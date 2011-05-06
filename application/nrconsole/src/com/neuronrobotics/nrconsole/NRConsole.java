@@ -45,7 +45,7 @@ public class NRConsole implements ActionListener {
 		}
 		
 		while(nrcWindow.isShowing()){
-			nrcWindow.repaint();
+			nrcWindow.setVisible(true);
 			ThreadUtil.wait(500);
 		}
 		manager.disconnect();

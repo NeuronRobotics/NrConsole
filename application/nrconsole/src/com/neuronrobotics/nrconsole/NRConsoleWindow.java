@@ -49,7 +49,6 @@ public class NRConsoleWindow extends JFrame {
 	private JPanel logoPanel = new JPanel() {
 		private static final long serialVersionUID = 1L;
 		private ImageIcon logo = new ImageIcon(NRConsole.class.getResource("images/logo.png"));
-		
 		public void paintComponent (Graphics g) {
 			Graphics2D g2 = (Graphics2D)instance.getGraphics();
 			super.paintComponent(g);
@@ -91,11 +90,9 @@ public class NRConsoleWindow extends JFrame {
 	
 	public void repaint(){		
 		logoPanel.repaint();
-		
 		for(JPanel p: panels){
 			p.repaint();
 		}
-	
 		super.repaint();
 	}
 	private void updateUI(){
