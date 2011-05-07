@@ -171,7 +171,7 @@ public class AdvancedAsyncWidget extends JPanel {
 
 	public void setControlPanel(ControlPanel controlPanel) {
 		this.controlPanel=controlPanel;	
-		if(getPerpheral().getMode() == DyIOChannelMode.DIGITAL_IN){
+		if(getPerpheral().getMode() != DyIOChannelMode.ANALOG_IN){
 			async.setSelected(true);
 			getPerpheral().setAsync(true);
 			add(advanced);
