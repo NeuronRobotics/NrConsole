@@ -74,6 +74,7 @@ public class AdvancedAsyncWidget extends JPanel {
 		perm.add(new JLabel("ms"));
 		advanced.add(perm,"wrap");
 		advanced.add(tmp);
+
 	}
 	private void updateAsync(){
 		DyIOAbstractPeripheral p =getPerpheral();
@@ -170,6 +171,11 @@ public class AdvancedAsyncWidget extends JPanel {
 
 	public void setControlPanel(ControlPanel controlPanel) {
 		this.controlPanel=controlPanel;	
+		if(getPerpheral().getMode() == DyIOChannelMode.DIGITAL_IN){
+			async.setSelected(true);
+			getPerpheral().setAsync(true);
+			add(advanced);
+		}
 		time.setText(new Integer(100).toString());
 		switch(getPerpheral().getMode()){
 		case ANALOG_IN:
@@ -182,6 +188,8 @@ public class AdvancedAsyncWidget extends JPanel {
 			setType(AsyncMode.NOTEQUAL);
 			break;
 		}
+		
 		updateAsync();
+		
 	}
 }

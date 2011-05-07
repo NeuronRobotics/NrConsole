@@ -49,6 +49,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		add(save);
 		save.addActionListener(this);
 		setValue(getChannel().getValue());
+		liveUpdate.setSelected(true);
 	}
 	
 	private String formatValue(int value) {

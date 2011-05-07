@@ -103,6 +103,9 @@ public class PIDControlGui extends JPanel {
 		add(groups);
 		add(selected);
 		Log.info("Started PID Control Gui");
+		for(PIDControlWidget w:widgits) {
+			w.stopPID();
+		}
 	}
 	
 	private void setDyPID(boolean hadDyPID) {

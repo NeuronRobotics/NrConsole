@@ -194,7 +194,7 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 		for(DyIOChannelMode mode: m) {
 			switch(mode) {
 			case SERVO_OUT:
-			case DC_MOTOR_DIR:
+			case DC_MOTOR_VEL:
 				back.add(mode);
 				break;
 			default:
