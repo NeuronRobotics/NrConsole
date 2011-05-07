@@ -86,7 +86,7 @@ public class ServoChannelConfiguration extends JPanel {
 	}
 	private void guiInit(){
 		LegWidget w= legWidgets.get(selected);
-		System.out.println("Selected leg: "+selected+" Widget: "+w);
+		//System.out.println("Selected leg: "+selected+" Widget: "+w);
 		w.setVisible(true);
 		w.redisplay();
 		widgetHolder.removeAll();
@@ -208,7 +208,7 @@ public class ServoChannelConfiguration extends JPanel {
 					
 					public void actionPerformed(ActionEvent e) {
 						Integer i= chanBox.getIntSelected();
-						System.out.println("Selected Servo channel Integer: "+i);
+						//System.out.println("Selected Servo channel Integer: "+i);
 						if(i != null)
 							getMyLink().setServoChannel(new ServoChannel(getDyio().getChannel(i.intValue())));
 					}

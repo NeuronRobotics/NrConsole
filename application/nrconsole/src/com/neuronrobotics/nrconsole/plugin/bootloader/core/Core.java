@@ -38,7 +38,7 @@ public class Core {
 		     in.close();
 			setLines(tmp);
 		}catch (Exception e) {
-			//System.out.println("File not found!!");
+			////System.out.println("File not found!!");
 		}
 	}
 

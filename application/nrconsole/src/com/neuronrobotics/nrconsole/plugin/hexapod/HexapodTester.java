@@ -73,7 +73,7 @@ public class HexapodTester extends JPanel implements KeyListener {
     		return;
     	new Thread(){
     		public void run(){
-    			System.out.println("Starting test thread..");
+    			//System.out.println("Starting test thread..");
     			setRunning(true);
     			getWalker().initialize();
     			//System.out.println("Default: "+BasicWalkerConfig.getDefaultConfiguration());
@@ -127,7 +127,7 @@ public class HexapodTester extends JPanel implements KeyListener {
     				}
     			}
     			setRunning(false);
-    			System.out.println("Stopping test thread");
+    			//System.out.println("Stopping test thread");
     			typingArea.setText("inactave..");
     			getWalker().initialize();
     			display.redisplay();
@@ -155,7 +155,7 @@ public class HexapodTester extends JPanel implements KeyListener {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				setRunning(false);
-				System.out.println("Stopping test");
+				//System.out.println("Stopping test");
 			}
 		});
 		setLayout(new MigLayout());

@@ -27,7 +27,7 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 	private JPanel values = new JPanel(new MigLayout());
 	public PPMReaderWidget(ChannelManager c) {
 		super(c);
-		System.out.println("\nInitializing PPM channel");
+		//System.out.println("\nInitializing PPM channel");
 		try {
 			ppmr = new PPMReaderChannel(getChannel());
 			ppmr.addPPMReaderListener(this);
@@ -50,7 +50,7 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 				values.add(ppmLinks[i],"wrap");
 			}
 			add(values);
-			System.out.println("\nPPM UI ok");
+			//System.out.println("\nPPM UI ok");
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException();

@@ -145,7 +145,7 @@ public class NRConsoleWindow extends JFrame {
 		
 		
 		public Dimension getPreferredScrollableViewportSize() {
-			System.out.println("Getting preffered size");
+			//System.out.println("Getting preffered size");
 			return new Dimension(panelWidth, panelHight);
 		}
 

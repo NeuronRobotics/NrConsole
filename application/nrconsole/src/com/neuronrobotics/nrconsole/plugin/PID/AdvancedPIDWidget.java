@@ -184,14 +184,14 @@ public class AdvancedPIDWidget extends JPanel{
 			pPC=pointsPerCycle;
 			cy=cycles;
 			run=true;
-			System.out.println("Amplitude of sin wave: "+a+" period: "+p+" cycles/sec, points per cycle: "+pPC+" for "+cy+" cycles");
+			//System.out.println("Amplitude of sin wave: "+a+" period: "+p+" cycles/sec, points per cycle: "+pPC+" for "+cy+" cycles");
 			getPid().setSetpoint(a);
 		}
 		public void run(){
 			double radInc = (Math.PI*2.0)/((double)pPC); 
 			double time = (1.0/p)/((double)pPC);
 			try {Thread.sleep(1000);} catch (InterruptedException e) {}
-			System.out.println("Sin wave tracking "+time+" seconds per increment");
+			//System.out.println("Sin wave tracking "+time+" seconds per increment");
 			for (int i=0;i<cy;i++){
 				for (int j=0;j<pPC;j++){
 					try {Thread.sleep(5);} catch (InterruptedException e) {}
@@ -202,7 +202,7 @@ public class AdvancedPIDWidget extends JPanel{
 						try {Thread.sleep((long) (time*1000));} catch (InterruptedException e) {}
 				}
 			}
-			System.out.println("Loop Done");
+			//System.out.println("Loop Done");
 			stopLoop.setEnabled(false);
 			runLoop.setEnabled(true);
 			runSin.setEnabled(true);

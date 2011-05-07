@@ -233,7 +233,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
         int option = chooser.showSaveDialog(null);
         if (option == JFileChooser.APPROVE_OPTION) {
             try {
-                System.out.println(chooser.getFileFilter());
+                //System.out.println(chooser.getFileFilter());
 
                 //if(!filter.accept(file)) {
                 	file = new File(file.getAbsolutePath() + ".xls");
@@ -255,7 +255,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	
 	public void onDyIOEvent(IDyIOEvent e) {
 		if(e.getClass() == DyIOPowerEvent.class){
-			System.out.println("Got power event: "+e);
+			//System.out.println("Got power event: "+e);
 			devicePanel.setPowerEvent(((DyIOPowerEvent)e));
 			try{
 				for(ChannelManager cm : channels) {

@@ -99,7 +99,7 @@ public class SchedulerGui extends JPanel{
 			//setValue(0);
 		}
 		public void run(){
-			System.out.println("Starting timer");
+			//System.out.println("Starting timer");
 			do{
 				long start = System.currentTimeMillis();
 				StartOffset = slider.getValue();

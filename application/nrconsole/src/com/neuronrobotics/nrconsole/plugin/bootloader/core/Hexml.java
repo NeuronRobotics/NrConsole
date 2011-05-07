@@ -31,11 +31,11 @@ public class Hexml {
 		doc = dBuilder.parse(hexml);
 		doc.getDocumentElement().normalize();
 
-		//System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+		////System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
 		loadRevision(doc);
 		//NodeList nList = doc.getElementsByTagName("revision");
 		//revision = getTagValue("revision",(Element)nList.item(0));
-		//System.out.println("Revision is:"+revision);
+		////System.out.println("Revision is:"+revision);
 		NodeList nList = doc.getElementsByTagName("core");
 		for (int temp = 0; temp < nList.getLength(); temp++) {
 		    Node nNode = nList.item(temp);	    
@@ -60,7 +60,7 @@ public class Hexml {
 					}
 			    }
 			    Core tmp = new Core(index, lines, type);
-			    //System.out.println("Adding new core: "+tmp);
+			    ////System.out.println("Adding new core: "+tmp);
 			    cores.add(tmp);
 		    }
 		 }

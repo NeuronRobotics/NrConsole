@@ -42,7 +42,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 6467421820450464854L;
 	
 	public BootloaderPanel(){
-		//System.out.println("Starting GUI");
+		////System.out.println("Starting GUI");
 		setName("NR Bootloader");
 		fileButton = new JButton();
 		fileButton.addActionListener(this);
@@ -93,7 +93,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 	}
 	
 	public void loadFile() {
-		System.out.println("Loading file:");
+		//System.out.println("Loading file:");
     	JFileChooser fc = new JFileChooser();
     	File dir2=null; 
     	try {
@@ -111,9 +111,9 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 			dir2=new File (".");
     	if(file!=null){
     		fc.setSelectedFile(file);
-    		System.out.println("Starting with: "+file.getAbsolutePath());
+    		//System.out.println("Starting with: "+file.getAbsolutePath());
     	}else{
-			System.out.println("Starting in: "+dir2.getAbsolutePath());
+			//System.out.println("Starting in: "+dir2.getAbsolutePath());
 			fc.setCurrentDirectory(dir2);	
     	}
     	fc.setFileFilter(new FileFilter() {
@@ -203,7 +203,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
         	try{
 	        	if (getBlApp()!=null){
 	        		loadStatus.setStatus(StatusLabel.OK);
-	        		//System.out.println("Loading firmware");
+	        		////System.out.println("Loading firmware");
 	        		reloadFile();
 	        		getBlApp().loadCores(hex.getCores());
 		    		loadButton.setText("Loading....");

@@ -73,7 +73,7 @@ public class NRBootLoaderApp {
 	}
 	public NRBootLoaderApp(){
 		NR_Bootloader_GUI gui = new NR_Bootloader_GUI();
-		//System.out.println("Waiting for port selection");
+		////System.out.println("Waiting for port selection");
 		boolean getAp = false;
 		boolean wasSelected = false;
 		while (true){

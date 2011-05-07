@@ -127,7 +127,7 @@ public class BowlerCamPanel extends JPanel implements IWebcamImageListener {
 		thr.setText(new Integer(threshhold.getValue()).toString());
 		target.getColor();
 		if(scaleSet != Double.parseDouble(scale.getText())){
-			System.out.println("Resetting scale : "+scale.getText());
+			//System.out.println("Resetting scale : "+scale.getText());
 			scaleSet = Double.parseDouble(scale.getText());
 			cam.startHighSpeedAutoCapture(0,scaleSet,0);
 		}
@@ -172,7 +172,7 @@ public class BowlerCamPanel extends JPanel implements IWebcamImageListener {
 			cam.disconnect();
 			cam.stopAutoCapture(0);
 			cam.stopAutoCapture(1);
-			System.out.println("Bowler cam exiting");
+			//System.out.println("Bowler cam exiting");
 		}
 	}
 }

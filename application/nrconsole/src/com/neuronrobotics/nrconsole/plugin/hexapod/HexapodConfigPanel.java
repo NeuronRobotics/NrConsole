@@ -108,7 +108,7 @@ public class HexapodConfigPanel extends JPanel {
 		save.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Saving configuration to file: "+getOutputFile().getAbsolutePath());
+				//System.out.println("Saving configuration to file: "+getOutputFile().getAbsolutePath());
 				getWalker().writeXML(getOutputFile());
 			}
 		});
@@ -174,7 +174,7 @@ public class HexapodConfigPanel extends JPanel {
 	
 	public boolean setDyIO(){
 		initGUI();
-		System.out.println("Setting DyIO In Hex Panel");
+		//System.out.println("Setting DyIO In Hex Panel");
 		return DyIORegestry.get().isAvailable();
 	}
 
@@ -236,7 +236,7 @@ public class HexapodConfigPanel extends JPanel {
 			//setConfigEnabled(false); 
 			selectOutput.setEnabled(false);
 			setOutputFile(getFile(getOutputFile()));
-			System.out.println("Saving configuration to file: "+getOutputFile().getAbsolutePath());
+			//System.out.println("Saving configuration to file: "+getOutputFile().getAbsolutePath());
 			getWalker().writeXML(getOutputFile());
 			selectOutput.setEnabled(true);
 			//setConfigEnabled(true); 
@@ -276,13 +276,13 @@ public class HexapodConfigPanel extends JPanel {
 			frame.setVisible(true);
 			while(con.isConnected()){
 				if(!frame.isShowing()) {
-					System.out.println("Window closed");
+					//System.out.println("Window closed");
 					con.disconnect();
 					System.exit(0);
 				}
 				ThreadUtil.wait(100);
 			}
-			System.out.println("Connection disconnected");
+			//System.out.println("Connection disconnected");
 		}catch(Exception ex){
 		}
 		System.exit(0);

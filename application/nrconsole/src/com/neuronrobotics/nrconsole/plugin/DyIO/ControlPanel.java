@@ -58,7 +58,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		}
 	});
 	public void setupModesComboBox(){
-		System.out.println("Resetting channel "+getManager().getChannel().getChannelNumber()+" modes: "+getManager().getChannel().getAvailableModes());
+		//System.out.println("Resetting channel "+getManager().getChannel().getChannelNumber()+" modes: "+getManager().getChannel().getAvailableModes());
 		boolean hasServ = false;
 		for(DyIOChannelMode m:getManager().getChannel().getAvailableModes() ){
 			if(m==DyIOChannelMode.SERVO_OUT)

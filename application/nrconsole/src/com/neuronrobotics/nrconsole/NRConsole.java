@@ -57,7 +57,7 @@ public class NRConsole implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("set-connection")) {
-			System.out.println("Do something with the aciton command.");
+			//System.out.println("Do something with the aciton command.");
 		}
 	}
 	private class showManager extends Thread{
