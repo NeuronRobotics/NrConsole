@@ -120,6 +120,7 @@ public class MenuBar extends JMenuBar {
 	}
 	public void connect(){
 		disconnect();
+		connectionMenu.setEnabled(false);	
 		try {
 			//System.out.println("Connecting...");
 			if(manager.connect()) {
@@ -133,8 +134,8 @@ public class MenuBar extends JMenuBar {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Failed to connect to device! "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
 			manager.disconnect();
-			return;
 		}
+		connectionMenu.setEnabled(true);
 	}
 	public void disconnect() {
 		try {

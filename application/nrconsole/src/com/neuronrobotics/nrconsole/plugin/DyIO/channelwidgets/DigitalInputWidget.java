@@ -73,7 +73,8 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 	
 	public void pollValue() {
 		//System.out.println(this.getClass()+" refresh pressed");
-		setValue(dic.isHigh());
+		if(!async.isSelected())
+			setValue(dic.isHigh());
 	}
 
 	

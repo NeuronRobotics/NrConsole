@@ -45,8 +45,6 @@ public class NRConsole implements ActionListener {
 		}
 		
 		while(nrcWindow.isShowing()){
-			if(nrcWindow.isShowing())
-				nrcWindow.setVisible(true);
 			ThreadUtil.wait(500);
 		}
 		manager.disconnect();
@@ -62,10 +60,12 @@ public class NRConsole implements ActionListener {
 	}
 	private class showManager extends Thread{
 		public void run(){
+			nrcMenubar.connect();
 			while(true){	
 				if(nrcMenubar.isReady()){
 					nrcMenubar.setMenues(manager.getMenueItems());
 					nrcWindow.setDeviceManager(manager);
+					nrcWindow.invalidate();
 					nrcWindow.setVisible(true);
 					while(nrcMenubar.isReady()){
 						ThreadUtil.wait(1000);
@@ -75,8 +75,8 @@ public class NRConsole implements ActionListener {
 				}else{
 					nrcMenubar.setMenues(null);
 					nrcWindow.displayLogo();
+					nrcWindow.invalidate();
 					nrcWindow.setVisible(true);
-					nrcMenubar.connect();
 					while(!nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}

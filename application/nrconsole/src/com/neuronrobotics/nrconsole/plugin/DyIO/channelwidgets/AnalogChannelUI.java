@@ -92,7 +92,8 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 	
 	
 	public void pollValue() {
-		setValue(aic.getValue());
+		if(!async.isSelected())
+			setValue(aic.getValue());
 	}
 
 	
