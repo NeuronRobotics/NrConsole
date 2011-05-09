@@ -55,7 +55,7 @@ public class MenuBar extends JMenuBar {
 	    add(fileMenu);
 	    add(connectionMenu);
 	    add(aboutMenu);
-	    about.add(new JLabel(NRConsoleWindow.name),"wrap");
+	    about.add(new JLabel(NRConsoleWindow.getConsoleVersion()),"wrap");
 	}
 	public void setMenues(ArrayList<JMenu> menues){
 		removeAll();

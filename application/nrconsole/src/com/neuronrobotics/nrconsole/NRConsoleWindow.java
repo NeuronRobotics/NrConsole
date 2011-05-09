@@ -21,12 +21,13 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.ControlPanel;
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 
 
 public class NRConsoleWindow extends JFrame {
 	private ArrayList<JPanel> panels=new ArrayList<JPanel>();
-	public static final String name = "Neuron Robotics Console 3.7.5";
+	private static final String name = "Neuron Robotics Console ";
 	public static int panelHight = 700;
 	public static int panelWidth = 1095;
 	private static final long serialVersionUID = 1L;
@@ -65,7 +66,7 @@ public class NRConsoleWindow extends JFrame {
 	};
 	
 	public NRConsoleWindow() {
-		super(name);
+		super(getConsoleVersion());
 		instance=this;
 		displayLogo();
 		scrollPanel.setViewportView(scroller);
@@ -129,6 +130,10 @@ public class NRConsoleWindow extends JFrame {
 		scroller.removeAll();
 		scroller.add(logoPanel);
 		updateUI();
+	}
+
+	public static String getConsoleVersion() {
+		return name+SDKBuildInfo.getVersion();
 	}
 
 	private class WindowScroller extends JPanel implements Scrollable{
