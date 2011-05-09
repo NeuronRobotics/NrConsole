@@ -112,6 +112,9 @@ public class AdvancedAsyncWidget extends JPanel {
 		}
 		switch(getSelectedMode()){
 		case AUTOSAMP:
+			if(sampTime<100)
+				sampTime=100;
+			time.setText(new Integer(sampTime).toString());
 			getPerpheral().configAdvancedAsyncAutoSample(sampTime);
 			break;
 		case DEADBAND:
