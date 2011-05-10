@@ -19,6 +19,7 @@ import sun.net.www.content.image.jpeg;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class MenuBar extends JMenuBar {
@@ -56,6 +57,7 @@ public class MenuBar extends JMenuBar {
 	    add(connectionMenu);
 	    add(aboutMenu);
 	    about.add(new JLabel(NRConsoleWindow.getConsoleVersion()),"wrap");
+	    //about.add(new JLabel("Build date: "+SDKBuildInfo.getBuildDate()),"wrap");
 	}
 	public void setMenues(ArrayList<JMenu> menues){
 		removeAll();
