@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project default="create_run_jar" name="Create Runnable Jar for Project NRConsole">
     <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required  
-                                    -->
+    <!--ANT 1.7 is required  -->
     <target name="create_run_jar">
-    	
+        <tstamp>
+          <format property="TODAY" pattern="yyyy-MM-dd" />
+        </tstamp>
         <jar destfile="/home/hephaestus/workspace/NRConsole/target/nr-console.jar" filesetmanifest="mergewithoutmain" >
             <manifest>
                 <attribute name="Main-Class" value="com.neuronrobotics.nrconsole.NRConsole"/>
                 <attribute name="Class-Path" value="."/>
+              	<attribute name="Built-Date" value="${TODAY}"/> 
             </manifest>
             <fileset dir="/home/hephaestus/workspace/NRConsole/bin"/>
             <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/miglayout-3.7.2-swing.jar"/>
