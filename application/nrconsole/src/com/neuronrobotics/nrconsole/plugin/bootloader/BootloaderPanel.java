@@ -186,7 +186,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 				progress.setValue(getBlApp().getProgressValue());
 			}
 			progress.setIndeterminate(false);
-			String message = "Success! Your Bowler device is now updated to version: "+hex.getRevision();
+			String message = "Success! Your Bowler device is now updated to version: "+hex.getRevision()+" Dont forget to Un-Plug your device!";
     		JOptionPane.showMessageDialog(null, message, message, JOptionPane.INFORMATION_MESSAGE);
     		resetAll();
 		}
