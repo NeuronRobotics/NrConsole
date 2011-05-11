@@ -18,8 +18,6 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
-import com.neuronrobotics.sdk.dyio.IDyIOEvent;
-import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
 
 import com.neuronrobotics.sdk.pid.IPIDControl;
 
