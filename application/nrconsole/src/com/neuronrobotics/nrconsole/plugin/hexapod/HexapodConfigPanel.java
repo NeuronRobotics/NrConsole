@@ -16,10 +16,10 @@ import javax.swing.filechooser.FileFilter;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.neuronrobotics.nrconsole.plugin.DyIO.DyIORegestry;
 import com.neuronrobotics.sdk.addons.walker.BasicWalker;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 

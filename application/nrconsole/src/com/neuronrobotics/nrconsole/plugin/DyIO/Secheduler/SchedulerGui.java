@@ -12,9 +12,9 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.neuronrobotics.nrconsole.plugin.DyIO.DyIORegestry;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class SchedulerGui extends JPanel{

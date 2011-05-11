@@ -13,10 +13,10 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.neuronrobotics.nrconsole.plugin.DyIO.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IDyIOEvent;
 import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;

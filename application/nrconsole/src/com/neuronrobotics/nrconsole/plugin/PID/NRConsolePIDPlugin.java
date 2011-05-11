@@ -8,9 +8,10 @@ import javax.swing.JPanel;
 
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-import com.neuronrobotics.nrconsole.plugin.DyIO.DyIORegestry;
+
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 
 public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
