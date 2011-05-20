@@ -23,7 +23,7 @@ public class ChannelManager  implements IDyIOChannelModeChangeListener {
 	
 	public ChannelManager(DyIOChannel c){
 		channel = c;
-		channel.addChannelModeChangeListener(this);
+		
 		
 		controlPanel = new ControlPanel(this);
 		channelPanel = new ChannelPanel(this);
@@ -35,6 +35,8 @@ public class ChannelManager  implements IDyIOChannelModeChangeListener {
 		onModeChange(channel.getMode());
 		controlPanel.setUpModeUI();
 		controlPanel.refresh();
+		
+		channel.addChannelModeChangeListener(this);
 	}
 
 	public void refresh() {
