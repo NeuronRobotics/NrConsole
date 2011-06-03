@@ -32,11 +32,11 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		add(button);
 		add(refresh);
 		//add(async);
-
+		setValue(true);
 		dic.addDigitalInputListener(this);
 		refresh.addActionListener(this);
 		async.addActionListener(this);
-		setValue(true);
+		
 	}
 
 	private void setValue(boolean value) {
