@@ -21,7 +21,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.PWMOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
-public class ServoChannelUI extends ControlWidget implements ChangeListener, ActionListener {
+public class SliderChannelUI extends ControlWidget implements ChangeListener, ActionListener {
 	private static final long serialVersionUID = 1L;
 	
 	private JSlider sliderUI = new JSlider();
@@ -31,22 +31,13 @@ public class ServoChannelUI extends ControlWidget implements ChangeListener, Act
 	private int saveValue = 256;
 	private DyIOAbstractPeripheral dap;
 	private boolean startup = true;
-	public ServoChannelUI(ChannelManager channel, DyIOChannelMode mode) {
+	public SliderChannelUI(ChannelManager channel, DyIOChannelMode mode) {
 		super(channel);
 		setRecordable(true);
-		
-		if(mode == DyIOChannelMode.SERVO_OUT) {
-			try{
-				//System.out.println("Making Servo");
-				dap = new ServoChannel(getChannel());
-			}catch (Exception e){
-				dap = new DigitalInputChannel(getChannel());
-			}
-		} else if(mode == DyIOChannelMode.PWM_OUT){
-			//System.out.println("Making PWM");
+	
+		if(mode == DyIOChannelMode.PWM_OUT){
 			dap = new PWMOutputChannel(getChannel());
 		}else if((mode == DyIOChannelMode.DC_MOTOR_VEL)||(mode == DyIOChannelMode.DC_MOTOR_DIR)){
-			//System.out.println("Making PWM");
 			dap = new DCMotorOutputChannel(getChannel());
 		}
 		
