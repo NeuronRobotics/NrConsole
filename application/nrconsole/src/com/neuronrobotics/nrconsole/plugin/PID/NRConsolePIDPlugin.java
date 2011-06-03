@@ -1,10 +1,15 @@
 package com.neuronrobotics.nrconsole.plugin.PID;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JMenu;
 
 import javax.swing.JPanel;
+
+import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
@@ -20,13 +25,33 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 	//private DyIO dyio;
 	private GenericPIDDevice pid;
 	private PIDControlGui gui;
+	private JPanel panel = new JPanel(new MigLayout());
+	private BowlerAbstractConnection connection = null;
+	private JButton display = new JButton("Display PID configuration");
 	public NRConsolePIDPlugin(){
 		PluginManager.addNRConsoleTabedPanelPlugin(this);
+		panel.add(display,"wrap");
+		panel.setName("P.I.D. Configuration");
+		display.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				display.setVisible(false);
+				if(!dypid){
+					pid = new  GenericPIDDevice(connection);
+					pid.connect();
+					gui = new PIDControlGui(pid);
+				}else{
+					DyIORegestry.setConnection(connection);
+					gui = new PIDControlGui();
+				}
+				panel.add(gui,"wrap");
+				panel.invalidate();
+			}
+		});
 	}
 	
 	public JPanel getTabPane() {
-		// TODO Auto-generated method stub
-		return gui;
+		
+		return panel;
 	}
 
 
@@ -44,15 +69,9 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 	}
 
 	
-	public boolean setConnection(BowlerAbstractConnection connection) {
-		if(!dypid){
-			pid = new  GenericPIDDevice(connection);
-			pid.connect();
-			gui = new PIDControlGui(pid);
-		}else{
-			DyIORegestry.setConnection(connection);
-			gui = new PIDControlGui();
-		}
+	public boolean setConnection(BowlerAbstractConnection conn) {
+		this.connection = conn;
+
 		
 		return true;
 	}

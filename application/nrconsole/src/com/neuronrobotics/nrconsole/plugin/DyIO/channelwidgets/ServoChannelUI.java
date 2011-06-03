@@ -13,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DCMotorOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
@@ -29,7 +30,7 @@ public class ServoChannelUI extends ControlWidget implements ChangeListener, Act
 	private JButton save = new JButton("Set Default");
 	private int saveValue = 256;
 	private DyIOAbstractPeripheral dap;
-	
+	private boolean startup = true;
 	public ServoChannelUI(ChannelManager channel, DyIOChannelMode mode) {
 		super(channel);
 		setRecordable(true);
@@ -62,10 +63,14 @@ public class ServoChannelUI extends ControlWidget implements ChangeListener, Act
 		add(liveUpdate, "wrap");
 		add(save);
 		
-		setValue(getChannel().getValue());
+		Log.debug(this.getClass()+"Getting value");
+		int v =getChannel().getValue();
+		Log.debug(this.getClass()+"Setting UI value");
+		setValue(v);
 		
 		save.addActionListener(this);
 		sliderUI.addChangeListener(this);
+		startup = false;
 	}
 	
 	private String formatValue(int value) {
@@ -98,9 +103,11 @@ public class ServoChannelUI extends ControlWidget implements ChangeListener, Act
 			save.setEnabled(true);
 		else
 			save.setEnabled(false);
-		dap.setValue(sliderUI.getValue());
-		
-		pollValue();
+		if( startup == false ) {
+			Log.debug(this.getClass()+"Setting Device value");
+			dap.setValue(sliderUI.getValue());
+			pollValue();
+		}
 	}
 
 	
@@ -114,6 +121,7 @@ public class ServoChannelUI extends ControlWidget implements ChangeListener, Act
 	
 	
 	public void pollValue() {
+		
 		recordValue(dap.getValue());
 	}
 
