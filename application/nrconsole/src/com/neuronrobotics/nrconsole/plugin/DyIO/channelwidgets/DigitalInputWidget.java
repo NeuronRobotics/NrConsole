@@ -78,7 +78,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 	}
 
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return dic;
 	}

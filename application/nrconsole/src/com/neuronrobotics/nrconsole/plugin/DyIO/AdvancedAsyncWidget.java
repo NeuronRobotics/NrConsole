@@ -169,29 +169,38 @@ public class AdvancedAsyncWidget extends JPanel {
 	}
 
 	public DyIOAbstractPeripheral getPerpheral(){
+		if(controlPanel == null)
+			throw new RuntimeException(this.getClass()+"Control Panel is null");
 		return controlPanel.getPerpheral();
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	public void setControlPanel(ControlPanel controlPanel) {
-		this.controlPanel=controlPanel;	
-		if(getPerpheral().getMode() != DyIOChannelMode.ANALOG_IN){
-			async.setSelected(true);
-			getPerpheral().setAsync(true);
-			add(advanced);
+		
+		this.controlPanel=controlPanel;
+		/**
+		 * this is for Label UI that returns null perpherals
+		 */
+		if(getPerpheral() != null) {
+			
+			if(getPerpheral().getMode() != DyIOChannelMode.ANALOG_IN){
+				async.setSelected(true);
+				getPerpheral().setAsync(true);
+				add(advanced);
+			}
+			switch(getPerpheral().getMode()){
+			case ANALOG_IN:
+				setType(AsyncMode.DEADBAND);
+				break;
+			case DIGITAL_IN:
+				time.setText(new Integer(5).toString());
+			case COUNT_IN_INT:
+			case COUNT_OUT_INT:	
+				setType(AsyncMode.NOTEQUAL);
+				break;
+			}
 		}
 		time.setText(new Integer(100).toString());
-		switch(getPerpheral().getMode()){
-		case ANALOG_IN:
-			setType(AsyncMode.DEADBAND);
-			break;
-		case DIGITAL_IN:
-			time.setText(new Integer(5).toString());
-		case COUNT_IN_INT:
-		case COUNT_OUT_INT:	
-			setType(AsyncMode.NOTEQUAL);
-			break;
-		}
-		
 		updateAsync();
 		
 	}

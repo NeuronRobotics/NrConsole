@@ -15,7 +15,7 @@ public class LabelChannelUI extends ControlWidget {
 	}
 
 	@Override
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;
 	}

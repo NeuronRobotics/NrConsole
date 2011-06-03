@@ -92,7 +92,7 @@ public class SPIChannelWidget extends ControlWidget {
 		
 	}
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;
 	}

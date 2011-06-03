@@ -32,6 +32,7 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.ServoChannelUI;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.ServoWidget;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.UARTChannelUI;
 import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;
@@ -131,7 +132,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		
 		DyIOChannelMode mode = getMode();
 		if(previousMode==null || mode != previousMode){
-			//System.out.println(this.getClass()+"Setup mode UI: "+getManager().getChannel());
+			Log.debug(this.getClass()+"Setup mode UI: "+getManager().getChannel());
 			previousMode=mode;
 			try{
 				switch(mode) {
@@ -337,10 +338,15 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	}
 
 	public DyIOAbstractPeripheral getPerpheral() {
-		return getCurrentWidget().getPerphera();
+		if(getCurrentWidget() == null)
+			throw new RuntimeException(this.getClass()+"Current Widget is null");
+		return getCurrentWidget().getPerpheral();
 	}
 
 	public void setCurrentWidget(ControlWidget currentWidget) {
+		Log.debug(this.getClass()+" setting current control widget");
+		if(currentWidget == null)
+			throw new RuntimeException(this.getClass()+"currentWidget is null");
 		this.currentWidget = currentWidget;
 	}
 

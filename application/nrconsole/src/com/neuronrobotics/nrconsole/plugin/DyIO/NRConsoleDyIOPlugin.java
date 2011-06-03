@@ -28,6 +28,7 @@ import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.nrconsole.plugin.hexapod.ServoChannelConfiguration;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
@@ -98,7 +99,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		
 		int index = 0;
 		ArrayList<DyIOChannel> chans =(ArrayList<DyIOChannel>) DyIORegestry.get().getChannels();
-		//System.out.println("DyIO state: "+device+ " \nchans: "+chans );
+		Log.debug("DyIO state: "+DyIORegestry.get()+ " \nchans: "+chans );
 		for(DyIOChannel c : chans) {
 			//System.out.println(this.getClass()+" Adding channel: "+index+" as mode: "+c.getMode());
 			ChannelManager cm = new ChannelManager(c);

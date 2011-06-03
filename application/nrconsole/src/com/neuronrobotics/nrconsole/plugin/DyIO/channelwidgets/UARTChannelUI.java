@@ -110,7 +110,7 @@ public class UARTChannelUI extends ControlWidget implements ActionListener,IUART
 	}
 
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;
 	}

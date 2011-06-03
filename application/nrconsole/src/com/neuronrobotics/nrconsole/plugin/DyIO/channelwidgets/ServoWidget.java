@@ -100,7 +100,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	}
 
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;
 	}

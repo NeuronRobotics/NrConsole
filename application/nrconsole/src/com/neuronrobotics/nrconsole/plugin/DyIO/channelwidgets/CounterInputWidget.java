@@ -68,7 +68,7 @@ public class CounterInputWidget extends ControlWidget implements ICounterInputLi
 		
 	}
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return ci;
 	}

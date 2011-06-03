@@ -81,7 +81,7 @@ public class CounterOutputWidget extends ControlWidget implements ActionListener
 		//async.setSelected(true);
 	}
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return outChannel;
 	}

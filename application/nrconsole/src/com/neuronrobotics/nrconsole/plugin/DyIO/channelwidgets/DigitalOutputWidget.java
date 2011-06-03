@@ -56,7 +56,7 @@ public class DigitalOutputWidget extends ControlWidget implements ActionListener
 	}
 
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;
 	}

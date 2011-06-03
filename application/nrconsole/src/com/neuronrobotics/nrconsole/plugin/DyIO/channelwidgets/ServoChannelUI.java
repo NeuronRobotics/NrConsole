@@ -55,14 +55,17 @@ public class ServoChannelUI extends ControlWidget implements ChangeListener, Act
 		sliderUI.setMaximum(255);
 		sliderUI.setMajorTickSpacing(15);
 		sliderUI.setPaintTicks(true);
-		sliderUI.addChangeListener(this);
+		
 		
 		add(sliderUI);
 		add(valueUI);
 		add(liveUpdate, "wrap");
 		add(save);
-		save.addActionListener(this);
+		
 		setValue(getChannel().getValue());
+		
+		save.addActionListener(this);
+		sliderUI.addChangeListener(this);
 	}
 	
 	private String formatValue(int value) {
@@ -115,8 +118,7 @@ public class ServoChannelUI extends ControlWidget implements ChangeListener, Act
 	}
 
 	
-	public DyIOAbstractPeripheral getPerphera() {
-		// TODO Auto-generated method stub
-		return null;
+	public DyIOAbstractPeripheral getPerpheral() {
+		return dap;
 	}
 }

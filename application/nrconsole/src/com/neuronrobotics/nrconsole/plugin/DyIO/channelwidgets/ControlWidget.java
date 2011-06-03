@@ -47,6 +47,6 @@ public abstract class ControlWidget extends JPanel {
 		return isRecordable;
 	}
 
-	abstract public DyIOAbstractPeripheral getPerphera();
+	abstract public DyIOAbstractPeripheral getPerpheral();
 	
 }

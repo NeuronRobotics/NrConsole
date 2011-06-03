@@ -97,7 +97,7 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 	}
 
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		return aic;
 	}
 

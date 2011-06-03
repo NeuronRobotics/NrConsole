@@ -115,7 +115,7 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 //		System.out.println(s+"]");
 	}
 	
-	public DyIOAbstractPeripheral getPerphera() {
+	public DyIOAbstractPeripheral getPerpheral() {
 		return ppmr;
 	}
 
