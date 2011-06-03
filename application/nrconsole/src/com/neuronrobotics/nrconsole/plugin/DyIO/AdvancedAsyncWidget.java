@@ -201,7 +201,7 @@ public class AdvancedAsyncWidget extends JPanel {
 			}
 		}
 		time.setText(new Integer(100).toString());
-		updateAsync();
+		//updateAsync();
 		
 	}
 }
