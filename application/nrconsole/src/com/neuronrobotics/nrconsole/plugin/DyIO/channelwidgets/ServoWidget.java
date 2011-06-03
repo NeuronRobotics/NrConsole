@@ -25,7 +25,8 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	private JCheckBox liveUpdate = new JCheckBox("Live");
 	private JButton save = new JButton("Set Default");
 	private ServoChannel sc;
-	
+	private boolean startup = true;
+	private int saveValue = 256;
 	public ServoWidget(ChannelManager channel, DyIOChannelMode mode) {
 		super(channel);
 		setRecordable(true);
@@ -41,15 +42,18 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		sliderUI.setMaximum(255);
 		sliderUI.setMajorTickSpacing(15);
 		sliderUI.setPaintTicks(true);
-		sliderUI.addChangeListener(this);
+		
 		
 		add(sliderUI);
 		add(valueUI);
 		add(liveUpdate, "wrap");
 		add(save);
-		save.addActionListener(this);
+		
 		setValue(getChannel().getValue());
 		liveUpdate.setSelected(true);
+		
+		sliderUI.addChangeListener(this);
+		save.addActionListener(this);
 	}
 	
 	private String formatValue(int value) {
@@ -81,15 +85,21 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		
 		pollValue();
 		
-		save.setEnabled(true);
-		sc.setValue(sliderUI.getValue());
-		recordValue(sliderUI.getValue());
+		if(sliderUI.getValue() !=saveValue )
+			save.setEnabled(true);
+		else
+			save.setEnabled(false);
+		if( startup == false ) {
+			sc.setValue(sliderUI.getValue());
+			recordValue(sliderUI.getValue());
+		}
 	}
 
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == save){
-			sc.SavePosition(sliderUI.getValue());
+			saveValue=sliderUI.getValue();
+			sc.SavePosition(saveValue);
 			save.setEnabled(false);
 		}
 	}
