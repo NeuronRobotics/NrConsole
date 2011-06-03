@@ -52,6 +52,7 @@ public class AdvancedAsyncWidget extends JPanel {
 		type.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateAsyncPanel();
+				updateDevice();
 			}
 		});
 		
@@ -61,6 +62,7 @@ public class AdvancedAsyncWidget extends JPanel {
 		edge.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateAsyncPanel();
+				updateDevice();
 			}
 		});
 		update.addActionListener(new ActionListener() {
@@ -153,7 +155,7 @@ public class AdvancedAsyncWidget extends JPanel {
 			tmp.add(edge);
 			break;
 		}
-		updateDevice();
+		
 	}
 	private void setType(AsyncMode m){
 		for (int i=0;i<type.getItemCount();i++){
@@ -201,7 +203,7 @@ public class AdvancedAsyncWidget extends JPanel {
 			}
 		}
 		time.setText(new Integer(100).toString());
-		//updateAsync();
+		updateAsync();
 		
 	}
 }
