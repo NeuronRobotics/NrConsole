@@ -31,12 +31,12 @@
 	  	depends="clean"
 	  	description="Build the nrsdk">
 	  	<echo message="Attempting to build the nrsdk"/>
-	  	<!--<delete dir="/home/hephaestus/workspace/NRSDK/target/"/>
-	  	<ant antfile="${baseDirUpOne}/NRSDK/build.xml" inheritAll="true" target="deploy" dir="."> 
+	  	<!--<delete dir="/home/hephaestus/workspace/NRSDK/target/"/>-->
+	  	<ant antfile="${baseDirUpOne}/NRSDK/build.xml" inheritAll="true" target="deploy" dir="../NRSDK/"> 
 	  		
-	  	</ant>-->
+	  	</ant>
 	  	<echo message="Copying the nrsdk"/>
-	  	<copyfile 	src="${baseDirUpOne}/NRSDK/target/${app.name}-${app.version}-jar-with-dependencies.jar" 
+	  	<copyfile 	src="${basedir}/target/${app.name}-${app.version}-jar-with-dependencies.jar" 
 	  				             dest="${basedir}/lib/${app.name}-${app.version}-jar-with-dependencies.jar" />
 	  	<echo message="Done building the nrsdk"/>
 	</target>
