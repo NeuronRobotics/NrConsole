@@ -22,9 +22,11 @@
 	
 	<property name="jar.module" value="nr-console.jar"/>
 	<target name="clean"
+		depends=""
 	   description="Delete old build and dist directories">
 
 		<delete dir="${build.home}"/>
+		<delete dir="${dist.home}"/>
 	</target>
 	
 	<target name="nrsdk" 
@@ -35,6 +37,7 @@
 	  	<ant antfile="${baseDirUpOne}/NRSDK/build.xml" inheritAll="true" target="deploy" dir="../NRSDK/"> 
 	  		
 	  	</ant>
+		<delete file="${basedir}/lib/nrsdk*.jar"/>
 	  	<echo message="Copying the nrsdk"/>
 	  	<copyfile 	src="${basedir}/target/${app.name}-${app.version}-jar-with-dependencies.jar" 
 	  				             dest="${basedir}/lib/${app.name}-${app.version}-jar-with-dependencies.jar" />
