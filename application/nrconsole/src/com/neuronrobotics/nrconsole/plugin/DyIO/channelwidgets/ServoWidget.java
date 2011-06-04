@@ -54,6 +54,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		
 		sliderUI.addChangeListener(this);
 		save.addActionListener(this);
+		startup = false;
 	}
 	
 	private String formatValue(int value) {
