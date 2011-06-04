@@ -1,28 +1,140 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project NRConsole">
-    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
-    <!--ANT 1.7 is required  -->
-    <target name="create_run_jar">
-        <tstamp>
-          <format property="TODAY" pattern="yyyy-MM-dd" />
-        </tstamp>
-        <jar destfile="/home/hephaestus/workspace/NRConsole/target/nr-console.jar" filesetmanifest="mergewithoutmain" >
-            <manifest>
-                <attribute name="Main-Class" value="com.neuronrobotics.nrconsole.NRConsole"/>
-                <attribute name="Class-Path" value="."/>
+<project default="deploy" name="Create Runnable Jar for Project NRConsole">
+  <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+  <!--ANT 1.7 is required  -->
+	<property file="../NRSDK/src/com/neuronrobotics/sdk/config/build.properties"/>
+	<property name="app.path"      value="/${app.name}"/>
+	<property name="build.home"    value="${basedir}/build"/>
+	<property name="lib.home"      value="${basedir}/lib"/>
+	<property name="dist.home"     value="${basedir}/target"/>
+	<property name="docs.home"     value="${basedir}/docs"/>
+	<property name="src.home"      value="${basedir}/src"/>
+		
+	<property name="compile.debug"       value="true"/>
+	<property name="compile.deprecation" value="false"/>
+	<property name="compile.optimize"    value="true"/>
+	
+	<property name="compile.debug"       value="true"/>
+	<property name="compile.deprecation" value="false"/>
+	<property name="compile.optimize"    value="true"/>
+	
+	<property name="baseDirUpOne"      value="${basedir}/.."/>
+	
+	<property name="jar.module" value="nr-console.jar"/>
+	<target name="clean"
+	   description="Delete old build and dist directories">
+
+		<delete dir="${build.home}"/>
+	</target>
+	
+	<target name="nrsdk" 
+	  	depends="clean"
+	  	description="Build the nrsdk">
+	  	<echo message="Attempting to build the nrsdk"/>
+	  	<!--<delete dir="/home/hephaestus/workspace/NRSDK/target/"/>
+	  	<ant antfile="${baseDirUpOne}/NRSDK/build.xml" inheritAll="true" target="deploy" dir="."> 
+	  		
+	  	</ant>-->
+	  	<echo message="Copying the nrsdk"/>
+	  	<copyfile 	src="${baseDirUpOne}/NRSDK/target/${app.name}-${app.version}-jar-with-dependencies.jar" 
+	  				             dest="${basedir}/lib/${app.name}-${app.version}-jar-with-dependencies.jar" />
+	  	<echo message="Done building the nrsdk"/>
+	</target>
+	
+	<target name="prepare" depends="nrsdk" 
+	  	description="Create the file structure for assembly">
+	  <mkdir  dir="${build.home}"/>
+	  	
+	  <mkdir  dir="${build.home}/lib"/>
+	  	
+	  <copy  todir="${build.home}/lib">
+	    	<fileset dir="${basedir}/lib" includes="*"/>
+	  </copy>
+	  	
+	</target>
+	
+	 <path id="compile.classpath">
+	  <fileset dir="${lib.home}">
+	    <include name="*.jar"/>
+	  </fileset>  	
+	</path>
+		
+	<target name="compile" depends="prepare"
+	   description="Compile Java sources">
+	  <mkdir    dir="${build.home}"/>
+	  <javac srcdir="${src.home}"
+	          destdir="${build.home}"
+	            debug="${compile.debug}"
+	      deprecation="${compile.deprecation}"
+	         optimize="${compile.optimize}">
+	      <classpath refid="compile.classpath"/>
+	  </javac>
+	  	
+	  <copy  todir="${build.home}">
+	    <fileset dir="${src.home}" excludes="**/*.java"/>
+	  </copy>
+	</target>
+
+	<target name="dist"
+	  	depends="javadoc"
+	   description="Create binary distribution">
+	  	<mkdir dir="${dist.home}/docs/api"/>
+	  <tstamp>
+	    <format property="TODAY" pattern="yyyy-MM-dd" />
+	  </tstamp>
+	  <jar jarfile="${dist.home}/nr-console.jar">
+	    <manifest>
+	      <attribute name="Sealed" value="true"/>
+	      	<attribute name="Built-Date" value="${TODAY}"/> 
+	    </manifest>
+	    <fileset dir="build">
+	      <include name="**/*.class"/>
+	      	<include name="**/*.png"/>
+	      	<include name="**/*.xml"/>
+	      	<include name="**/*.properties"/>
+	      <exclude name="test/*.class"/>
+	    </fileset>
+	    <zipgroupfileset dir="lib" includes="*.jar" />
+
+	  </jar>
+	  	
+	</target>	
+		
+	<target name="javadoc" depends="compile"
+	   description="Create Javadoc API documentation">
+	    
+	  <javadoc sourcepath="${src.home}" destdir="${dist.home}/docs/api" packagenames="*" 
+	    	source="1.6" splitindex="true" use="true" version="true">
+	    <classpath refid="compile.classpath"/> 
+	    <bottom><![CDATA[<script type="text/javascript" src="/googleanalytics.js"></script>]]></bottom>
+	   	</javadoc>
+	</target>
+	
+	<target name="deploy" depends="dist"
+	   description="Builds the full deployment" />
+	
+<!--<target name="create_run_jar">
+      <tstamp>
+        <format property="TODAY" pattern="yyyy-MM-dd" />
+      </tstamp>
+      <jar destfile="/home/hephaestus/workspace/NRConsole/target/nr-console.jar" filesetmanifest="mergewithoutmain" >
+          <manifest>
+              <attribute name="Main-Class" value="com.neuronrobotics.nrconsole.NRConsole"/>
+              <attribute name="Class-Path" value="."/>
               	<attribute name="Built-Date" value="${TODAY}"/> 
-            </manifest>
-            <fileset dir="/home/hephaestus/workspace/NRConsole/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/miglayout-3.7.2-swing.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/jcommon-1.0.16.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/jfreechart-1.0.13.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/jxl.jar"/>
-            <fileset dir="/home/hephaestus/workspace/NRSDK/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/miglayout-3.7.2-swing.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/motej.0.9.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/bluecove-2.1.1.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/bluecove-gpl-2.1.1.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/nrjavaserial-3.7.6.jar"/>
-        </jar>
-    </target>
+          </manifest>
+          <fileset dir="/home/hephaestus/workspace/NRConsole/bin"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/miglayout-3.7.2-swing.jar"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/jcommon-1.0.16.jar"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/jfreechart-1.0.13.jar"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRConsole/lib/jxl.jar"/>
+          <fileset dir="/home/hephaestus/workspace/NRSDK/bin"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/miglayout-3.7.2-swing.jar"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/motej.0.9.jar"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/bluecove-2.1.1.jar"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/bluecove-gpl-2.1.1.jar"/>
+          <zipfileset excludes="META-INF/*.SF" src="/home/hephaestus/workspace/NRSDK/lib/nrjavaserial-3.7.6.jar"/>
+      </jar>
+  </target>
+    -->
 </project>
