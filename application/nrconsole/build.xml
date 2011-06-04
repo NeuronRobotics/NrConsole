@@ -84,14 +84,15 @@
 	  	depends="javadoc"
 	   description="Create binary distribution">
 	  	<mkdir dir="${dist.home}/docs/api"/>
-	  <tstamp>
-	    <format property="TODAY" pattern="yyyy-MM-dd" />
-	  </tstamp>
+	    <tstamp>
+	        <format property="TODAY" pattern="yyyy-MM-dd" />
+	    </tstamp>
 	  <jar jarfile="${dist.home}/nr-console.jar">
-	    <manifest>
-	      <attribute name="Sealed" value="true"/>
-	      	<attribute name="Built-Date" value="${TODAY}"/> 
-	    </manifest>
+        <manifest>
+            <attribute name="Main-Class" value="com.neuronrobotics.nrconsole.NRConsole"/>
+            <attribute name="Class-Path" value="."/>
+            	<attribute name="Built-Date" value="${TODAY}"/> 
+        </manifest>
 	    <fileset dir="build">
 	      <include name="**/*.class"/>
 	      	<include name="**/*.png"/>
