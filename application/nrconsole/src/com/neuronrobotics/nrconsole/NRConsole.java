@@ -60,7 +60,11 @@ public class NRConsole implements ActionListener {
 	}
 	private class showManager extends Thread{
 		public void run(){
-			nrcMenubar.connect();
+			try{
+				nrcMenubar.connect();
+			}catch (Exception ex){
+				ex.printStackTrace();
+			}
 			while(true){	
 				if(nrcMenubar.isReady()){
 					nrcMenubar.setMenues(manager.getMenueItems());

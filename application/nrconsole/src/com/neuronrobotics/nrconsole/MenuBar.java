@@ -134,7 +134,7 @@ public class MenuBar extends JMenuBar {
 		}catch(Exception ex){
 			//System.err.println("Failed to connect:");
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Failed to connect to device! "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Failed to connect to device, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
 			manager.disconnect();
 		}
 		connectionMenu.setEnabled(true);
