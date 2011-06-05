@@ -15,7 +15,9 @@ import net.miginfocom.swing.MigLayout;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.ControlWidget;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
+import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIOFirmwareOutOfDateException;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 
 public class AdvancedAsyncWidget extends JPanel {
@@ -112,23 +114,28 @@ public class AdvancedAsyncWidget extends JPanel {
 			tv=0;
 			tvalue.setText(new Integer(tv).toString());
 		}
-		switch(getSelectedMode()){
-		case AUTOSAMP:
-			if(sampTime<100)
-				sampTime=100;
-			time.setText(new Integer(sampTime).toString());
-			getPerpheral().configAdvancedAsyncAutoSample(sampTime);
-			break;
-		case DEADBAND:
-			getPerpheral().configAdvancedAsyncDeadBand(sampTime, dv);
-			break;
-		case NOTEQUAL:
-			getPerpheral().configAdvancedAsyncNotEqual(sampTime);
-			break;
-		case THRESHHOLD:
-			getPerpheral().configAdvancedAsyncTreshhold(sampTime, tv, (AsyncThreshholdEdgeType)edge.getSelectedItem());
-			break;
+		try{
+			switch(getSelectedMode()){
+			case AUTOSAMP:
+				if(sampTime<100)
+					sampTime=100;
+				time.setText(new Integer(sampTime).toString());
+				getPerpheral().configAdvancedAsyncAutoSample(sampTime);
+				break;
+			case DEADBAND:
+				getPerpheral().configAdvancedAsyncDeadBand(sampTime, dv);
+				break;
+			case NOTEQUAL:
+				getPerpheral().configAdvancedAsyncNotEqual(sampTime);
+				break;
+			case THRESHHOLD:
+				getPerpheral().configAdvancedAsyncTreshhold(sampTime, tv, (AsyncThreshholdEdgeType)edge.getSelectedItem());
+				break;
+			}
+		}catch(InvalidResponseException ex){
+			throw new DyIOFirmwareOutOfDateException("The DyIO firmware is out of date.");
 		}
+		
 		perm.setVisible(true);
 		tmp.setVisible(true);
 		advanced.setVisible(true);
