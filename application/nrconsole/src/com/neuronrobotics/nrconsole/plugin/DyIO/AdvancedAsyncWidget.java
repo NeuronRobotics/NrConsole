@@ -16,6 +16,7 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.ControlWidget;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOFirmwareOutOfDateException;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
@@ -41,9 +42,9 @@ public class AdvancedAsyncWidget extends JPanel {
 		add(async);
 		
 		
-		async.addActionListener(new ActionListener() {
-			
+		async.addActionListener(new ActionListener() {	
 			public void actionPerformed(ActionEvent e) {
+				Log.debug(this.getClass()+"Async checkbox hit: "+async.isSelected());
 				updateAsync();
 			}
 		});
@@ -83,12 +84,12 @@ public class AdvancedAsyncWidget extends JPanel {
 	private void updateAsync(){
 		DyIOAbstractPeripheral p =getPerpheral();
 		if(p!=null){
-			if(!async.isSelected()) {
-				p.setAsync(false);
-				remove(advanced);
-			} else {
-				p.setAsync(true);
+			p.setAsync(async.isSelected());
+			Log.debug(this.getClass()+"Setting Async to "+async.isSelected());
+			if(async.isSelected()) {
 				add(advanced);
+			} else {
+				remove(advanced);
 			}
 		}
 	}
