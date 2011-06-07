@@ -28,9 +28,11 @@ import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.nrconsole.plugin.hexapod.ServoChannelConfiguration;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
+import com.neuronrobotics.sdk.dyio.DyIOFirmwareOutOfDateException;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IDyIOEvent;
@@ -89,10 +91,17 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	}
 
 	
-	public boolean setConnection(BowlerAbstractConnection connection) {
-		DyIORegestry.setConnection(connection);
-		DyIORegestry.get().addDyIOEventListener(this);
-		setupDyIO();
+	public boolean setConnection(BowlerAbstractConnection connection){
+		Log.debug(this.getClass()+" setConnection");
+		try{
+			DyIORegestry.setConnection(connection);
+			DyIORegestry.get().addDyIOEventListener(this);
+			setupDyIO();
+		}catch(Exception ix){
+			DyIORegestry.get().checkFirmwareRev();
+			ix.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 	private void setupDyIO(){

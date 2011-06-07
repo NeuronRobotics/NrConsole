@@ -18,11 +18,12 @@ import net.miginfocom.swing.MigLayout;
 import sun.net.www.content.image.jpeg;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-public class MenuBar extends JMenuBar {
+public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	private static final long serialVersionUID = 1L;
 	
 	private JMenuItem quitMenuItem = new JMenuItem("Quit");
@@ -85,7 +86,7 @@ public class MenuBar extends JMenuBar {
 		quitMenuItem.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				manager.disconnect();
+				disconnect();
 				System.exit(0);
 			}
 		});
@@ -104,8 +105,6 @@ public class MenuBar extends JMenuBar {
 		disconnectMenuItem.setMnemonic(KeyEvent.VK_D);
 		disconnectMenuItem.setEnabled(false);
 		disconnectMenuItem.addActionListener(new ActionListener() {
-			
-			
 			public void actionPerformed(ActionEvent e) {
 				disconnect();	
 			}
@@ -114,7 +113,6 @@ public class MenuBar extends JMenuBar {
 		//connectionMenuItem.setAction(new ConnectionAction());
 		connectionMenuItem.setMnemonic(KeyEvent.VK_C);
 		connectionMenuItem.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
 				connect();
 			}
@@ -122,33 +120,41 @@ public class MenuBar extends JMenuBar {
 	}
 	public void connect(){
 		disconnect();
-		connectionMenu.setEnabled(false);	
 		try {
-			//System.out.println("Connecting...");
-			if(manager.connect()) {
-				ready = true;
-				disconnectMenuItem.setEnabled(true);
-			}
-			
-			//System.out.println("Connection ok!");
+			connectionMenu.setEnabled(false);
+			manager.connect(this);
+			ready = true;
 		}catch(Exception ex){
-			//System.err.println("Failed to connect:");
+			disconnect();
+			System.err.println("NRCONSOLE connection error print:");
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Failed to connect to device, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
-			manager.disconnect();
 		}
-		connectionMenu.setEnabled(true);
 	}
 	public void disconnect() {
 		try {
 			manager.disconnect();
-		}catch(Exception ex) {}
-		disconnectMenuItem.setEnabled(false);
-		setMenues(null);
-		ready = false;
+		}catch(Exception ex) {
+			System.err.println("NRCONSOLE disconnection error print:");
+			ex.printStackTrace();
+		}
 		ThreadUtil.wait(75);
 	}
 	public boolean isReady(){
 		return ready ;
+	}
+	
+	@Override
+	public void onDisconnect() {
+		disconnectMenuItem.setEnabled(false);
+		connectionMenu.setEnabled(true);
+		setMenues(null);
+		ready = false;
+		
+	}
+	@Override
+	public void onConnect() {
+		disconnectMenuItem.setEnabled(true);
+		connectionMenu.setEnabled(true);
 	}
 }

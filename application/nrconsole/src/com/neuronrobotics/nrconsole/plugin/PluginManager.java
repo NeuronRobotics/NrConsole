@@ -12,6 +12,7 @@ import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.bootloader.NRConsoleBootloaderPlugin;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -20,6 +21,7 @@ public class PluginManager {
 	private static ArrayList<INRConsoleTabedPanelPlugin> plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 	private GenericDevice gen;
 	private BowlerAbstractConnection connection;
+	
 	public PluginManager(){
 		update();
 	}
@@ -33,12 +35,12 @@ public class PluginManager {
 		}
 	}
 	public boolean disconnect(){
-		if(gen != null) {
-			gen.disconnect();
+		if(connection != null) {
+			connection.disconnect();
 		}
 		return true;
 	}
-	public boolean connect() throws Exception{
+	public boolean connect(IConnectionEventListener listener) throws Exception{
 		disconnect();
 		update();
 		try {
@@ -46,6 +48,7 @@ public class PluginManager {
 			if(connection == null) {
 				return false;
 			}
+			connection.addConnectionEventListener(listener);
 			gen = new GenericDevice(connection);
 			if(!gen.connect()) {
 				throw new InvalidConnectionException("Connection is invalid");
@@ -101,6 +104,7 @@ public class PluginManager {
 				 back.add(p.getTabPane());
 			 }
 		 }
+		 System.out.println("Displaying: "+back);
 		 return back;	
 	}
 	public boolean ping() {
@@ -122,7 +126,7 @@ public class PluginManager {
 		new NRConsolePIDPlugin();
 		new NRConsoleBowlerCameraPlugin();
 		new NRConsoleBootloaderPlugin();
-		
+		//System.out.println("Updating plugins:"+plugins);
 		//new NRConsoleSchedulerPlugin();
 		//END HACK
 	}

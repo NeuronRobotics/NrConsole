@@ -67,23 +67,28 @@ public class NRConsole implements ActionListener {
 			}
 			while(true){	
 				if(nrcMenubar.isReady()){
+					
 					nrcMenubar.setMenues(manager.getMenueItems());
 					nrcWindow.setDeviceManager(manager);
 					nrcWindow.invalidate();
 					nrcWindow.setVisible(true);
+					System.out.println("Starting application");
 					while(nrcMenubar.isReady()){
 						ThreadUtil.wait(1000);
 						if(!manager.ping())
 							nrcMenubar.disconnect();
 					}
+					System.out.println("Exiting Application");
 				}else{
 					nrcMenubar.setMenues(null);
 					nrcWindow.displayLogo();
 					nrcWindow.invalidate();
 					nrcWindow.setVisible(true);
+					System.out.println("Starting splash");
 					while(!nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
+					System.out.println("Exiting splash");
 				}
 			}
 		}

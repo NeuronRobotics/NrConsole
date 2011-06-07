@@ -78,7 +78,8 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 
 	
 	public boolean isAcvive() {
-		// TODO Auto-generated method stub
+//		if(active)
+//			System.out.println(this.getClass()+" is active");
 		return active;
 	}
 
