@@ -3,6 +3,7 @@ package com.neuronrobotics.nrconsole;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -37,6 +39,7 @@ public class NRConsoleWindow extends JFrame {
 	private JTabbedPane modePane = new JTabbedPane();
 	private JPanel active=null;
 	private static NRConsoleWindow instance = null;
+	public ImageIcon logo = new ImageIcon(NRConsole.class.getResource("images/logo.png"));
 	public static Dimension getNRWindowSize(){
 		if(instance!= null)
 			return instance.getWindowSize();
@@ -49,19 +52,19 @@ public class NRConsoleWindow extends JFrame {
 	}
 	private JPanel logoPanel = new JPanel() {
 		private static final long serialVersionUID = 1L;
-		private ImageIcon logo = new ImageIcon(NRConsole.class.getResource("images/logo.png"));
+		//public ImageIcon logo = new ImageIcon(NRConsole.class.getResource("images/logo.png"));
 		public void paintComponent (Graphics g) {
 			Graphics2D g2 = (Graphics2D)instance.getGraphics();
 			super.paintComponent(g);
-			setSize(getWindowSize());
-	    	try {
-	    		Dimension d = getWindowSize();
-	    		int y = (d.height - (3*logo.getIconHeight() / 2));
-	    		
-	    		g2.drawImage(logo.getImage(), 50, y, logo.getIconWidth(), logo.getIconHeight(), this);
-	    	} catch (Exception e) {
-	    		
-	    	}
+//			setSize(getWindowSize());
+//	    	try {
+//	    		Dimension d = getWindowSize();
+//	    		int y = (d.height - (3*logo.getIconHeight() / 2));
+//	    		
+//	    		g2.drawImage(logo.getImage(), 50, y, logo.getIconWidth(), logo.getIconHeight(), this);
+//	    	} catch (Exception e) {
+//	    		
+//	    	}
 	    }
 	};
 	
@@ -86,6 +89,8 @@ public class NRConsoleWindow extends JFrame {
 				modePane.setSize(getWindowSize());
 			}			
 		});
+		logoPanel.setLayout(new GridLayout(3, 2));
+		logoPanel.add(new JLabel(logo),"[0,2]");
 	}
 	
 	
@@ -97,16 +102,16 @@ public class NRConsoleWindow extends JFrame {
 		super.repaint();
 	}
 	private void updateUI(){
-		setSize(new Dimension(panelWidth+53,panelHight+105));
+		//setSize(new Dimension(panelWidth+53,panelHight+105));
 		//scroller.setSize(getWindowSize());
 		scroller.setPreferredSize(new Dimension(panelWidth,panelHight));
-		setLocationRelativeTo(null);
+		//setLocationRelativeTo(null);
 		scroller.invalidate();
 		scroller.repaint();
 		scroller.setVisible(true);
 		invalidate();
 		repaint();
-		setVisible(true);
+		
 	}
 	
 	public void setDeviceManager(PluginManager deviceManager) {
@@ -125,9 +130,9 @@ public class NRConsoleWindow extends JFrame {
 	}
 
 	public void displayLogo() {
-		panelHight = 700;
-		panelWidth = 1095;
 		scroller.removeAll();
+		
+		
 		scroller.add(logoPanel);
 		updateUI();
 	}

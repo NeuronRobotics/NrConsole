@@ -104,7 +104,7 @@ public class PluginManager {
 				 back.add(p.getTabPane());
 			 }
 		 }
-		 System.out.println("Displaying: "+back);
+		 //System.out.println("Displaying: "+back);
 		 return back;	
 	}
 	public boolean ping() {

@@ -36,6 +36,11 @@ public class NRConsole implements ActionListener {
 		nrcMenubar.setMenues(null);
 		nrcMenubar.addActionListener(this);
 		
+		nrcWindow.setSize((NRConsoleWindow.panelWidth+53),(NRConsoleWindow.panelHight+105));
+		nrcWindow.setLocationRelativeTo(null);
+		nrcWindow.setVisible(true);
+		
+		
 		shower.start();
 		if(debug)
 			Log.enableDebugPrint(true);
@@ -72,23 +77,21 @@ public class NRConsole implements ActionListener {
 					nrcWindow.setDeviceManager(manager);
 					nrcWindow.invalidate();
 					nrcWindow.setVisible(true);
-					System.out.println("Starting application");
+					//System.out.println("Starting application");
 					while(nrcMenubar.isReady()){
-						ThreadUtil.wait(1000);
-						if(!manager.ping())
-							nrcMenubar.disconnect();
+						ThreadUtil.wait(50);
 					}
-					System.out.println("Exiting Application");
+					//System.out.println("Exiting Application");
 				}else{
 					nrcMenubar.setMenues(null);
 					nrcWindow.displayLogo();
 					nrcWindow.invalidate();
 					nrcWindow.setVisible(true);
-					System.out.println("Starting splash");
+					//System.out.println("Starting splash");
 					while(!nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
-					System.out.println("Exiting splash");
+					//System.out.println("Exiting splash");
 				}
 			}
 		}

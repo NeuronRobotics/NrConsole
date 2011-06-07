@@ -8,15 +8,10 @@ import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-//import javax.swing.filechooser.FileNameExtensionFilter;
-
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.graphing.ExcelWriter;
@@ -25,19 +20,13 @@ import com.neuronrobotics.graphing.GraphingWindow;
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodConfigPanel;
-import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodNRConsolePulgin;
-import com.neuronrobotics.nrconsole.plugin.hexapod.ServoChannelConfiguration;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
-import com.neuronrobotics.sdk.dyio.DyIOFirmwareOutOfDateException;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IDyIOEvent;
 import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
-import com.sun.org.apache.bcel.internal.generic.INSTANCEOF;
 
 public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelPanelListener,IDyIOEventListener  {
 	private GraphingWindow graphingWindow = new GraphingWindow();
