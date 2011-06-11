@@ -124,6 +124,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			connectionMenu.setEnabled(false);
 			manager.connect(this);
 			ready = true;
+			connectionMenu.setEnabled(true);
 		}catch(Exception ex){
 			disconnect();
 			System.err.println("NRCONSOLE connection error print:");
