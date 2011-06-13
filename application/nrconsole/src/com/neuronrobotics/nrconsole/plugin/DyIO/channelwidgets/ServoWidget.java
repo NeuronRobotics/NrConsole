@@ -91,7 +91,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		else
 			save.setEnabled(false);
 		if( startup == false ) {
-			sc.setValue(sliderUI.getValue());
+			sc.SetPosition(sliderUI.getValue());
 			recordValue(sliderUI.getValue());
 		}
 	}
