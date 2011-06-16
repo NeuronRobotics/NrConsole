@@ -15,12 +15,8 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
-import sun.net.www.content.image.jpeg;
-
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
-import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class MenuBar extends JMenuBar implements IConnectionEventListener {

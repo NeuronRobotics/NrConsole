@@ -17,14 +17,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.Scrollable;
-import javax.swing.event.InternalFrameListener;
-
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-import com.neuronrobotics.nrconsole.plugin.DyIO.ControlPanel;
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 
 public class NRConsoleWindow extends JFrame {
