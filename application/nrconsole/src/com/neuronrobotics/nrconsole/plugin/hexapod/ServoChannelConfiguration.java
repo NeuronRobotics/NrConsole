@@ -19,7 +19,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.addons.walker.BasicWalker;
 import com.neuronrobotics.sdk.addons.walker.Leg;
-import com.neuronrobotics.sdk.addons.walker.Link;
+import com.neuronrobotics.sdk.addons.walker.WalkerServoLink;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
@@ -347,7 +347,7 @@ public class ServoChannelConfiguration extends JPanel {
 				redisplay();
 			}
 			public void redisplay() {
-				setSlider(getMyLink().getServoSetPoint(), false);
+				setSlider(getMyLink().getTargetValue(), false);
 				invert.setSelected(getMyLink().getScale()<0);
 				ll.setText(new Integer(getMyLink().getLowerLimit()).toString());
 				ul.setText(new Integer(getMyLink().getUpperLimit()).toString());
@@ -402,12 +402,12 @@ public class ServoChannelConfiguration extends JPanel {
 				slider.setValue(val);
 				sliderValue.setText(String.format("%03d", val));
 				if(updateServo)
-					getMyLink().setServoValue(val);
+					getMyLink().getServoChannel().SetPosition(val);
 				scaleUI.setText(String.format("%05f", Math.abs(getMyLink().getScale())));
-				angle.setText("Angel: "+String.format("%05f", getMyLink().getAngle())+" degrees");
+				angle.setText("Angel: "+String.format("%05f", getMyLink().getTargetAngle())+" degrees");
 				angle.invalidate();
 			}
-			public Link getMyLink() {
+			public WalkerServoLink getMyLink() {
 				if(name.toLowerCase().contains("hip"))
 					return getWalkerLeg().getHipLink();
 				if(name.toLowerCase().contains("knee"))
