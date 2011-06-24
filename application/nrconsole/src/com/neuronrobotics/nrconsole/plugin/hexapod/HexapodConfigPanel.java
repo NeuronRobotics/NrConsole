@@ -284,6 +284,7 @@ public class HexapodConfigPanel extends JPanel {
 			}
 			//System.out.println("Connection disconnected");
 		}catch(Exception ex){
+			ex.printStackTrace();
 		}
 		System.exit(0);
 	}
