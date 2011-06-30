@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
-public class PIDControlWidget extends JPanel implements IPIDEventListener {
+public class PIDControlWidget extends JPanel implements IPIDEventListener,ActionListener {
 	private static final long serialVersionUID = 3L;
 	private static final double defaultKp = 1;
 	private static final double defaultKi = 0;
@@ -113,26 +113,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 		});
 		
 		setpoint.setText(new Integer(startValue).toString());
-		setpoint.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try{
-					setSetpoint(getSetPoint());
-				}catch(Exception e){
-					setpoint.setText(new Integer(0).toString());
-					return;
-				}
-			}
-		});
-		setSetpoint.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try{
-					setSetpoint(getSetPoint());
-				}catch(Exception e){
-					setpoint.setText(new Integer(0).toString());
-					return;
-				}
-			}
-		});
+		setpoint.addActionListener(this);
+		setSetpoint.addActionListener(this);
 		
 		
 		populatePID();
@@ -358,5 +340,15 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		try{
+			setSetpoint(getSetPoint());
+		}catch(Exception e){
+			setpoint.setText(new Integer(0).toString());
+			return;
+		}
 	}
 }
