@@ -294,7 +294,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 		try{
 			getGui().getPidDevice().ResetPIDChannel(getGroup());
 		}catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Setpoint reset failed", "pid ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Setpoint reset failed on group:"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
 			return;
 		}
@@ -303,7 +303,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 		try{
 			return getGui().getPidDevice().GetPIDPosition(getGroup());
 		}catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Setpoint get failed", "pid ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Setpoint get failed on group:"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
 			return 0;
 		}
@@ -312,7 +312,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 		try{
 			return getGui().getPidDevice().getPIDConfiguration(getGroup());
 		}catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Configuration get failed", "pid ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Configuration get failed on group:"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
 			return new PIDConfiguration();
 		}
@@ -321,7 +321,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 		try{
 			getGui().getPidDevice().ConfigurePIDController(pidconfig);
 		}catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Configuration failed", "pid ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Configuration Set failed on group:"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
 			return;
 		}
@@ -330,7 +330,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 		try{
 			getGui().getPidDevice().SetPIDSetPoint(getGroup(), setPoint,velocity);
 		}catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Setpoint set failed", "pid ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Setpoint set failed on group:"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
 			return;
 		}
@@ -343,7 +343,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener {
 			getGui().getPidDevice().SetPIDInterpolatedVelocity(getGroup(),velocity,seconds);
 			Log.enableDebugPrint(false);
 		}catch(Exception e){
-			JOptionPane.showMessageDialog(null, "Velocity set failed", "pid ERROR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Velocity set failed on group:"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
 			return;
 		}
