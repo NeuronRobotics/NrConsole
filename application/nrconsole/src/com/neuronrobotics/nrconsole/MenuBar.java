@@ -114,6 +114,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			}
 		});
 	}
+	
 	public void connect(){
 		disconnect();
 		try {
@@ -123,7 +124,6 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			connectionMenu.setEnabled(true);
 		}catch(Exception ex){
 			disconnect();
-			System.err.println("NRCONSOLE connection error print:");
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Failed to connect to device, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
 		}
@@ -146,8 +146,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		disconnectMenuItem.setEnabled(false);
 		connectionMenu.setEnabled(true);
 		setMenues(null);
-		ready = false;
-		
+		ready = false;	
 	}
 	@Override
 	public void onConnect() {

@@ -82,15 +82,9 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	
 	public boolean setConnection(BowlerAbstractConnection connection){
 		Log.debug(this.getClass()+" setConnection");
-		try{
-			DyIORegestry.setConnection(connection);
-			DyIORegestry.get().addDyIOEventListener(this);
-			setupDyIO();
-		}catch(Exception ix){
-			DyIORegestry.get().checkFirmwareRev();
-			ix.printStackTrace();
-			return false;
-		}
+		DyIORegestry.setConnection(connection);
+		DyIORegestry.get().addDyIOEventListener(this);
+		setupDyIO();
 		return true;
 	}
 	private void setupDyIO(){
@@ -107,6 +101,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			}
 			channels.add(cm);
 			index++;
+
+
 		}
 		//System.out.println(this.getClass()+" setupDyIO: "+ channels.size());
 		devicePanel.addChannels(channels.subList(00, 12), false);

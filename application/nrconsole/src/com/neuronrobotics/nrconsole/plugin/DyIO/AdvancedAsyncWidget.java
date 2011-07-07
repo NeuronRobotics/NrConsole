@@ -86,13 +86,7 @@ public class AdvancedAsyncWidget extends JPanel {
 	private void updateAsync(){
 		DyIOAbstractPeripheral p =getPerpheral();
 		if(p!=null){
-			try {
-				p.setAsync(async.isSelected());
-			}catch(Exception ex) {
-				ex.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Invalid configuration, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
-				NRConsole.disconnect();
-			}
+			p.setAsync(async.isSelected());
 			Log.debug(this.getClass()+"Setting Async to "+async.isSelected());
 			if(async.isSelected()) {
 				add(advanced);
