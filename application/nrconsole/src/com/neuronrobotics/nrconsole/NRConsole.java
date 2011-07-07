@@ -17,7 +17,7 @@ public class NRConsole implements ActionListener {
 	private PluginManager manager=new PluginManager();
 	private MenuBar nrcMenubar = new MenuBar(manager);
 	private showManager shower = new showManager ();
-	
+	private static NRConsole self;
 	public static void main(String [] args) {
 		try {
 			if(args.length != 0)
@@ -30,7 +30,12 @@ public class NRConsole implements ActionListener {
 		}
 	}
 	
+	public static void disconnect() {
+		self.nrcMenubar.disconnect();
+	}
+	
 	public NRConsole(boolean debug) {
+		self = this;
 		nrcWindow = new NRConsoleWindow();
 		nrcWindow.setJMenuBar(nrcMenubar);
 		nrcMenubar.setMenues(null);
