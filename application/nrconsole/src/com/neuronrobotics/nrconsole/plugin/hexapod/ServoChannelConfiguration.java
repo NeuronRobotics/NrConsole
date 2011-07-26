@@ -401,8 +401,11 @@ public class ServoChannelConfiguration extends JPanel {
 				//System.out.println("Setting slider val: "+ val);
 				slider.setValue(val);
 				sliderValue.setText(String.format("%03d", val));
-				if(updateServo)
+				if(updateServo) {
+					System.out.println("Attempting to update servo link from Hexapod");
 					getMyLink().getServoChannel().SetPosition(val);
+					getMyLink().getServoChannel().flush();
+				}
 				scaleUI.setText(String.format("%05f", Math.abs(getMyLink().getScale())));
 				angle.setText("Angel: "+String.format("%05f", getMyLink().getTargetAngle())+" degrees");
 				angle.invalidate();
