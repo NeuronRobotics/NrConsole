@@ -26,7 +26,7 @@ public class CounterInputWidget extends ControlWidget implements ICounterInputLi
 	public CounterInputWidget(ChannelManager c, DyIOChannelMode mode) {
 		super(c);
 		setRecordable(true);
-		ci = new CounterInputChannel(getChannel());
+		ci = new CounterInputChannel(getChannel(),true);
 		field.setColumns(10);
 		field.setEnabled(false);
 

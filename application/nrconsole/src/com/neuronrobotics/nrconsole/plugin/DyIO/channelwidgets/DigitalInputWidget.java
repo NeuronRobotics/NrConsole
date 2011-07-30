@@ -25,7 +25,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		super(c);
 		setRecordable(true);
 		
-		dic = new DigitalInputChannel(getChannel());
+		dic = new DigitalInputChannel(getChannel(),true);
 		
 		button.setEnabled(false);
 

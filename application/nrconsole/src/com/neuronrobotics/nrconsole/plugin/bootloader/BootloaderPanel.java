@@ -23,6 +23,7 @@ import com.neuronrobotics.nrconsole.plugin.bootloader.gui.StatusLabel;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
 import com.neuronrobotics.sdk.common.NoConnectionAvailableException;
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 
 public class BootloaderPanel extends JPanel implements ActionListener {
 	
@@ -107,8 +108,12 @@ public class BootloaderPanel extends JPanel implements ActionListener {
     	}catch(Exception ex) {
     		ex.printStackTrace();
     	}
-    	if(dir2==null)
+    	if(dir2==null){
+    		if(SDKBuildInfo.isLinux()){
+    			dir2=new File ("/usr/local/NeuronRobotics/RDK/");
+    		}
 			dir2=new File (".");
+    	}
     	if(file!=null){
     		fc.setSelectedFile(file);
     		//System.out.println("Starting with: "+file.getAbsolutePath());
