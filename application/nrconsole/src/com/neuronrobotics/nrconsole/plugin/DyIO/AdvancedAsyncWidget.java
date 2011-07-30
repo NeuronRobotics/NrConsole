@@ -40,6 +40,8 @@ public class AdvancedAsyncWidget extends JPanel {
 	private JPanel perm = new JPanel(new MigLayout());
 	private JPanel tmp=new JPanel(new MigLayout());
 	public AdvancedAsyncWidget(){
+		
+		async.setSelected(true);
 		setLayout(new MigLayout());
 		add(async);
 		
