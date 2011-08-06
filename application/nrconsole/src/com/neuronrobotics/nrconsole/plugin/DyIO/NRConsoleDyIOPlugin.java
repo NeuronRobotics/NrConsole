@@ -21,6 +21,7 @@ import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
@@ -28,7 +29,7 @@ import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IDyIOEvent;
 import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
 
-public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelPanelListener,IDyIOEventListener  {
+public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelPanelListener,IDyIOEventListener , IConnectionEventListener  {
 	private GraphingWindow graphingWindow = new GraphingWindow();
 	private GraphingOptionsDialog graphingOptionsDialog = new GraphingOptionsDialog(graphingWindow);
 	private ExportDataDialog graphingDialog = new ExportDataDialog(this);
@@ -43,8 +44,9 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private HexapodConfigPanel hex=null;
 	private JDialog hexFrame;
 	private JPanel wrapper;
-	public NRConsoleDyIOPlugin(){
+	public NRConsoleDyIOPlugin() {
 		PluginManager.addNRConsoleTabedPanelPlugin(this);
+		DyIORegestry.addConnectionEventListener(this);
 		//hex = new HexapodNRConsolePulgin();
 	}
 	
@@ -143,6 +145,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 				hexFrame.pack();
 				hexFrame.setLocationRelativeTo(null); 
 				hexFrame.setVisible(true);
+				
 			}
 		});
 		exportData.setMnemonic(KeyEvent.VK_E);
@@ -262,6 +265,20 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 				ex.printStackTrace();
 			}
 		}
+	}
+
+
+	@Override
+	public void onDisconnect() {
+		if(hexFrame!=null)
+			hexFrame.setVisible(false);
+	}
+
+
+	@Override
+	public void onConnect() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
