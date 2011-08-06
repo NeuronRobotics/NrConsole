@@ -1,6 +1,7 @@
 package com.neuronrobotics.nrconsole.plugin.hexapod;
 
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
@@ -24,7 +25,7 @@ public class HexapodTestStandAlone {
 			if (con == null){
 				System.exit(1);
 			}
-			JDialog frame = new JDialog();
+			JFrame frame = new JFrame();
 			frame.setTitle("Hexapod Configuration");
 			HexapodConfigPanel panel = new HexapodConfigPanel(frame);
 			DyIORegestry.setConnection(con);

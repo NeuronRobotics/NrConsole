@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -42,7 +43,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private DyIOControlsPanel deviceControls = new DyIOControlsPanel();
 	private ArrayList<ChannelManager> channels = new ArrayList<ChannelManager>();
 	private HexapodConfigPanel hex=null;
-	private JDialog hexFrame;
+	private JFrame hexFrame;
 	private JPanel wrapper;
 	public NRConsoleDyIOPlugin() {
 		PluginManager.addNRConsoleTabedPanelPlugin(this);
@@ -136,7 +137,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		showHexapodConfig.addActionListener(new ActionListener() {	
 			
 			public void actionPerformed(ActionEvent e) {
-				hexFrame = new JDialog();
+				hexFrame = new JFrame();
 				if(hex == null)
 					hex = new HexapodConfigPanel(hexFrame);
 				hex.setDyIO();

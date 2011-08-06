@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.hexapod;
 
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -34,6 +35,7 @@ public class HexapodConfigPanel extends JPanel {
 	private JButton selectOutput = new JButton("Export Configuration To File");
 	private JCheckBox defaultConfig = new JCheckBox("Load Configuration From Default");
 	private JButton start = new JButton("Initialize Configuration to DyIO");
+	private JPanel controlPanel = new JPanel(new MigLayout());
 	private ServoChannelConfiguration srv = null;
 	//private JButton servos = new JButton("Configure Servos Channels");
 	private JButton save = new JButton("Save Configuration");
@@ -41,10 +43,10 @@ public class HexapodConfigPanel extends JPanel {
 	private BasicWalker walker;
 	private static File inputFile = null;
 	private static File outputFile = null;
-	private JDialog hexFrame;
+	private JFrame hexFrame;
 	private HexapodTester testWidget=new HexapodTester();
 	
-	public HexapodConfigPanel(JDialog hexFrame) {
+	public HexapodConfigPanel(JFrame hexFrame) {
 		this.hexFrame=hexFrame;
 	}
 	private HexapodConfigPanel getGUI(){
@@ -99,9 +101,11 @@ public class HexapodConfigPanel extends JPanel {
 				}
 				if(srv == null){
 					srv=new ServoChannelConfiguration(getGUI());
-					add(srv);
 				}
-				hexFrame.pack();
+				removeAll();
+				add(controlPanel);
+				add(srv);
+				hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 				redisplay();
 			}
 		});
@@ -124,19 +128,20 @@ public class HexapodConfigPanel extends JPanel {
 		defaultConfig.setSelected(true);
 		configFile.setEnabled(false);
 		setConfigEnabled(false);
-		JPanel p = new JPanel(new MigLayout());
 		
-		p.add(start,"wrap");
-		p.add(defaultConfig,"wrap");
-		p.add(configFile,"wrap");
-		p.add(inputFileDisplay,"wrap");
-		p.add(selectOutput,"wrap");
-		p.add(outputFileDisplay,"wrap");
+		
+		controlPanel.add(start,"wrap");
+		controlPanel.add(defaultConfig,"wrap");
+		controlPanel.add(configFile,"wrap");
+		controlPanel.add(inputFileDisplay,"wrap");
+		controlPanel.add(selectOutput,"wrap");
+		controlPanel.add(outputFileDisplay,"wrap");
 		//p.add(save,"wrap");
-		p.add(test,"wrap");
+		controlPanel.add(test,"wrap");
 		
-		p.add(testWidget,"wrap");
-		add(p);
+		controlPanel.add(testWidget,"wrap");
+		removeAll();
+		add(controlPanel);
 		
 		start.setEnabled(false);
 		defaultConfig.setSelected(false);
