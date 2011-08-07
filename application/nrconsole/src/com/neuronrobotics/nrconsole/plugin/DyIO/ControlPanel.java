@@ -52,6 +52,12 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	private JCheckBox recordData = new JCheckBox("Record Channel");
 	private AdvancedAsyncWidget advanced;
 	private DyIOChannelMode previousMode=null;
+	private ActionListener modeActionListener = new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+			DyIOChannelMode mode = (DyIOChannelMode) modes.getSelectedItem();
+			getManager().setMode(mode);
+		}
+	};
 	private Timer timer = new Timer(1000, new ActionListener() {
 		
 		public void actionPerformed(ActionEvent e) {
@@ -98,13 +104,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		}
 		setupModesComboBox();
 		modes.setRenderer(new ModeComboRenderer());
-		modes.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				DyIOChannelMode mode = (DyIOChannelMode) modes.getSelectedItem();
-				getManager().setMode(mode);
-				
-			}
-		});
+		modes.addActionListener(modeActionListener);
 		
 		recordData.addActionListener(new ActionListener() {
 			
@@ -132,7 +132,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		
 		DyIOChannelMode mode = getMode();
 		if(previousMode==null || mode != previousMode){
-			Log.debug(this.getClass()+"Setup mode UI: "+getManager().getChannel());
+			Log.debug("BEGIN Setup mode UI: "+getManager().getChannel()+this.getClass());
 			previousMode=mode;
 			try{
 				switch(mode) {
@@ -192,8 +192,10 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		}
 
 		widgets.put(mode, getCurrentWidget());
-
+		
+		modes.removeActionListener(modeActionListener);
 		modes.setSelectedItem(mode);
+		modes.addActionListener(modeActionListener);
 		
 		removeAll();		
 		add(new JLabel("Modes "), "cell 0 0");
@@ -209,6 +211,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		add(getCurrentWidget(), "cell 0 3, spanx, wrap");
 		revalidate();
 		repaint();
+		Log.debug("END Setup mode UI: "+getManager().getChannel()+this.getClass());
 	}
 	
 	private ControlWidget getWidget(DyIOChannelMode mode) {
@@ -343,7 +346,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	}
 
 	public void setCurrentWidget(ControlWidget currentWidget) {
-		Log.debug(this.getClass()+" setting current control widget");
+		//Log.debug(this.getClass()+" setting current control widget");
 		if(currentWidget == null)
 			throw new RuntimeException(this.getClass()+"currentWidget is null");
 		this.currentWidget = currentWidget;

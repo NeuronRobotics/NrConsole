@@ -196,10 +196,10 @@ public class AdvancedAsyncWidget extends JPanel {
 		 * this is for Label UI that returns null perpherals
 		 */
 		if(getPerpheral() != null) {
-			
+			Log.debug("BEGIN Setting up async on channel: "+getPerpheral().getChannel().getChannelNumber());
 			if(getPerpheral().getMode() != DyIOChannelMode.ANALOG_IN){
 				async.setSelected(true);
-				getPerpheral().setAsync(true);
+				//getPerpheral().setAsync(true);
 				add(advanced);
 			}
 			switch(getPerpheral().getMode()){
@@ -215,7 +215,8 @@ public class AdvancedAsyncWidget extends JPanel {
 			}
 		}
 		time.setText(new Integer(100).toString());
+		Log.debug("Setting up async");
 		updateAsync();
-		
+		Log.debug("END Setting up async on channel: "+getPerpheral().getChannel().getChannelNumber());
 	}
 }

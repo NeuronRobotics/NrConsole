@@ -7,6 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.IDigitalInputListener;
@@ -23,9 +24,11 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 	
 	public DigitalInputWidget(ChannelManager c) {
 		super(c);
+		Log.debug("BEGIN Setting up: "+this.getClass());
 		setRecordable(true);
 		
 		dic = new DigitalInputChannel(getChannel(),true);
+		
 		
 		button.setEnabled(false);
 
@@ -36,6 +39,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		dic.addDigitalInputListener(this);
 		refresh.addActionListener(this);
 		async.addActionListener(this);
+		Log.debug("END Setting up: "+this.getClass());
 		
 	}
 

@@ -124,6 +124,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			connectionMenu.setEnabled(true);
 		}catch(Exception ex){
 			disconnect();
+			onDisconnect();
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Failed to connect to device, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
 		}
