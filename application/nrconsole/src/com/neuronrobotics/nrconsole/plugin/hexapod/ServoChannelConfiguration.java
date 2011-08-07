@@ -197,7 +197,13 @@ public class ServoChannelConfiguration extends JPanel {
 			private JTextField scaleUI = new JTextField();
 			private JCheckBox invert = new JCheckBox("Invert");
 			private JButton updateScaleConfigs = new JButton("Update Scale");
-			
+			private ChangeListener slideristener = new ChangeListener() {
+				
+				public void stateChanged(ChangeEvent e) {
+					// TODO Auto-generated method stub
+					setSlider(slider.getValue(), true);
+				}
+			};
 			
 			public ServoLinkWidget(String name){
 				setLayout(new MigLayout());
@@ -267,18 +273,7 @@ public class ServoChannelConfiguration extends JPanel {
 				sliderInit();
 				
 				setSlider(getMyLink().getHome(), false);
-				slider.addChangeListener(new ChangeListener() {
-					
-					public void stateChanged(ChangeEvent e) {
-						// TODO Auto-generated method stub
-						setSlider(slider.getValue(), true);
-
-						//System.out.println("Attempting to update servo link from Hexapod");
-						getMyLink().getServoChannel().SetPosition(slider.getValue());
-						getMyLink().getServoChannel().flush();
-						
-					}
-				});
+				slider.addChangeListener(slideristener);
 				
 				updateServoConfigs.addActionListener(new ActionListener() {
 					
@@ -352,7 +347,7 @@ public class ServoChannelConfiguration extends JPanel {
 				redisplay();
 			}
 			public void redisplay() {
-				//setSlider(getMyLink().getTargetValue(), false);
+				setSlider(getMyLink().getTargetValue(), false);
 				invert.setSelected(getMyLink().getScale()<0);
 				ll.setText(new Integer(getMyLink().getLowerLimit()).toString());
 				ul.setText(new Integer(getMyLink().getUpperLimit()).toString());
@@ -404,7 +399,16 @@ public class ServoChannelConfiguration extends JPanel {
 				if(val<l)
 					val=l;
 				//System.out.println("Setting slider val: "+ val);
+				slider.removeChangeListener(slideristener);
 				slider.setValue(val);
+				slider.addChangeListener(slideristener);
+				
+				if(updateServo){
+					getMyLink().getServoChannel().SetPosition(slider.getValue());
+					getMyLink().getServoChannel().flush();
+				}
+				
+				
 				sliderValue.setText(String.format("%03d", val));
 
 				scaleUI.setText(String.format("%05f", Math.abs(getMyLink().getScale())));
