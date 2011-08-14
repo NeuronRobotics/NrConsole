@@ -92,20 +92,25 @@ public class HexapodConfigPanel extends JPanel {
 			
 			public void actionPerformed(ActionEvent e) {
 				start.setEnabled(false);
-				
-				setConfigEnabled(true);
-				if(defaultConfig.isSelected()){
-					setWalker(new BasicWalker(DyIORegestry.get()));
-				}else{
-					setWalker(new BasicWalker(getInputFile(),DyIORegestry.get()));
+				try{
+					setConfigEnabled(true);
+					if(defaultConfig.isSelected()){
+						setWalker(new BasicWalker(DyIORegestry.get()));
+					}else{
+						setWalker(new BasicWalker(getInputFile(),DyIORegestry.get()));
+					}
+					if(srv == null){
+						srv=new ServoChannelConfiguration(getGUI());
+					}
+					removeAll();
+					add(controlPanel);
+					add(srv);
+					hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(null, ex.getMessage(), "Hexapod ERROR", JOptionPane.ERROR_MESSAGE);
+					setConfigEnabled(false);
+					start.setEnabled(true);
 				}
-				if(srv == null){
-					srv=new ServoChannelConfiguration(getGUI());
-				}
-				removeAll();
-				add(controlPanel);
-				add(srv);
-				hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 				redisplay();
 			}
 		});
