@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -62,8 +63,9 @@ public class ServoChannelConfiguration extends JPanel {
 		tmp.add(leg);
 		tmp2.add(tmp,"wrap");
 		tmp2.add(homeAll,"wrap");
-		add(tmp2);
-		add(widgetHolder);
+		add(tmp2,"wrap");
+		add(widgetHolder,"wrap");
+		widgetHolder.setBorder(BorderFactory.createRaisedBevelBorder());
 		
 		setSelectedLeg(0);	
 		guiInit();
