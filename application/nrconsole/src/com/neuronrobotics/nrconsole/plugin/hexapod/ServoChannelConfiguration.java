@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -347,6 +348,7 @@ public class ServoChannelConfiguration extends JPanel {
 				add(chanBox);
 				add(localControl);
 				redisplay();
+				setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 			}
 			public void redisplay() {
 				setSlider(getMyLink().getTargetValue(), false);
