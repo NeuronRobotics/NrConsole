@@ -150,8 +150,8 @@ public class HexapodTester extends JPanel implements KeyListener {
 		typingArea = new JTextField(13);
 		typingArea.setText("inactave..");
 		typingArea.addKeyListener(this);
-		loopTime.setText(".75");
-		fwdInc.setText("1");
+		loopTime.setText(".5");
+		fwdInc.setText(".5");
 		degInc.setText("10");
 		
 		stop.addActionListener(new ActionListener() {
