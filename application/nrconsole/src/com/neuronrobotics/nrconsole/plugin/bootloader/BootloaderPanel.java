@@ -194,6 +194,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 			String message = "Success! Your Bowler device is now updated to version: "+hex.getRevision()+" Dont forget to Un-Plug your device!";
     		JOptionPane.showMessageDialog(null, message, message, JOptionPane.INFORMATION_MESSAGE);
     		resetAll();
+    		System.exit(0);
 		}
 	}
 
