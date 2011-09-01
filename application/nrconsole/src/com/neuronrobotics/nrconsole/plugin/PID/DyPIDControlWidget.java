@@ -5,11 +5,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -34,6 +36,7 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 	//DyIO dyio;
 	PIDControlWidget widgit;
 	public DyPIDControlWidget(PIDControlWidget widg){
+		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		setLayout(new MigLayout());
 		widgit=widg;
 		DyIORegestry.get().addDyIOEventListener(this);

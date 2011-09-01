@@ -5,8 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -35,6 +37,7 @@ public class PIDGraph extends JPanel  {
 	public PIDGraph(int channel){
 		this.channel=channel;
 		setLayout(new MigLayout());
+		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		JFreeChart chart = ChartFactory.createXYLineChart(
 				"Live Data", 
 				"Time", 
@@ -45,9 +48,13 @@ public class PIDGraph extends JPanel  {
 				false, 
 				false);
 		ChartPanel cp = new ChartPanel(chart);
+		JPanel buttons = new JPanel();
+		buttons.add(save);
+		buttons.add(clear);
+		add(buttons,"wrap");
 		add(cp,"wrap");
-		add(save);
-		add(clear,"wrap");
+		//add(save);
+		//add(clear,"wrap");
 		save.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {

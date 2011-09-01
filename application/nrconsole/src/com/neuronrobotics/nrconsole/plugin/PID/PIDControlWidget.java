@@ -8,10 +8,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -120,18 +122,20 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		populatePID();
 	    
 		JPanel constants = new JPanel(new MigLayout());
+		constants.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 	    constants.setMinimumSize(new Dimension(300, 50));
 	    constants.add(new JLabel("PID Gain Constants"),"wrap");
-		constants.add(new JLabel("proportional"));
+		constants.add(new JLabel("proportional (Kp)"));
 	    constants.add(kp,"wrap");
-	    constants.add(new JLabel("integral"));
+	    constants.add(new JLabel("integral (Ki)"));
 	    constants.add(ki,"wrap");
-	    constants.add(new JLabel("derivitive"));
+	    constants.add(new JLabel("derivitive (Kd)"));
 	    constants.add(kd,"wrap");
 	    constants.add(pidSet);
 	    constants.add(inverted);
 	    
-	    pidRunning.add(new JLabel("PID pidRunning for group "+((int)getGroup())),"wrap");
+	    pidRunning.add(new JLabel("PID Running for group "+((int)getGroup())),"wrap");
+	    pidRunning.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 	    //pidRunning.add(pidSet);
 	    pidRunning.add(pidStop,"wrap");
 	    //pidRunning.add(inverted);
