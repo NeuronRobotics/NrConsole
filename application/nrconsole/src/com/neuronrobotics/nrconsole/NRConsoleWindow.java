@@ -65,7 +65,7 @@ public class NRConsoleWindow extends JFrame {
 			public void ancestorResized(HierarchyEvent arg0) {
 				//System.out.println("Resized: "+getWindowSize());
 				scroller.setSize(getWindowSize());
-				scroller.setPreferredSize(new Dimension(panelWidth-53,1000));
+				scroller.setPreferredSize(new Dimension(panelWidth-53,1100));
 				scroller.setVisible(true);
 				modePane.setSize(getWindowSize());
 			}			
@@ -85,7 +85,7 @@ public class NRConsoleWindow extends JFrame {
 	private void updateUI(){
 		//setSize(new Dimension(panelWidth+53,panelHight+105));
 		//scroller.setSize(getWindowSize());
-		scroller.setPreferredSize(new Dimension(panelWidth-53,1000));
+		scroller.setPreferredSize(new Dimension(panelWidth-53,1100));
 		//setLocationRelativeTo(null);
 		scroller.invalidate();
 		scroller.repaint();
