@@ -31,8 +31,10 @@ public class PIDVelocityWidget extends JPanel implements ActionListener {
 		vel.setText("100");
 		time.setText("1.0");
 		add(new JLabel("Velocity Control"),"wrap");
-		add(vel);add(new JLabel("ticks per second"),"wrap");
-		add(time);add(new JLabel("seconds"),"wrap");
+		JPanel p = new JPanel(new MigLayout());
+		p.add(vel);p.add(new JLabel("ticks per second"),"wrap");
+		p.add(time);p.add(new JLabel("seconds"),"wrap");
+		add(p,"wrap");
 		add(go,"wrap");
 	}
 

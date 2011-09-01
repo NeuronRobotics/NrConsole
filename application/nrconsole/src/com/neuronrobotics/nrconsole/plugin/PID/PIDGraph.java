@@ -74,7 +74,7 @@ public class PIDGraph extends JPanel  {
 			}
 		});
 		
-		setSize(new Dimension(300,200));
+		setSize(new Dimension(150,100));
 		init();
 	}
 	/**

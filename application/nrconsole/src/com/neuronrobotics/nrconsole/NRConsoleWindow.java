@@ -46,29 +46,14 @@ public class NRConsoleWindow extends JFrame {
 		//System.out.println("Window size "+d);
 		return d;
 	}
-	private JPanel logoPanel = new JPanel() {
-		private static final long serialVersionUID = 1L;
-		//public ImageIcon logo = new ImageIcon(NRConsole.class.getResource("images/logo.png"));
-		public void paintComponent (Graphics g) {
-			Graphics2D g2 = (Graphics2D)instance.getGraphics();
-			super.paintComponent(g);
-//			setSize(getWindowSize());
-//	    	try {
-//	    		Dimension d = getWindowSize();
-//	    		int y = (d.height - (3*logo.getIconHeight() / 2));
-//	    		
-//	    		g2.drawImage(logo.getImage(), 50, y, logo.getIconWidth(), logo.getIconHeight(), this);
-//	    	} catch (Exception e) {
-//	    		
-//	    	}
-	    }
-	};
+	private JPanel logoPanel = new JPanel();
 	
 	public NRConsoleWindow() {
 		super(getConsoleVersion());
 		instance=this;
 		displayLogo();
 		scrollPanel.setViewportView(scroller);
+		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
 		add(scrollPanel);
 		getContentPane().addHierarchyBoundsListener(new HierarchyBoundsListener(){
 			
@@ -80,7 +65,7 @@ public class NRConsoleWindow extends JFrame {
 			public void ancestorResized(HierarchyEvent arg0) {
 				//System.out.println("Resized: "+getWindowSize());
 				scroller.setSize(getWindowSize());
-				scroller.setPreferredSize(new Dimension(panelWidth-53,panelHight-105));
+				scroller.setPreferredSize(new Dimension(panelWidth-53,1000));
 				scroller.setVisible(true);
 				modePane.setSize(getWindowSize());
 			}			
@@ -100,7 +85,7 @@ public class NRConsoleWindow extends JFrame {
 	private void updateUI(){
 		//setSize(new Dimension(panelWidth+53,panelHight+105));
 		//scroller.setSize(getWindowSize());
-		scroller.setPreferredSize(new Dimension(panelWidth,panelHight));
+		scroller.setPreferredSize(new Dimension(panelWidth-53,1000));
 		//setLocationRelativeTo(null);
 		scroller.invalidate();
 		scroller.repaint();
@@ -137,46 +122,4 @@ public class NRConsoleWindow extends JFrame {
 		return name+SDKBuildInfo.getVersion();
 	}
 
-	private class WindowScroller extends JPanel implements Scrollable{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -8759782155710955452L;
-		private int maxUnitIncrement = 50;
-		
-		public WindowScroller() {
-			setOpaque(false);
-			setLayout(new MigLayout());
-		}
-		
-		
-		public Dimension getPreferredScrollableViewportSize() {
-			//System.out.println("Getting preffered size");
-			return new Dimension(panelWidth, panelHight);
-		}
-
-		
-		public int getScrollableBlockIncrement(Rectangle visibleRect, int arg1,int arg2) {
-			// TODO Auto-generated method stub
-			return maxUnitIncrement;
-		}
-
-		
-		public boolean getScrollableTracksViewportHeight() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		
-		public boolean getScrollableTracksViewportWidth() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		
-		public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-
-	       return maxUnitIncrement;
-	    }		
-	}
 }

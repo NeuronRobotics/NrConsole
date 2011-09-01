@@ -99,8 +99,8 @@ public class PIDControlGui extends JPanel {
 		groups.add(groupSelector,"wrap");
 		groups.add(stopAll,"wrap");
 		selected = widgits.get(0);
-		add(groups);
-		add(selected);
+		add(groups,"wrap");
+		add(selected,"wrap");
 		Log.info("Started PID Control Gui");
 		for(PIDControlWidget w:widgits) {
 			w.stopPID();

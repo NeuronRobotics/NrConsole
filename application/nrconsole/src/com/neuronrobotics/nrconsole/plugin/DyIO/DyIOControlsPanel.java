@@ -4,7 +4,9 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.Scrollable;
 
@@ -19,9 +21,9 @@ public class DyIOControlsPanel extends JPanel {
 	private JScrollPane scroller;
 		
 	public DyIOControlsPanel() {
-		setBorder(null);
+		//setBorder(BorderFactory.createRaisedBevelBorder());
 		components.setLayout(new MigLayout());
-		
+
 		scroller = new JScrollPane(components);
 		add(scroller);
 		fix();
@@ -72,12 +74,13 @@ public class DyIOControlsPanel extends JPanel {
 			setOpaque(false);
 		}
 		
-		
+
+
 		public Dimension getPreferredScrollableViewportSize() {
 			// TODO Auto-generated method stub
 			//return new Dimension(ControlPanel.panelWidth+52,NRConsoleWindow.panelHight-110);
 			Dimension d=NRConsoleWindow.getNRWindowSize();
-			return new Dimension(ControlPanel.panelWidth+52,d.height-110) ;
+			return new Dimension(ControlPanel.panelWidth+52,d.height-140) ;
 		}
 
 		

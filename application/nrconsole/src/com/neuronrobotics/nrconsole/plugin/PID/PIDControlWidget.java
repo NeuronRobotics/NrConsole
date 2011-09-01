@@ -33,11 +33,11 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private JTextField ki=new JTextField(new Double(defaultKi).toString(),10);
 	private JTextField kd=new JTextField(new Double(defaultKd).toString(),10);
 	private JCheckBox  inverted =new JCheckBox("Invert control");
-	JButton  pidSet = new JButton("Start");
+	JButton  pidSet = new JButton("Configure");
 	JButton  pidStop = new JButton("Stop");
-	private JTextField setpoint=new JTextField(new Double(defaultKd).toString(),10);
+	private JTextField setpoint=new JTextField(new Double(defaultKd).toString(),5);
 	private JButton  setSetpoint = new JButton("Set Setpoint");
-	private JButton  zero = new JButton("Reset PID");
+	private JButton  zero = new JButton("Zero PID");
 	private JLabel   currentPos = new JLabel("0");
 	private AdvancedPIDWidget advanced =null;
 	
@@ -54,6 +54,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private int setpointValue;
 	private int positionValue;
 	public PIDControlWidget(int group, int startValue, PIDControlGui tab) {
+		setBorder(BorderFactory.createRaisedBevelBorder());
 		tab.getPidDevice().addPIDEventListener(this);
 		currentPos.setText(new Integer(startValue).toString());
 		setpointValue=startValue;
@@ -149,17 +150,20 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	    pidRunning.add(new PIDVelocityWidget(this));
 	    
 	    
-	    JPanel uiPanel = new JPanel();
+	    JPanel uiPanel = new JPanel(new MigLayout());
 	    if(getGui().isDyPID()) {
-	    	uiPanel.add(new DyPIDControlWidget(this));		
+	    	uiPanel.add(new DyPIDControlWidget(this),"wrap");		
 		}
-	    uiPanel.add(constants);
-		uiPanel.add(pidRunning,"wrap");
+	    uiPanel.add(constants,"wrap");
+	    
+	    JPanel config = new JPanel();
+	    config.add(uiPanel);
+	    config.add(pidRunning);
 		
 		
 		graph = new PIDGraph(group);
 		
-		add(uiPanel,"wrap");
+		add(config,"wrap");
 		add(graph,"wrap");
 		
 		repaint();
