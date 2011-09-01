@@ -28,7 +28,7 @@ public class ChannelPanel extends JPanel implements IChannelEventListener, Mouse
 	private ImageIcon image;
 	private DyIOChannelMode mode = DyIOChannelMode.OFF;
 	private ChannelPanelStatus status = ChannelPanelStatus.DEFAULT;
-	private Timer timer = new Timer(250, this);
+	private Timer timer = new Timer(150, this);
 	private ChannelManager manager;
 	private boolean leftAligned = true;
 	
@@ -108,16 +108,14 @@ public class ChannelPanel extends JPanel implements IChannelEventListener, Mouse
 
 	
 	public void onChannelEvent(DyIOChannelEvent e) {
-		if(isSelected()) {
-			return;
-		}
-		
 		setStatus(ChannelPanelStatus.UPDATE);
 		timer.restart();
 	}
 	
 	
 	public void mouseClicked(MouseEvent e) {
+		selected=true;
+		setStatus(ChannelPanelStatus.HIGHLIGHT);
 		getManager().fireOnClick(e);
 	}
 
@@ -150,7 +148,10 @@ public class ChannelPanel extends JPanel implements IChannelEventListener, Mouse
 	
 	public void actionPerformed(ActionEvent e) {
 		if(getStatus() != ChannelPanelStatus.UPDATE) {
-			setStatus(ChannelPanelStatus.DEFAULT);
+			if(selected)
+				setStatus(ChannelPanelStatus.SELECTED);
+			else
+				setStatus(ChannelPanelStatus.DEFAULT);
 		}
 		timer.stop();
 	}

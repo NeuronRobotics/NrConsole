@@ -208,6 +208,9 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	public void onClick(ChannelManager source, int type) {
 		switch(type) {
 		case SINGLE_CLICK:
+			for(ChannelManager cm: channels) {
+				cm.setActive(false);
+			}
 			deviceControls.setChannel(source.getControlPanel());
 			break;
 		case SHIFT_CLICK:
@@ -215,6 +218,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			deviceControls.addChannel(source.getControlPanel());
 			break;
 		}
+		source.setActive(true);
 	}
 
 	

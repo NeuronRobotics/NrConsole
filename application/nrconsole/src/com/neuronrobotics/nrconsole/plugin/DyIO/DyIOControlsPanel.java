@@ -33,6 +33,7 @@ public class DyIOControlsPanel extends JPanel {
 		components.removeAll();
 		controls.add(channel);
 		components.add(channel, "wrap");
+		
 		fix();
 	}
 	

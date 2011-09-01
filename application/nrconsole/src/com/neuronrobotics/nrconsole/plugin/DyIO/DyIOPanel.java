@@ -5,13 +5,17 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIOPowerState;
 
@@ -25,6 +29,8 @@ public class DyIOPanel extends JPanel {
 	private JLabel voltage = new JLabel("Battery Voltage");
 	private bankLED A = new bankLED ();
 	private bankLED B = new bankLED ();
+	private JButton refresh = new JButton("Refresh");
+	private DyIO d;
 	public DyIOPanel() {
 	    initPanel();
 	    setName("DyIO");
@@ -37,7 +43,13 @@ public class DyIOPanel extends JPanel {
 	    setMinimumSize(size);
 	    setPreferredSize(size);
 	    setLayout(new MigLayout());
+	    refresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				d.getBatteryVoltage(true);
+			}
+		});
 	    add(voltage, "pos 210 50");
+	    add(refresh, "pos 385 40");
 		int ledPos = 12*34+125;
 		add(A, "pos 440 "+ledPos);
 		add(B, "pos 105 "+ledPos);
@@ -46,7 +58,7 @@ public class DyIOPanel extends JPanel {
 	public void addChannels(List<ChannelManager> list, boolean alignedLeft) {
 		int index = 0;
 		//removeAll();
-		
+		d=list.get(0).getChannel().getDevice();
 		for(ChannelManager cp : list) {
 			cp.getChannelPanel().setAlignedLeft(alignedLeft);
 			int x = (alignedLeft ? 105 : 370);
