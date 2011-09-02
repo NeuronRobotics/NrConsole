@@ -26,11 +26,11 @@ public class AdvancedPIDWidget extends JPanel{
 	private StepLoop looper=null;
 	private SineTrack siner=null;
 	
-	private JTextField loopStart=new JTextField(new Double(0).toString(),10);
-	private JTextField loopMiddle=new JTextField(new Double(100).toString(),10);
-	private JTextField loopEnd=new JTextField(new Double(200).toString(),10);
-	private JTextField loopIterations=new JTextField(new Double(10).toString(),1);
-	private JTextField loopTime=new JTextField(new Double(3).toString(),10);
+	private JTextField loopStart=new JTextField(new Double(0).toString(),5);
+	private JTextField loopMiddle=new JTextField(new Double(100).toString(),5);
+	private JTextField loopEnd=new JTextField(new Double(200).toString(),5);
+	private JTextField loopIterations=new JTextField(new Double(20).toString(),5);
+	private JTextField loopTime=new JTextField(new Double(.5).toString(),5);
 	private JButton  runLoop = new JButton("Run Step Loop");
 	private JButton  stopLoop = new JButton("Stop Loop");
 	private JButton  runSin = new JButton("Run Sin wave");

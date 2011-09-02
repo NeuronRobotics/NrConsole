@@ -86,14 +86,21 @@ public class PIDGraph extends JPanel  {
 			
 			double[] data = {setpoint,position};
 			double time = (System.currentTimeMillis()-startTime);
+			
 			dataTable.add(new GraphDataElement((long) time,data));
 			XYDataItem s = new XYDataItem(time,setpoint);
 			XYDataItem p = new XYDataItem(time,position);
 			synchronized (setpoints){
 				setpoints.add(s);
+				if(setpoints.getItemCount()>100){
+					setpoints.remove(0);
+				}
 			}
 			synchronized(positions){
 				positions.add(p);
+				if(positions.getItemCount()>100){
+					positions.remove(0);
+				}
 			}
 		}catch(Exception e){
 			System.err.println("Failed to set a data point");
