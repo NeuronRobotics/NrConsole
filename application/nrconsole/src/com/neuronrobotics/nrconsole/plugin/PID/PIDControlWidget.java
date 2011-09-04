@@ -26,16 +26,14 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class PIDControlWidget extends JPanel implements IPIDEventListener,ActionListener {
 	private static final long serialVersionUID = 3L;
-	private static final double defaultKp = 1;
-	private static final double defaultKi = 0;
-	private static final double defaultKd = 0;
-	private JTextField kp=new JTextField(new Double(defaultKp).toString(),10);
-	private JTextField ki=new JTextField(new Double(defaultKi).toString(),10);
-	private JTextField kd=new JTextField(new Double(defaultKd).toString(),10);
+
+	private JTextField kp=new JTextField(10);
+	private JTextField ki=new JTextField(10);
+	private JTextField kd=new JTextField(10);
 	private JCheckBox  inverted =new JCheckBox("Invert control");
 	JButton  pidSet = new JButton("Configure");
 	JButton  pidStop = new JButton("Stop");
-	private JTextField setpoint=new JTextField(new Double(defaultKd).toString(),5);
+	private JTextField setpoint=new JTextField(new Double(0).toString(),5);
 	private JButton  setSetpoint = new JButton("Set Setpoint");
 	private JButton  zero = new JButton("Zero PID");
 	private JLabel   currentPos = new JLabel("0");
@@ -53,7 +51,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private PIDConfiguration pidconfig; 
 	private int setpointValue;
 	private int positionValue;
-	public PIDControlWidget(int group, int startValue, PIDControlGui tab) {
+	public PIDControlWidget(int group, int startValue, PIDControlGui tab,PIDConfiguration conf) {
 		setBorder(BorderFactory.createRaisedBevelBorder());
 		tab.getPidDevice().addPIDEventListener(this);
 		currentPos.setText(new Integer(startValue).toString());
@@ -62,7 +60,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		setLayout(new MigLayout());
 		setGui(tab);
 		setGroup(group);
-		pidconfig=new PIDConfiguration(getGroup(), false, false, false, 1, 0, 0);
+		pidconfig=conf;
 	    inverted.setSelected(true);
 	    
 		pidSet.addActionListener(new ActionListener() {
@@ -72,21 +70,21 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				try{
 					p=Double.parseDouble(kp.getText());
 				}catch(Exception e){
-					kp.setText(new Double(defaultKp).toString());
+					kp.setText(new Double(1).toString());
 					JOptionPane.showMessageDialog(null, "Bad PID values, resetting.", "PID Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try{
 					i=Double.parseDouble(ki.getText());
 				}catch(Exception e){
-					ki.setText(new Double(defaultKi).toString());
+					ki.setText(new Double(0).toString());
 					JOptionPane.showMessageDialog(null, "Bad PID values, resetting.", "PID Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				try{
 					d=Double.parseDouble(kd.getText());
 				}catch(Exception e){
-					kd.setText(new Double(defaultKd).toString());
+					kd.setText(new Double(0).toString());
 					JOptionPane.showMessageDialog(null, "Bad PID values, resetting.", "PID Error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}

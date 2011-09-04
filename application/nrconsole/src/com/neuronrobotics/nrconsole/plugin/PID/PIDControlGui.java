@@ -65,7 +65,7 @@ public class PIDControlGui extends JPanel {
 		
 		for(int i=0;i<initVals.length;i++) {
 			try{
-				widgits.add(new PIDControlWidget(i, initVals[i], this));
+				widgits.add(new PIDControlWidget(i, initVals[i], this,getPidDevice().getPIDConfiguration(i)));
 			}catch (Exception e){
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Failed to create a PID widget", "DyPID ERROR", JOptionPane.ERROR_MESSAGE);
