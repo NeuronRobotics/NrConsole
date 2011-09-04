@@ -51,7 +51,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private PIDConfiguration pidconfig; 
 	private int setpointValue;
 	private int positionValue;
-	public PIDControlWidget(int group, int startValue, PIDControlGui tab,PIDConfiguration conf) {
+	public PIDControlWidget(int group, int startValue, PIDControlGui tab) {
 		setBorder(BorderFactory.createRaisedBevelBorder());
 		tab.getPidDevice().addPIDEventListener(this);
 		currentPos.setText(new Integer(startValue).toString());
@@ -60,7 +60,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		setLayout(new MigLayout());
 		setGui(tab);
 		setGroup(group);
-		pidconfig=conf;
+		getPIDConfiguration();
 	    inverted.setSelected(true);
 	    
 		pidSet.addActionListener(new ActionListener() {
@@ -199,21 +199,21 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	}
 	void stopPID(){
 		pidStop.setEnabled(false);
-		pidconfig.setEnabled(false);
-		ConfigurePIDController(pidconfig);
+		getPIDConfiguration().setEnabled(false);
+		ConfigurePIDController();
 		advanced.setEnabled(false);
 		pidRunning.setVisible(false);
 	}
 	private void setPID(double p,double i,double d){
 		setSet(true);
 		pidStop.setEnabled(true);
-		pidconfig.setEnabled(true);
-		pidconfig.setInverted(inverted.isSelected());
-		pidconfig.setAsync(true);
-		pidconfig.setKP(p);
-		pidconfig.setKI(i);
-		pidconfig.setKD(d);
-		ConfigurePIDController(pidconfig);
+		getPIDConfiguration().setEnabled(true);
+		getPIDConfiguration().setInverted(inverted.isSelected());
+		getPIDConfiguration().setAsync(true);
+		getPIDConfiguration().setKP(p);
+		getPIDConfiguration().setKI(i);
+		getPIDConfiguration().setKD(d);
+		ConfigurePIDController();
 		advanced.setEnabled(true);
 	}
 	public void setSet(boolean set) {
@@ -298,16 +298,18 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	}
 	private PIDConfiguration getPIDConfiguration(){
 		try{
-			return getGui().getPidDevice().getPIDConfiguration(getGroup());
+			if(pidconfig==null)
+				pidconfig = getGui().getPidDevice().getPIDConfiguration(getGroup());
 		}catch(Exception e){
 			JOptionPane.showMessageDialog(null, "Configuration get failed on group #"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-			return new PIDConfiguration();
+            pidconfig =new PIDConfiguration();
 		}
+		return pidconfig;
 	}
-	private void ConfigurePIDController(PIDConfiguration pidconfig){
+	private void ConfigurePIDController(){
 		try{
-			getGui().getPidDevice().ConfigurePIDController(pidconfig);
+			getGui().getPidDevice().ConfigurePIDController(getPIDConfiguration());
 		}catch(Exception e){
 			JOptionPane.showMessageDialog(null, "Configuration Set failed on group #"+getGroup(), "pid ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
