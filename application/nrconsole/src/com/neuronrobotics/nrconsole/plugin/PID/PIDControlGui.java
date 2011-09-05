@@ -103,7 +103,7 @@ public class PIDControlGui extends JPanel {
 		add(selected,"wrap");
 		Log.info("Started PID Control Gui");
 		for(PIDControlWidget w:widgits) {
-			w.stopPID();
+			//w.stopPID();
 		}
 	}
 	
