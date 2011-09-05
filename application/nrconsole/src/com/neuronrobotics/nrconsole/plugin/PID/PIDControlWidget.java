@@ -279,17 +279,15 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	}
 	private class messageShower extends Thread{
 		String message;
-		Exception ex;
-		public messageShower (String s,Exception e){
+		public messageShower (String s){
 			message=s;
-			ex=e;
 		}
 		public void run(){
-			JOptionPane.showMessageDialog(null,  message+", Message: "+ex.getMessage(), "PID Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,  message, "PID Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	private void showMessage(String s,Exception e){
-		new messageShower(s,e).start();
+		new messageShower(s+", Message: "+e.getMessage()).start();
 	}
 	
 	private void ResetPIDChannel(){
