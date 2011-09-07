@@ -58,12 +58,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 			getManager().setMode(mode);
 		}
 	};
-	private Timer timer = new Timer(1000, new ActionListener() {
-		
-		public void actionPerformed(ActionEvent e) {
-			autoPoll();
-		}
-	});
+
 	public void setupModesComboBox(){
 		//System.out.println("Resetting channel "+getManager().getChannel().getChannelNumber()+" modes: "+getManager().getChannel().getAvailableModes());
 		boolean hasServ = false;
@@ -113,10 +108,10 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 				getManager().fireOnRecordingEvent();
 				if(recordData.isSelected() ) {
 					getManager().getChannelRecorder().setGraphing(true);
-					timer.restart();
+
 				} else {
 					getManager().getChannelRecorder().setGraphing(false);
-					timer.stop();
+
 				}
 			}
 		});
@@ -240,13 +235,6 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		getCurrentWidget().pollValue();
 	}
 	
-	public void setAutoPoll(boolean autoPoll) {
-		if(autoPoll) {
-			timer.restart();
-		} else {
-			timer.stop();
-		}
-	}
 	
 
 	public boolean isRecordingEnabled() {
