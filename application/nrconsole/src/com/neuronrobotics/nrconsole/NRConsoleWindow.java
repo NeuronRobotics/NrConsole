@@ -74,7 +74,7 @@ public class NRConsoleWindow extends JFrame {
 	}
 	
 	
-	public void repaint(){		
+	public void repaint(){
 		logoPanel.repaint();
 		for(JPanel p: panels){
 			p.repaint();
@@ -83,6 +83,7 @@ public class NRConsoleWindow extends JFrame {
 	}
 	private void updateScroller(){
 		scroller.setPreferredSize(new Dimension(panelWidth-53,1100));
+		//scroller.setPreferredSize(new Dimension(panelWidth-53,panelHight-50));
 		scroller.setVisible(true);
 	}
 	private void updateUI(){
