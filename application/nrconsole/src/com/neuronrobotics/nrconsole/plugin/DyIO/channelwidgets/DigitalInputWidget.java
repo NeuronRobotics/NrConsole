@@ -56,7 +56,6 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == refresh) {
-			
 			pollValue();
 		}else if(e.getSource() == async) {
 			if(!async.isSelected()) {

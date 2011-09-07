@@ -71,7 +71,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		}
 		
 		pollValue();
-		
+		recordValue(value);
 		sliderUI.setValue(value);
 		valueUI.setText(formatValue(value));
 	}

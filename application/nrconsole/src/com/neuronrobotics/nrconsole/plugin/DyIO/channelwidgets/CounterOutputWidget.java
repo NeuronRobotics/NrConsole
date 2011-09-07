@@ -42,6 +42,8 @@ public class CounterOutputWidget extends ControlWidget implements ActionListener
 		outChannel.addCounterOutputListener(this);
 	}
 	private void setValue(int value) {
+		
+		recordValue(value);
 		field.setText(new Integer(value).toString());
 	}
 	

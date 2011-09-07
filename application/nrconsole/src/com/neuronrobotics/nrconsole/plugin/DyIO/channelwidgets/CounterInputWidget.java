@@ -42,6 +42,7 @@ public class CounterInputWidget extends ControlWidget implements ICounterInputLi
 		ci.addCounterInputListener(this);
 	}
 	private void setValue(int value) {
+		recordValue(value);
 		field.setText(new Integer(value).toString());
 	}
 	
