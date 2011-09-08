@@ -363,6 +363,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		for(int i=0;i<retry;i++){
 			try{
 				getGui().getPidDevice().ConfigurePIDController(getPIDConfiguration());
+				return;
 			}catch(Exception e){
 				ex=e;
 			}
@@ -375,6 +376,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		for(int i=0;i<retry;i++){
 			try{
 				getGui().getPidDevice().SetPIDSetPoint(getGroup(), setPoint,velocity);
+				return;
 			}catch(Exception e){
 				ex=e;
 			}
@@ -387,8 +389,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		Exception ex = new Exception();
 		for(int i=0;i<retry;i++){
 			try{
-				System.err.println("Running Velocity Update: "+velocity+" ticks/sec  "+seconds+" seconds ");
 				getGui().getPidDevice().SetPIDInterpolatedVelocity(getGroup(),velocity,seconds);
+				return;
 			}catch(Exception e){
 				ex=e;
 			}
