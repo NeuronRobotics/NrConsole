@@ -277,81 +277,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	public int getPositionValue() {
 		return positionValue;
 	}
-	private class messageShower extends Thread{
-		String message;
-		public messageShower (String s){
-			message=s;
-		}
-		public void run(){
-			JOptionPane.showMessageDialog(null,  message, "PID Error", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-	private void showMessage(String s,Exception e){
-		new messageShower(s+", Message: "+e.getMessage()).start();
-	}
-	
-	private void ResetPIDChannel(){
-		try{
-			getGui().getPidDevice().ResetPIDChannel(getGroup());
-		}catch(Exception e){
-			showMessage("Setpoint reset failed on group #"+getGroup(),e);
-            e.printStackTrace();
-			return;
-		}
-	}
-	private int GetPIDPosition(){
-		try{
-			return getGui().getPidDevice().GetPIDPosition(getGroup());
-		}catch(Exception e){
-			showMessage( "Setpoint get failed on group #"+getGroup(),e);
-            e.printStackTrace();
-			return 0;
-		}
-	}
-	private PIDConfiguration getPIDConfiguration(){
-		try{
-			
-			if(pidconfig==null){
-				pidconfig = getGui().getPidDevice().getPIDConfiguration(getGroup());;
-			}
-		}catch(Exception e){
-			showMessage( "Configuration get failed on group #"+getGroup(),e);
-            e.printStackTrace();
-            pidconfig =new PIDConfiguration();
-		}
-		return pidconfig;
-	}
-	private void ConfigurePIDController(){
-		try{
-			getGui().getPidDevice().ConfigurePIDController(getPIDConfiguration());
-		}catch(Exception e){
-			showMessage( "Configuration Set failed on group #"+getGroup(),e);
-            e.printStackTrace();
-			return;
-		}
-	}
-	private void SetPIDSetPoint(int setPoint,int velocity){
-		try{
-			getGui().getPidDevice().SetPIDSetPoint(getGroup(), setPoint,velocity);
-		}catch(Exception e){
-			showMessage( "Setpoint set failed on group #"+getGroup(),e);
-            e.printStackTrace();
-			return;
-		}
-	}
-	
-	public void SetPIDVel(int velocity,double seconds){
-		try{
-			System.err.println("Running Velocity Update: "+velocity+" ticks/sec  "+seconds+" seconds ");
-			Log.enableDebugPrint(true);
-			getGui().getPidDevice().SetPIDInterpolatedVelocity(getGroup(),velocity,seconds);
-			Log.enableDebugPrint(false);
-		}catch(Exception e){
-			showMessage( "Velocity set failed on group #"+getGroup(),e);
-            e.printStackTrace();
-			return;
-		}
-	}
+
 	
 	public void onPIDReset(int group, int currentValue) {
 		// TODO Auto-generated method stub
@@ -373,4 +299,103 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 			return;
 		}
 	}
+	
+	private class messageShower extends Thread{
+		String message;
+		public messageShower (String s){
+			message=s;
+		}
+		public void run(){
+			JOptionPane.showMessageDialog(null,  message, "PID Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	private void showMessage(String s,Exception e){
+		new messageShower(s+", Message: "+e.getMessage()).start();
+	}
+	private final int retry = 5;
+	private void ResetPIDChannel(){
+		Exception ex = new Exception();
+		for(int i=0;i<retry;i++){
+			try{
+				getGui().getPidDevice().ResetPIDChannel(getGroup());
+				return;
+			}catch(Exception e){
+				ex=e;
+			}
+		}
+		showMessage("Setpoint reset failed on group #"+getGroup(),ex);
+        ex.printStackTrace();
+		return;
+		
+	}
+	private int GetPIDPosition(){
+		Exception ex = new Exception();
+		for(int i=0;i<retry;i++){
+			try{
+				return getGui().getPidDevice().GetPIDPosition(getGroup());
+			}catch(Exception e){
+				ex=e;
+			}
+		}
+		showMessage("Setpoint get failed on group #"+getGroup(),ex);
+        ex.printStackTrace();
+		return 0;
+	}
+	private PIDConfiguration getPIDConfiguration(){
+		Exception ex = new Exception();
+		for(int i=0;i<retry;i++){
+			try{
+				if(pidconfig==null){
+					pidconfig = getGui().getPidDevice().getPIDConfiguration(getGroup());
+				}
+				return pidconfig;
+			}catch(Exception e){
+				ex=e;
+			}
+		}
+		showMessage("Configuration get failed on group #"+getGroup(),ex);
+        ex.printStackTrace();
+        pidconfig =new PIDConfiguration();
+		return pidconfig;
+	}
+	private void ConfigurePIDController(){
+		Exception ex = new Exception();
+		for(int i=0;i<retry;i++){
+			try{
+				getGui().getPidDevice().ConfigurePIDController(getPIDConfiguration());
+			}catch(Exception e){
+				ex=e;
+			}
+		}
+		showMessage( "Configuration Set failed on group #"+getGroup(),ex);
+        ex.printStackTrace();
+	}
+	private void SetPIDSetPoint(int setPoint,int velocity){
+		Exception ex = new Exception();
+		for(int i=0;i<retry;i++){
+			try{
+				getGui().getPidDevice().SetPIDSetPoint(getGroup(), setPoint,velocity);
+			}catch(Exception e){
+				ex=e;
+			}
+		}
+		showMessage( "Setpoint set failed on group #"+getGroup(),ex);
+        ex.printStackTrace();
+	}
+	
+	public void SetPIDVel(int velocity,double seconds){
+		Exception ex = new Exception();
+		for(int i=0;i<retry;i++){
+			try{
+				System.err.println("Running Velocity Update: "+velocity+" ticks/sec  "+seconds+" seconds ");
+				getGui().getPidDevice().SetPIDInterpolatedVelocity(getGroup(),velocity,seconds);
+			}catch(Exception e){
+				ex=e;
+			}
+		}
+		showMessage( "Velocity set failed on group #"+getGroup(),ex);
+        ex.printStackTrace();
+	}
+	
+
 }
