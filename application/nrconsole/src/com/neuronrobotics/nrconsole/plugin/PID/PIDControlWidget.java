@@ -348,6 +348,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				if(pidconfig==null){
 					pidconfig = getGui().getPidDevice().getPIDConfiguration(getGroup());
 				}
+				pidconfig.setGroup(getGroup());
 				return pidconfig;
 			}catch(Exception e){
 				ex=e;
