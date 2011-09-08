@@ -26,7 +26,7 @@ import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 
 public class PIDControlWidget extends JPanel implements IPIDEventListener,ActionListener {
 	private static final long serialVersionUID = 3L;
-
+	private final int retry = 5;
 	private JTextField kp=new JTextField(10);
 	private JTextField ki=new JTextField(10);
 	private JTextField kd=new JTextField(10);
@@ -312,7 +312,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private void showMessage(String s,Exception e){
 		new messageShower(s+", Message: "+e.getMessage()).start();
 	}
-	private final int retry = 5;
+
 	private void ResetPIDChannel(){
 		Exception ex = new Exception();
 		for(int i=0;i<retry;i++){
@@ -323,7 +323,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				ex=e;
 			}
 		}
-		showMessage("Setpoint reset failed on group #"+getGroup(),ex);
+		showMessage("Setpoint reset failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
 		return;
 		
@@ -337,7 +337,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				ex=e;
 			}
 		}
-		showMessage("Setpoint get failed on group #"+getGroup(),ex);
+		showMessage("Setpoint get failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
 		return 0;
 	}
@@ -353,7 +353,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				ex=e;
 			}
 		}
-		showMessage("Configuration get failed on group #"+getGroup(),ex);
+		showMessage("Configuration get failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
         pidconfig =new PIDConfiguration();
 		return pidconfig;
@@ -367,7 +367,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				ex=e;
 			}
 		}
-		showMessage( "Configuration Set failed on group #"+getGroup(),ex);
+		showMessage( "Configuration Set failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
 	}
 	private void SetPIDSetPoint(int setPoint,int velocity){
@@ -379,7 +379,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				ex=e;
 			}
 		}
-		showMessage( "Setpoint set failed on group #"+getGroup(),ex);
+		showMessage( "Setpoint set failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
 	}
 	
@@ -393,7 +393,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				ex=e;
 			}
 		}
-		showMessage( "Velocity set failed on group #"+getGroup(),ex);
+		showMessage( "Velocity set failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
 	}
 	
