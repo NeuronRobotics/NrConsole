@@ -357,6 +357,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		showMessage("Configuration get failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
         pidconfig =new PIDConfiguration();
+        pidconfig.setGroup(getGroup());
 		return pidconfig;
 	}
 	private void ConfigurePIDController(){
