@@ -317,7 +317,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		Exception ex = new Exception();
 		for(int i=0;i<retry;i++){
 			try{
-				getGui().getPidDevice().ResetPIDChannel(getGroup());
+				getGui().getPidDevice().ResetPIDChannel(getGroup(), 0);
 				return;
 			}catch(Exception e){
 				ex=e;
