@@ -21,6 +21,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
+import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 
 
 public class NRConsoleWindow extends JFrame {
@@ -71,6 +72,7 @@ public class NRConsoleWindow extends JFrame {
 		});
 		logoPanel.setLayout(new GridLayout(3, 2));
 		logoPanel.add(new JLabel(logo),"[0,2]");
+		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 	}
 	
 	
