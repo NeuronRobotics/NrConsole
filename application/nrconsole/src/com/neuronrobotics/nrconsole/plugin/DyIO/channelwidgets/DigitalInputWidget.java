@@ -78,7 +78,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		
 		if(!async.isSelected())
 			setValue(dic.isHigh());
-		throw new RuntimeException();
+		//throw new RuntimeException();
 	}
 
 	
