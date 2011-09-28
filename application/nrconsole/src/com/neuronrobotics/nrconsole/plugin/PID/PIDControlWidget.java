@@ -281,7 +281,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	
 	public void onPIDReset(int group, int currentValue) {
 		// TODO Auto-generated method stub
-		
+		if(group==getGroup())
+			setPositionValue(currentValue);
 	}
 
 	
@@ -318,6 +319,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		for(int i=0;i<retry;i++){
 			try{
 				getGui().getPidDevice().ResetPIDChannel(getGroup(), 0);
+				
 				return;
 			}catch(Exception e){
 				ex=e;
