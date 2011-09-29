@@ -56,7 +56,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		tab.getPidDevice().addPIDEventListener(this);
 		currentPos.setText(new Integer(startValue).toString());
 		setpointValue=startValue;
-		setPositionValue(startValue);
+		setPositionDisplay(startValue);
 		setLayout(new MigLayout());
 		setGui(tab);
 		setGroup(group);
@@ -91,7 +91,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				setPID(p, i, d);
 				int cur = GetPIDPosition();
 				setSetpoint(cur);
-				setPositionValue(cur);
+				setPositionDisplay(cur);
 				pidRunning.setVisible(true);
 			}
 		});
@@ -233,7 +233,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		if(e.getGroup()==getGroup()){
 			//System.out.println("From PID control widget: "+e);
 			
-			setPositionValue(e.getValue());
+			setPositionDisplay(e.getValue());
 			
 		}
 	}
@@ -266,7 +266,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 			graph.addEvent(setpointValue,getPositionValue());
 	}
 
-	public void setPositionValue(int positionValue) {
+	public void setPositionDisplay(int positionValue) {
 		currentPos.setText(new Integer(positionValue).toString());
 		this.positionValue = positionValue;
 		graphVals();
@@ -282,7 +282,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	public void onPIDReset(int group, int currentValue) {
 		// TODO Auto-generated method stub
 		if(group==getGroup())
-			setPositionValue(currentValue);
+			setPositionDisplay(currentValue);
 	}
 
 	
@@ -393,7 +393,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		Exception ex = new Exception();
 		for(int i=0;i<retry;i++){
 			try{
-				getGui().getPidDevice().SetPIDInterpolatedVelocity(getGroup(),velocity,seconds);
+				getGui().getPidDevice().SetPDVelocity(getGroup(),velocity,seconds);
 				return;
 			}catch(Exception e){
 				ex=e;
