@@ -55,7 +55,7 @@ public class MP3 {
 	
 	public double getPercent() {
 		if(player!=null) {
-			return player.getPosition();
+			return player.getPercent();
 		}
 		return 0;
 	}

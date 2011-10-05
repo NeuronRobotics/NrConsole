@@ -73,7 +73,6 @@ public class Player
 	 */
 	private boolean		complete = false;
 
-	private int			lastPosition = 0;
 	private int			numFrames = 0;
 	
 	private ArrayList<short[]> outputData = new ArrayList<short[]>();
@@ -101,10 +100,10 @@ public class Player
 		}
 		audio.open(decoder);
 		getNumberOfFrames();
+		complete = false;
 	}
-	public int getNumberOfFrames() {
+	public double getNumberOfFrames() {
 		if(numFrames==0) {
-			System.out.println("Storing frames:");
 			boolean ret = true;
 			while (ret)
 			{
@@ -117,8 +116,7 @@ public class Player
 					Header h = bitstream.readFrame();	
 					
 					if (h==null)
-						return numFrames;
-						
+						return numFrames;	
 					// sample buffer set when decoder constructed
 					SampleBuffer s = (SampleBuffer)decoder.decodeFrame(h, bitstream);
 					outputData.add(s.getBuffer());														
@@ -149,7 +147,8 @@ public class Player
 	{
 		boolean ret = true;
 		AudioDevice out = audio;
-
+		frame=0;
+		complete = false;
 		for(short[] s:outputData) {
 			synchronized (this)
 			{
@@ -157,14 +156,15 @@ public class Player
 				if (out!=null)
 				{					
 					out.write(s, 0, s.length);
+					frame++;
 				}				
 			}
 		}
+		complete = true;
 		if (out!=null){				
 			out.flush();
 			synchronized (this)
 			{
-				complete = (!closed);
 				close();
 			}				
 		}
@@ -185,13 +185,13 @@ public class Player
 			// this may fail, so ensure object state is set up before
 			// calling this method. 
 			out.close();
-			lastPosition = out.getPosition();
 			try
 			{
 				bitstream.close();
 			}
 			catch (BitstreamException ex)
 			{
+				ex.printStackTrace();
 			}
 		}
 	}
@@ -213,16 +213,17 @@ public class Player
 	 * AudioDevice</code> that is used by this player to sound
 	 * the decoded audio samples. 
 	 */
-	public int getPosition()
+	public double getPercent()
 	{
-		int position = lastPosition;
-		
-		AudioDevice out = audio;		
-		if (out!=null)
-		{
-			position = out.getPosition();	
-		}
-		return position;
+		return (getCurrentFrame()/getNumberOfFrames());
+	}
+
+	public void setCurrentFrame(int frame) {
+		this.frame = frame;
+	}
+
+	public double getCurrentFrame() {
+		return frame;
 	}		
 
 	
