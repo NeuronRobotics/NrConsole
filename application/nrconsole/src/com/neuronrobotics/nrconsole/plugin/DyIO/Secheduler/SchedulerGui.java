@@ -22,8 +22,8 @@ public class SchedulerGui extends JPanel{
 	private JSlider slider = new JSlider();
 	private JButton play = new JButton("Play");
 	private JCheckBox loop = new JCheckBox("Loop");
-	private JLabel time = new JLabel("Miliseconds: ");
-	private JTextField length = new JTextField("2000");
+	private JLabel time = new JLabel("Seconds: ");
+	private JTextField length = new JTextField("60.0");
 	/**
 	 * 
 	 */
@@ -42,14 +42,15 @@ public class SchedulerGui extends JPanel{
 				if(st == null){
 					long setpoint;
 					try{
-						setpoint = Long.parseLong(length.getText());
+						setpoint = (long)(1000*Double.parseDouble(length.getText()));
 					}catch (NumberFormatException n){
 						setpoint=1000;
 					}
-					length.setText(new Long(setpoint).toString());
+					length.setText(new Double(((double)setpoint)/1000.0).toString());
 					st = new SchedulerThread(setpoint);
 					st.start();
 					play.setText("Pause");
+					
 				}else{
 					st.kill();
 					st=null;
