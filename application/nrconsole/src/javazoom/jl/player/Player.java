@@ -21,11 +21,11 @@
 package javazoom.jl.player;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Decoder;
-import javazoom.jl.decoder.DecoderException;
 import javazoom.jl.decoder.Header;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.decoder.SampleBuffer;
@@ -75,6 +75,8 @@ public class Player
 
 	private int			lastPosition = 0;
 	private int			numFrames = 0;
+	
+	private ArrayList<short[]> outputData = new ArrayList<short[]>();
 	/**
 	 * Creates a new <code>Player</code> instance. 
 	 */
@@ -98,8 +100,39 @@ public class Player
 			audio = r.createAudioDevice();
 		}
 		audio.open(decoder);
+		getNumberOfFrames();
 	}
-	
+	public int getNumberOfFrames() {
+		if(numFrames==0) {
+			System.out.println("Storing frames:");
+			boolean ret = true;
+			while (ret)
+			{
+				try
+				{
+					AudioDevice out = audio;
+					if (out==null)
+						return numFrames;
+
+					Header h = bitstream.readFrame();	
+					
+					if (h==null)
+						return numFrames;
+						
+					// sample buffer set when decoder constructed
+					SampleBuffer s = (SampleBuffer)decoder.decodeFrame(h, bitstream);
+					outputData.add(s.getBuffer());														
+					bitstream.closeFrame();
+				}catch (RuntimeException ex){
+					ex.printStackTrace();
+				} catch (JavaLayerException e) {
+					e.printStackTrace();
+				}
+				numFrames++;
+			}
+		}
+		return numFrames;
+	}
 	public void play() throws JavaLayerException
 	{
 		play(Integer.MAX_VALUE);
@@ -115,25 +148,25 @@ public class Player
 	public boolean play(int frames) throws JavaLayerException
 	{
 		boolean ret = true;
-			
-		while (frames-- > 0 && ret)
-		{
-			ret = decodeFrame();
-		}
-		
-		if (!ret)
-		{
-			// last frame, ensure all data flushed to the audio device. 
-			AudioDevice out = audio;
-			if (out!=null)
-			{				
-				out.flush();
-				synchronized (this)
-				{
-					complete = (!closed);
-					close();
+		AudioDevice out = audio;
+
+		for(short[] s:outputData) {
+			synchronized (this)
+			{
+				out = audio;
+				if (out!=null)
+				{					
+					out.write(s, 0, s.length);
 				}				
 			}
+		}
+		if (out!=null){				
+			out.flush();
+			synchronized (this)
+			{
+				complete = (!closed);
+				close();
+			}				
 		}
 		return ret;
 	}
@@ -162,33 +195,14 @@ public class Player
 			}
 		}
 	}
-	public int getNumberOfFrames() {
-		int num=0;
-		try
-		{
-			Header h = bitstream.readFrame();	
-			if (h==null)
-				return 0;	
-			// sample buffer set when decoder constructed
-			SampleBuffer output = (SampleBuffer)decoder.decodeFrame(h, bitstream);																	
-			bitstream.closeFrame();
-		}		
-		catch (RuntimeException e)
-		{
-			
-		} catch (BitstreamException e) {
-		} catch (DecoderException e) {
-		}
-
-		return num;
-	}
+	
 	/**
 	 * Returns the completed status of this player.
 	 * 
 	 * @return	true if all available MPEG audio frames have been
 	 *			decoded, or false otherwise. 
 	 */
-	public synchronized boolean isComplete()
+	public boolean isComplete()
 	{
 		return complete;	
 	}
@@ -210,72 +224,6 @@ public class Player
 		}
 		return position;
 	}		
-	
-	
-	
-	/**
-	 * Decodes a single frame.
-	 * 
-	 * @return true if there are no more frames to decode, false otherwise.
-	 */
-	protected boolean decodeFrame() throws JavaLayerException
-	{		
-		try
-		{
-			AudioDevice out = audio;
-			if (out==null)
-				return false;
-
-			Header h = bitstream.readFrame();	
-			
-			if (h==null)
-				return false;
-				
-			// sample buffer set when decoder constructed
-			SampleBuffer output = (SampleBuffer)decoder.decodeFrame(h, bitstream);
-																																					
-			synchronized (this)
-			{
-				out = audio;
-				if (out!=null)
-				{					
-					out.write(output.getBuffer(), 0, output.getBufferLength());
-				}				
-			}
-																			
-			bitstream.closeFrame();
-		}		
-		catch (RuntimeException ex)
-		{
-			throw new JavaLayerException("Exception decoding audio frame", ex);
-		}
-/*
-		catch (IOException ex)
-		{
-			System.out.println("exception decoding audio frame: "+ex);
-			return false;	
-		}
-		catch (BitstreamException bitex)
-		{
-			System.out.println("exception decoding audio frame: "+bitex);
-			return false;	
-		}
-		catch (DecoderException decex)
-		{
-			System.out.println("exception decoding audio frame: "+decex);
-			return false;				
-		}
-*/		
-		return true;
-	}
-
-	public void setNumFrames(int numFrames) {
-		this.numFrames = numFrames;
-	}
-
-	public int getNumFrames() {
-		return numFrames;
-	}
 
 	
 }

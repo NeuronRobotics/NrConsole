@@ -63,7 +63,11 @@ public class SampleBuffer extends Obuffer
   
   public short[] getBuffer()
   {
-	return this.buffer;  
+	short[] copy= new short[buffer.length];
+	for(int i=0;i<buffer.length;i++) {
+		copy[i]=buffer[i];
+	}
+	return copy;  
   }
   
   public int getBufferLength()
