@@ -61,6 +61,10 @@ public class MP3 {
 	public int getCurrentTime() {
 		return player.getCurrentTime();
 	}
+	public void setCurrentTime(int time) {
+		System.out.println("Setting current time="+time);
+		player.setCurrentTime(time);
+	}
 	/**
 	 * 
 	 * @return length in Ms
@@ -109,11 +113,18 @@ public class MP3 {
         System.out.println("Number of frames="+mp3.getNumFrames());
         mp3.play();
         
+        ThreadUtil.wait(5000);
+        mp3.pause();
+        ThreadUtil.wait(5000);
+        mp3.play();
         while(mp3.isPlaying()) {
         	ThreadUtil.wait(500);
         	System.out.println("Time = "+mp3.getCurrentTime());
         }
+       
+        
         mp3.close();
+     
         System.out.println("Song done");
         System.out.println("Number of frames="+mp3.getNumFrames());
 

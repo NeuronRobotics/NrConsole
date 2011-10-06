@@ -1,20 +1,26 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class SchedulerGui extends JPanel{
@@ -24,6 +30,10 @@ public class SchedulerGui extends JPanel{
 	private JCheckBox loop = new JCheckBox("Loop");
 	private JLabel time = new JLabel("Seconds: ");
 	private JTextField length = new JTextField("60.0");
+	private JButton selectSong = new JButton("Select Audio Track");
+	private JLabel trackName = new JLabel("none");
+	private MP3 mp3;
+	private File mp3File=null;
 	/**
 	 * 
 	 */
@@ -40,13 +50,13 @@ public class SchedulerGui extends JPanel{
 			
 			public void actionPerformed(ActionEvent arg0) {
 				if(st == null){
-					long setpoint;
+					int setpoint;
 					try{
-						setpoint = (long)(1000*Double.parseDouble(length.getText()));
+						setpoint = (int)(1000*Double.parseDouble(length.getText()));
 					}catch (NumberFormatException n){
 						setpoint=1000;
 					}
-					length.setText(new Double(((double)setpoint)/1000.0).toString());
+					setTrackLegnth(setpoint);
 					st = new SchedulerThread(setpoint);
 					st.start();
 					play.setText("Pause");
@@ -68,6 +78,9 @@ public class SchedulerGui extends JPanel{
 		
 	}
 	
+	private void setTrackLegnth(int ms){
+		length.setText(new Double(((double)ms)/1000.0).toString());
+	}
 	
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		DyIORegestry.setConnection(connection);
@@ -104,10 +117,14 @@ public class SchedulerGui extends JPanel{
 			do{
 				long start = System.currentTimeMillis();
 				StartOffset = slider.getValue();
-				while( (((double)(System.currentTimeMillis()-start))<(time-StartOffset)) && run){
-					long offset = ((System.currentTimeMillis()-start))+StartOffset;
-					setValue(offset);
-					ThreadUtil.wait(100);
+				if(mp3==null){
+					while( (((double)(System.currentTimeMillis()-start))<(time-StartOffset)) && run){
+						long offset = ((System.currentTimeMillis()-start))+StartOffset;
+						setValue(offset);
+						ThreadUtil.wait(100);
+					}
+				}else{
+					mp3.setCurrentTime((int) (StartOffset*1000));
 				}
 				if(run)
 					setValue(0);
@@ -120,5 +137,45 @@ public class SchedulerGui extends JPanel{
 			run = false;
 		}
 	}
-
+	private class mp3Filter extends FileFilter{
+		
+		public String getDescription() {
+			return "MP3 Audio File (mp3)";
+		}
+		public boolean accept(File f) {
+			if(f.isDirectory()) {
+				return true;
+			}
+			String path = f.getAbsolutePath().toLowerCase();
+			if ((path.endsWith("mp3") && (path.charAt(path.length() - 3)) == '.')) {
+				return true;
+			}
+			return f.getName().matches(".+\\.mp3$");
+		}
+	}
+	private void getFile() {
+		JFileChooser fc =new JFileChooser();
+    	File dir1 = new File (".");
+    	if(mp3File!=null){
+    		fc.setSelectedFile(mp3File);
+    	}else{
+    		fc.setCurrentDirectory(dir1);
+    	}
+    	fc.setFileFilter(new  mp3Filter());
+        int returnVal = fc.showOpenDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+        	mp3File=fc.getSelectedFile();
+        	mp3 = new MP3(mp3File.getAbsolutePath());
+        	setTrackLegnth(mp3.getTrackLength());
+        }
+	}
+	public static void main(String[] args) {
+		 JFrame frame = new JFrame();
+		 SchedulerGui sg =new SchedulerGui();
+		 sg.setConnection(new SerialConnection("COM14"));
+		 frame .add(sg);
+		 frame.setSize(new Dimension(1024,768));
+		 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		 frame.setVisible(true);
+	}
 }

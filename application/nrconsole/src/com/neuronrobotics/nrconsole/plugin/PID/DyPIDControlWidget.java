@@ -94,9 +94,9 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 				}
 			}
 			widgit.pidSet.setEnabled(true);
-			if(conf.getInputMode() == DyIOChannelMode.ANALOG_IN){
-				widgit.setSetpoint(512);
-			}
+//			if(conf.getInputMode() == DyIOChannelMode.ANALOG_IN){
+//				widgit.setSetpoint(512);
+//			}
 		}
 		
 	}

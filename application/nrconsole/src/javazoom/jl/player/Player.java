@@ -141,6 +141,7 @@ public class Player
 	public void setPause(boolean p){
 		pause = p;
 	}
+	
 	/**
 	 * Plays a number of MPEG audio frames. 
 	 * 
@@ -153,11 +154,9 @@ public class Player
 	{
 		boolean ret = true;
 		AudioDevice out = audio;
-		frame=0;
 		complete = false;
-		
-			long start=System.currentTimeMillis();
-		for(short[] s:outputData) {
+		//long start=System.currentTimeMillis();
+		for(frame=0;frame<outputData.size();frame++) {
 			while(pause){
 				Thread.sleep(1);
 			}
@@ -166,12 +165,11 @@ public class Player
 				out = audio;
 				if (out!=null)
 				{					
-					out.write(s, 0, s.length);
-					frame++;
+					out.write(outputData.get(frame), 0, outputData.get(frame).length);
 				}				
 			}
 		}
-		msPerFrame = (long) ((System.currentTimeMillis()-start)/getNumberOfFrames());
+		//msPerFrame = (long) ((System.currentTimeMillis()-start)/getNumberOfFrames());
 		complete = true;
 		if (out!=null){				
 			out.flush();
@@ -237,7 +235,18 @@ public class Player
 	public void setCurrentFrame(int frame) {
 		this.frame = frame;
 	}
-
+	
+	/**
+	 * sets the current playback time in Ms
+	 * @param time
+	 */
+	public void setCurrentTime(int time) {
+		if(time<0)
+			time=0;
+		if(time>getTrackLength())
+			time=getTrackLength();
+		frame = (int) (time/msPerFrame);
+	}
 	public double getCurrentFrame() {
 		return frame;
 	}		

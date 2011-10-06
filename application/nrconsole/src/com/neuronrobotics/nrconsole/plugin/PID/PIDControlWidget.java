@@ -52,6 +52,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private int setpointValue;
 	private int positionValue;
 	public PIDControlWidget(int group, int startValue, PIDControlGui tab) {
+//		if(group==0)
+//			Log.enableDebugPrint(true);
 		setBorder(BorderFactory.createRaisedBevelBorder());
 		tab.getPidDevice().addPIDEventListener(this);
 		currentPos.setText(new Integer(startValue).toString());
@@ -90,6 +92,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				}
 				setPID(p, i, d);
 				int cur = GetPIDPosition();
+				//System.out.println("Current position="+cur+" group="+getGroup());
 				setSetpoint(cur);
 				setPositionDisplay(cur);
 				pidRunning.setVisible(true);
@@ -168,6 +171,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		Updater up = new Updater();
 		up.start();
 		pidRunning.setVisible(false);
+//		if(group==0)
+//			Log.enableDebugPrint(false);
 	}
 	
 	private void populatePID() {
@@ -178,10 +183,10 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		ki.setText(new Double(conf.getKI()).toString());
 		kd.setText(new Double(conf.getKD()).toString());
 		inverted.setSelected(conf.isInverted());
-		if(conf.isEnabled()){
-			pidStop.setEnabled(true);
-			advanced.setEnabled(true);
-		}
+//		if(conf.isEnabled()){
+//			pidStop.setEnabled(true);
+//			advanced.setEnabled(true);
+//		}
 	}
 	
 
@@ -239,6 +244,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	}
 	public void setSetpoint(int setPoint){
 		SetPIDSetPoint(setPoint,0);
+		System.out.println("Setting setpoint on group="+getGroup()+" value="+setPoint);
 		setpointValue=setPoint;
 		setpoint.setText(new Integer(setPoint).toString());
 		graphVals();
@@ -376,6 +382,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
         ex.printStackTrace();
 	}
 	private void SetPIDSetPoint(int setPoint,int velocity){
+
 		Exception ex = new Exception();
 		for(int i=0;i<retry;i++){
 			try{
