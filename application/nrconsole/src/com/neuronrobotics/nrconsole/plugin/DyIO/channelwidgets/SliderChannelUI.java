@@ -16,10 +16,8 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DCMotorOutputChannel;
-import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.PWMOutputChannel;
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 public class SliderChannelUI extends ControlWidget implements ChangeListener, ActionListener {
 	private static final long serialVersionUID = 1L;

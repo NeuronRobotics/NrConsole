@@ -155,7 +155,6 @@ public class Player
 		boolean ret = true;
 		AudioDevice out = audio;
 		complete = false;
-		//long start=System.currentTimeMillis();
 		for(frame=0;frame<outputData.size();frame++) {
 			while(pause){
 				Thread.sleep(1);
@@ -172,11 +171,7 @@ public class Player
 		//msPerFrame = (long) ((System.currentTimeMillis()-start)/getNumberOfFrames());
 		complete = true;
 		if (out!=null){				
-			out.flush();
-			synchronized (this)
-			{
-				close();
-			}				
+			out.flush();			
 		}
 		return ret;
 	}
@@ -240,12 +235,14 @@ public class Player
 	 * sets the current playback time in Ms
 	 * @param time
 	 */
-	public void setCurrentTime(int time) {
+	public void setCurrentTime(double time) {
 		if(time<0)
 			time=0;
 		if(time>getTrackLength())
 			time=getTrackLength();
+		
 		frame = (int) (time/msPerFrame);
+		//System.out.println("Setting current frame to="+frame+" time="+time);
 	}
 	public double getCurrentFrame() {
 		return frame;

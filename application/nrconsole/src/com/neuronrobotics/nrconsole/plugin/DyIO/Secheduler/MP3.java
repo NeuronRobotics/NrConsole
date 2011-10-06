@@ -62,7 +62,7 @@ public class MP3 {
 		return player.getCurrentTime();
 	}
 	public void setCurrentTime(int time) {
-		System.out.println("Setting current time="+time);
+		//System.out.println("Setting current time="+time);
 		player.setCurrentTime(time);
 	}
 	/**
