@@ -237,7 +237,7 @@ public class PlayerApplet extends Applet implements Runnable
 			{
 				player.play();				
 			}
-			catch (JavaLayerException ex)
+			catch (Exception ex)
 			{
 				System.err.println("Problem playing audio: "+ex);
 			}			

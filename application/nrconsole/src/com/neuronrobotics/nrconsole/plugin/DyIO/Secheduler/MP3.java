@@ -27,6 +27,8 @@ import javazoom.jl.player.Player;
 public class MP3 {
     private Player player; 
     private String fn="";
+    private boolean pause = false;
+    private boolean playing = false;
     // constructor that takes the name of an MP3 file
     public MP3(String filename) {
     	fn = filename;
@@ -41,6 +43,10 @@ public class MP3 {
         }
     }
     
+    public void pause(){
+    	pause=true;
+    	player.setPause(true);
+    }
 
     public void close() { 
     	if (player != null) 
@@ -52,7 +58,16 @@ public class MP3 {
 			return !player.isComplete();
 		return false;
 	}
-	
+	public int getCurrentTime() {
+		return player.getCurrentTime();
+	}
+	/**
+	 * 
+	 * @return length in Ms
+	 */
+	public int getTrackLength(){
+		return player.getTrackLength();
+	}
 	public double getPercent() {
 		if(player!=null) {
 			return player.getPercent();
@@ -65,14 +80,22 @@ public class MP3 {
 
     // play the MP3 file to the sound card
     public void play() {
+    	if(pause){
+        	pause=false;
+        	player.setPause(false);
+        	if(playing)
+        		return;
+    	}
         // run in new thread to play in background
         new Thread() {
             public void run() {
+            	playing=true;
                 try { 
                 	player.play(); 
                 }catch (Exception e) {
                 	System.out.println(e); 
                 }
+                playing=false;
             }
         }.start();
     }
@@ -88,7 +111,7 @@ public class MP3 {
         
         while(mp3.isPlaying()) {
         	ThreadUtil.wait(500);
-        	System.out.println("Time = "+mp3.getPercent());
+        	System.out.println("Time = "+mp3.getCurrentTime());
         }
         mp3.close();
         System.out.println("Song done");

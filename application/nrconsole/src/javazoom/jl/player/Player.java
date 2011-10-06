@@ -68,12 +68,15 @@ public class Player
 	 */
 	private boolean		closed = false;
 	
+	private boolean pause = false;
+	
 	/**
 	 * Has the player played back all frames from the stream?
 	 */
 	private boolean		complete = false;
 
 	private int			numFrames = 0;
+	private long 		msPerFrame = 25; 
 	
 	private ArrayList<short[]> outputData = new ArrayList<short[]>();
 	/**
@@ -131,25 +134,33 @@ public class Player
 		}
 		return numFrames;
 	}
-	public void play() throws JavaLayerException
+	public void play() throws Exception
 	{
 		play(Integer.MAX_VALUE);
 	}
-	
+	public void setPause(boolean p){
+		pause = p;
+	}
 	/**
 	 * Plays a number of MPEG audio frames. 
 	 * 
 	 * @param frames	The number of frames to play. 
 	 * @return	true if the last frame was played, or false if there are
 	 *			more frames. 
+	 * @throws InterruptedException 
 	 */
-	public boolean play(int frames) throws JavaLayerException
+	public boolean play(int frames) throws Exception
 	{
 		boolean ret = true;
 		AudioDevice out = audio;
 		frame=0;
 		complete = false;
+		
+			long start=System.currentTimeMillis();
 		for(short[] s:outputData) {
+			while(pause){
+				Thread.sleep(1);
+			}
 			synchronized (this)
 			{
 				out = audio;
@@ -160,6 +171,7 @@ public class Player
 				}				
 			}
 		}
+		msPerFrame = (long) ((System.currentTimeMillis()-start)/getNumberOfFrames());
 		complete = true;
 		if (out!=null){				
 			out.flush();
@@ -217,6 +229,10 @@ public class Player
 	{
 		return (getCurrentFrame()/getNumberOfFrames());
 	}
+	
+	public int getCurrentTime(){
+		return (int) (getCurrentFrame()*msPerFrame);
+	}
 
 	public void setCurrentFrame(int frame) {
 		this.frame = frame;
@@ -225,6 +241,12 @@ public class Player
 	public double getCurrentFrame() {
 		return frame;
 	}		
-
+	/**
+	 * 
+	 * @return the length of the track in Ms 
+	 */
+	public int getTrackLength(){
+		return (int) (getNumberOfFrames()*msPerFrame);
+	}
 	
 }
