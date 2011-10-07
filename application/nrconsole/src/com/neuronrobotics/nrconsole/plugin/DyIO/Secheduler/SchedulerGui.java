@@ -17,8 +17,8 @@ public class SchedulerGui extends JPanel{
 	//private DyIO d = new DyIO();
 	private static final long serialVersionUID = -2532174391435417313L;
 	public SchedulerGui(){
-
-		SchedulerControlBar cb = new SchedulerControlBar();
+		CoreScheduler cs = new CoreScheduler();
+		SchedulerControlBar cb = new SchedulerControlBar(cs);
 		
 		cb.setAudioFile(new File("track.mp3"));
 		
@@ -34,7 +34,7 @@ public class SchedulerGui extends JPanel{
 	public static void main(String[] args) {
 		 JFrame frame = new JFrame();
 		 SchedulerGui sg =new SchedulerGui();
-		 sg.setConnection(new SerialConnection("/dev/DyIO0"));
+		 //sg.setConnection(new SerialConnection("/dev/DyIO0"));
 		 frame .add(sg);
 		 frame.setSize(new Dimension(1024,768));
 		 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
