@@ -17,6 +17,7 @@ public class SchedulerGui extends JPanel{
 	//private DyIO d = new DyIO();
 	private static final long serialVersionUID = -2532174391435417313L;
 	public SchedulerGui(){
+		setName("DyIO Scheduler");
 		CoreScheduler cs = new CoreScheduler();
 		SchedulerControlBar cb = new SchedulerControlBar(cs);
 		

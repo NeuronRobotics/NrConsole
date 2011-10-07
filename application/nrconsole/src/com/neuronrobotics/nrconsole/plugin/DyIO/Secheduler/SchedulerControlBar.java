@@ -3,6 +3,7 @@ package com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.DecimalFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -21,10 +22,11 @@ import net.miginfocom.swing.MigLayout;
 public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 	
 	private JSlider slider = new JSlider();
-	private JButton play = new JButton("Play");
+	private JButton play = new JButton("Play ");
 	private JCheckBox loop = new JCheckBox("Loop");
-	private JLabel time = new JLabel("Seconds: ");
-	private JTextField length = new JTextField();
+	private JLabel time = new JLabel("Seconds");
+
+	private JTextField length = new JTextField(4);
 	private JButton selectSong = new JButton("Select Audio Track");
 	private JLabel trackName = new JLabel("none");
 	private CoreScheduler cs;
@@ -39,7 +41,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
 		
-		setName("DyIO Scheduler");
+		
 		slider.setMajorTickSpacing(1000);
 		slider.setPaintTicks(true);
 		setTrackLegnth(60000);
@@ -128,7 +130,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 	}
 	private void pause() {
 		cs.pause();
-		play.setText("Play");
+		play.setText("Play ");
 	}
 	
 	private void setTrackLegnth(int ms){
@@ -144,6 +146,8 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		double cTime = ((double)val)/1000;
+		time.setText("Seconds: "+new DecimalFormat("000.00").format(cTime));
 		//System.out.println("Setting current time="+val+" slider="+slider.getValue());
 	}
 	private void setBounds(double top){
@@ -186,6 +190,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		cs.setAudioFile(f);
     	setTrackLegnth(cs.getTrackLength());
     	trackName.setText(f.getName());
+    	length.setEditable(false);
 	}
 
 	@Override
