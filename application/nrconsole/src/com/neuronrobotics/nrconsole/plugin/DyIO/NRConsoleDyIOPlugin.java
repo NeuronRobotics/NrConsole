@@ -24,6 +24,7 @@ import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
@@ -85,7 +86,9 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	
 	public boolean setConnection(BowlerAbstractConnection connection){
 		Log.debug(this.getClass()+" setConnection");
+		DyIO.disableFWCheck();
 		DyIORegestry.setConnection(connection);
+		DyIORegestry.get().connect();
 		DyIORegestry.get().addDyIOEventListener(this);
 		DyIORegestry.get().setMuteResyncOnModeChange(true);
 		setupDyIO();
