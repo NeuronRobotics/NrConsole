@@ -19,5 +19,9 @@ public class ServoOutputScheduleChannelUI extends JPanel {
 		setBorder(BorderFactory.createLoweredBevelBorder());
 		add(new JLabel("Output Channel: "+channel.getChannelNumber()));
 	}
+	public int getChannelNumber() {
+		// TODO Auto-generated method stub
+		return channel.getChannelNumber();
+	}
 	
 }

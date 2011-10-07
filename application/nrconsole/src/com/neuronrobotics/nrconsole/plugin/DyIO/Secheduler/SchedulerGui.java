@@ -29,6 +29,7 @@ public class SchedulerGui extends JPanel{
 	private static final long serialVersionUID = -2532174391435417313L;
 	JPanel channelBar = new JPanel(new MigLayout());
 	private IntegerComboBox availibleChans = new IntegerComboBox();
+	private IntegerComboBox usedChans = new IntegerComboBox();
 	private ArrayList< ServoOutputScheduleChannelUI> outputs = new ArrayList< ServoOutputScheduleChannelUI>();
 	public SchedulerGui(){
 		setName("DyIO Scheduler");
@@ -53,6 +54,7 @@ public class SchedulerGui extends JPanel{
 					outputs.add(sosc);
 					channelBar.add(sosc,"wrap");
 					availibleChans.removeInteger(selected);
+					usedChans.addInteger(selected);
 				}catch (Exception ex){
 					JOptionPane.showMessageDialog(null, "Failed to select channel, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
 				}
@@ -63,6 +65,36 @@ public class SchedulerGui extends JPanel{
 		}
 		addBar.add(addChannel);
 		addBar.add(availibleChans);
+		
+		JButton removeChannel = new JButton("Remove channel");
+		removeChannel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try{
+					try{
+						int selected = usedChans.getSelectedInteger();
+						availibleChans.addInteger(selected);
+						for(int i=0;i<outputs.size();i++){
+							ServoOutputScheduleChannelUI s = outputs.get(i);
+							if(s.getChannelNumber()==selected){
+								outputs.remove(s);
+								channelBar.remove(s);
+								usedChans.removeInteger(selected);
+								return;
+							}
+						}
+						
+					}catch (Exception ex){
+						JOptionPane.showMessageDialog(null, "Failed to select channel, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
+					}
+				}catch (Exception ex){
+					JOptionPane.showMessageDialog(null, "Failed to select channel, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+
+		addBar.add(removeChannel);
+		addBar.add(usedChans);
+		
 		channelBar.setBorder(BorderFactory.createRaisedBevelBorder());
 		
 		add(cb,"wrap");
