@@ -5,14 +5,22 @@ import java.util.ArrayList;
 
 import javax.swing.filechooser.FileFilter;
 
+import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
+import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 public class CoreScheduler {
+	private final int loopTime = 100;
+	private long flushTime = 0; 
 	private SchedulerThread st=null;
 	private MP3 mp3;
 	private boolean loop = false;
 	private ArrayList< ISchedulerListener> listeners = new ArrayList< ISchedulerListener>();
+	private ArrayList< ServoOutputScheduleChannel> outputs = new ArrayList< ServoOutputScheduleChannel>();
+	private DyIO dyio;
 	public CoreScheduler(){
 		
 	}
@@ -30,6 +38,16 @@ public class CoreScheduler {
 	}
 	public boolean isPlaying() {
 		return st!=null;
+	}
+	
+	public ServoOutputScheduleChannel addServoChannel(ServoChannel srv){
+		dyio=srv.getChannel().getDevice();
+		srv.getChannel().setCachedMode(true);
+		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
+		addISchedulerListener(soc);
+		soc.setIntervalTime(loopTime);
+		outputs.add(soc);
+		return soc;
 	}
 	
 	public void play(int setpoint,long StartOffset) {
@@ -56,6 +74,16 @@ public class CoreScheduler {
 		for(ISchedulerListener l:listeners){
 			l.onTimeUpdate(time);
 		}
+		long start = System.currentTimeMillis();
+		if(dyio!=null)
+			dyio.flushCache(loopTime);
+		flushTime = System.currentTimeMillis()-start;
+		if(flushTime>loopTime){
+			System.out.println("Flush took:"+flushTime+ " and loop time="+loopTime);
+			flushTime=loopTime;
+		}
+			
+			
 	}
 	
 	private void callStop(){
@@ -68,7 +96,7 @@ public class CoreScheduler {
 		private double time;
 		private boolean run = true;
 		private long StartOffset;
-		private final int loopTime = 100;
+		
 		public SchedulerThread(double ms,final long so){
 			time = ms;
 			StartOffset=so;
@@ -86,13 +114,25 @@ public class CoreScheduler {
 					while( (((double)(System.currentTimeMillis()-start))<(time-StartOffset)) && run){
 						long offset = ((System.currentTimeMillis()-start))+StartOffset;
 						setCurrentTime(offset);
-						ThreadUtil.wait(loopTime );
+						long t  = loopTime-flushTime;
+						try {
+							Thread.sleep(t);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}else{
 					mp3.play();
 					while(mp3.isPlaying() && run) {
 						setCurrentTime(mp3.getCurrentTime());
-						ThreadUtil.wait(loopTime );
+						long t  = loopTime-flushTime;
+						try {
+							Thread.sleep(t);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 				if(run && isLooping())
