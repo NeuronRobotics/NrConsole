@@ -23,7 +23,9 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	public ServoOutputScheduleChannel(ServoChannel srv) {
 		output=srv;
 	}
-
+	public int getChannelNumber(){
+		return output.getChannel().getChannelNumber();
+	}
 	public void pauseRecording(){
 		input.removeAnalogInputListener(this);
 		recording=false;

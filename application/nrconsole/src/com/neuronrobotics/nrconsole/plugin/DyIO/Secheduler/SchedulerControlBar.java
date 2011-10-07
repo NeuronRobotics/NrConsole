@@ -191,6 +191,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
     	setTrackLegnth(cs.getTrackLength());
     	trackName.setText(f.getName());
     	length.setEditable(false);
+    	setCurrentTime(0);
 	}
 
 	@Override

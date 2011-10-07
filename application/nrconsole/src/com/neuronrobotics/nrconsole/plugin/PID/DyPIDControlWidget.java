@@ -24,7 +24,7 @@ import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
 import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 
 public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
-	private JButton  DypidSet = new JButton("Set DyIO PID");
+	private JButton  DypidSet = new JButton("Configure DyIO channels");
 	private JComboBox inChan = new JComboBox();
 	private JComboBox outChan = new JComboBox();
 	private JComboBox inMode = new JComboBox();

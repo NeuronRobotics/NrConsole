@@ -82,8 +82,7 @@ public class CoreScheduler {
 			System.out.println("Flush took:"+flushTime+ " and loop time="+loopTime);
 			flushTime=loopTime;
 		}
-			
-			
+
 	}
 	
 	private void callStop(){
