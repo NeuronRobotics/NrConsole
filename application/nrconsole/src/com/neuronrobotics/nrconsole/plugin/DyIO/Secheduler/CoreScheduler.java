@@ -16,8 +16,8 @@ public class CoreScheduler {
 	private ArrayList< ISchedulerListener> listeners = new ArrayList< ISchedulerListener>();
 	private ArrayList< ServoOutputScheduleChannel> outputs = new ArrayList< ServoOutputScheduleChannel>();
 	private DyIO dyio;
-	public CoreScheduler(){
-		
+	public CoreScheduler(DyIO d){
+		dyio = d;
 	}
 	public void setAudioFile(File f) {
     	mp3 = new MP3(f.getAbsolutePath());
@@ -35,12 +35,12 @@ public class CoreScheduler {
 		return st!=null;
 	}
 	
-	public ServoOutputScheduleChannel addServoChannel(ServoChannel srv){
-		dyio=srv.getChannel().getDevice();
+	public ServoOutputScheduleChannel addServoChannel(int dyIOChannel){
+		ServoChannel srv = new ServoChannel(dyio.getChannel(dyIOChannel));
 		srv.getChannel().setCachedMode(true);
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
 		addISchedulerListener(soc);
-		soc.setIntervalTime(loopTime);
+		//soc.setIntervalTime(loopTime);
 		outputs.add(soc);
 		return soc;
 	}
@@ -75,7 +75,7 @@ public class CoreScheduler {
 		}
 		long start = System.currentTimeMillis();
 		if(dyio!=null)
-			dyio.flushCache(loopTime);
+			dyio.flushCache(loopTime+loopTime/2);
 		flushTime = System.currentTimeMillis()-start;
 		if(flushTime>loopTime){
 			System.err.println("Flush took:"+flushTime+ " and loop time="+loopTime);
@@ -102,41 +102,44 @@ public class CoreScheduler {
 			if(mp3!=null) {
 				mp3.setCurrentTime((int) (StartOffset));
 			}
+			for(ServoOutputScheduleChannel s:outputs){
+				s.setIntervalTime(loopTime, (int) time);
+			}
 		}
 		public void run(){
 			//System.out.println("Starting timer");
 			do{
 				long start = System.currentTimeMillis();
 				//System.out.println("Initial slider value = "+StartOffset);
-				if(mp3==null){
-					while( (((double)(System.currentTimeMillis()-start))<(time-StartOffset)) && run){
-						long offset = ((System.currentTimeMillis()-start))+StartOffset;
-						setCurrentTime(offset);
-						long t  = loopTime-flushTime;
-						try {
-							Thread.sleep(t);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+				while(run){
+					boolean playing;
+					long current;
+					if(mp3==null){
+						playing = (((double)(System.currentTimeMillis()-start))<(time-StartOffset));
+						current =((System.currentTimeMillis()-start))+StartOffset;
+					}else{
+						playing = mp3.isPlaying();
+						current = mp3.getCurrentTime();
 					}
-				}else{
-					mp3.play();
-					while(mp3.isPlaying() && run) {
-						setCurrentTime(mp3.getCurrentTime());
-						long t  = loopTime-flushTime;
-						try {
-							Thread.sleep(t);
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+					if(!playing){
+						kill();
+						break;
+					}
+						
+					setCurrentTime(current);
+					long t  = loopTime-flushTime;
+					try {
+						Thread.sleep(t);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 				}
+				
 				if(run && isLooping())
 					setCurrentTime(0);
 			}while(isLooping() && run);
-			
+			kill();
 			callStop();
 			st=null;
 		}

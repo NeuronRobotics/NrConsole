@@ -33,10 +33,10 @@ public class SchedulerGui extends JPanel{
 	private ArrayList< ServoOutputScheduleChannelUI> outputs = new ArrayList< ServoOutputScheduleChannelUI>();
 	CoreScheduler cs;
 	public SchedulerGui(){
-		setName("DyIO Scheduler");
+		setName("DyIO Sequencer");
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		cs = new CoreScheduler();
+		cs = new CoreScheduler(DyIORegestry.get());
 		SchedulerControlBar cb = new SchedulerControlBar(cs);
 		
 		cb.setAudioFile(new File("track.mp3"));
@@ -48,9 +48,7 @@ public class SchedulerGui extends JPanel{
 				try{
 					int selected = availibleChans.getSelectedInteger();
 					ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(
-														cs.addServoChannel(
-														new ServoChannel(
-														DyIORegestry.get().getChannel(selected))));
+														cs.addServoChannel(selected));
 					
 					outputs.add(sosc);
 					channelBar.add(sosc,"wrap");

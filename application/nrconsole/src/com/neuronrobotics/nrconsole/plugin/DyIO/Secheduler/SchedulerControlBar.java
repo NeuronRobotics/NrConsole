@@ -58,6 +58,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 						pause();
 					}
 				}else {
+					setCurrentTime(slider.getValue());
 					if(wasAdjusting) {
 						wasAdjusting = false;
 						play();
@@ -200,14 +201,14 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 	}
 
 	@Override
-	public void setIntervalTime(double ms) {
-		// TODO Auto-generated method stub
-		
+	public void isStopped() {
+		play.setText("Play");
 	}
 
 	@Override
-	public void isStopped() {
-		play.setText("Play");
+	public void setIntervalTime(int msInterval, int totalTime) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

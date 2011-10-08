@@ -8,9 +8,10 @@ public interface ISchedulerListener {
 	public void onTimeUpdate(double ms);
 	/**
 	 * This method is to configure the listeners timing. This passes in the time interval that the scheduler will run at
-	 * @param ms time interval that the scheduler will run at
+	 * @param msInterval time interval that the scheduler will run at
+	 * @param msInterval the total time for the loop
 	 */
-	public void setIntervalTime(double ms);
+	public void setIntervalTime(int msInterval, int totalTime);
 	
 	/**
 	 * This function is called when the seceduler is stopped
