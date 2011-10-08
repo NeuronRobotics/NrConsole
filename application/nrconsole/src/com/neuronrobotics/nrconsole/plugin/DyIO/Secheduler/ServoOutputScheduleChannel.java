@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
+import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogInputListener {
@@ -147,7 +148,12 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	public boolean isRecording() {
 		return recording;
 	}
-
+	public void addIServoPositionUpdateListener(IServoPositionUpdateListener l) {
+		getOutput().addIServoPositionUpdateListener(l);
+	}
+	public void removeIServoPositionUpdateListener(IServoPositionUpdateListener l) {
+		getOutput().removeIServoPositionUpdateListener(l);
+	}
 	
 
 }

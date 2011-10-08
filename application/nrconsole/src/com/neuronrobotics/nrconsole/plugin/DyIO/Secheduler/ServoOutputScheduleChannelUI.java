@@ -10,10 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.neuronrobotics.nrconsole.util.IntegerComboBox;
+import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
+import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 import net.miginfocom.swing.MigLayout;
 
-public class ServoOutputScheduleChannelUI extends JPanel {
+public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositionUpdateListener{
 
 	/**
 	 * 
@@ -25,6 +27,7 @@ public class ServoOutputScheduleChannelUI extends JPanel {
 	private JPanel recordConfig = new JPanel();
 	IntegerComboBox availible;
 	public ServoOutputScheduleChannelUI(ServoOutputScheduleChannel chan){
+		chan.addIServoPositionUpdateListener(this);
 		setChannel(chan);
 		setLayout(new MigLayout());
 		availible=new IntegerComboBox();
@@ -81,6 +84,13 @@ public class ServoOutputScheduleChannelUI extends JPanel {
 	}
 	public ServoOutputScheduleChannel getChannel() {
 		return channel;
+	}
+
+
+	@Override
+	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
