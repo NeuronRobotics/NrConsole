@@ -3,13 +3,8 @@ package com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler;
 import java.io.File;
 import java.util.ArrayList;
 
-import javax.swing.filechooser.FileFilter;
-
 import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
-import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
-import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 public class CoreScheduler {
@@ -48,6 +43,10 @@ public class CoreScheduler {
 		soc.setIntervalTime(loopTime);
 		outputs.add(soc);
 		return soc;
+	}
+	
+	public void removeServoOutputScheduleChannel(ServoOutputScheduleChannel s){
+		outputs.remove(s);
 	}
 	
 	public void play(int setpoint,long StartOffset) {

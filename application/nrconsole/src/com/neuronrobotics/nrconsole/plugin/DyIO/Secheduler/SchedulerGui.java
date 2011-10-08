@@ -31,11 +31,12 @@ public class SchedulerGui extends JPanel{
 	private IntegerComboBox availibleChans = new IntegerComboBox();
 	private IntegerComboBox usedChans = new IntegerComboBox();
 	private ArrayList< ServoOutputScheduleChannelUI> outputs = new ArrayList< ServoOutputScheduleChannelUI>();
+	CoreScheduler cs;
 	public SchedulerGui(){
 		setName("DyIO Scheduler");
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		CoreScheduler cs = new CoreScheduler();
+		cs = new CoreScheduler();
 		SchedulerControlBar cb = new SchedulerControlBar(cs);
 		
 		cb.setAudioFile(new File("track.mp3"));
@@ -47,7 +48,7 @@ public class SchedulerGui extends JPanel{
 				try{
 					int selected = availibleChans.getSelectedInteger();
 					ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(
-														new ServoOutputScheduleChannel(
+														cs.addServoChannel(
 														new ServoChannel(
 														DyIORegestry.get().getChannel(selected))));
 					
@@ -76,6 +77,7 @@ public class SchedulerGui extends JPanel{
 						for(int i=0;i<outputs.size();i++){
 							ServoOutputScheduleChannelUI s = outputs.get(i);
 							if(s.getChannelNumber()==selected){
+								cs.removeServoOutputScheduleChannel(s.getChannel());
 								outputs.remove(s);
 								channelBar.remove(s);
 								usedChans.removeInteger(selected);
