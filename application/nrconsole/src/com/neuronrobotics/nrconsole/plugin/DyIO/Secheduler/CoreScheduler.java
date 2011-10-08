@@ -8,7 +8,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 
 public class CoreScheduler {
-	private final int loopTime = 100;
+	private final int loopTime = 150;
 	private long flushTime = 0; 
 	private SchedulerThread st=null;
 	private MP3 mp3;
@@ -78,7 +78,7 @@ public class CoreScheduler {
 			dyio.flushCache(loopTime);
 		flushTime = System.currentTimeMillis()-start;
 		if(flushTime>loopTime){
-			System.out.println("Flush took:"+flushTime+ " and loop time="+loopTime);
+			System.err.println("Flush took:"+flushTime+ " and loop time="+loopTime);
 			flushTime=loopTime;
 		}
 
