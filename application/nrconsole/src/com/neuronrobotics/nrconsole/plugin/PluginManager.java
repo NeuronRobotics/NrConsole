@@ -127,7 +127,7 @@ public class PluginManager {
 		new NRConsoleBowlerCameraPlugin();
 		new NRConsoleBootloaderPlugin();
 		//System.out.println("Updating plugins:"+plugins);
-		new NRConsoleSchedulerPlugin();
+		//new NRConsoleSchedulerPlugin();
 		//END HACK
 	}
 }

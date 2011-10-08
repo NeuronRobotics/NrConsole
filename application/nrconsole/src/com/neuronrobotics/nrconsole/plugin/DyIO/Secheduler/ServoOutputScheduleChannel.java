@@ -20,8 +20,11 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	private double interval;
 	private double lastTime=0;
 	
+	private int currentValue;
+	
 	public ServoOutputScheduleChannel(ServoChannel srv) {
 		output=srv;
+		currentValue = output.getValue();
 	}
 	public int getChannelNumber(){
 		return output.getChannel().getChannelNumber();
