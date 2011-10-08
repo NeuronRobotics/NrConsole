@@ -3,12 +3,13 @@ package com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler;
 import java.io.File;
 import java.util.ArrayList;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 
 public class CoreScheduler {
-	private final int loopTime = 150;
+	private final int loopTime = 120;
 	private long flushTime = 0; 
 	private SchedulerThread st=null;
 	private MP3 mp3;
@@ -74,8 +75,12 @@ public class CoreScheduler {
 			l.onTimeUpdate(time);
 		}
 		long start = System.currentTimeMillis();
-		if(dyio!=null)
-			dyio.flushCache(loopTime+loopTime/2);
+		if(dyio!=null){
+			//Log.enableDebugPrint(true);
+			double seconds =((double)(loopTime+loopTime/3))/1000;
+			dyio.flushCache(seconds);
+			//Log.enableDebugPrint(false);
+		}
 		flushTime = System.currentTimeMillis()-start;
 		if(flushTime>loopTime){
 			System.err.println("Flush took:"+flushTime+ " and loop time="+loopTime);
@@ -110,7 +115,11 @@ public class CoreScheduler {
 			//System.out.println("Starting timer");
 			do{
 				long start = System.currentTimeMillis();
-				//System.out.println("Initial slider value = "+StartOffset);
+				System.out.println("Initial slider value = "+StartOffset);
+				if(mp3!=null) {
+					mp3.play();
+				}
+				run = true;
 				while(run){
 					boolean playing;
 					long current;

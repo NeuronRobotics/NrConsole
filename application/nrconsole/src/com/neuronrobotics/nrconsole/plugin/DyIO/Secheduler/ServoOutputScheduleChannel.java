@@ -19,20 +19,25 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	
 	private int currentValue;
 	private ArrayList<MapData> data = new ArrayList<MapData>();
-	private int outputMax;
-	private int outputMin;  
+	private int outputMax=200;
+	private int outputMin=50;
+	private int index=0;
 	public ServoOutputScheduleChannel(ServoChannel srv) {
 		output=srv;
 		currentValue = output.getValue();
+		srv.SetPosition(currentValue);
+		srv.flush();
 	}
 	public int getChannelNumber(){
 		return output.getChannel().getChannelNumber();
 	}
 	public void pauseRecording(){
+		System.out.println("pausing recording");
 		input.removeAnalogInputListener(this);
 		recording=false;
 	}
 	public void resumeRecording(){
+		System.out.println("resuming recording");
 		addAnalogInputListener(this);
 		recording=true;
 	}
@@ -44,24 +49,26 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	public void startRecording(int analogInputChannelNumber, int inCenter, double inScale){
 		setInputCenter(inCenter);
 		setInputScale(inScale);
-		input=new AnalogInputChannel(output.getChannel().getDevice().getChannel(analogInputChannelNumber),true);
-		input.configAdvancedAsyncNotEqual(10);
+		if(input==null){
+			input=new AnalogInputChannel(output.getChannel().getDevice().getChannel(analogInputChannelNumber),true);
+			input.configAdvancedAsyncNotEqual(10);
+		}
 		resumeRecording();
 	}
 
 	@Override
 	public void onTimeUpdate(double ms) {
-		int index = (int) (ms/interval);
-		if(recording){
-			if(inputValue>getOutputMax()){
-				inputValue=getOutputMax();
-			}
-			if(inputValue<getOutputMin()){
-				inputValue=getOutputMin();
-			}
+		index = (int) (ms/interval);
+		if(recording)
 			data.get(index).input=inputValue;
+		currentValue = data.get(index).input;
+		//System.out.println("Setting servo value="+data.get(index).input);
+		//Log.enableDebugPrint(true);
+		while(index>=data.size()){
+			data.add(new MapData(currentValue,index*interval));
 		}
 		output.SetPosition(data.get(index).input);
+		//Log.enableDebugPrint(false);
 	}
 
 
@@ -69,11 +76,13 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	public void setIntervalTime(int msInterval, int totalTime) {
 		interval=msInterval;
 		int slices = totalTime/msInterval;
-		if(data.size()!=slices){
+		if(data.size()==0){
+			System.out.println("Setting up sample data:");
 			data = new ArrayList<MapData>();
 			for(int i=0;i<slices;i++){
 				data.add(new MapData(currentValue, i*msInterval));
 			}
+			data.add(new MapData(currentValue, slices*msInterval));
 		}
 		
 	}
@@ -84,9 +93,15 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
-		
+		System.out.println("Analog value="+value);
 		inputValue = (int) ((value+getInputCenter())*getInputScale());
-
+		if(inputValue>getOutputMax()){
+			inputValue=getOutputMax();
+		}
+		if(inputValue<getOutputMin()){
+			inputValue=getOutputMin();
+		}
+		System.out.println("Analog value="+value+" scaled="+inputValue);
 	}
 	
 	public void setOutput(ServoChannel output) {
@@ -98,7 +113,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 
 	public void setInputCenter(int inputCenter) {
-		this.inputCenter = 512-inputCenter;
+		this.inputCenter =inputCenter- 512;
 	}
 	public int getInputCenter() {
 		return inputCenter;
@@ -128,6 +143,9 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 			input=i;
 			time=t;
 		}
+	}
+	public boolean isRecording() {
+		return recording;
 	}
 
 	

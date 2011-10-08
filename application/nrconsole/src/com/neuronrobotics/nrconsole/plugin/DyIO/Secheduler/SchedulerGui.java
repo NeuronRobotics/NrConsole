@@ -39,7 +39,7 @@ public class SchedulerGui extends JPanel{
 		cs = new CoreScheduler(DyIORegestry.get());
 		SchedulerControlBar cb = new SchedulerControlBar(cs);
 		
-		cb.setAudioFile(new File("track.mp3"));
+		//cb.setAudioFile(new File("track.mp3"));
 		
 		JPanel addBar = new JPanel(new MigLayout());
 		JButton addChannel = new JButton("Add new channel");
@@ -102,6 +102,10 @@ public class SchedulerGui extends JPanel{
 		add(channelBar,"wrap");
 	}
 	
+	protected SchedulerGui getGui() {
+		return this;
+	}
+
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		DyIORegestry.setConnection(connection);
 		return DyIORegestry.get().ping()!=null;
