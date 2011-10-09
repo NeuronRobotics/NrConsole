@@ -22,7 +22,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 
 public class CoreScheduler {
-	private int loopTime = 120;
+	private int loopTime;
 	private long flushTime = 0; 
 	private SchedulerThread st=null;
 	private MP3 mp3;
@@ -34,10 +34,11 @@ public class CoreScheduler {
 	private int msDuration=0;
 	private int trackLength;
 	private File audioFile=null;
-	public CoreScheduler(DyIO d){
+	public CoreScheduler(DyIO d, int loopTime,int duration ){
 		dyio = d;
-		dyio.enableDebug();
-		
+		this.loopTime=loopTime;
+		msDuration=duration;
+		//dyio.enableDebug();	
 	}
 	
 	public void loadFromFile(File f){
@@ -96,7 +97,6 @@ public class CoreScheduler {
 			    		}
 			    		ServoOutputScheduleChannel so = addServoChannel(channel);
 			    		so.setOutputMinMax(min,max);
-			    		so.setIntervalTime(loopTime, getTrackLength());
 			    		if(enabled){
 			    			so.startRecording(inChannel, inCenter, inScale);
 			    		}
@@ -122,10 +122,9 @@ public class CoreScheduler {
 		audioFile=f;
 		filename=f.getAbsolutePath();
     	mp3 = new MP3(f.getAbsolutePath());
+    	msDuration = mp3.getTrackLength();
 	}
 	public int getTrackLength(){
-		if(mp3!=null)
-			return mp3.getTrackLength();
 		return msDuration;
 	}
 	public void setLooping(boolean b){
@@ -142,6 +141,7 @@ public class CoreScheduler {
 		ServoChannel srv = new ServoChannel(dyio.getChannel(dyIOChannel));
 		srv.getChannel().setCachedMode(true);
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
+		soc.setIntervalTime(loopTime, getTrackLength());
 		addISchedulerListener(soc);
 		//soc.setIntervalTime(loopTime);
 		getOutputs().add(soc);

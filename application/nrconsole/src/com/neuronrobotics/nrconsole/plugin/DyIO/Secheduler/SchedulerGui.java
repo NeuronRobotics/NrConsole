@@ -21,7 +21,6 @@ import com.neuronrobotics.nrconsole.util.IntegerComboBox;
 import com.neuronrobotics.nrconsole.util.XmlFilter;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
-import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 
 public class SchedulerGui extends JPanel{
@@ -38,11 +37,12 @@ public class SchedulerGui extends JPanel{
 	private File configFile=null;
 	CoreScheduler cs;
 	SchedulerControlBar cb;
+	private int loopTime =120;
 	public SchedulerGui(){
 		setName("DyIO Sequencer");
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		cs = new CoreScheduler(DyIORegestry.get());
+		cs = new CoreScheduler(DyIORegestry.get(), loopTime,60000);
 		cb = new SchedulerControlBar(cs);
 		
 		//cb.setAudioFile(new File("track.mp3"));

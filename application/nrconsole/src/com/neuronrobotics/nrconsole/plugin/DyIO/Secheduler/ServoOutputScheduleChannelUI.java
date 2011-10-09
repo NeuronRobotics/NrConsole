@@ -65,15 +65,13 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		add(recordConfig);
 		
 		record.setSelected(getChannel().isRecording());
-		if(record.isSelected()){
-			recordConfig.setVisible(true);
-		}else{
-			recordConfig.setVisible(false);
-			pause();
-		}
-		if(getChannel().isRecording()){
+		try{
 			availible.setSelectedInteger(getChannel().getInputChannelNumber());
+		}catch(Exception ex){
+			
 		}
+		recordConfig.setVisible(record.isSelected());
+	
 	}
 	
 	private void pause(){

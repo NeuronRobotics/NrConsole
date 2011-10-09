@@ -19,7 +19,7 @@
 		<inputScale>0.0</inputScale>
 		<inputCenter>128</inputCenter>
 		<inputChannel>255</inputChannel>
-		<data></data>
+		<data>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</data>
 	</ServoOutputSequence>
 	<ServoOutputSequence>
 		<outputMax>200</outputMax>
@@ -29,7 +29,7 @@
 		<inputScale>0.0</inputScale>
 		<inputCenter>128</inputCenter>
 		<inputChannel>255</inputChannel>
-		<data></data>
+		<data>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</data>
 	</ServoOutputSequence>
 	<ServoOutputSequence>
 		<outputMax>200</outputMax>
@@ -39,6 +39,6 @@
 		<inputScale>0.0</inputScale>
 		<inputCenter>128</inputCenter>
 		<inputChannel>255</inputChannel>
-		<data></data>
+		<data>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</data>
 	</ServoOutputSequence>
 </ServoOutputSequenceGroup>
