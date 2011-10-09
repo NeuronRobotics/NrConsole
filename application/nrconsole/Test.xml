@@ -4,41 +4,11 @@
 	<ServoOutputSequence>
 		<outputMax>200</outputMax>
 		<outputMin>50</outputMin>
-		<outputChannel>0</outputChannel>
-		<inputEnabled>false</inputEnabled>
+		<outputChannel>11</outputChannel>
+		<inputEnabled>true</inputEnabled>
 		<inputScale>0.25</inputScale>
 		<inputCenter>512</inputCenter>
 		<inputChannel>12</inputChannel>
-		<data>98,98,98,107,128,160,181,184,170,126,119,111,131,158,165,141,124,124,105,136,158,185,200,200,200,200,200,200,174,136,93,72,56,82,107,135,160,200,200,191,181,119,89,57,50,50,50,64,88,112,138,163,174,168,160,160,160,50,50,0,69,121,148,168,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</data>
-	</ServoOutputSequence>
-	<ServoOutputSequence>
-		<outputMax>200</outputMax>
-		<outputMin>50</outputMin>
-		<outputChannel>1</outputChannel>
-		<inputEnabled>false</inputEnabled>
-		<inputScale>0.0</inputScale>
-		<inputCenter>128</inputCenter>
-		<inputChannel>255</inputChannel>
-		<data>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</data>
-	</ServoOutputSequence>
-	<ServoOutputSequence>
-		<outputMax>200</outputMax>
-		<outputMin>50</outputMin>
-		<outputChannel>2</outputChannel>
-		<inputEnabled>false</inputEnabled>
-		<inputScale>0.0</inputScale>
-		<inputCenter>128</inputCenter>
-		<inputChannel>255</inputChannel>
-		<data>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</data>
-	</ServoOutputSequence>
-	<ServoOutputSequence>
-		<outputMax>200</outputMax>
-		<outputMin>50</outputMin>
-		<outputChannel>3</outputChannel>
-		<inputEnabled>false</inputEnabled>
-		<inputScale>0.0</inputScale>
-		<inputCenter>128</inputCenter>
-		<inputChannel>255</inputChannel>
-		<data>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</data>
+		<data>200,200,200,200,200,200,161,140,111,111,113,183,200,200,200,200,200,200,200,200,200,200,200,200,200,165,112,108,117,177,200,181,162,177,50,146,175,200,145,174,124,132,132,171,88,52,67,136,103,63,177,168,89,156,50,75,156,105,142,92,50,64,147,104,68,57,157,104,188,144,144,125,140,143,173,117,125,186,128,190,174,141,182,182,200,200,200,190,151,99,97,169,200,200,200,179,138,97,106,178,200,170,149,111,200,118,119,185,112,138,187,200,179,118,95,120,180,200,145,112,147,164,106,148,190,119,153,200,200,200,162,50,124,109,171,200,200,200,163,137,115,96,141,200,132,160,189,132,188,188,161,200,200,200,200,200,200</data>
 	</ServoOutputSequence>
 </ServoOutputSequenceGroup>

@@ -117,7 +117,7 @@ public class CoreScheduler {
 	    return nValue.getNodeValue();    
 	}
 	public void setAudioFile(File f) {
-		if( audioFile==f)
+		if( audioFile==f || f==null)
 			return;
 		audioFile=f;
 		filename=f.getAbsolutePath();
