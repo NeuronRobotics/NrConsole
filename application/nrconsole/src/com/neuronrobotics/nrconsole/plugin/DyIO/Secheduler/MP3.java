@@ -23,9 +23,9 @@ import java.io.FileInputStream;
 
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
-import javazoom.jl.player.Player;
+import javazoom.jl.player.MyPlayer;
 public class MP3 {
-    private Player player; 
+    private MyPlayer player; 
     private String fn="";
     private boolean pause = false;
     private boolean playing = false;
@@ -35,7 +35,7 @@ public class MP3 {
         try {
             FileInputStream fis     = new FileInputStream(fn);
             BufferedInputStream bis = new BufferedInputStream(fis);
-            player = new Player(bis);
+            player = new MyPlayer(bis);
         }
         catch (Exception e) {
             System.out.println("Problem playing file " + filename);

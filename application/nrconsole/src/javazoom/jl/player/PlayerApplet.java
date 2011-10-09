@@ -42,7 +42,7 @@ public class PlayerApplet extends Applet implements Runnable
 	/**
 	 * The Player used to play the MPEG audio file. 
 	 */
-	private Player	player = null;
+	private MyPlayer	player = null;
 	
 	/**
 	 * The thread that runs the player.
@@ -160,7 +160,7 @@ public class PlayerApplet extends Applet implements Runnable
 		
 		if (in!=null && dev!=null)
 		{
-			player = new Player(in, dev);
+			player = new MyPlayer(in, dev);
 			playerThread = createPlayerThread();
 			playerThread.start();
 		}

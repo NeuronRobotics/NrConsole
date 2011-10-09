@@ -40,7 +40,7 @@ import javazoom.jl.decoder.SampleBuffer;
 
 // REVIEW: the audio device should not be opened until the
 // first MPEG audio frame has been decoded. 
-public class Player
+public class MyPlayer
 {	  	
 	/**
 	 * The current frame number. 
@@ -82,12 +82,12 @@ public class Player
 	/**
 	 * Creates a new <code>Player</code> instance. 
 	 */
-	public Player(InputStream stream) throws JavaLayerException
+	public MyPlayer(InputStream stream) throws JavaLayerException
 	{
 		this(stream, null);	
 	}
 	
-	public Player(InputStream stream, AudioDevice device) throws JavaLayerException
+	public MyPlayer(InputStream stream, AudioDevice device) throws JavaLayerException
 	{
 		bitstream = new Bitstream(stream);		
 		decoder = new Decoder();

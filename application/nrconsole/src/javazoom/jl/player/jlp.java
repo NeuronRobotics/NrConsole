@@ -130,7 +130,7 @@ public class jlp
 			if (remote == true) in = getURLInputStream();
 			else in = getInputStream();
 			AudioDevice dev = getAudioDevice();
-			Player player = new Player(in, dev);
+			MyPlayer player = new MyPlayer(in, dev);
 			player.play();
 		}
 		catch (IOException ex)
