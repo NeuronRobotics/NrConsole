@@ -63,6 +63,17 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		add(new JLabel("Output Channel: "+getChannel().getChannelNumber()));
 		add(record);
 		add(recordConfig);
+		
+		record.setSelected(getChannel().isRecording());
+		if(record.isSelected()){
+			recordConfig.setVisible(true);
+		}else{
+			recordConfig.setVisible(false);
+			pause();
+		}
+		if(getChannel().isRecording()){
+			availible.setSelectedInteger(getChannel().getInputChannelNumber());
+		}
 	}
 	
 	private void pause(){

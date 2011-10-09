@@ -1,8 +1,21 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import com.neuronrobotics.sdk.addons.walker.WalkerServoLink;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
@@ -19,15 +32,101 @@ public class CoreScheduler {
 	private DyIO dyio;
 	private String filename=null;
 	private int msDuration=0;
+	private int trackLength;
+	private File audioFile=null;
 	public CoreScheduler(DyIO d){
 		dyio = d;
+		dyio.enableDebug();
+		
+	}
+	
+	public void loadFromFile(File f){
+		/**
+		 * sample code from
+		 * http://www.mkyong.com/java/how-to-read-xml-file-in-java-dom-parser/
+		 */
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder dBuilder;
+	    Document doc = null;
+	    try {
+			dBuilder = dbFactory.newDocumentBuilder();
+			doc = dBuilder.parse(new FileInputStream(f));
+			doc.getDocumentElement().normalize();
+		} catch (ParserConfigurationException e) {
+			throw new RuntimeException(e);
+		} catch (SAXException e) {
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		//System.out.println("Parsing File...");
+		NodeList nList = doc.getElementsByTagName("ServoOutputSequenceGroup");
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+			//System.out.println("Leg # "+temp);
+		    Node nNode = nList.item(temp);
+		    if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+		    	Element eElement = (Element) nNode;
+		    	
+		    	String filename = getTagValue("mp3",eElement);
+		    	if(filename!=null){
+		    		setAudioFile(new File(filename));
+		    	}else{
+		    		msDuration = Integer.parseInt(getTagValue("duration",eElement));
+		    	}
+		    	loopTime = Integer.parseInt(getTagValue("loopTime",eElement));
+		    	NodeList links = eElement.getElementsByTagName("ServoOutputSequence");
+		    	for (int i = 0; i < links.getLength(); i++) {
+		    		//System.out.println("\tLink # "+i);
+		    		Node lNode = links.item(i);
+		    		if (lNode.getNodeType() == Node.ELEMENT_NODE) {
+			    		Element lElement = (Element) lNode;
+			    		int max=Integer.parseInt(getTagValue("outputMax",lElement));
+			    		int min=Integer.parseInt(getTagValue("outputMin",lElement));
+			    		int channel=Integer.parseInt(getTagValue("outputChannel",lElement));
+			    		boolean enabled = getTagValue("inputEnabled",lElement).contains("true");
+			    		
+			    		double inScale=Double.parseDouble(getTagValue("inputScale",lElement));
+			    		int inCenter=Integer.parseInt(getTagValue("inputCenter",lElement));
+			    		int inChannel=Integer.parseInt(getTagValue("inputChannel",lElement));
+			    		
+			    		String [] sdata =  getTagValue("data",lElement).split(",");
+			    		int []data=new int[sdata.length];
+			    		for(int j=0;j<data.length;j++){
+			    			data[j]=Integer.parseInt(sdata[j]);
+			    		}
+			    		ServoOutputScheduleChannel so = addServoChannel(channel);
+			    		so.setOutputMinMax(min,max);
+			    		so.setIntervalTime(loopTime, getTrackLength());
+			    		if(enabled){
+			    			so.startRecording(inChannel, inCenter, inScale);
+			    		}
+			    		so.setData(data);
+		    		}
+		    	}
+
+		    }else{
+		    	//System.out.println("Not Element Node");
+		    }
+		}
+		System.out.println("Populated Scheduler");
+	}
+	private static String getTagValue(String sTag, Element eElement){
+	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
+	    Node nValue = (Node) nlList.item(0); 
+	    //System.out.println("\t\t"+sTag+" = "+nValue.getNodeValue());
+	    return nValue.getNodeValue();    
 	}
 	public void setAudioFile(File f) {
+		if( audioFile==f)
+			return;
+		audioFile=f;
 		filename=f.getAbsolutePath();
     	mp3 = new MP3(f.getAbsolutePath());
 	}
 	public int getTrackLength(){
-		return mp3.getTrackLength();
+		if(mp3!=null)
+			return mp3.getTrackLength();
+		return msDuration;
 	}
 	public void setLooping(boolean b){
 		loop=b;
@@ -45,12 +144,12 @@ public class CoreScheduler {
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
 		addISchedulerListener(soc);
 		//soc.setIntervalTime(loopTime);
-		outputs.add(soc);
+		getOutputs().add(soc);
 		return soc;
 	}
 	
 	public void removeServoOutputScheduleChannel(ServoOutputScheduleChannel s){
-		outputs.remove(s);
+		getOutputs().remove(s);
 	}
 	
 	public void play(int setpoint,long StartOffset) {
@@ -107,13 +206,21 @@ public class CoreScheduler {
 			s+="\t<duriation>"+msDuration+"</duriation>\n";
 		}	
 		s+="\t<loopTime>"+loopTime+"</loopTime>\n";
-		for(ServoOutputScheduleChannel so:outputs){
+		for(ServoOutputScheduleChannel so:getOutputs()){
 			s+=so.getXml();
 		}
 		s+="</ServoOutputSequenceGroup>\n";
 		return s;
 	}
 	
+	public void setOutputs(ArrayList< ServoOutputScheduleChannel> outputs) {
+		this.outputs = outputs;
+	}
+
+	public ArrayList< ServoOutputScheduleChannel> getOutputs() {
+		return outputs;
+	}
+
 	private class SchedulerThread extends Thread{
 		private double time;
 		private boolean run = true;
@@ -126,7 +233,7 @@ public class CoreScheduler {
 			if(mp3!=null) {
 				mp3.setCurrentTime((int) (StartOffset));
 			}
-			for(ServoOutputScheduleChannel s:outputs){
+			for(ServoOutputScheduleChannel s:getOutputs()){
 				s.setIntervalTime(loopTime, (int) time);
 			}
 		}
@@ -177,6 +284,10 @@ public class CoreScheduler {
 			}
 			run = false;
 		}
+	}
+
+	public File getAudioFile() {
+		return audioFile;
 	}
 
 

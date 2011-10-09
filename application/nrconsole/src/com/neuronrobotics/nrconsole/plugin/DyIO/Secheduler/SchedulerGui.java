@@ -37,12 +37,13 @@ public class SchedulerGui extends JPanel{
 	private ArrayList< ServoOutputScheduleChannelUI> outputs = new ArrayList< ServoOutputScheduleChannelUI>();
 	private File configFile=null;
 	CoreScheduler cs;
+	SchedulerControlBar cb;
 	public SchedulerGui(){
 		setName("DyIO Sequencer");
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
 		cs = new CoreScheduler(DyIORegestry.get());
-		SchedulerControlBar cb = new SchedulerControlBar(cs);
+		cb = new SchedulerControlBar(cs);
 		
 		//cb.setAudioFile(new File("track.mp3"));
 		
@@ -52,13 +53,8 @@ public class SchedulerGui extends JPanel{
 			public void actionPerformed(ActionEvent e) {
 				try{
 					int selected = availibleChans.getSelectedInteger();
-					ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(
-														cs.addServoChannel(selected));
-					
-					outputs.add(sosc);
-					channelBar.add(sosc,"wrap");
-					availibleChans.removeInteger(selected);
-					usedChans.addInteger(selected);
+					addServoChannel(cs.addServoChannel(selected));
+
 				}catch (Exception ex){
 					JOptionPane.showMessageDialog(null, "Failed to select channel, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
 				}
@@ -124,9 +120,22 @@ public class SchedulerGui extends JPanel{
 		add(channelBar,"wrap");
 	}
 	
+	private void addServoChannel( ServoOutputScheduleChannel chan){
+		int selected = chan.getChannelNumber();
+		ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(chan);
+		outputs.add(sosc);
+		channelBar.add(sosc,"wrap");
+		availibleChans.removeInteger(selected);
+		usedChans.addInteger(selected);
+	}
+	
 	protected void importfromFile() {
-		// TODO Auto-generated method stub
-		
+		cs.loadFromFile(configFile);
+		cb.setAudioFile(cs.getAudioFile());
+		ArrayList< ServoOutputScheduleChannel> outs = cs.getOutputs();
+		for(ServoOutputScheduleChannel so:outs){
+			addServoChannel(so);
+		}
 	}
 
 	protected void exportToFile() {
