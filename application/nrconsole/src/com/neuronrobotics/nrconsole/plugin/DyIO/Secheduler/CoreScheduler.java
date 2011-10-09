@@ -9,7 +9,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 
 public class CoreScheduler {
-	private final int loopTime = 120;
+	private int loopTime = 120;
 	private long flushTime = 0; 
 	private SchedulerThread st=null;
 	private MP3 mp3;
@@ -17,10 +17,13 @@ public class CoreScheduler {
 	private ArrayList< ISchedulerListener> listeners = new ArrayList< ISchedulerListener>();
 	private ArrayList< ServoOutputScheduleChannel> outputs = new ArrayList< ServoOutputScheduleChannel>();
 	private DyIO dyio;
+	private String filename=null;
+	private int msDuration=0;
 	public CoreScheduler(DyIO d){
 		dyio = d;
 	}
 	public void setAudioFile(File f) {
+		filename=f.getAbsolutePath();
     	mp3 = new MP3(f.getAbsolutePath());
 	}
 	public int getTrackLength(){
@@ -51,8 +54,9 @@ public class CoreScheduler {
 	}
 	
 	public void play(int setpoint,long StartOffset) {
+		msDuration=setpoint;
 		//System.out.println("Starting scheduler setpoint="+setpoint+" offset="+StartOffset);
-		st = new SchedulerThread(setpoint,StartOffset);
+		st = new SchedulerThread(msDuration,StartOffset);
 		st.start();
 	}
 	public void pause() {
@@ -93,6 +97,21 @@ public class CoreScheduler {
 		for(ISchedulerListener l:listeners){
 			l.isStopped();
 		}
+	}
+	public String getXml(){
+		String s="";
+		s+="<ServoOutputSequenceGroup>\n";
+		if(mp3!=null){
+			s+="\t<mp3>"+filename+"</mp3>\n";
+		}else{
+			s+="\t<duriation>"+msDuration+"</duriation>\n";
+		}	
+		s+="\t<loopTime>"+loopTime+"</loopTime>\n";
+		for(ServoOutputScheduleChannel so:outputs){
+			s+=so.getXml();
+		}
+		s+="</ServoOutputSequenceGroup>\n";
+		return s;
 	}
 	
 	private class SchedulerThread extends Thread{

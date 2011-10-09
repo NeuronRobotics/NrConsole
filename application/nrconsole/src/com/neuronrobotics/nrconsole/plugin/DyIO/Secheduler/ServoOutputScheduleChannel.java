@@ -60,14 +60,16 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	@Override
 	public void onTimeUpdate(double ms) {
 		index = (int) (ms/interval);
+		while(index>=data.size()){
+			data.add(new MapData(currentValue,index*interval));
+		}
+			
 		if(recording)
 			data.get(index).input=inputValue;
 		currentValue = data.get(index).input;
 		//System.out.println("Setting servo value="+data.get(index).input);
 		//Log.enableDebugPrint(true);
-		while(index>=data.size()){
-			data.add(new MapData(currentValue,index*interval));
-		}
+	
 		output.SetPosition(data.get(index).input);
 		//Log.enableDebugPrint(false);
 	}
@@ -114,10 +116,10 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 
 	public void setInputCenter(int inputCenter) {
-		this.inputCenter =inputCenter- 512;
+		this.inputCenter =inputCenter;
 	}
 	public int getInputCenter() {
-		return inputCenter;
+		return inputCenter- 512;
 	}
 
 	public void setInputScale(double inputScale) {
@@ -155,5 +157,28 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		getOutput().removeIServoPositionUpdateListener(l);
 	}
 	
+	public String getXml(){
+		String s="";
+		s+="\t<ServoOutputSequence>\n";
+		s+="\t\t<outputMax>"+outputMax+"</outputMax>\n";
+		s+="\t\t<outputMin>"+outputMin+"</outputMin>\n";
+		s+="\t\t<outputChannel>"+getOutput().getChannel().getChannelNumber()+"</outputChannel>\n";
+		s+="\t\t<inputEnabled>"+recording+"</inputEnabled>\n";
+		s+="\t\t<inputScale>"+inputScale+"</inputScale>\n";
+		s+="\t\t<inputCenter>"+inputCenter+"</inputCenter>\n";
+		int num=0xff;
+		if(input!=null)
+			num = input.getChannel().getChannelNumber();
+		s+="\t\t<inputChannel>"+num+"</inputChannel>\n";
+		s+="\t\t<data>";
+		for(int i=0;i<data.size();i++){
+			s+=data.get(i).input;
+			if(i<data.size()-1)
+				s+="\t,";
+		}
+		s+=	"</data>\n";
+		s+="\t</ServoOutputSequence>\n";
+		return s;
+	}
 
 }

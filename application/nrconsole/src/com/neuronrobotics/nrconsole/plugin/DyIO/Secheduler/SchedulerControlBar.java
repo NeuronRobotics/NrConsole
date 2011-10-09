@@ -17,6 +17,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileFilter;
 
+import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
+import com.neuronrobotics.nrconsole.util.Mp3Filter;
+
 import net.miginfocom.swing.MigLayout;
 
 public class SchedulerControlBar extends JPanel implements ISchedulerListener {
@@ -157,35 +160,8 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 	}
 
 	
-	private class mp3Filter extends FileFilter{
-		
-		public String getDescription() {
-			return "MP3 Audio File (mp3)";
-		}
-		public boolean accept(File f) {
-			if(f.isDirectory()) {
-				return true;
-			}
-			String path = f.getAbsolutePath().toLowerCase();
-			if ((path.endsWith("mp3") && (path.charAt(path.length() - 3)) == '.')) {
-				return true;
-			}
-			return f.getName().matches(".+\\.mp3$");
-		}
-	}
 	private void getFile() {
-		JFileChooser fc =new JFileChooser();
-    	File dir1 = new File (".");
-    	if(mp3File!=null){
-    		fc.setSelectedFile(mp3File);
-    	}else{
-    		fc.setCurrentDirectory(dir1);
-    	}
-    	fc.setFileFilter(new  mp3Filter());
-        int returnVal = fc.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-        	setAudioFile(fc.getSelectedFile());
-        }
+        setAudioFile(FileSelectionFactory.GetFile(mp3File, new Mp3Filter()));
 	}
 	public void setAudioFile(File f) {
 		cs.setAudioFile(f);

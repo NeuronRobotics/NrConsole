@@ -17,6 +17,8 @@ import javax.swing.filechooser.FileFilter;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
+import com.neuronrobotics.nrconsole.util.XmlFilter;
 import com.neuronrobotics.sdk.addons.walker.BasicWalker;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -187,38 +189,8 @@ public class HexapodConfigPanel extends JPanel {
 		//System.out.println("Setting DyIO In Hex Panel");
 		return DyIORegestry.get().isAvailable();
 	}
-
-	private class xmlFilter extends FileFilter{
-		
-		public String getDescription() {
-			return "Hexapod Configuration (xml)";
-		}
-		
-		public boolean accept(File f) {
-			if(f.isDirectory()) {
-				return true;
-			}
-			String path = f.getAbsolutePath().toLowerCase();
-			if ((path.endsWith("xml") && (path.charAt(path.length() - 3)) == '.')) {
-				return true;
-			}
-			return f.getName().matches(".+\\.xml$");
-		}
-	}
 	private File getFile(File file) {
-		JFileChooser fc =new JFileChooser();
-    	File dir1 = new File (".");
-    	if(file!=null){
-    		fc.setSelectedFile(file);
-    	}else{
-    		fc.setCurrentDirectory(dir1);
-    	}
-    	fc.setFileFilter(new  xmlFilter());
-        int returnVal = fc.showOpenDialog(null);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            return fc.getSelectedFile();
-        }
-		return null;
+		return FileSelectionFactory.GetFile(file, new XmlFilter());
 	}
 	
 	private class tester extends Thread{
