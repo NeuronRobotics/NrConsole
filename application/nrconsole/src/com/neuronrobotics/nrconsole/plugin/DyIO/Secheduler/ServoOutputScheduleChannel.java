@@ -51,9 +51,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		input.configAdvancedAsyncNotEqual(10);
 	}
 	
-	public void startRecording(int analogInputChannelNumber, int inCenter, double inScale){
-		setInputCenter(inCenter);
-		setInputScale(inScale);
+	public void startRecording(int analogInputChannelNumber){
 		if(input==null){
 			input=new AnalogInputChannel(output.getChannel().getDevice().getChannel(analogInputChannelNumber),true);
 		}
@@ -105,15 +103,22 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
-		//System.out.println("Analog value="+value);
-		setCurrentTargetValue((int) ((value+getInputCenter())*getInputScale()));
+
+		double centerOffset =getInputCenter()-(512*getInputScale());
+		System.out.println("Center Offset="+centerOffset);
+		
+		double scaled  = (value*getInputScale());
+		double recentered =  (scaled+centerOffset);
+		
+		
+		setCurrentTargetValue((int) recentered );
+		System.out.println("Analog value="+(int)value+" scaled="+(int)scaled +" recentered="+(int)recentered);
 		if(getCurrentTargetValue()>getOutputMax()){
 			setCurrentTargetValue(getOutputMax());
 		}
 		if(getCurrentTargetValue()<getOutputMin()){
 			setCurrentTargetValue(getOutputMin());
 		}
-		//System.out.println("Analog value="+value+" scaled="+getCurrentTargetValue());
 	}
 	
 	public void setOutput(ServoChannel output) {
@@ -128,7 +133,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		this.inputCenter =inputCenter;
 	}
 	public int getInputCenter() {
-		return inputCenter- 512;
+		return inputCenter;
 	}
 
 	public void setInputScale(double inputScale) {

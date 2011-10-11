@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import com.neuronrobotics.nrconsole.util.IntegerComboBox;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
@@ -15,7 +16,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
 import net.miginfocom.swing.MigLayout;
 
-public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositionUpdateListener{
+public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositionUpdateListener,ActionListener{
 
 	/**
 	 * 
@@ -27,7 +28,13 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	private JButton startTest = new JButton("Start Test");
 	private JPanel recordConfig = new JPanel();
 	IntegerComboBox availible;
+	private JTextField scale = new JTextField(5);
+	private JTextField zero = new JTextField(5);
+	
+	private double currentScale=.25;
+	private int currentZero = 512;
 	public ServoOutputScheduleChannelUI(ServoOutputScheduleChannel chan){
+		
 		chan.addIServoPositionUpdateListener(this);
 		setChannel(chan);
 		setLayout(new MigLayout());
@@ -72,6 +79,17 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		recordConfig.add(startRecording);
 		recordConfig.add(startTest);
 		recordConfig.setVisible(false);
+		
+		JPanel config = new JPanel(new MigLayout());
+		config.add(new JLabel("Input Scale:"));
+		config.add(scale,"wrap");
+		config.add(new JLabel("Input Center:"));
+		config.add(zero,"wrap");
+		scale.addActionListener(this);
+		zero.addActionListener(this);
+		
+		recordConfig.add(config);
+		
 		add(new JLabel("Output Channel: "+getChannel().getChannelNumber()));
 		add(record);
 		add(recordConfig);
@@ -83,24 +101,42 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 			
 		}
 		recordConfig.setVisible(record.isSelected());
-	
+		zero.setText(new Integer(getChannel().getInputCenter()).toString());
+		scale.setText(new Double(getChannel().getInputScale()).toString());
+		setScaleingInfo();
+	}
+	private void setScaleingInfo() {
+		currentZero = Integer.parseInt(zero.getText());
+		currentScale = Double.parseDouble(scale.getText());
+		getChannel().setInputScale(getInputScale());
+		getChannel().setInputCenter(getInputZero());
+	}
+	private int getInputZero() {
+		return currentZero;
+	}
+	private double getInputScale() {
+		return currentScale;
 	}
 	private void startTest() {
 		startTest.setText("Stop  Test");
+		setScaleingInfo();
 		getChannel().startTest();
 	}
 	private void stopTest() {
 		startTest.setText("Start Test");
+		setScaleingInfo();
 		getChannel().stopTest();
 	}
 	private void pause(){
 		getChannel().stopTest();
 		getChannel().pauseRecording();
+		setScaleingInfo();
 		startRecording.setText("Start Recording");
 	}
 	private void resume(){
 		getChannel().stopTest();
-		getChannel().startRecording(availible.getSelectedInteger(), 512, .25);
+		setScaleingInfo();
+		getChannel().startRecording(availible.getSelectedInteger());
 		startRecording.setText("Pause  Recording");
 		availible.setEditable(false);
 	}
@@ -121,6 +157,11 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		 setScaleingInfo();
 	}
 	
 }

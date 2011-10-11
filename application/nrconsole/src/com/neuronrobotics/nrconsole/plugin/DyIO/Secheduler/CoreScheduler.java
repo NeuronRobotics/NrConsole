@@ -97,7 +97,9 @@ public class CoreScheduler {
 			    		}
 			    		ServoOutputScheduleChannel so = addServoChannel(channel);
 			    		so.setOutputMinMax(min,max);
-			    		so.startRecording(inChannel, inCenter, inScale);
+			    		so.setInputCenter(inCenter);
+			    		so.setInputScale(inScale);
+			    		so.startRecording(inChannel);
 			    		if(!enabled){
 			    			so.pauseRecording();
 			    		}
