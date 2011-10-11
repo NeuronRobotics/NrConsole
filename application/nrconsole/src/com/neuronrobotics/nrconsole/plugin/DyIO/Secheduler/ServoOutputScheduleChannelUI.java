@@ -24,6 +24,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	private ServoOutputScheduleChannel channel;
 	private JCheckBox record = new JCheckBox("Record");
 	private JButton startRecording = new JButton("Start Recording");
+	private JButton startTest = new JButton("Start Test");
 	private JPanel recordConfig = new JPanel();
 	IntegerComboBox availible;
 	public ServoOutputScheduleChannelUI(ServoOutputScheduleChannel chan){
@@ -56,9 +57,20 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 				}
 			}
 		});
+		startTest.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(getChannel().isTesting()) {
+					stopTest();
+				}else
+					startTest();
+			}
+		});
 		
 		recordConfig.add(availible);
 		recordConfig.add(startRecording);
+		recordConfig.add(startTest);
 		recordConfig.setVisible(false);
 		add(new JLabel("Output Channel: "+getChannel().getChannelNumber()));
 		add(record);
@@ -73,14 +85,23 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		recordConfig.setVisible(record.isSelected());
 	
 	}
-	
+	private void startTest() {
+		startTest.setText("Stop  Test");
+		getChannel().startTest();
+	}
+	private void stopTest() {
+		startTest.setText("Start Test");
+		getChannel().stopTest();
+	}
 	private void pause(){
+		getChannel().stopTest();
 		getChannel().pauseRecording();
 		startRecording.setText("Start Recording");
 	}
 	private void resume(){
+		getChannel().stopTest();
 		getChannel().startRecording(availible.getSelectedInteger(), 512, .25);
-		startRecording.setText("Pause Recording");
+		startRecording.setText("Pause  Recording");
 		availible.setEditable(false);
 	}
 	

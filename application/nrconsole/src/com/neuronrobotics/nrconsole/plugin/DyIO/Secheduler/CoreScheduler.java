@@ -32,7 +32,7 @@ public class CoreScheduler {
 	private DyIO dyio;
 	private String filename=null;
 	private int msDuration=0;
-	private int trackLength;
+	//private int trackLength;
 	private File audioFile=null;
 	public CoreScheduler(DyIO d, int loopTime,int duration ){
 		dyio = d;
@@ -97,8 +97,9 @@ public class CoreScheduler {
 			    		}
 			    		ServoOutputScheduleChannel so = addServoChannel(channel);
 			    		so.setOutputMinMax(min,max);
-			    		if(enabled){
-			    			so.startRecording(inChannel, inCenter, inScale);
+			    		so.startRecording(inChannel, inCenter, inScale);
+			    		if(!enabled){
+			    			so.pauseRecording();
 			    		}
 			    		so.setData(data);
 		    		}
@@ -174,13 +175,10 @@ public class CoreScheduler {
 		listeners.remove(l);
 	}
 	public void setCurrentTime(long time) {
-		for(ISchedulerListener l:listeners){
-			l.onTimeUpdate(time);
-		}
 		long start = System.currentTimeMillis();
 		if(dyio!=null){
 			//Log.enableDebugPrint(true);
-			double seconds =((double)(loopTime+loopTime/3))/1000;
+			double seconds =((double)(loopTime/3))/1000;
 			dyio.flushCache(seconds);
 			//Log.enableDebugPrint(false);
 		}
@@ -188,6 +186,9 @@ public class CoreScheduler {
 		if(flushTime>loopTime){
 			System.err.println("Flush took:"+flushTime+ " and loop time="+loopTime);
 			flushTime=loopTime;
+		}
+		for(ISchedulerListener l:listeners){
+			l.onTimeUpdate(time);
 		}
 
 	}
