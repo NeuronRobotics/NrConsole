@@ -41,9 +41,10 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		recording=false;
 	}
 	public void resumeRecording(){
+		if(input==null)
+			startRecording();
 		System.out.println("resuming recording");
 		addAnalogInputListener(this);
-		
 		recording=true;
 	}
 	
@@ -203,6 +204,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		}
 	}
 	public void startTest() {
+		
 		resumeRecording();
 		directTester = new Tester();
 		directTester.start();
