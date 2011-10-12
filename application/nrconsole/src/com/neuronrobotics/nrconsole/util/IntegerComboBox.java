@@ -21,8 +21,16 @@ public class IntegerComboBox extends JComboBox{
 		}
 	}
 	
-	public void addInteger(int i){
-		addItem(new Integer(i));
+	public void addInteger(int in){
+		for(int i=0;i<getItemCount();i++){
+			Integer selected = (Integer)( getItemAt(i));
+			if(selected != null){
+				if(selected.intValue() == in){
+					return;
+				}
+			}
+		}
+		addItem(new Integer(in));
 	}
 	
 	public void setSelectedInteger(int in){

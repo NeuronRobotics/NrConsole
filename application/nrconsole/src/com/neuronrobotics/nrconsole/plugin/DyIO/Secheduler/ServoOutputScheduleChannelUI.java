@@ -98,7 +98,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		try{
 			availible.setSelectedInteger(getChannel().getInputChannelNumber());
 		}catch(Exception ex){
-			
+			ex.printStackTrace();
 		}
 		recordConfig.setVisible(record.isSelected());
 		zero.setText(new Integer(getChannel().getInputCenter()).toString());
@@ -136,7 +136,8 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	private void resume(){
 		getChannel().stopTest();
 		setScaleingInfo();
-		getChannel().startRecording(availible.getSelectedInteger());
+		getChannel().setAnalogInputChannelNumber(availible.getSelectedInteger());
+		getChannel().startRecording();
 		startRecording.setText("Pause  Recording");
 		availible.setEditable(false);
 	}

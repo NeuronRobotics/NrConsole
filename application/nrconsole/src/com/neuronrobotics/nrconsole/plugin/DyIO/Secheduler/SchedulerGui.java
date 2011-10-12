@@ -72,14 +72,10 @@ public class SchedulerGui extends JPanel{
 	
 				try{
 					int selected = usedChans.getSelectedInteger();
-					availibleChans.addInteger(selected);
 					for(int i=0;i<outputs.size();i++){
 						ServoOutputScheduleChannelUI s = outputs.get(i);
 						if(s.getChannelNumber()==selected){
-							cs.removeServoOutputScheduleChannel(s.getChannel());
-							outputs.remove(s);
-							channelBar.remove(s);
-							usedChans.removeInteger(selected);
+							rmChannel(selected);
 							return;
 						}
 					}
@@ -107,6 +103,8 @@ public class SchedulerGui extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				rmAllChannels();
+				
 				getFile();
 				importfromFile();
 			}
@@ -119,7 +117,31 @@ public class SchedulerGui extends JPanel{
 		add(addBar,"wrap");
 		add(channelBar,"wrap");
 	}
-	
+	private void rmAllChannels() {
+		int [] chans = new int[outputs.size()];
+		for(int i=0;i<chans.length;i++) {
+			chans[i]=outputs.get(i).getChannelNumber();
+		}
+		for(int i=0;i<chans.length;i++) {
+			rmChannel(chans[i]);
+		}
+	}
+	private void rmChannel(int num) {
+		
+		ServoOutputScheduleChannelUI s=null;
+		
+		for(ServoOutputScheduleChannelUI so:outputs) {
+			if(so.getChannelNumber() == num)
+				s=so;
+		}
+		if(s==null)
+			return;
+		cs.removeServoOutputScheduleChannel(s.getChannel());
+		outputs.remove(s);
+		channelBar.remove(s);
+		usedChans.removeInteger(num);
+		availibleChans.addInteger(num);
+	}
 	private void addServoChannel( ServoOutputScheduleChannel chan){
 		int selected = chan.getChannelNumber();
 		ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(chan);
@@ -130,6 +152,8 @@ public class SchedulerGui extends JPanel{
 	}
 	
 	protected void importfromFile() {
+		if(configFile==null)
+			return;
 		cs.loadFromFile(configFile);
 		cb.setAudioFile(cs.getAudioFile());
 		ArrayList< ServoOutputScheduleChannel> outs = cs.getOutputs();

@@ -99,9 +99,11 @@ public class CoreScheduler {
 			    		so.setOutputMinMax(min,max);
 			    		so.setInputCenter(inCenter);
 			    		so.setInputScale(inScale);
-			    		so.startRecording(inChannel);
+			    		so.setAnalogInputChannelNumber(inChannel);
 			    		if(!enabled){
 			    			so.pauseRecording();
+			    		}else {
+			    			so.startRecording();
 			    		}
 			    		so.setData(data);
 		    		}

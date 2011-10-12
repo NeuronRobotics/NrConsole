@@ -11,7 +11,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	
 	private ServoChannel output;
 	AnalogInputChannel input;
-	private double inputScale;
+	private double inputScale=.25;
 	private int inputCenter = 128;
 	private int inputValue;
 	
@@ -24,6 +24,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	private int outputMin=50;
 	private int index=0;
 	private Tester directTester;
+	private int analogInputChannelNumber=8;
 	public ServoOutputScheduleChannel(ServoChannel srv) {
 		output=srv;
 		currentValue = output.getValue();
@@ -35,7 +36,8 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 	public void pauseRecording(){
 		System.out.println("pausing recording");
-		input.removeAnalogInputListener(this);
+		if(input != null)
+			input.removeAnalogInputListener(this);
 		recording=false;
 	}
 	public void resumeRecording(){
@@ -51,9 +53,9 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		input.configAdvancedAsyncNotEqual(10);
 	}
 	
-	public void startRecording(int analogInputChannelNumber){
+	public void startRecording(){
 		if(input==null){
-			input=new AnalogInputChannel(output.getChannel().getDevice().getChannel(analogInputChannelNumber),true);
+			input=new AnalogInputChannel(output.getChannel().getDevice().getChannel(getAnalogInputChannelNumber()),true);
 		}
 		resumeRecording();
 	}
@@ -178,10 +180,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		s+="\t\t<inputEnabled>"+recording+"</inputEnabled>\n";
 		s+="\t\t<inputScale>"+inputScale+"</inputScale>\n";
 		s+="\t\t<inputCenter>"+inputCenter+"</inputCenter>\n";
-		int num=0xff;
-		if(input!=null)
-			num = input.getChannel().getChannelNumber();
-		s+="\t\t<inputChannel>"+num+"</inputChannel>\n";
+		s+="\t\t<inputChannel>"+getAnalogInputChannelNumber()+"</inputChannel>\n";
 		s+="\t\t<data>";
 		for(int i=0;i<data.size();i++){
 			s+=data.get(i).input;
@@ -193,7 +192,9 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		return s;
 	}
 	public int getInputChannelNumber() {
-		return input.getChannel().getChannelNumber();
+		if(input!= null)
+			return input.getChannel().getChannelNumber();
+		return getAnalogInputChannelNumber();
 	}
 	public void setData(int[] data2) {
 		data = new ArrayList<MapData>();
@@ -228,6 +229,14 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 	public int getCurrentTargetValue() {
 		return inputValue;
+	}
+	public void setAnalogInputChannelNumber(int analogInputChannelNumber) {
+		this.analogInputChannelNumber = analogInputChannelNumber;
+	}
+	public int getAnalogInputChannelNumber() {
+		if(input != null)
+			return input.getChannel().getChannelNumber();
+		return analogInputChannelNumber;
 	}
 	private class Tester extends Thread {
 		private boolean running=true;
