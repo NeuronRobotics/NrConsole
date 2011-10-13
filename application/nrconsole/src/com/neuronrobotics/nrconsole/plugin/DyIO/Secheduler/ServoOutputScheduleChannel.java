@@ -180,7 +180,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		s+="\t\t<outputChannel>"+getChannelNumber()+"</outputChannel>\n";
 		s+="\t\t<inputEnabled>"+recording+"</inputEnabled>\n";
 		s+="\t\t<inputScale>"+inputScale+"</inputScale>\n";
-		s+="\t\t<inputCenter>"+inputCenter+"</inputCenter>\n";
+		s+="\t\t<outputCenter>"+inputCenter+"</outputCenter>\n";
 		s+="\t\t<inputChannel>"+getAnalogInputChannelNumber()+"</inputChannel>\n";
 		s+="\t\t<data>";
 		for(int i=0;i<data.size();i++){

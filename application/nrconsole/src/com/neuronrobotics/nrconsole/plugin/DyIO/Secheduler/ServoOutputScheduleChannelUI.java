@@ -83,7 +83,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		JPanel config = new JPanel(new MigLayout());
 		config.add(new JLabel("Input Scale:"));
 		config.add(scale,"wrap");
-		config.add(new JLabel("Input Center:"));
+		config.add(new JLabel("Output Center:"));
 		config.add(zero,"wrap");
 		scale.addActionListener(this);
 		zero.addActionListener(this);

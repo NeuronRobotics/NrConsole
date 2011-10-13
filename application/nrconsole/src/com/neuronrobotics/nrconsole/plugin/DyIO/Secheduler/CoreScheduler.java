@@ -87,7 +87,7 @@ public class CoreScheduler {
 			    		boolean enabled = getTagValue("inputEnabled",lElement).contains("true");
 			    		
 			    		double inScale=Double.parseDouble(getTagValue("inputScale",lElement));
-			    		int inCenter=Integer.parseInt(getTagValue("inputCenter",lElement));
+			    		int outCenter=Integer.parseInt(getTagValue("outputCenter",lElement));
 			    		int inChannel=Integer.parseInt(getTagValue("inputChannel",lElement));
 			    		
 			    		String [] sdata =  getTagValue("data",lElement).split(",");
@@ -97,7 +97,7 @@ public class CoreScheduler {
 			    		}
 			    		ServoOutputScheduleChannel so = addServoChannel(channel);
 			    		so.setOutputMinMax(min,max);
-			    		so.setInputCenter(inCenter);
+			    		so.setInputCenter(outCenter);
 			    		so.setInputScale(inScale);
 			    		so.setAnalogInputChannelNumber(inChannel);
 			    		if(!enabled){
