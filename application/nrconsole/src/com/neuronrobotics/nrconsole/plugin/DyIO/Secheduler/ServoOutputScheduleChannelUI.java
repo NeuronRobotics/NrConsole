@@ -27,7 +27,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	private JButton startRecording = new JButton("Start Recording");
 	private JButton startTest = new JButton("Start Test");
 	private JPanel recordConfig = new JPanel();
-	IntegerComboBox availible;
+	IntegerComboBox inputChannelNumber;
 	private JTextField scale = new JTextField(5);
 	private JTextField zero = new JTextField(5);
 	
@@ -38,9 +38,9 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		chan.addIServoPositionUpdateListener(this);
 		setChannel(chan);
 		setLayout(new MigLayout());
-		availible=new IntegerComboBox();
+		inputChannelNumber=new IntegerComboBox();
 		for(int i=8;i<16;i++){
-			availible.addInteger(i);
+			inputChannelNumber.addInteger(i);
 		}
 		setBorder(BorderFactory.createLoweredBevelBorder());
 		record.addActionListener(new ActionListener() {
@@ -75,7 +75,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 			}
 		});
 		
-		recordConfig.add(availible);
+		recordConfig.add(inputChannelNumber);
 		recordConfig.add(startRecording);
 		recordConfig.add(startTest);
 		recordConfig.setVisible(false);
@@ -96,7 +96,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		
 		record.setSelected(getChannel().isRecording());
 		try{
-			availible.setSelectedInteger(getChannel().getInputChannelNumber());
+			inputChannelNumber.setSelectedInteger(getChannel().getInputChannelNumber());
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -110,6 +110,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		currentScale = Double.parseDouble(scale.getText());
 		getChannel().setInputScale(getInputScale());
 		getChannel().setInputCenter(getInputZero());
+		getChannel().setAnalogInputChannelNumber(inputChannelNumber.getSelectedInteger());
 	}
 	private int getInputZero() {
 		return currentZero;
@@ -128,18 +129,17 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		getChannel().stopTest();
 	}
 	private void pause(){
-		getChannel().stopTest();
+		stopTest();
 		getChannel().pauseRecording();
 		setScaleingInfo();
 		startRecording.setText("Start Recording");
 	}
 	private void resume(){
-		getChannel().stopTest();
+		stopTest();
 		setScaleingInfo();
-		getChannel().setAnalogInputChannelNumber(availible.getSelectedInteger());
 		getChannel().startRecording();
 		startRecording.setText("Pause  Recording");
-		availible.setEditable(false);
+		inputChannelNumber.setEditable(false);
 	}
 	
 	public int getChannelNumber() {
