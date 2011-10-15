@@ -86,7 +86,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	
 	public boolean setConnection(BowlerAbstractConnection connection){
 		Log.debug(this.getClass()+" setConnection");
-		DyIO.disableFWCheck();
+		//DyIO.disableFWCheck();
 		DyIORegestry.setConnection(connection);
 		DyIORegestry.get().connect();
 		DyIORegestry.get().addDyIOEventListener(this);
