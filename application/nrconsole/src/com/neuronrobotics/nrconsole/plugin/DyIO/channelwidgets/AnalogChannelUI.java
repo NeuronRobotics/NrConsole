@@ -33,7 +33,7 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 		super(channel);
 		setRecordable(true);
 		
-		aic = new AnalogInputChannel(getChannel(), false);
+		aic = new AnalogInputChannel(getChannel(), true);
 		
 		sliderUI.setMaximum(0);
 		sliderUI.setMaximum(1024);
