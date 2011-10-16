@@ -88,18 +88,26 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	}
 	private void updateScroller(){
 		if(manager!=null)
-			scroller.setPreferredSize(new Dimension(manager.getMinimumWidth()-53,manager.getMinimumHeight()));
-		//scroller.setPreferredSize(new Dimension(panelWidth-53,panelHight-50));
+			scroller.setPreferredSize(new Dimension(	manager.getMinimumWidth(),
+														manager.getMinimumHeight()
+													)
+									  );
+		scroller.setSize(getWindowSize());
+		scroller.invalidate();
+		scroller.repaint();
 		scroller.setVisible(true);
 	}
 	private void updateUI(){
 		//setSize(new Dimension(panelWidth+53,panelHight+105));
-		//scroller.setSize(getWindowSize());
+		if (manager !=null){
+			setSize((manager.getMinimumWidth()+53),805);
+			modePane.setSize(	manager.getMinimumWidth(),
+								manager.getMinimumHeight()
+							);	
+		}
+		
 		updateScroller();
-		
-		scroller.invalidate();
-		scroller.repaint();
-		
+
 		invalidate();
 		repaint();
 		

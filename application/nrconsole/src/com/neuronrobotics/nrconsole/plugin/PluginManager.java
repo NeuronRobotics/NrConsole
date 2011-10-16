@@ -3,8 +3,11 @@ package com.neuronrobotics.nrconsole.plugin;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
+
+import javazoom.jl.decoder.Manager;
 
 import com.neuronrobotics.nrconsole.plugin.BowlerCam.NRConsoleBowlerCameraPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.NRConsoleDyIOPlugin;
@@ -19,7 +22,7 @@ import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class PluginManager {
-	private static ArrayList<INRConsoleTabedPanelPlugin> plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
+	private ArrayList<INRConsoleTabedPanelPlugin> plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 	private GenericDevice gen;
 	private BowlerAbstractConnection connection;
 	private ArrayList<String >names=null;
@@ -28,21 +31,39 @@ public class PluginManager {
 	public PluginManager(){
 		update();
 	}
+	
+	public void removeNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
+		removeNRConsoleTabedPanelPlugin(p.getClass().toString());
+	}
+	
+	public void removeNRConsoleTabedPanelPlugin(String p){
+		for(int i=0;i<plugins.size();i++){
+			INRConsoleTabedPanelPlugin pl= plugins.get(i);
+			if(pl.getClass().toString().contains(p))
+				plugins.remove(pl);
+		}
+	}
+	
 	/**
 	 * This static method is for plugins to add themselves to the list of tabed-paned plugins
 	 * @param p a plugin instance to add to the list
 	 */
 	public void addNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
 		if (!plugins.contains(p)){
-			plugins.add(p);
-			firePluginUpdate();
+			for(INRConsoleTabedPanelPlugin pl:plugins){
+				if(pl.getClass().toString().contains(p.getClass().toString()))
+					return;
+			}
 			Dimension d= p.getMinimumWimdowDimentions();
 			if(d!=null){
 				if(d.getWidth()>getMinimumWidth())
 					setMinimumWidth((int) d.getWidth());
 				if(d.getHeight()>getMinimumHeight())
 					setMinimumHeight((int) d.getHeight());
+				//p.getTabPane().setSize(d);
 			}
+			plugins.add(p);
+			firePluginUpdate();
 			System.out.println("Adding "+p.getClass());
 		}
 	}
@@ -54,7 +75,6 @@ public class PluginManager {
 	}
 	public boolean connect(IConnectionEventListener listener) throws Exception{
 		disconnect();
-		update();
 		try {
 			connection = ConnectionDialog.promptConnection();
 			if(connection == null) {
@@ -73,7 +93,9 @@ public class PluginManager {
 			throw e;
 		}
 		setNameSpaces(gen.getNamespaces());
-		for (INRConsoleTabedPanelPlugin p:plugins){
+		
+		for (int i=0;i<plugins.size();i++){
+			INRConsoleTabedPanelPlugin p = plugins.get(i);
 			if(p.isMyNamespace(getNameSpaces())){
 				p.setConnection(connection);
 			}
@@ -113,11 +135,19 @@ public class PluginManager {
 		 ArrayList<JPanel> back =  new ArrayList<JPanel>();
 		 for (INRConsoleTabedPanelPlugin p:plugins){
 			 if(p.isAcvive()){
+				 p.getTabPane().setBorder(BorderFactory.createLoweredBevelBorder());
+				 p.getTabPane().setSize(getMinimumDimention());
 				 back.add(p.getTabPane());
 			 }
 		 }
 		 //System.out.println("Displaying: "+back);
 		 return back;	
+	}
+	private Dimension getMinimumDimention() {
+		// TODO Auto-generated method stub
+		return new Dimension(	getMinimumWidth(),
+								getMinimumHeight()
+							);
 	}
 	public boolean ping() {
 		try {
@@ -129,7 +159,7 @@ public class PluginManager {
 	/**
 	 * Update the plugin state data
 	 */
-	public void update() {
+	private void update() {
 		//System.out.println("Clearing tab list");
 		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 		// HACK this should load using OSGI
@@ -139,7 +169,7 @@ public class PluginManager {
 		new NRConsoleBowlerCameraPlugin(this);
 		new NRConsoleBootloaderPlugin(this);
 		//System.out.println("Updating plugins:"+plugins);
-		new NRConsoleSchedulerPlugin(this);
+		
 		//END HACK
 	}
 	private ArrayList<IPluginUpdateListener> puListeners = new ArrayList<IPluginUpdateListener>();

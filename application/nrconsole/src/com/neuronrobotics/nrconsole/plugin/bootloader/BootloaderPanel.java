@@ -29,10 +29,10 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 	
 	private NRBoot blApp;
 	
-	private JButton fileButton,loadButton;
+	private JButton loadButton;
 	private Hexml hex=null;
 	private JProgressBar progress = new JProgressBar();
-	private StatusLabel fileStatus = new StatusLabel();
+	//private StatusLabel fileStatus = new StatusLabel();
 	private StatusLabel loadStatus = new StatusLabel();
 	private String revision;
 	private static File file = null;
@@ -45,9 +45,9 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 	public BootloaderPanel(){
 		////System.out.println("Starting GUI");
 		setName("NR Bootloader");
-		fileButton = new JButton();
-		fileButton.addActionListener(this);
-		resetFile();
+//		fileButton = new JButton();
+//		fileButton.addActionListener(this);
+//		resetFile();
 		
 		
 		loadButton = new JButton();
@@ -56,8 +56,8 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 		
 		JPanel buttonPanel = new JPanel(new MigLayout());
 
-		buttonPanel.add(fileStatus);
-        buttonPanel.add(fileButton, "wrap");
+		//buttonPanel.add(fileStatus);
+//        buttonPanel.add(fileButton, "wrap");
         
         JPanel prog = new JPanel(new MigLayout());
         prog.add(loadButton, "wrap");
@@ -82,13 +82,13 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 		return blApp;
 	}
 	
-	public void resetFile() {
-		fileButton.setText("Select a NR Firmware File..");
-	}
+//	public void resetFile() {
+//		fileButton.setText("Select a NR Firmware File..");
+//	}
 	
 	public void resetLoad() {
 		loadButton.setEnabled(false);
-		loadButton.setText("Load Firmware");
+		loadButton.setText("Load NR Firmware File...");
 		loadStatus.setStatus(0);
 		reloadFile();
 	}
@@ -148,8 +148,8 @@ public class BootloaderPanel extends JPanel implements ActionListener {
             if(!file.getName().matches(".+\\.xml$")){
             	String message = "Invalid file type. Must be .xml";
             	JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
-            	fileStatus.setStatus(StatusLabel.ERROR);
-            	resetFile();
+            	//fileStatus.setStatus(StatusLabel.ERROR);
+            	//resetFile();
             	resetLoad();
             	return;
             }
@@ -168,9 +168,9 @@ public class BootloaderPanel extends JPanel implements ActionListener {
         		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
         		return;
         	}
-        	fileButton.setText("Using: "+file.getName());
+        	//fileButton.setText("Using: "+file.getName());
             revision = hex.getRevision();
-            fileStatus.setStatus(StatusLabel.OK);
+            //fileStatus.setStatus(StatusLabel.OK);
 		}
 	}
 	
@@ -202,17 +202,18 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
         //Handle open button action.
-        if (e.getSource() == fileButton) {
-        	loadFile();
-        }
+//        if (e.getSource() == fileButton) {
+//        	
+//        }
         if (e.getSource() == loadButton) {
+        	loadFile();
         	try{
 	        	if (getBlApp()!=null){
 	        		loadStatus.setStatus(StatusLabel.OK);
 	        		////System.out.println("Loading firmware");
 	        		reloadFile();
 	        		getBlApp().loadCores(hex.getCores());
-		    		loadButton.setText("Loading....");
+		    		loadButton.setText(file.getName()+" Loading....");
 		    		loadButton.setEnabled(false);
 		    		LoaderChecker l = new LoaderChecker();
 		    		l.start();

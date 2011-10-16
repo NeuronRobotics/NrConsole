@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -21,6 +22,8 @@ import com.neuronrobotics.graphing.GraphingOptionsDialog;
 import com.neuronrobotics.graphing.GraphingWindow;
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
+import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -38,7 +41,9 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private GraphingOptionsDialog graphingOptionsDialog = new GraphingOptionsDialog(graphingWindow);
 	private ExportDataDialog graphingDialog = new ExportDataDialog(this);
 	private JMenuItem showGraphMenuItem = new JMenuItem("Show Graph");
-	private JMenuItem showHexapodConfig = new JMenuItem("Show Hexapod Configuration");
+	private JMenuItem showHexapodConf = new JMenuItem("Show Hexapod Configuration");
+	private JMenuItem showSequencerConf = new JMenuItem("Show Sequencer Configuration");
+	private JMenuItem showPidConf = new JMenuItem("Show P.I.D. Configuration");
 	private JMenuItem graphOptionsMenuItem = new JMenuItem("Graphing Options");
 	private JMenuItem exportData = new JMenuItem("Export Data to File");
 	private boolean active=false;
@@ -74,6 +79,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		wrapper.add(getDeviceDisplay(), "pos 5 5");
 		wrapper.add(getDeviceControls(), "pos 560 5");
 		wrapper.setName("DyIO");
+		wrapper.setBorder(BorderFactory.createLoweredBevelBorder());
 		return wrapper;
 	}
 
@@ -89,6 +95,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 	
 	public boolean setConnection(BowlerAbstractConnection connection){
+		manager.removeNRConsoleTabedPanelPlugin("NRConsolePIDPlugin");
 		Log.debug(this.getClass()+" setConnection");
 		//DyIO.disableFWCheck();
 		DyIORegestry.setConnection(connection);
@@ -134,7 +141,9 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		JMenu collectionMenu = new JMenu("DyIO");
 		collectionMenu.add(showGraphMenuItem);
 		collectionMenu.add(exportData);
-		collectionMenu.add(showHexapodConfig);
+		collectionMenu.add(showPidConf);
+		collectionMenu.add(showSequencerConf);
+		collectionMenu.add(showHexapodConf);
 		showGraphMenuItem.setMnemonic(KeyEvent.VK_G);
 		showGraphMenuItem.addActionListener(new ActionListener() {
 			
@@ -143,22 +152,32 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 				displayGraphingWindow(true);
 			}
 		});
-		showHexapodConfig.addActionListener(new ActionListener() {	
+		showSequencerConf.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new NRConsoleSchedulerPlugin(manager);
+				manager.firePluginUpdate();
+				showSequencerConf.setEnabled(false);
+			}
+		});
+		showPidConf.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new NRConsolePIDPlugin(manager);
+				//new NRConsoleSchedulerPlugin(manager);
+				manager.firePluginUpdate();
+				showPidConf.setEnabled(false);
+			}
+		});
+		showHexapodConf.addActionListener(new ActionListener() {	
 			
 			public void actionPerformed(ActionEvent e) {
 				
 				new HexapodNRConsolePulgin(manager);
 				manager.firePluginUpdate();
-				showHexapodConfig.setEnabled(false);
-//				hexFrame = new JFrame();
-//				if(hex == null)
-//					hex = new HexapodConfigPanel(hexFrame);
-//				hex.setDyIO();
-//				hexFrame.setTitle(hex.getName());
-//				hexFrame.add(hex);			
-//				hexFrame.pack();
-//				hexFrame.setLocationRelativeTo(null); 
-//				hexFrame.setVisible(true);
+				showHexapodConf.setEnabled(false);
 				
 			}
 		});

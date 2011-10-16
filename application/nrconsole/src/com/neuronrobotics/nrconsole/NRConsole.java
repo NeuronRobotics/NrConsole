@@ -110,7 +110,7 @@ public class NRConsole implements ActionListener {
 				nrcWindow.invalidate();
 				nrcWindow.setVisible(true);
 				
-				nrcWindow.setSize((manager.getMinimumWidth()+53),805);
+				
 			}
 		}
 	}

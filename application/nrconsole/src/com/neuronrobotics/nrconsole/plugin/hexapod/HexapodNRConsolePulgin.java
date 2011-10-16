@@ -19,6 +19,7 @@ public class HexapodNRConsolePulgin extends AbstractNRConsoleTabedPanelPlugin {
 	
 	public JPanel getTabPane() {
 		System.out.println(this.getClass()+"is getting tabPane");
+		hex.setSize(getMinimumWimdowDimentions());
 		return hex;
 	}
 
@@ -32,7 +33,7 @@ public class HexapodNRConsolePulgin extends AbstractNRConsoleTabedPanelPlugin {
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
 		// TODO Auto-generated method stub
-		return new Dimension(1250,700);
+		return new Dimension(1250,850);
 	}
 
 }
