@@ -45,11 +45,11 @@ public class HexapodConfigPanel extends JPanel {
 	private BasicWalker walker;
 	private static File inputFile = null;
 	private static File outputFile = null;
-	private JFrame hexFrame;
+	//private JFrame hexFrame;
 	private HexapodTester testWidget=new HexapodTester();
 	
-	public HexapodConfigPanel(JFrame hexFrame) {
-		this.hexFrame=hexFrame;
+	public HexapodConfigPanel() {
+		//this.hexFrame=hexFrame;
 	}
 	private HexapodConfigPanel getGUI(){
 		return this;
@@ -107,7 +107,8 @@ public class HexapodConfigPanel extends JPanel {
 					removeAll();
 					add(controlPanel);
 					add(srv);
-					hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
+					invalidate();
+					//hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 				}catch(Exception ex){
 					JOptionPane.showMessageDialog(null, ex.getMessage(), "Hexapod ERROR", JOptionPane.ERROR_MESSAGE);
 					setConfigEnabled(false);
@@ -178,10 +179,9 @@ public class HexapodConfigPanel extends JPanel {
 	}
 	
 	public boolean setConnection(BowlerAbstractConnection connection) {
-		setWalker(new BasicWalker(DyIORegestry.get()));
-		
-		initGUI();
-		return connection.isConnected();
+		if(!DyIORegestry.get().getConnection().isConnected())
+			DyIORegestry.setConnection(connection);
+		return setDyIO();
 	}
 	
 	public boolean setDyIO(){

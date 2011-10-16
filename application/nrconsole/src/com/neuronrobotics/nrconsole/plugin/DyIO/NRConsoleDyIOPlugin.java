@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -21,6 +22,7 @@ import com.neuronrobotics.graphing.GraphingWindow;
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodConfigPanel;
+import com.neuronrobotics.nrconsole.plugin.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
@@ -43,11 +45,13 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private DyIOPanel devicePanel = new DyIOPanel();
 	private DyIOControlsPanel deviceControls = new DyIOControlsPanel();
 	private ArrayList<ChannelManager> channels = new ArrayList<ChannelManager>();
-	private HexapodConfigPanel hex=null;
+	//private HexapodConfigPanel hex=null;
 	private JFrame hexFrame;
 	private JPanel wrapper;
-	public NRConsoleDyIOPlugin() {
-		PluginManager.addNRConsoleTabedPanelPlugin(this);
+	private PluginManager manager;
+	public NRConsoleDyIOPlugin(PluginManager pm) {
+		manager = pm;
+		manager.addNRConsoleTabedPanelPlugin(this);
 		DyIORegestry.addConnectionEventListener(this);
 		//hex = new HexapodNRConsolePulgin();
 	}
@@ -142,15 +146,19 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		showHexapodConfig.addActionListener(new ActionListener() {	
 			
 			public void actionPerformed(ActionEvent e) {
-				hexFrame = new JFrame();
-				if(hex == null)
-					hex = new HexapodConfigPanel(hexFrame);
-				hex.setDyIO();
-				hexFrame.setTitle(hex.getName());
-				hexFrame.add(hex);			
-				hexFrame.pack();
-				hexFrame.setLocationRelativeTo(null); 
-				hexFrame.setVisible(true);
+				
+				new HexapodNRConsolePulgin(manager);
+				manager.firePluginUpdate();
+				showHexapodConfig.setEnabled(false);
+//				hexFrame = new JFrame();
+//				if(hex == null)
+//					hex = new HexapodConfigPanel(hexFrame);
+//				hex.setDyIO();
+//				hexFrame.setTitle(hex.getName());
+//				hexFrame.add(hex);			
+//				hexFrame.pack();
+//				hexFrame.setLocationRelativeTo(null); 
+//				hexFrame.setVisible(true);
 				
 			}
 		});
@@ -289,6 +297,13 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	public void onConnect() {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public Dimension getMinimumWimdowDimentions() {
+		// TODO Auto-generated method stub
+		return new Dimension(1095,700);
 	}
 
 }

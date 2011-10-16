@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -41,7 +42,7 @@ public class NRConsole implements ActionListener {
 		nrcMenubar.setMenues(null);
 		nrcMenubar.addActionListener(this);
 		
-		nrcWindow.setSize((NRConsoleWindow.panelWidth+53),(NRConsoleWindow.panelHight+105));
+		nrcWindow.setSize((manager.getMinimumWidth()+53),(manager.getMinimumHeight()+105));
 		nrcWindow.setLocationRelativeTo(null);
 		nrcWindow.setVisible(true);
 		
@@ -68,7 +69,7 @@ public class NRConsole implements ActionListener {
 			//System.out.println("Do something with the aciton command.");
 		}
 	}
-	private class showManager extends Thread{
+	private class showManager extends Thread implements IPluginUpdateListener{
 		public void run(){
 			try{
 				nrcMenubar.connect();
@@ -78,18 +79,17 @@ public class NRConsole implements ActionListener {
 			while(true){	
 				if(nrcMenubar.isReady()){
 					
-					nrcMenubar.setMenues(manager.getMenueItems());
-					nrcWindow.setDeviceManager(manager);
-					nrcWindow.invalidate();
-					nrcWindow.setVisible(true);
+					onPluginListUpdate(manager);
+					manager.addIPluginUpdateListener(this);
 					//System.out.println("Starting application");
 					while(nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
 					//System.out.println("Exiting Application");
 				}else{
+					manager.removeIPluginUpdateListener(this);
 					nrcMenubar.setMenues(null);
-					nrcWindow.displayLogo();
+					nrcWindow.displayLogo(manager);
 					nrcWindow.invalidate();
 					nrcWindow.setVisible(true);
 					//System.out.println("Starting splash");
@@ -98,6 +98,19 @@ public class NRConsole implements ActionListener {
 					}
 					//System.out.println("Exiting splash");
 				}
+			}
+		}
+
+		@Override
+		public void onPluginListUpdate(PluginManager manager) {
+			System.out.println("NRConsole is refreshing");
+			if(nrcMenubar.isReady()){
+				nrcMenubar.setMenues(manager.getMenueItems());
+				nrcWindow.setDeviceManager(manager);
+				nrcWindow.invalidate();
+				nrcWindow.setVisible(true);
+				
+				nrcWindow.setSize((manager.getMinimumWidth()+53),805);
 			}
 		}
 	}

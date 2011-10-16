@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
@@ -12,4 +13,5 @@ public interface INRConsoleTabedPanelPlugin {
 	public boolean isMyNamespace( ArrayList<String> names);
 	public boolean isAcvive();
 	public boolean setConnection(BowlerAbstractConnection connection);
+	public Dimension getMinimumWimdowDimentions();
 }

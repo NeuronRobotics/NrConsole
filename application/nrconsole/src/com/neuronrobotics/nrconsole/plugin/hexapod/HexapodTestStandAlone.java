@@ -27,7 +27,7 @@ public class HexapodTestStandAlone {
 			}
 			JFrame frame = new JFrame();
 			frame.setTitle("Hexapod Configuration");
-			HexapodConfigPanel panel = new HexapodConfigPanel(frame);
+			HexapodConfigPanel panel = new HexapodConfigPanel();
 			DyIORegestry.setConnection(con);
 			//DyIORegestry.get().enableDebug();
 			panel.setConnection(con);

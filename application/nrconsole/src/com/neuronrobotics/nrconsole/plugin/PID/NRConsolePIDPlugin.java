@@ -34,8 +34,8 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 	private JButton display = new JButton("Display PID configuration");
 	private JScrollPane scrollPanel = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel holder = new JPanel();
-	public NRConsolePIDPlugin(){
-		PluginManager.addNRConsoleTabedPanelPlugin(this);
+	public NRConsolePIDPlugin(PluginManager pm){
+		pm.addNRConsoleTabedPanelPlugin(this);
 		panel.add(display,"wrap");
 		display.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -99,8 +99,12 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 
 	
 	public ArrayList<JMenu> getMenueItems() {
-		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Dimension getMinimumWimdowDimentions() {
+		return new Dimension(1095,700);
 	}
 
 }

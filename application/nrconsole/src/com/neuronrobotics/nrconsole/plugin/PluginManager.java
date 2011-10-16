@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin;
 
+import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.JMenu;
@@ -21,7 +22,9 @@ public class PluginManager {
 	private static ArrayList<INRConsoleTabedPanelPlugin> plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 	private GenericDevice gen;
 	private BowlerAbstractConnection connection;
-	
+	private ArrayList<String >names=null;
+	private int width=1095;
+	private int height=700;
 	public PluginManager(){
 		update();
 	}
@@ -29,9 +32,18 @@ public class PluginManager {
 	 * This static method is for plugins to add themselves to the list of tabed-paned plugins
 	 * @param p a plugin instance to add to the list
 	 */
-	public static void addNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
+	public void addNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
 		if (!plugins.contains(p)){
 			plugins.add(p);
+			firePluginUpdate();
+			Dimension d= p.getMinimumWimdowDimentions();
+			if(d!=null){
+				if(d.getWidth()>getMinimumWidth())
+					setMinimumWidth((int) d.getWidth());
+				if(d.getHeight()>getMinimumHeight())
+					setMinimumHeight((int) d.getHeight());
+			}
+			System.out.println("Adding "+p.getClass());
 		}
 	}
 	public boolean disconnect(){
@@ -60,9 +72,9 @@ public class PluginManager {
 		} catch(Exception e) {
 			throw e;
 		}
-		ArrayList<String >names = gen.getNamespaces();
+		setNameSpaces(gen.getNamespaces());
 		for (INRConsoleTabedPanelPlugin p:plugins){
-			if(p.isMyNamespace(names)){
+			if(p.isMyNamespace(getNameSpaces())){
 				p.setConnection(connection);
 			}
 		}
@@ -122,12 +134,51 @@ public class PluginManager {
 		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 		// HACK this should load using OSGI
 		// Once instantiated they add themselves to the static list of plugins
-		new NRConsoleDyIOPlugin();
-		new NRConsolePIDPlugin();
-		new NRConsoleBowlerCameraPlugin();
-		new NRConsoleBootloaderPlugin();
+		new NRConsoleDyIOPlugin(this);
+		new NRConsolePIDPlugin(this);
+		new NRConsoleBowlerCameraPlugin(this);
+		new NRConsoleBootloaderPlugin(this);
 		//System.out.println("Updating plugins:"+plugins);
-		new NRConsoleSchedulerPlugin();
+		new NRConsoleSchedulerPlugin(this);
 		//END HACK
+	}
+	private ArrayList<IPluginUpdateListener> puListeners = new ArrayList<IPluginUpdateListener>();
+	public void addIPluginUpdateListener(IPluginUpdateListener l) {
+		if(puListeners.contains(l))
+			return;
+		puListeners.add(l);
+	}
+	public void removeIPluginUpdateListener(IPluginUpdateListener l) {
+		if(puListeners.contains(l))
+			puListeners.remove(l);
+	}
+	public void firePluginUpdate(){
+		//System.out.println(this.getClass()+"is refreshing");
+		for(IPluginUpdateListener l:puListeners){
+			l.onPluginListUpdate(this);
+		}
+	}
+	public boolean isConnected() {
+		if(connection==null)
+			return false;
+		return connection.isConnected();
+	}
+	public void setNameSpaces(ArrayList<String > names) {
+		this.names = names;
+	}
+	public ArrayList<String > getNameSpaces() {
+		return names;
+	}
+	public void setMinimumWidth(int width) {
+		this.width = width;
+	}
+	public int getMinimumWidth() {
+		return width;
+	}
+	public void setMinimumHeight(int height) {
+		this.height = height;
+	}
+	public int getMinimumHeight() {
+		return height;
 	}
 }

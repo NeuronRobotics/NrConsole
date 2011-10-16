@@ -8,11 +8,15 @@ import javax.swing.JMenu;
 public abstract class AbstractNRConsoleTabedPanelPlugin implements INRConsoleTabedPanelPlugin{
 	private boolean active = false;
 	ArrayList<String> myNames = new ArrayList<String> ();
-	public AbstractNRConsoleTabedPanelPlugin(String myNamespaces[]){
+	
+	public AbstractNRConsoleTabedPanelPlugin(String myNamespaces[],PluginManager pm){
 		for(int i=0;i<myNamespaces.length;i++){
 			myNames.add(myNamespaces[i]);
 		}
-		PluginManager.addNRConsoleTabedPanelPlugin(this);
+		pm.addNRConsoleTabedPanelPlugin(this);
+		if(pm.isConnected()){
+			isMyNamespace(pm.getNameSpaces());
+		}
 	}
 	
 	
@@ -32,7 +36,7 @@ public abstract class AbstractNRConsoleTabedPanelPlugin implements INRConsoleTab
 		return isAcvive();
 	}
 
-	private void setActive(boolean a){
+	public void setActive(boolean a){
 		active=a;
 	}
 	
