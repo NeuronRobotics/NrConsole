@@ -173,8 +173,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		});
 		showHexapodConf.addActionListener(new ActionListener() {	
 			
-			public void actionPerformed(ActionEvent e) {
-				
+			public void actionPerformed(ActionEvent e) {				
 				new HexapodNRConsolePulgin(manager);
 				manager.firePluginUpdate();
 				showHexapodConf.setEnabled(false);
@@ -183,9 +182,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		});
 		exportData.setMnemonic(KeyEvent.VK_E);
 		exportData.setEnabled(true);
-		exportData.addActionListener(new ActionListener() {
-			
-			
+		exportData.addActionListener(new ActionListener() {		
 			public void actionPerformed(ActionEvent e) {
 				displayGraphingDialog();
 			}

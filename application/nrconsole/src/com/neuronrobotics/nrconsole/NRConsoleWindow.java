@@ -139,7 +139,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	}
 	@Override
 	public void onPluginListUpdate(PluginManager manager) {
-		System.out.println(this.getClass()+" is refreshing");
+		//System.out.println(this.getClass()+" is refreshing");
 		setDeviceManager(manager);
 	}
 

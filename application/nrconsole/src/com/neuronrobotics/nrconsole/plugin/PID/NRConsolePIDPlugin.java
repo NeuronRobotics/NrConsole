@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.NRConsoleWindow;
+import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 
@@ -23,7 +24,7 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
 
-public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
+public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
 	private boolean active = false;
 	private boolean dypid = false;
 	//private DyIO dyio;
@@ -34,7 +35,9 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 	private JButton display = new JButton("Display PID configuration");
 	private JScrollPane scrollPanel = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	private JPanel holder = new JPanel();
+	private static final String [] namespaces = {"bcs.pid.*"};
 	public NRConsolePIDPlugin(PluginManager pm){
+		super(namespaces,pm);
 		pm.addNRConsoleTabedPanelPlugin(this);
 		panel.add(display,"wrap");
 		display.addActionListener(new ActionListener() {
@@ -45,7 +48,8 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 					pid.connect();
 					gui = new PIDControlGui(pid);
 				}else{
-					DyIORegestry.setConnection(connection);
+					if(connection != null)
+						DyIORegestry.setConnection(connection);
 					gui = new PIDControlGui();
 				}
 				panel.add(gui,"wrap");
@@ -69,14 +73,12 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 	}
 
 
-	
+	@Override
 	public boolean isMyNamespace(ArrayList<String> names) {
+		super.isMyNamespace(names);
 		for(String s:names){
 			if(s.contains("neuronrobotics.dyio.*")){
 				dypid = true;
-			}
-			if(s.contains("bcs.pid.*")){
-				active= true;
 			}
 		}
 		return isAcvive();
@@ -85,18 +87,8 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 	
 	public boolean setConnection(BowlerAbstractConnection conn) {
 		this.connection = conn;
-
-		
 		return true;
 	}
-
-	
-	public boolean isAcvive() {
-//		if(active)
-//			System.out.println(this.getClass()+" is active");
-		return active;
-	}
-
 	
 	public ArrayList<JMenu> getMenueItems() {
 		return null;
@@ -104,7 +96,7 @@ public class NRConsolePIDPlugin implements INRConsoleTabedPanelPlugin {
 
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
-		return new Dimension(1095,700);
+		return new Dimension(1095,900);
 	}
 
 }

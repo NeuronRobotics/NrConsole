@@ -103,14 +103,12 @@ public class NRConsole implements ActionListener {
 
 		@Override
 		public void onPluginListUpdate(PluginManager manager) {
-			System.out.println("NRConsole is refreshing");
+			//System.out.println("NRConsole is refreshing");
 			if(nrcMenubar.isReady()){
 				nrcMenubar.setMenues(manager.getMenueItems());
 				nrcWindow.setDeviceManager(manager);
 				nrcWindow.invalidate();
 				nrcWindow.setVisible(true);
-				
-				
 			}
 		}
 	}

@@ -63,8 +63,12 @@ public class PluginManager {
 				//p.getTabPane().setSize(d);
 			}
 			plugins.add(p);
+			if(connection!= null){
+				if(connection.isConnected())
+					updateNamespaces();
+			}
 			firePluginUpdate();
-			System.out.println("Adding "+p.getClass());
+			//System.out.println("Adding "+p.getClass());
 		}
 	}
 	public boolean disconnect(){
@@ -72,6 +76,14 @@ public class PluginManager {
 			connection.disconnect();
 		}
 		return true;
+	}
+	private void updateNamespaces(){
+		for (int i=0;i<plugins.size();i++){
+			INRConsoleTabedPanelPlugin p = plugins.get(i);
+			if(p.isMyNamespace(getNameSpaces())){
+				p.setConnection(connection);
+			}
+		}
 	}
 	public boolean connect(IConnectionEventListener listener) throws Exception{
 		disconnect();
@@ -93,13 +105,7 @@ public class PluginManager {
 			throw e;
 		}
 		setNameSpaces(gen.getNamespaces());
-		
-		for (int i=0;i<plugins.size();i++){
-			INRConsoleTabedPanelPlugin p = plugins.get(i);
-			if(p.isMyNamespace(getNameSpaces())){
-				p.setConnection(connection);
-			}
-		}
+		updateNamespaces();
 		return true;
 	}
 	public ArrayList<JMenu> getMenueItems(){
