@@ -38,7 +38,6 @@ public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
 	private static final String [] namespaces = {"bcs.pid.*"};
 	public NRConsolePIDPlugin(PluginManager pm){
 		super(namespaces,pm);
-		pm.addNRConsoleTabedPanelPlugin(this);
 //		panel.add(display,"wrap");
 //		display.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {
@@ -72,21 +71,24 @@ public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
 			holder = new JPanel();
 		return holder;
 	}
-
-
+	private boolean setNameSpaces = false;
 	@Override
 	public boolean isMyNamespace(ArrayList<String> names) {
-		super.isMyNamespace(names);
-		for(String s:names){
-			if(s.contains("neuronrobotics.dyio.*")){
-				dypid = true;
+		if(super.isMyNamespace(names)) {
+			for(String s:names){
+				if(s.contains("neuronrobotics.dyio.*")){
+					dypid = true;
+				}
 			}
+			setNameSpaces = true;
 		}
 		return isAcvive();
 	}
 
 	
 	public boolean setConnection(BowlerAbstractConnection conn) {
+		if(!setNameSpaces)
+			throw new RuntimeException("Namespaces not set before connection");
 		this.connection = conn;
 		if(!dypid){
 			pid = new  GenericPIDDevice(connection);
@@ -108,7 +110,7 @@ public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
 
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
-		return new Dimension(1095,900);
+		return new Dimension(1095,1000);
 	}
 
 }

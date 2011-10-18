@@ -55,7 +55,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		super(getConsoleVersion());
 		instance=this;
 		scroller.add(logoPanel);
-		updateUI();
+		
 		scrollPanel.setViewportView(scroller);
 		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
 		add(scrollPanel);
@@ -76,6 +76,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		logoPanel.setLayout(new GridLayout(3, 2));
 		logoPanel.add(new JLabel(logo),"[0,2]");
 		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
+		updateUI();
 	}
 	
 	
@@ -104,6 +105,8 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 			modePane.setSize(	manager.getMinimumWidth(),
 								manager.getMinimumHeight()
 							);	
+		}else {
+			setSize((1095+53),805);
 		}
 		
 		updateScroller();

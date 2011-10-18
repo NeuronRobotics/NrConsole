@@ -14,7 +14,6 @@ public class HexapodNRConsolePulgin extends AbstractNRConsoleTabedPanelPlugin {
 	private HexapodConfigPanel hex;
 	public HexapodNRConsolePulgin(PluginManager pm){
 		super(myNames,pm);
-		hex.setDyIO();
 	}
 	
 	public JPanel getTabPane() {
@@ -28,6 +27,7 @@ public class HexapodNRConsolePulgin extends AbstractNRConsoleTabedPanelPlugin {
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		if(hex == null)
 			hex = new HexapodConfigPanel();
+		hex.setDyIO();
 		return hex.setConnection(connection);
 	}
 

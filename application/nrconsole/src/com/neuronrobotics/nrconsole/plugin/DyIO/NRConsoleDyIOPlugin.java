@@ -95,7 +95,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 	private boolean setUp = false;
 	public boolean setConnection(BowlerAbstractConnection connection){
-		System.err.println(this.getClass()+" setConnection");
+		//System.err.println(this.getClass()+" setConnection");
 		if(setUp)
 			return true;
 		//DyIO.disableFWCheck();
@@ -169,7 +169,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				INRConsoleTabedPanelPlugin p =new NRConsolePIDPlugin(manager);
+				NRConsolePIDPlugin p =new NRConsolePIDPlugin(manager);
+				p.isMyNamespace(manager.getNameSpaces());
 				p.setConnection(DyIORegestry.get().getConnection());
 				//new NRConsoleSchedulerPlugin(manager);
 				manager.firePluginUpdate();

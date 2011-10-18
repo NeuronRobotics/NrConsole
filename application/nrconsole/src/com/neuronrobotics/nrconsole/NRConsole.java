@@ -42,7 +42,6 @@ public class NRConsole implements ActionListener {
 		nrcMenubar.setMenues(null);
 		nrcMenubar.addActionListener(this);
 		
-		nrcWindow.setSize((manager.getMinimumWidth()+53),(manager.getMinimumHeight()+105));
 		nrcWindow.setLocationRelativeTo(null);
 		nrcWindow.setVisible(true);
 		

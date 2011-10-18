@@ -41,7 +41,7 @@ public class PluginManager {
 		for(int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin pl= plugins.get(i);
 			if(pl.getClass().toString().contains(p)) {
-				System.err.println("removing: "+p);
+				//System.err.println("removing: "+p);
 				plugins.remove(pl);
 			}
 		}
@@ -67,12 +67,9 @@ public class PluginManager {
 					setMinimumHeight((int) d.getHeight());
 				//p.getTabPane().setSize(d);
 			}
-			System.out.println("Adding: "+p.getClass());
+			//System.out.println("Adding: "+p.getClass());
 			plugins.add(p);
-			if(connection!= null){
-				if(connection.isConnected())
-					updateNamespaces();
-			}
+			updateNamespaces();
 			firePluginUpdate();
 			//System.out.println("Adding "+p.getClass());
 		}
@@ -86,7 +83,8 @@ public class PluginManager {
 	private void updateNamespaces(){
 		for (int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin p = plugins.get(i);
-			p.isMyNamespace(getNameSpaces());
+			if(getNameSpaces()!=null)
+				p.isMyNamespace(getNameSpaces());
 		}
 	}
 	public boolean connect(IConnectionEventListener listener) throws Exception{
@@ -152,13 +150,13 @@ public class PluginManager {
 		 updateNamespaces();
 		 for (INRConsoleTabedPanelPlugin p:plugins){
 			 if(p.isAcvive()){
-				 System.out.println("Displaying: "+p.getClass());
+				 //System.out.println("Displaying: "+p.getClass());
 				 p.getTabPane().setBorder(BorderFactory.createLoweredBevelBorder());
 				 p.getTabPane().setSize(getMinimumDimention());
 				 p.getTabPane().setVisible(true);
 				 back.add(p.getTabPane());
 			 }else {
-				 System.out.println("\t\tInactive: "+p.getClass());
+				 //System.out.println("\t\tInactive: "+p.getClass());
 			 }
 		 }
 		 //System.out.println("Displaying: "+back);

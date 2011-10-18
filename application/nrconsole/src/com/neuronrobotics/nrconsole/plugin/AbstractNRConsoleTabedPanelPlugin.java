@@ -14,9 +14,7 @@ public abstract class AbstractNRConsoleTabedPanelPlugin implements INRConsoleTab
 			myNames.add(myNamespaces[i]);
 		}
 		pm.addNRConsoleTabedPanelPlugin(this);
-		if(pm.isConnected()){
-			isMyNamespace(pm.getNameSpaces());
-		}
+		isMyNamespace(pm.getNameSpaces());
 	}
 	
 	
@@ -26,6 +24,8 @@ public abstract class AbstractNRConsoleTabedPanelPlugin implements INRConsoleTab
 
 	
 	public boolean isMyNamespace(ArrayList<String> names) {
+		if (names == null)
+			return false;
 		for(String s:names){
 			for(String m:myNames){
 				if(s.contains(m)){
@@ -33,6 +33,7 @@ public abstract class AbstractNRConsoleTabedPanelPlugin implements INRConsoleTab
 				}
 			}
 		}
+		
 		return isAcvive();
 	}
 
