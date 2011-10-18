@@ -37,10 +37,13 @@ public class PluginManager {
 	}
 	
 	public void removeNRConsoleTabedPanelPlugin(String p){
+		
 		for(int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin pl= plugins.get(i);
-			if(pl.getClass().toString().contains(p))
+			if(pl.getClass().toString().contains(p)) {
+				System.err.println("removing: "+p);
 				plugins.remove(pl);
+			}
 		}
 	}
 	
@@ -51,8 +54,10 @@ public class PluginManager {
 	public void addNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
 		if (!plugins.contains(p)){
 			for(INRConsoleTabedPanelPlugin pl:plugins){
-				if(pl.getClass().toString().contains(p.getClass().toString()))
+				if(pl.getClass().toString().contains(p.getClass().toString())) {
+					System.err.println("in list, not adding: "+p.getClass());
 					return;
+				}
 			}
 			Dimension d= p.getMinimumWimdowDimentions();
 			if(d!=null){
@@ -62,6 +67,7 @@ public class PluginManager {
 					setMinimumHeight((int) d.getHeight());
 				//p.getTabPane().setSize(d);
 			}
+			System.out.println("Adding: "+p.getClass());
 			plugins.add(p);
 			if(connection!= null){
 				if(connection.isConnected())
@@ -80,9 +86,7 @@ public class PluginManager {
 	private void updateNamespaces(){
 		for (int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin p = plugins.get(i);
-			if(p.isMyNamespace(getNameSpaces())){
-				p.setConnection(connection);
-			}
+			p.isMyNamespace(getNameSpaces());
 		}
 	}
 	public boolean connect(IConnectionEventListener listener) throws Exception{
@@ -106,6 +110,12 @@ public class PluginManager {
 		}
 		setNameSpaces(gen.getNamespaces());
 		updateNamespaces();
+		 for (int i=0;i<plugins.size();i++){
+			 INRConsoleTabedPanelPlugin p = plugins.get(i);
+			 if(p.isAcvive()){
+				 p.setConnection(connection);
+			 }
+		 }
 		return true;
 	}
 	public ArrayList<JMenu> getMenueItems(){
@@ -139,11 +149,16 @@ public class PluginManager {
 	}
 	public ArrayList<JPanel> getPanels(){
 		 ArrayList<JPanel> back =  new ArrayList<JPanel>();
+		 updateNamespaces();
 		 for (INRConsoleTabedPanelPlugin p:plugins){
 			 if(p.isAcvive()){
+				 System.out.println("Displaying: "+p.getClass());
 				 p.getTabPane().setBorder(BorderFactory.createLoweredBevelBorder());
 				 p.getTabPane().setSize(getMinimumDimention());
+				 p.getTabPane().setVisible(true);
 				 back.add(p.getTabPane());
+			 }else {
+				 System.out.println("\t\tInactive: "+p.getClass());
 			 }
 		 }
 		 //System.out.println("Displaying: "+back);

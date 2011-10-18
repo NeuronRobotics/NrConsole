@@ -32,43 +32,44 @@ public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
 	private PIDControlGui gui;
 	private JPanel panel = new JPanel(new MigLayout());
 	private BowlerAbstractConnection connection = null;
-	private JButton display = new JButton("Display PID configuration");
-	private JScrollPane scrollPanel = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-	private JPanel holder = new JPanel();
+	//private JButton display = new JButton("Display PID configuration");
+	//private JScrollPane scrollPanel = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+	private JPanel holder ;
 	private static final String [] namespaces = {"bcs.pid.*"};
 	public NRConsolePIDPlugin(PluginManager pm){
 		super(namespaces,pm);
 		pm.addNRConsoleTabedPanelPlugin(this);
-		panel.add(display,"wrap");
-		display.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				display.setVisible(false);
-				if(!dypid){
-					pid = new  GenericPIDDevice(connection);
-					pid.connect();
-					gui = new PIDControlGui(pid);
-				}else{
-					if(connection != null)
-						DyIORegestry.setConnection(connection);
-					gui = new PIDControlGui();
-				}
-				panel.add(gui,"wrap");
-				panel.invalidate();
-			}
-		});
+//		panel.add(display,"wrap");
+//		display.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				display.setVisible(false);
+//				if(!dypid){
+//					pid = new  GenericPIDDevice(connection);
+//					pid.connect();
+//					gui = new PIDControlGui(pid);
+//				}else{
+//					if(connection != null)
+//						DyIORegestry.setConnection(connection);
+//					gui = new PIDControlGui();
+//				}
+//				panel.add(gui,"wrap");
+//				panel.invalidate();
+//			}
+//		});
 		
 		
 		//panel.setPreferredSize(new Dimension(NRConsoleWindow.panelWidth-100,NRConsoleWindow.panelHight-100));
 		//panel.setSize(new Dimension(NRConsoleWindow.panelWidth-100,NRConsoleWindow.panelHight-100));
-		scrollPanel.setViewportView(panel);
-		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
+//		scrollPanel.setViewportView(panel);
+//		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
 		
-		holder.setName("P.I.D. Configuration");
-		holder.add(scrollPanel);
+		getTabPane().setName("P.I.D. Configuration");
+		getTabPane().add(panel);
 	}
 	
 	public JPanel getTabPane() {
-		
+		if(holder== null)
+			holder = new JPanel();
 		return holder;
 	}
 
@@ -87,6 +88,17 @@ public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
 	
 	public boolean setConnection(BowlerAbstractConnection conn) {
 		this.connection = conn;
+		if(!dypid){
+			pid = new  GenericPIDDevice(connection);
+			pid.connect();
+			gui = new PIDControlGui(pid);
+		}else{
+			if(connection != null)
+				DyIORegestry.setConnection(connection);
+			gui = new PIDControlGui();
+		}
+		panel.add(gui,"wrap");
+		panel.invalidate();
 		return true;
 	}
 	

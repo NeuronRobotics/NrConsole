@@ -11,20 +11,23 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 
 public class HexapodNRConsolePulgin extends AbstractNRConsoleTabedPanelPlugin {
 	public static final String[] myNames ={"neuronrobotics.dyio.*"};
-	private HexapodConfigPanel hex = new HexapodConfigPanel();
+	private HexapodConfigPanel hex;
 	public HexapodNRConsolePulgin(PluginManager pm){
 		super(myNames,pm);
 		hex.setDyIO();
 	}
 	
 	public JPanel getTabPane() {
-		System.out.println(this.getClass()+"is getting tabPane");
+		if(hex == null)
+			hex = new HexapodConfigPanel();
 		hex.setSize(getMinimumWimdowDimentions());
 		return hex;
 	}
 
 	
 	public boolean setConnection(BowlerAbstractConnection connection) {
+		if(hex == null)
+			hex = new HexapodConfigPanel();
 		return hex.setConnection(connection);
 	}
 

@@ -93,10 +93,11 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		return isAcvive();
 	}
 
-	
+	private boolean setUp = false;
 	public boolean setConnection(BowlerAbstractConnection connection){
-		manager.removeNRConsoleTabedPanelPlugin("NRConsolePIDPlugin");
-		Log.debug(this.getClass()+" setConnection");
+		System.err.println(this.getClass()+" setConnection");
+		if(setUp)
+			return true;
 		//DyIO.disableFWCheck();
 		DyIORegestry.setConnection(connection);
 		DyIORegestry.get().connect();
@@ -105,6 +106,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		setupDyIO();
 		DyIORegestry.get().setMuteResyncOnModeChange(false);
 		DyIORegestry.get().getBatteryVoltage(true);
+		manager.removeNRConsoleTabedPanelPlugin("NRConsolePIDPlugin");
+		setUp = true;
 		return true;
 	}
 	private void setupDyIO(){
@@ -156,7 +159,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new NRConsoleSchedulerPlugin(manager);
+				INRConsoleTabedPanelPlugin p = new NRConsoleSchedulerPlugin(manager);
+				p.setConnection(DyIORegestry.get().getConnection());
 				manager.firePluginUpdate();
 				showSequencerConf.setEnabled(false);
 			}
@@ -165,7 +169,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new NRConsolePIDPlugin(manager);
+				INRConsoleTabedPanelPlugin p =new NRConsolePIDPlugin(manager);
+				p.setConnection(DyIORegestry.get().getConnection());
 				//new NRConsoleSchedulerPlugin(manager);
 				manager.firePluginUpdate();
 				showPidConf.setEnabled(false);
@@ -174,7 +179,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		showHexapodConf.addActionListener(new ActionListener() {	
 			
 			public void actionPerformed(ActionEvent e) {				
-				new HexapodNRConsolePulgin(manager);
+				INRConsoleTabedPanelPlugin p =new HexapodNRConsolePulgin(manager);
+				p.setConnection(DyIORegestry.get().getConnection());
 				manager.firePluginUpdate();
 				showHexapodConf.setEnabled(false);
 				
