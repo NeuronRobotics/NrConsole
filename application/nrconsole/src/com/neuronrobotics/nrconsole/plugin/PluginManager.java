@@ -55,7 +55,7 @@ public class PluginManager {
 		if (!plugins.contains(p)){
 			for(INRConsoleTabedPanelPlugin pl:plugins){
 				if(pl.getClass().toString().contains(p.getClass().toString())) {
-					System.err.println("in list, not adding: "+p.getClass());
+					//System.err.println("in list, not adding: "+p.getClass());
 					return;
 				}
 			}
