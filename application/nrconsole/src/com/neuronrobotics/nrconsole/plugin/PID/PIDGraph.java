@@ -81,7 +81,7 @@ public class PIDGraph extends JPanel  {
 	 * long 
 	 */
 	private static final long serialVersionUID = 1L;
-	public synchronized void addEvent(double setpoint, double position) {
+	public void addEvent(double setpoint, double position) {
 		try{
 			
 			double[] data = {setpoint,position};
