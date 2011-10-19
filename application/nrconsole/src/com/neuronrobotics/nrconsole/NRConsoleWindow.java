@@ -116,16 +116,16 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		
 	}
 	
-	public void setDeviceManager(PluginManager deviceManager) {
-		manager=deviceManager;
+	public void setDeviceManager(PluginManager dm) {
+		manager=dm;
 		scroller.removeAll();
 		modePane.removeAll();
 		panels=new ArrayList<JPanel>();
-		for(JPanel p: deviceManager.getPanels()){
+		for(JPanel p: manager.getPanels()){
 			modePane.addTab(p.getName(), p);
 			panels.add(p);
 		}
-		deviceManager.addIPluginUpdateListener(this);
+		manager.addIPluginUpdateListener(this);
 		scroller.add(modePane);
 		updateUI();
 	}

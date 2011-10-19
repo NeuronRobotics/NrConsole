@@ -169,17 +169,22 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				NRConsolePIDPlugin p =new NRConsolePIDPlugin(manager);
-				p.isMyNamespace(manager.getNameSpaces());
-				p.setConnection(DyIORegestry.get().getConnection());
-				//new NRConsoleSchedulerPlugin(manager);
-				manager.firePluginUpdate();
-				showPidConf.setEnabled(false);
+				new Thread() {
+					public void run() {
+						NRConsolePIDPlugin p =new NRConsolePIDPlugin(manager);
+						p.isMyNamespace(manager.getNameSpaces());
+						p.setConnection(DyIORegestry.get().getConnection());
+						//new NRConsoleSchedulerPlugin(manager);
+						manager.firePluginUpdate();
+						showPidConf.setEnabled(false);
+					}
+				}.start();
 			}
 		});
 		showHexapodConf.addActionListener(new ActionListener() {	
 			
-			public void actionPerformed(ActionEvent e) {				
+			public void actionPerformed(ActionEvent e) {		
+				
 				INRConsoleTabedPanelPlugin p =new HexapodNRConsolePulgin(manager);
 				p.setConnection(DyIORegestry.get().getConnection());
 				manager.firePluginUpdate();

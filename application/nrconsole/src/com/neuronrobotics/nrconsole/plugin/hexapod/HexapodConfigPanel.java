@@ -26,6 +26,7 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+import com.sun.corba.se.impl.orb.ORBConfiguratorImpl.ConfigParser;
 
 public class HexapodConfigPanel extends JPanel {
 	/**
@@ -39,6 +40,7 @@ public class HexapodConfigPanel extends JPanel {
 	private JCheckBox defaultConfig = new JCheckBox("Load Configuration From Default");
 	private JButton start = new JButton("Initialize Configuration to DyIO");
 	private JPanel controlPanel = new JPanel(new MigLayout());
+	private JPanel confPanel = new JPanel(new MigLayout());
 	private ServoChannelConfiguration srv = null;
 	//private JButton servos = new JButton("Configure Servos Channels");
 	private JButton save = new JButton("Save Configuration");
@@ -104,10 +106,11 @@ public class HexapodConfigPanel extends JPanel {
 					}
 					if(srv == null){
 						srv=new ServoChannelConfiguration(getGUI());
+						srv.setVisible(true);
 					}
-					removeAll();
-					add(controlPanel);
-					add(srv);
+					confPanel.removeAll();
+					confPanel.add(srv);
+					confPanel.setVisible(true);
 					invalidate();
 					//hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 				}catch(Exception ex){
@@ -145,13 +148,19 @@ public class HexapodConfigPanel extends JPanel {
 		controlPanel.add(inputFileDisplay,"wrap");
 		controlPanel.add(selectOutput,"wrap");
 		controlPanel.add(outputFileDisplay,"wrap");
-		//p.add(save,"wrap");
-		controlPanel.add(test,"wrap");
 		
-		controlPanel.add(testWidget,"wrap");
-		removeAll();
-		add(controlPanel);
+		JPanel testPanel = new JPanel(new MigLayout());
+		testPanel.add(test,"wrap");
+		testPanel.add(testWidget,"wrap");
 		
+		
+		JPanel cp = new JPanel(new MigLayout());
+		cp.add(controlPanel);
+		cp.add(testPanel);
+		
+		add(cp,"wrap");
+		add(confPanel,"wrap");
+		confPanel.setVisible(false);
 		start.setEnabled(false);
 		defaultConfig.setSelected(false);
 		configFile.setEnabled(true);

@@ -36,7 +36,7 @@ public class HexapodNRConsolePulgin extends AbstractNRConsoleTabedPanelPlugin {
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
 		// TODO Auto-generated method stub
-		return new Dimension(1250,850);
+		return new Dimension(1050,1200);
 	}
 
 }
