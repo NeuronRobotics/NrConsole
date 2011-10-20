@@ -1,4 +1,4 @@
-package com.neuronrobotics.nrconsole.plugin.hexapod;
+package com.neuronrobotics.nrconsole.plugin.DyIO.hexapod;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
