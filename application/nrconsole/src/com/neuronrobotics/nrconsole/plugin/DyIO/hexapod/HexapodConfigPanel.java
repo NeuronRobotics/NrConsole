@@ -110,6 +110,7 @@ public class HexapodConfigPanel extends JPanel {
 					}
 					confPanel.removeAll();
 					confPanel.add(srv);
+					confPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 					confPanel.setVisible(true);
 					invalidate();
 					//hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -150,17 +151,22 @@ public class HexapodConfigPanel extends JPanel {
 		controlPanel.add(outputFileDisplay,"wrap");
 		
 		JPanel testPanel = new JPanel(new MigLayout());
+		
 		testPanel.add(test,"wrap");
 		testPanel.add(testWidget,"wrap");
+		//testPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		
 		
 		JPanel cp = new JPanel(new MigLayout());
 		cp.add(controlPanel);
 		cp.add(testPanel);
+		cp.setBorder(BorderFactory.createRaisedBevelBorder());
 		
+		removeAll();
 		add(cp,"wrap");
-		add(confPanel,"wrap");
-		confPanel.setVisible(false);
+		add(confPanel);
+		
+
 		start.setEnabled(false);
 		defaultConfig.setSelected(false);
 		configFile.setEnabled(true);

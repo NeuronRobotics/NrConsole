@@ -15,9 +15,10 @@ import net.miginfocom.swing.MigLayout;
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
+import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 
-public class ServoWidget extends ControlWidget implements ChangeListener, ActionListener {
+public class ServoWidget extends ControlWidget implements ChangeListener, ActionListener, IServoPositionUpdateListener {
 	private static final long serialVersionUID = 1L;
 	
 	private JSlider sliderUI = new JSlider();
@@ -32,6 +33,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		setRecordable(true);
 		try{
 			sc = new ServoChannel(getChannel());
+			sc.addIServoPositionUpdateListener(this);
 		}catch (Exception e){
 			return;
 		}
@@ -114,5 +116,14 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
+		if(srv == sc){
+			sliderUI.removeChangeListener(this);
+			sliderUI.setValue(position);
+			sliderUI.addChangeListener(this);
+		}
 	}
 }
