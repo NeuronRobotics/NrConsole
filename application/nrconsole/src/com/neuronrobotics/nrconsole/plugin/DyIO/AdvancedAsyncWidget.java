@@ -217,6 +217,10 @@ public class AdvancedAsyncWidget extends JPanel {
 		time.setText(new Integer(100).toString());
 		Log.debug("Setting up async");
 		updateAsync();
-		Log.debug("END Setting up async on channel: "+getPerpheral().getChannel().getChannelNumber());
+		try {
+			Log.debug("END Setting up async on channel: "+getPerpheral().getChannel().getChannelNumber());
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
