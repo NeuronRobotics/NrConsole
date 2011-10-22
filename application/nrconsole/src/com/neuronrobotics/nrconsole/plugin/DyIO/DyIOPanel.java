@@ -15,9 +15,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIOPowerState;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 
 
 
@@ -30,10 +32,12 @@ public class DyIOPanel extends JPanel {
 	private bankLED A = new bankLED ();
 	private bankLED B = new bankLED ();
 	private JButton refresh = new JButton("Refresh");
-	private DyIO d;
+	private JLabel mac = new JLabel("MAC: 00:00:00:00:00:00");
+	private JLabel fw = new JLabel("FW Version: ?.?.?");
 	public DyIOPanel() {
 	    initPanel();
 	    setName("DyIO");
+
 	}
 	
 	private void initPanel() {
@@ -45,20 +49,29 @@ public class DyIOPanel extends JPanel {
 	    setLayout(new MigLayout());
 	    refresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				d.getBatteryVoltage(true);
+				DyIORegestry.get().getBatteryVoltage(true);
 			}
 		});
 	    add(voltage, "pos 210 50");
 	    add(refresh, "pos 385 40");
+	    add(mac, "pos 200 150");
+	    add(fw, "pos 200 175");
 		int ledPos = 12*34+125;
 		add(A, "pos 440 "+ledPos);
 		add(B, "pos 105 "+ledPos);
+		
+		
+	}
+	private void setFw(byte[] f){
+		fw.setText("FW Version: "+f[0]+"."+f[1]+"."+f[2]);
+	}
+	private void setMac(MACAddress m){
+		mac.setText("MAC: "+m.toString());
 	}
 	
 	public void addChannels(List<ChannelManager> list, boolean alignedLeft) {
 		int index = 0;
 		//removeAll();
-		d=list.get(0).getChannel().getDevice();
 		for(ChannelManager cp : list) {
 			cp.getChannelPanel().setAlignedLeft(alignedLeft);
 			int x = (alignedLeft ? 105 : 370);
@@ -91,6 +104,8 @@ public class DyIOPanel extends JPanel {
 		setVoltage(dyIOPowerEvent.getVoltage());
 		A.setState(dyIOPowerEvent.getChannelAMode());
 		B.setState(dyIOPowerEvent.getChannelBMode());
+	    setMac(DyIORegestry.get().getAddress());
+	    setFw(DyIORegestry.get().getFirmwareRev());
 		repaint();
 	}
 	private class bankLED extends JPanel{
