@@ -30,7 +30,7 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 		//System.out.println("\nInitializing PPM channel");
 		try {
 			ppmr = new PPMReaderChannel(getChannel());
-			ppmr.addPPMReaderListener(this);
+			
 			cross = ppmr.getCrossLink();
 			int [] vals = ppmr.getValues();
 			for(int i=0;i<ppmLabels.length;i++){
@@ -50,6 +50,7 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 				values.add(ppmLinks[i],"wrap");
 			}
 			add(values);
+			ppmr.addPPMReaderListener(this);
 			//System.out.println("\nPPM UI ok");
 		}catch(Exception e){
 			e.printStackTrace();
