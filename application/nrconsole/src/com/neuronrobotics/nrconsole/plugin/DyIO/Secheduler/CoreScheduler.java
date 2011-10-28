@@ -34,11 +34,15 @@ public class CoreScheduler {
 	private int msDuration=0;
 	//private int trackLength;
 	private File audioFile=null;
+	DyIOFlusher flusher;
 	public CoreScheduler(DyIO d, int loopTime,int duration ){
-		dyio = d;
-		this.loopTime=loopTime;
+		setDyIO(d);
+		
+		this.setLoopTime(loopTime);
 		msDuration=duration;
-		//dyio.enableDebug();	
+		//dyio.enableDebug();
+		flusher = new DyIOFlusher();
+		flusher.start();
 	}
 	
 	public void loadFromFile(File f){
@@ -74,7 +78,7 @@ public class CoreScheduler {
 		    	}else{
 		    		msDuration = Integer.parseInt(getTagValue("duration",eElement));
 		    	}
-		    	loopTime = Integer.parseInt(getTagValue("loopTime",eElement));
+		    	setLoopTime(Integer.parseInt(getTagValue("loopTime",eElement)));
 		    	NodeList links = eElement.getElementsByTagName("ServoOutputSequence");
 		    	for (int i = 0; i < links.getLength(); i++) {
 		    		//System.out.println("\tLink # "+i);
@@ -143,10 +147,10 @@ public class CoreScheduler {
 	}
 	
 	public ServoOutputScheduleChannel addServoChannel(int dyIOChannel){
-		ServoChannel srv = new ServoChannel(dyio.getChannel(dyIOChannel));
+		ServoChannel srv = new ServoChannel(getDyIO().getChannel(dyIOChannel));
 		srv.getChannel().setCachedMode(true);
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
-		soc.setIntervalTime(loopTime, getTrackLength());
+		soc.setIntervalTime(getLoopTime(), getTrackLength());
 		addISchedulerListener(soc);
 		//soc.setIntervalTime(loopTime);
 		getOutputs().add(soc);
@@ -179,18 +183,7 @@ public class CoreScheduler {
 		listeners.remove(l);
 	}
 	public void setCurrentTime(long time) {
-		long start = System.currentTimeMillis();
-		if(dyio!=null){
-			//Log.enableDebugPrint(true);
-			double seconds =((double)(loopTime/3))/1000;
-			dyio.flushCache(seconds);
-			//Log.enableDebugPrint(false);
-		}
-		flushTime = System.currentTimeMillis()-start;
-		if(flushTime>loopTime){
-			System.err.println("Flush took:"+flushTime+ " and loop time="+loopTime);
-			flushTime=loopTime;
-		}
+		flusher.setFlush();
 		for(ISchedulerListener l:listeners){
 			l.onTimeUpdate(time);
 		}
@@ -210,7 +203,7 @@ public class CoreScheduler {
 		}else{
 			s+="\t<duriation>"+msDuration+"</duriation>\n";
 		}	
-		s+="\t<loopTime>"+loopTime+"</loopTime>\n";
+		s+="\t<loopTime>"+getLoopTime()+"</loopTime>\n";
 		for(ServoOutputScheduleChannel so:getOutputs()){
 			s+=so.getXml();
 		}
@@ -224,6 +217,46 @@ public class CoreScheduler {
 
 	public ArrayList< ServoOutputScheduleChannel> getOutputs() {
 		return outputs;
+	}
+	
+	private class DyIOFlusher extends Thread{
+		private boolean running = true;
+		private boolean flush = false;
+		public void run(){
+			while(isRunning()){
+				if(isFlush()){
+					flush = false;
+					long start = System.currentTimeMillis();
+					if(getDyIO()!=null){
+						//Log.enableDebugPrint(true);
+						double seconds =((double)(getLoopTime()/3))/1000;
+						getDyIO().flushCache(seconds);
+						//Log.enableDebugPrint(false);
+					}
+					flushTime = System.currentTimeMillis()-start;
+					if(flushTime>getLoopTime()){
+						System.err.println("Flush took:"+flushTime+ " and loop time="+getLoopTime());
+						flushTime=getLoopTime();
+					}
+				}else{
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+		public boolean isRunning() {
+			return running;
+		}
+		public void setFlush() {
+			this.flush = true;
+		}
+		public boolean isFlush() {
+			return flush;
+		}
 	}
 
 	private class SchedulerThread extends Thread{
@@ -239,7 +272,7 @@ public class CoreScheduler {
 				mp3.setCurrentTime((int) (StartOffset));
 			}
 			for(ServoOutputScheduleChannel s:getOutputs()){
-				s.setIntervalTime(loopTime, (int) time);
+				s.setIntervalTime(getLoopTime(), (int) time);
 			}
 		}
 		public void run(){
@@ -267,7 +300,7 @@ public class CoreScheduler {
 					}
 						
 					setCurrentTime(current);
-					long t  = loopTime-flushTime;
+					long t  = getLoopTime()-flushTime;
 					try {
 						Thread.sleep(t);
 					} catch (Exception e) {
@@ -293,6 +326,22 @@ public class CoreScheduler {
 
 	public File getAudioFile() {
 		return audioFile;
+	}
+
+	public void setDyIO(DyIO dyio) {
+		this.dyio = dyio;
+	}
+
+	public DyIO getDyIO() {
+		return dyio;
+	}
+
+	public void setLoopTime(int loopTime) {
+		this.loopTime = loopTime;
+	}
+
+	public int getLoopTime() {
+		return loopTime;
 	}
 
 
