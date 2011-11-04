@@ -46,7 +46,19 @@ public class PIDControlGui extends JPanel {
 		setDyPID(false);
 		init();
 	}
-	
+	private void stopAll(){
+		try{
+			getPidDevice().killAllPidGroups();
+			for(PIDControlWidget w:widgits) {
+				w.stopPID(false);
+			}
+		}catch (Exception ex){
+			ex.printStackTrace();
+			for(PIDControlWidget w:widgits) {
+				w.stopPID(true);
+			}
+		}
+	}
 	private void init() {
 		
 		setName("P.I.D.");
@@ -90,14 +102,7 @@ public class PIDControlGui extends JPanel {
 		stopAll.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				try{
-					getPidDevice().killAllPidGroups();
-				}catch (Exception ex){
-					ex.printStackTrace();
-					for(PIDControlWidget w:widgits) {
-						w.stopPID();
-					}
-				}
+				stopAll();
 			}
 		});
 		JPanel groups = new JPanel(new MigLayout());
@@ -107,9 +112,7 @@ public class PIDControlGui extends JPanel {
 		add(groups,"wrap");
 		add(selected,"wrap");
 		Log.info("Started PID Control Gui");
-		for(PIDControlWidget w:widgits) {
-			w.stopPID();
-		}
+		stopAll();
 	}
 	
 	private void setDyPID(boolean hadDyPID) {

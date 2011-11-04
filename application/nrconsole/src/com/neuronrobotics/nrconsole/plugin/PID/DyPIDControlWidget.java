@@ -153,10 +153,10 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 					widgit.pidSet.setEnabled(true);
 					DyPIDConfiguration config = new DyPIDConfiguration(widgit.getGroup(), Integer.parseInt( inChan.getSelectedItem().toString()), (DyIOChannelMode)inMode.getSelectedItem(), Integer.parseInt( outChan.getSelectedItem().toString()),(DyIOChannelMode) outMode.getSelectedItem());
 					DyIORegestry.get().ConfigureDynamicPIDChannels(config);
-					widgit.stopPID();
+					widgit.stopPID(true);
 				}else {
 					JOptionPane.showMessageDialog(null, "DyIO Channel/Modes are not all set", "DyPID ERROR", JOptionPane.ERROR_MESSAGE);
-					widgit.stopPID();
+					widgit.stopPID(true);
 					widgit.pidStop.setEnabled(false);
 					widgit.pidSet.setEnabled(false);
 				}

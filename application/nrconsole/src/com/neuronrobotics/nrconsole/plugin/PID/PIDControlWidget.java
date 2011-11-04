@@ -103,7 +103,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		pidStop.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				stopPID();
+				stopPID(true);
 			}
 		});
 		zero.addActionListener(new ActionListener() {
@@ -202,10 +202,11 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	public PIDControlGui getGui() {
 		return tab;
 	}
-	void stopPID(){
+	void stopPID(boolean b){
 		pidStop.setEnabled(false);
 		getPIDConfiguration().setEnabled(false);
-		ConfigurePIDController();
+		if(b)
+			ConfigurePIDController();
 		advanced.setEnabled(false);
 		pidRunning.setVisible(false);
 	}
