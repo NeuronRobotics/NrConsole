@@ -90,8 +90,13 @@ public class PIDControlGui extends JPanel {
 		stopAll.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				for(PIDControlWidget w:widgits) {
-					w.stopPID();
+				try{
+					getPidDevice().killAllPidGroups();
+				}catch (Exception ex){
+					ex.printStackTrace();
+					for(PIDControlWidget w:widgits) {
+						w.stopPID();
+					}
 				}
 			}
 		});
