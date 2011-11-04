@@ -19,8 +19,11 @@ import com.neuronrobotics.sdk.addons.walker.WalkerServoLink;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
-
-
+/**
+ * 
+ * @author hephaestus
+ *
+ */
 public class CoreScheduler {
 	private int loopTime;
 	private long flushTime = 0; 
@@ -44,6 +47,11 @@ public class CoreScheduler {
 		flusher = new DyIOFlusher();
 		flusher.start();
 	}
+	
+	/**
+	 * 
+	 * @param f The file to load the scheduler configuration from. This should be an xml.
+	 */
 	
 	public void loadFromFile(File f){
 		/**
