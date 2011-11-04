@@ -14,4 +14,5 @@ public interface INRConsoleTabedPanelPlugin {
 	public boolean isAcvive();
 	public boolean setConnection(BowlerAbstractConnection connection);
 	public Dimension getMinimumWimdowDimentions();
+	public void setActive(boolean b);
 }

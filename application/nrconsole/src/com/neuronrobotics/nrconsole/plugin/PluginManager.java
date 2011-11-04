@@ -78,6 +78,9 @@ public class PluginManager {
 		if(connection != null) {
 			connection.disconnect();
 		}
+		for(INRConsoleTabedPanelPlugin pl:plugins){
+			pl.setActive(false);
+		}
 		return true;
 	}
 	private void updateNamespaces(){

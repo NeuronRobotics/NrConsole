@@ -334,4 +334,10 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		return new Dimension(1095,700);
 	}
 
+
+	@Override
+	public void setActive(boolean b) {
+		active=b;
+	}
+
 }
