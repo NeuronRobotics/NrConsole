@@ -27,7 +27,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class DyIOPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private ImageIcon image = new ImageIcon(DyIOPanel.class.getResource("images/dyio.png"));
+	private ImageIcon image;
 	private JLabel voltage = new JLabel("Battery Voltage");
 	private bankLED A = new bankLED ();
 	private bankLED B = new bankLED ();
@@ -35,6 +35,12 @@ public class DyIOPanel extends JPanel {
 	private JLabel mac = new JLabel("MAC: 00:00:00:00:00:00");
 	private JLabel fw = new JLabel("FW Version: ?.?.?");
 	public DyIOPanel() {
+		try{
+			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio.png"));
+		}catch (Exception e){
+			e.printStackTrace();
+			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio.png"));
+		}
 	    initPanel();
 	    setName("DyIO");
 
