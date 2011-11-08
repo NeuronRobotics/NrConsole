@@ -18,8 +18,8 @@ public class PIDVelocityWidget extends JPanel implements ActionListener {
 	 */
 	private static final long serialVersionUID = -5325751144652371482L;
 	PIDControlWidget widget;
-	private JTextField vel=new JTextField();
-	private JTextField time=new JTextField();
+	private JTextField vel=new JTextField(5);
+	private JTextField time=new JTextField(5);
 	JButton go = new JButton("Run Velocity");
 	
 	public PIDVelocityWidget(PIDControlWidget w){
@@ -29,7 +29,7 @@ public class PIDVelocityWidget extends JPanel implements ActionListener {
 		vel.addActionListener(this);
 		time.addActionListener(this);
 		vel.setText("100");
-		time.setText("1.0");
+		time.setText("0");
 		add(new JLabel("Velocity Control"),"wrap");
 		JPanel p = new JPanel(new MigLayout());
 		p.add(vel);p.add(new JLabel("ticks per second"),"wrap");
