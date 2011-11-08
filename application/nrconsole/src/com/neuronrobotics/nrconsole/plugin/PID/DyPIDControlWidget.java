@@ -15,6 +15,7 @@ import javax.swing.border.EtchedBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.neuronrobotics.nrconsole.util.IntegerComboBox;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
@@ -25,8 +26,8 @@ import com.neuronrobotics.sdk.dyio.dypid.DyPIDConfiguration;
 
 public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 	private JButton  DypidSet = new JButton("Configure DyIO channels");
-	private JComboBox inChan = new JComboBox();
-	private JComboBox outChan = new JComboBox();
+	private IntegerComboBox inChan = new IntegerComboBox(true,0xff);
+	private IntegerComboBox outChan = new IntegerComboBox(true,0xff);
 	private JComboBox inMode = new JComboBox();
 	private JComboBox outMode = new JComboBox();
 	/**
@@ -58,25 +59,34 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 	private void populateDyPID() {
 		DyPIDConfiguration conf = DyIORegestry.get().getDyPIDConfiguration(widgit.getGroup());
 		
-		for(int i=0;i<inChan.getItemCount();i++){
-			Integer selected = (Integer)( inChan.getItemAt(i));
-			if(selected != null){
-				if(selected.intValue() == conf.getInputChannel()){
-					inChan.setSelectedItem(inChan.getItemAt(i));
-				}
-			}
-		}
-
-		for(int i=0;i<outChan.getItemCount();i++){
-			Integer selected = (Integer) outChan.getItemAt(i);
-			if(selected != null){
-				if(selected.intValue() == conf.getOutputChannel()){
-					outChan.setSelectedItem(outChan.getItemAt(i));
-				}
-			}
-		}
+		if(conf.getInputChannel()==0xff)
+			inChan.setNoneItemSelected();
+		else
+			inChan.setSelectedInteger(conf.getInputChannel());
+		if(conf.getOutputChannel()==0xff)
+			outChan.setNoneItemSelected();
+		else
+			outChan.setSelectedInteger(conf.getOutputChannel());
 		
-		if(conf.getOutputChannel() != conf.getInputChannel()){
+//		for(int i=0;i<inChan.getItemCount();i++){
+//			Integer selected = (Integer)( inChan.getItemAt(i));
+//			if(selected != null){
+//				if(selected.intValue() == conf.getInputChannel()){
+//					inChan.setSelectedItem(inChan.getItemAt(i));
+//				}
+//			}
+//		}
+
+//		for(int i=0;i<outChan.getItemCount();i++){
+//			Integer selected = (Integer) outChan.getItemAt(i);
+//			if(selected != null){
+//				if(selected.intValue() == conf.getOutputChannel()){
+//					outChan.setSelectedItem(outChan.getItemAt(i));
+//				}
+//			}
+//		}
+		
+		if((conf.getOutputChannel() != 0xff) && (conf.getInputChannel() != 0xff )){
 			for(int i=0;i<inMode.getItemCount();i++){
 				DyIOChannelMode selected = (DyIOChannelMode)(inMode.getItemAt(i));
 				if(selected != null){
@@ -105,32 +115,37 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 		if(inChan.getSelectedItem()==null)
 			return;
 		//System.out.println("Input channel set to "+inChan.getSelectedItem() );
-		int chan = Integer.parseInt( inChan.getSelectedItem().toString());
-		Collection<DyIOChannelMode> m = getAvailableInputModes(DyIORegestry.get().getChannel( chan ).getAvailableModes());
-		for(DyIOChannelMode mode :m) {
-			inMode.addItem(mode);
+		int chan = inChan.getSelectedInteger();
+		if(chan<24 && chan>0){
+			Collection<DyIOChannelMode> m = getAvailableInputModes(DyIORegestry.get().getChannel( chan ).getAvailableModes());
+			for(DyIOChannelMode mode :m) {
+				inMode.addItem(mode);
+			}
+			inMode.invalidate();
+			inMode.repaint();
 		}
-		inMode.invalidate();
-		inMode.repaint();
 	}
 	private void updateOutChan(){
 		outMode.removeAllItems();
 		if(outChan.getSelectedItem()==null)
 			return;
 		//System.out.println("Output channel set to "+outChan.getSelectedItem() );
-		int chan = Integer.parseInt( outChan.getSelectedItem().toString());
-		Collection<DyIOChannelMode> m = getAvailableOutputModes(DyIORegestry.get().getChannel(chan ).getAvailableModes());
-		for(DyIOChannelMode mode : m) {
-			outMode.addItem(mode);
+		int chan = outChan.getSelectedInteger();
+		if(chan<24 && chan>0){
+			Collection<DyIOChannelMode> m = getAvailableOutputModes(DyIORegestry.get().getChannel(chan ).getAvailableModes());
+			for(DyIOChannelMode mode : m) {
+				outMode.addItem(mode);
+			}
 		}
 	}
 	private void initDyPID() {
+//		inChan.addItem("None");
+//		outChan.addItem("None");
 		for(int i=0;i<24;i++) {
-			inChan.addItem(new Integer(i));
-			outChan.addItem(new Integer(i));
+			inChan.addInteger(i);
+			outChan.addInteger(i);
 		}
 		inChan.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent arg0) {
 				updateInChan();
 			}
@@ -149,9 +164,20 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 		DypidSet.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				if(inChan.getSelectedItem()!=null && outChan.getSelectedItem()!=null && inMode.getSelectedItem()!=null && outMode.getSelectedItem()!=null) {
+				if(		inChan.getSelectedItem()!=null &&
+						outChan.getSelectedItem()!=null) {
 					widgit.pidSet.setEnabled(true);
-					DyPIDConfiguration config = new DyPIDConfiguration(widgit.getGroup(), Integer.parseInt( inChan.getSelectedItem().toString()), (DyIOChannelMode)inMode.getSelectedItem(), Integer.parseInt( outChan.getSelectedItem().toString()),(DyIOChannelMode) outMode.getSelectedItem());
+					DyIOChannelMode o = (DyIOChannelMode) outMode.getSelectedItem();
+					if(o==null)
+						o=DyIOChannelMode.OFF;
+					DyIOChannelMode i = (DyIOChannelMode) inMode.getSelectedItem();
+					if(i==null)
+						i=DyIOChannelMode.OFF;
+					DyPIDConfiguration config = new DyPIDConfiguration(	widgit.getGroup(),
+																		inChan.getSelectedInteger(), 
+																		i,
+																		outChan.getSelectedInteger(),
+																		o);
 					DyIORegestry.get().ConfigureDynamicPIDChannels(config);
 					widgit.stopPID(true);
 				}else {
