@@ -47,7 +47,7 @@ public class PIDVelocityWidget extends JPanel implements ActionListener {
 			widget.SetPIDVel(v, t);
 		}catch (Exception ex){
 			vel.setText("100");
-			time.setText("1.0");
+			time.setText("0");
 			ex.printStackTrace();
 		}
 	}
