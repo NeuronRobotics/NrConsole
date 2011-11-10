@@ -38,14 +38,16 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		System.out.println("pausing recording");
 		if(input != null)
 			input.removeAnalogInputListener(this);
-		recording=false;
+		setRecording(false);
 	}
 	public void resumeRecording(){
 		if(input==null)
 			initInput();
 		System.out.println("resuming recording");
-		recording=true;
+		setRecording(true);
 	}
+	
+	
 	
 	public void addAnalogInputListener(IAnalogInputListener l){
 		input.addAnalogInputListener(l);
@@ -76,7 +78,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 			data.add(new MapData(currentValue));
 		}
 			
-		if(recording)
+		if(isRecording())
 			data.get(index).input=getCurrentTargetValue();
 		currentValue = data.get(index).input;
 		//System.out.println("Setting servo value="+data.get(index).input);
@@ -186,7 +188,7 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		s+="\t\t<outputMax>"+outputMax+"</outputMax>\n";
 		s+="\t\t<outputMin>"+outputMin+"</outputMin>\n";
 		s+="\t\t<outputChannel>"+getChannelNumber()+"</outputChannel>\n";
-		s+="\t\t<inputEnabled>"+recording+"</inputEnabled>\n";
+		s+="\t\t<inputEnabled>"+isRecording()+"</inputEnabled>\n";
 		s+="\t\t<inputScale>"+inputScale+"</inputScale>\n";
 		s+="\t\t<outputCenter>"+inputCenter+"</outputCenter>\n";
 		s+="\t\t<inputChannel>"+getAnalogInputChannelNumber()+"</inputChannel>\n";
@@ -241,6 +243,10 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	public int getCurrentTargetValue() {
 		return inputValue;
 	}
+	public void flush(){
+		output.SetPosition(getCurrentTargetValue());
+		output.flush();
+	}
 	public void setAnalogInputChannelNumber(int analogInputChannelNumber) {
 		System.out.println("Setting analog input number: "+analogInputChannelNumber);
 		this.analogInputChannelNumber = analogInputChannelNumber;
@@ -250,14 +256,16 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 			return input.getChannel().getChannelNumber();
 		return analogInputChannelNumber;
 	}
+	public void setRecording(boolean recording) {
+		this.recording = recording;
+	}
 	private class Tester extends Thread {
 		private boolean running=true;
 		
 		public void run() {
 			//System.out.println("Starting Test");
 			while(running) {
-				output.SetPosition(getCurrentTargetValue());
-				output.flush();
+				flush();
 				try {Thread.sleep((long) getInterval());} catch (InterruptedException e) {}
 			}
 			//System.out.println("Test Done");

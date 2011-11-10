@@ -39,9 +39,9 @@ public class CoreScheduler {
 	//private int trackLength;
 	private File audioFile=null;
 	DyIOFlusher flusher;
+	private long StartOffset;
 	public CoreScheduler(DyIO d, int loopTime,int duration ){
 		setDyIO(d);
-		
 		this.setLoopTime(loopTime);
 		msDuration=duration;
 		//dyio.enableDebug();
@@ -160,6 +160,7 @@ public class CoreScheduler {
 	}
 	
 	public ServoOutputScheduleChannel addServoChannel(int dyIOChannel){
+		System.out.println("Adding DyIO channel: "+dyIOChannel);
 		ServoChannel srv = new ServoChannel(getDyIO().getChannel(dyIOChannel));
 		srv.getChannel().setCachedMode(true);
 		ServoOutputScheduleChannel soc = new ServoOutputScheduleChannel(srv);
@@ -176,9 +177,12 @@ public class CoreScheduler {
 	
 	public void setSequenceParams(int setpoint,long StartOffset){
 		msDuration=setpoint;
+		this.StartOffset=StartOffset;
 		//System.out.println("Starting scheduler setpoint="+setpoint+" offset="+StartOffset);
 		if(getSt()==null)
 			setSt(new SchedulerThread(msDuration,StartOffset));
+		if(mp3!=null)
+			mp3.setCurrentTime((int) StartOffset);
 	}
 	
 	public void playStep() {
@@ -188,12 +192,12 @@ public class CoreScheduler {
 			throw new RuntimeException("The sequence paramaters are not set");
 		}
 	}
-	
-	public void play(int setpoint,long StartOffset) {
-		if(mp3!=null)
-			mp3.setCurrentTime((int) StartOffset);
-		setSequenceParams( setpoint, StartOffset);
+	public void play(){
 		getSt().setPause(false);
+	}
+	public void play(int setpoint,long StartOffset) {
+		setSequenceParams( setpoint, StartOffset);
+		play();
 	}
 	public void pause() {
 		if(getSt()!=null)
@@ -292,7 +296,7 @@ public class CoreScheduler {
 	private class SchedulerThread extends Thread{
 		private double time;
 		private boolean run = true;
-		private long StartOffset;
+
 		long start = System.currentTimeMillis();
 		private boolean pause = false;
 		
@@ -333,23 +337,15 @@ public class CoreScheduler {
 		public void run(){
 			//System.out.println("Starting timer");
 			do{
-				
-//				if(mp3!=null) {
-//					mp3.play();
-//				}
-				setRun(true);
 				do{
 					while(pause){
-						ThreadUtil.wait(1);
+						ThreadUtil.wait(10);
 					}
 					playStep();
 				}while(isRun());
-				
-				if(isRun() && isLooping())
-					setCurrentTime(0);
-			}while(isLooping() && isRun());
-			kill();
-			callStop();
+				setCurrentTime(0);
+				setPause(true);
+			}while(true);
 		}
 		public void pause(){
 			if(mp3!=null) {
@@ -362,7 +358,6 @@ public class CoreScheduler {
 				mp3.pause();
 			}
 			setPause(false);
-			setRun(false);
 		}
 		public boolean isRun() {
 			if(mp3!=null){
@@ -370,9 +365,9 @@ public class CoreScheduler {
 			}
 			return run;
 		}
-		public void setRun(boolean run) {
-			this.run = run;
-		}
+//		public void setRun(boolean run) {
+//			this.run = run;
+//		}
 		public boolean isPause() {
 			return pause;
 		}

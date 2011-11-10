@@ -89,6 +89,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				setSequenceParams();
 				cs.playStep();
 			}
 		});
@@ -129,7 +130,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		add(trackBar,"wrap");
 	}
 	
-	private void play() {
+	private void setSequenceParams(){
 		int start =slider.getValue(); 
 
 		int setpoint;
@@ -139,12 +140,18 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 			setpoint=1000;
 		}
 		setTrackLegnth(setpoint);
-		cs.play(setpoint, start);
+		cs.setSequenceParams(setpoint, start);
+	}
+	
+	private void play() {
+		setSequenceParams();
+		cs.play();
 		play.setText("Pause");
 		step.setEnabled(false);
 	}
 	private void pause() {
-		cs.pause();
+		if(cs != null)
+			cs.pause();
 		play.setText("Play ");
 		step.setEnabled(true);
 	}
@@ -164,6 +171,8 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		}
 		double cTime = ((double)val)/1000;
 		time.setText("Seconds: "+new DecimalFormat("000.00").format(cTime));
+		if(val == 0)
+			pause();
 		//System.out.println("Setting current time="+val+" slider="+slider.getValue());
 	}
 	private void setBounds(double top){

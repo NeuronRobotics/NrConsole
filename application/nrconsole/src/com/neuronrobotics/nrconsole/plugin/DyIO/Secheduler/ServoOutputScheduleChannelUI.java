@@ -8,11 +8,15 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.neuronrobotics.nrconsole.util.IntegerComboBox;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.sun.corba.se.impl.legacy.connection.USLPort;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -26,13 +30,30 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	private JCheckBox record = new JCheckBox("Record");
 	private JButton startRecording = new JButton("Start Recording");
 	private JButton startTest = new JButton("Start Test");
+	private JSlider position  = new JSlider();
+	private JCheckBox useSlider = new JCheckBox("Use Slider");
 	private JPanel recordConfig = new JPanel();
 	IntegerComboBox inputChannelNumber;
 	private JTextField scale = new JTextField(5);
 	private JTextField zero = new JTextField(5);
 	
 	private double currentScale=.25;
+	
 	private int currentZero = 512;
+	
+	ChangeListener posListener = new ChangeListener() {
+		
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			flush();
+			if(!position.getValueIsAdjusting()){
+				channel.flush();
+			}
+		}
+	};
+	public void flush(){
+		channel.setCurrentTargetValue(position.getValue());
+	}
 	public ServoOutputScheduleChannelUI(ServoOutputScheduleChannel chan){
 		
 		chan.addIServoPositionUpdateListener(this);
@@ -75,6 +96,19 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 			}
 		});
 		
+		useSlider.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(useSlider.isSelected()){
+					position.setEnabled(true);
+					getChannel().setRecording(true);
+				}else{
+					position.setEnabled(false);
+					getChannel().setRecording(false);
+				}
+			}
+		});
+		
 		recordConfig.add(inputChannelNumber);
 		recordConfig.add(startRecording);
 		recordConfig.add(startTest);
@@ -90,7 +124,17 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		
 		recordConfig.add(config);
 		
+		position.setEnabled(false);
+		position.setMaximum(0);
+		position.setMaximum(255);
+		position.setMajorTickSpacing(15);
+		position.setPaintTicks(true);
+		position.setValue(chan.getCurrentTargetValue());
+		
+		
 		add(new JLabel("Output Channel: "+getChannel().getChannelNumber()));
+		add(position);
+		add(useSlider);
 		add(record);
 		add(recordConfig);
 		
@@ -152,12 +196,19 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	public ServoOutputScheduleChannel getChannel() {
 		return channel;
 	}
-
+	
 
 	@Override
 	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
-		// TODO Auto-generated method stub
-		
+		if(useSlider.isSelected()){
+			channel.removeIServoPositionUpdateListener(this);
+			flush();
+			channel.addIServoPositionUpdateListener(this);
+			return;
+		}
+		this.position.removeChangeListener(posListener);
+		this.position.setValue(position);
+		this.position.addChangeListener(posListener);
 	}
 	
 	@Override

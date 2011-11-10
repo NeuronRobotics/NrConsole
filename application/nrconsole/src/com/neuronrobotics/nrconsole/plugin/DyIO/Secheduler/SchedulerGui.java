@@ -160,6 +160,9 @@ public class SchedulerGui extends JPanel{
 		for(ServoOutputScheduleChannel so:outs){
 			addServoChannel(so);
 		}
+		for(int i=0;i<DyIORegestry.get().getInternalChannels().size();i++){
+			DyIORegestry.get().getValue(i);
+		}
 	}
 
 	protected void exportToFile() {
@@ -183,6 +186,7 @@ public class SchedulerGui extends JPanel{
 
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		DyIORegestry.setConnection(connection);
+		
 		return DyIORegestry.get().ping()!=null;
 	}
 	
