@@ -54,6 +54,9 @@ public class CounterOutputWidget extends ControlWidget implements ActionListener
 			try{
 				int out = new Integer(field.getText()).intValue();
 				//System.out.println("Setting "+ out);
+				if(outChannel.getChannel().getDevice().getCachedMode()){
+					outChannel.getChannel().getDevice().setCachedMode(false);
+				}
 				outChannel.SetPosition(out);
 			}catch(Exception e1){
 				field.setText("0");

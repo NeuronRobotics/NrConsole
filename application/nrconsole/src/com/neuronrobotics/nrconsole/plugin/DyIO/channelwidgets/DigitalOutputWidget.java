@@ -45,6 +45,9 @@ public class DigitalOutputWidget extends ControlWidget implements ActionListener
 
 	
 	public void actionPerformed(ActionEvent e) { 
+		if(doc.getChannel().getDevice().getCachedMode()){
+			doc.getChannel().getDevice().setCachedMode(false);
+		}
 		if(doc.setHigh(!state)) {
 			setValue(!state);
 		}

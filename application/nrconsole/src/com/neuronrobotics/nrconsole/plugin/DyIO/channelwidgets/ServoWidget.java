@@ -88,11 +88,16 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		
 		pollValue();
 		
+		if(sc.getChannel().getDevice().getCachedMode()){
+			sc.getChannel().getDevice().setCachedMode(false);
+		}
+		
 		if(sliderUI.getValue() !=saveValue )
 			save.setEnabled(true);
 		else
 			save.setEnabled(false);
 		if( startup == false ) {
+			
 			sc.SetPosition(sliderUI.getValue());
 			recordValue(sliderUI.getValue());
 		}

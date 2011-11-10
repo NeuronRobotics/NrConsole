@@ -94,6 +94,9 @@ public class SliderChannelUI extends ControlWidget implements ChangeListener, Ac
 			save.setEnabled(false);
 		if( startup == false ) {
 			Log.debug(this.getClass()+"Setting Device value");
+			if(dap.getChannel().getDevice().getCachedMode()){
+				dap.getChannel().getDevice().setCachedMode(false);
+			}
 			dap.setValue(sliderUI.getValue());
 			pollValue();
 		}
