@@ -26,6 +26,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 	
 	private JSlider slider = new JSlider();
 	private JButton play = new JButton("Play ");
+	private JButton step = new JButton("Step ");
 	private JCheckBox loop = new JCheckBox("Loop");
 	private JLabel time = new JLabel("Seconds");
 
@@ -84,6 +85,14 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 			
 		});
 		
+		step.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cs.playStep();
+			}
+		});
+		
 		selectSong.addActionListener(new ActionListener() {
 			
 			@Override
@@ -110,6 +119,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		trackBar.add(length);
 		trackBar.add(time);
 		trackBar.add (slider);
+		trackBar.add(step);
 		trackBar.add(play);
 		trackBar.add(loop);
 		
@@ -131,10 +141,12 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		setTrackLegnth(setpoint);
 		cs.play(setpoint, start);
 		play.setText("Pause");
+		step.setEnabled(false);
 	}
 	private void pause() {
 		cs.pause();
 		play.setText("Play ");
+		step.setEnabled(true);
 	}
 	
 	private void setTrackLegnth(int ms){

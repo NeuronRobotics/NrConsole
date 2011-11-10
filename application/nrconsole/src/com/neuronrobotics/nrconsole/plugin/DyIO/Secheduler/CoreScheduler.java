@@ -19,6 +19,7 @@ import com.neuronrobotics.sdk.addons.walker.WalkerServoLink;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 /**
  * 
  * @author hephaestus
@@ -140,6 +141,8 @@ public class CoreScheduler {
 		filename=f.getAbsolutePath();
     	mp3 = new SequencerMP3(f.getAbsolutePath());
     	msDuration = mp3.getTrackLength();
+    	setSequenceParams( msDuration, 0);
+    	
 	}
 	public int getTrackLength(){
 		return msDuration;
@@ -151,7 +154,9 @@ public class CoreScheduler {
 		return loop;
 	}
 	public boolean isPlaying() {
-		return st!=null;
+		if(getSt() !=null)
+			return !getSt().isPause();
+		return false;
 	}
 	
 	public ServoOutputScheduleChannel addServoChannel(int dyIOChannel){
@@ -169,15 +174,30 @@ public class CoreScheduler {
 		getOutputs().remove(s);
 	}
 	
-	public void play(int setpoint,long StartOffset) {
+	public void setSequenceParams(int setpoint,long StartOffset){
 		msDuration=setpoint;
 		//System.out.println("Starting scheduler setpoint="+setpoint+" offset="+StartOffset);
-		st = new SchedulerThread(msDuration,StartOffset);
-		st.start();
+		if(getSt()==null)
+			setSt(new SchedulerThread(msDuration,StartOffset));
+	}
+	
+	public void playStep() {
+		if(getSt()!=null){
+			getSt().playStep();
+		}else{
+			throw new RuntimeException("The sequence paramaters are not set");
+		}
+	}
+	
+	public void play(int setpoint,long StartOffset) {
+		if(mp3!=null)
+			mp3.setCurrentTime((int) StartOffset);
+		setSequenceParams( setpoint, StartOffset);
+		getSt().setPause(false);
 	}
 	public void pause() {
-		st.kill();
-		st=null;
+		if(getSt()!=null)
+			getSt().pause();
 	}
 	
 	public void addISchedulerListener(ISchedulerListener l){
@@ -266,11 +286,15 @@ public class CoreScheduler {
 			return flush;
 		}
 	}
+	
+
 
 	private class SchedulerThread extends Thread{
 		private double time;
 		private boolean run = true;
 		private long StartOffset;
+		long start = System.currentTimeMillis();
+		private boolean pause = false;
 		
 		public SchedulerThread(double ms,final long so){
 			time = ms;
@@ -283,52 +307,77 @@ public class CoreScheduler {
 				s.setIntervalTime(getLoopTime(), (int) time);
 			}
 		}
+		public boolean isPlaying() {
+			return run;
+		}
+		public void playStep(){
+			//System.out.println("Stepping scheduler");
+			boolean playing;
+			long current;
+			if(mp3==null){
+				
+				playing = (((double)(System.currentTimeMillis()-start))<(time-StartOffset));
+				current =((System.currentTimeMillis()-start))+StartOffset;
+			}else{
+				mp3.playStep();
+				playing = mp3.isPlaying();
+				current = mp3.getCurrentTime();
+			}
+			if(!playing){
+				kill();
+				return;
+			}
+				
+			setCurrentTime(current);
+		}
 		public void run(){
 			//System.out.println("Starting timer");
 			do{
-				long start = System.currentTimeMillis();
-				System.out.println("Initial slider value = "+StartOffset);
-				if(mp3!=null) {
-					mp3.play();
-				}
-				run = true;
-				while(run){
-					boolean playing;
-					long current;
-					if(mp3==null){
-						playing = (((double)(System.currentTimeMillis()-start))<(time-StartOffset));
-						current =((System.currentTimeMillis()-start))+StartOffset;
-					}else{
-						playing = mp3.isPlaying();
-						current = mp3.getCurrentTime();
-					}
-					if(!playing){
-						kill();
-						break;
-					}
-						
-					setCurrentTime(current);
-					long t  = getLoopTime()-flushTime;
-					try {
-						Thread.sleep(t);
-					} catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
 				
-				if(run && isLooping())
+//				if(mp3!=null) {
+//					mp3.play();
+//				}
+				setRun(true);
+				do{
+					while(pause){
+						ThreadUtil.wait(1);
+					}
+					playStep();
+				}while(isRun());
+				
+				if(isRun() && isLooping())
 					setCurrentTime(0);
-			}while(isLooping() && run);
+			}while(isLooping() && isRun());
 			kill();
 			callStop();
-			st=null;
+		}
+		public void pause(){
+			if(mp3!=null) {
+				mp3.pause();
+			}
+			setPause(true);
 		}
 		public void kill(){
 			if(mp3!=null) {
 				mp3.pause();
 			}
-			run = false;
+			setPause(false);
+			setRun(false);
+		}
+		public boolean isRun() {
+			if(mp3!=null){
+				return run && mp3.isPlaying();
+			}
+			return run;
+		}
+		public void setRun(boolean run) {
+			this.run = run;
+		}
+		public boolean isPause() {
+			return pause;
+		}
+		public void setPause(boolean pause) {
+			this.pause = pause;
 		}
 	}
 
@@ -351,6 +400,18 @@ public class CoreScheduler {
 	public int getLoopTime() {
 		return loopTime;
 	}
+
+	public SchedulerThread getSt() {
+		return st;
+	}
+
+	public void setSt(SchedulerThread st) {
+		this.st = st;
+		st.setPause(true);
+		st.start();
+	}
+
+
 
 
 }

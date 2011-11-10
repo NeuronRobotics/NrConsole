@@ -191,7 +191,7 @@ public class SchedulerGui extends JPanel{
 	public static void main(String[] args) {
 		 JFrame frame = new JFrame();
 		 SchedulerGui sg =new SchedulerGui();
-		 sg.setConnection(new SerialConnection("/dev/DyIO0"));
+		 sg.setConnection(new SerialConnection("COM48"));
 		 //sg.setConnection(new SerialConnection("COM14"));
 		 frame .add(sg);
 		 frame.setSize(new Dimension(1024,768));

@@ -45,7 +45,7 @@ public class SequencerMP3 {
     
     public void pause(){
     	pause=true;
-    	player.setPause(true);
+    	//player.setPause(true);
     }
 
     public void close() { 
@@ -81,6 +81,10 @@ public class SequencerMP3 {
 	private double getNumFrames() {
 		return player.getNumberOfFrames();
 	}
+	
+	public void playStep(){
+		player.playStep();
+	}
 
     // play the MP3 file to the sound card
     public void play() {
@@ -94,8 +98,14 @@ public class SequencerMP3 {
         new Thread() {
             public void run() {
             	playing=true;
+            	player.setCurrentFrame(0);
                 try { 
-                	player.play(); 
+                	do{
+            			while(pause){
+            				Thread.sleep(1);
+            			}
+                		playStep();
+                	}while(!player.isComplete());
                 }catch (Exception e) {
                 	System.out.println(e); 
                 }

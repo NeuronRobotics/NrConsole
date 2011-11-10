@@ -142,6 +142,25 @@ public class MyPlayer
 		pause = p;
 	}
 	
+	public void playStep(){
+		if(frame<outputData.size()){
+			complete = false;
+			try {
+				synchronized (this){
+					audio.write(outputData.get(frame), 0, outputData.get(frame).length);
+				}
+				
+			} catch (JavaLayerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			frame++;
+		}else{
+			frame=0;
+			complete = true;
+		}
+	}
+	
 	/**
 	 * Plays a number of MPEG audio frames. 
 	 * 
@@ -153,26 +172,28 @@ public class MyPlayer
 	public boolean play(int frames) throws Exception
 	{
 		boolean ret = true;
-		AudioDevice out = audio;
-		complete = false;
-		for(frame=0;frame<outputData.size();frame++) {
+		do{
 			while(pause){
 				Thread.sleep(1);
 			}
-			synchronized (this)
-			{
-				out = audio;
-				if (out!=null)
-				{					
-					out.write(outputData.get(frame), 0, outputData.get(frame).length);
-				}				
+			if (audio!=null)
+			{					
+				playStep();
 			}
-		}
-		//msPerFrame = (long) ((System.currentTimeMillis()-start)/getNumberOfFrames());
-		complete = true;
-		if (out!=null){				
-			out.flush();			
-		}
+		}while(!complete);
+		audio.flush();
+//		for(frame=0;frame<outputData.size();) {
+//			while(pause){
+//				Thread.sleep(1);
+//			}
+//			out = audio;
+//			if (audio!=null)
+//			{					
+//				playStep();
+//			}				
+//			
+//		}
+
 		return ret;
 	}
 		
