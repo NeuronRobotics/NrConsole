@@ -28,7 +28,7 @@ public class CoreScheduler {
 	private int loopTime;
 	private long flushTime = 0; 
 	private SchedulerThread st=null;
-	private MP3 mp3;
+	private SequencerMP3 mp3;
 	private boolean loop = false;
 	private ArrayList< ISchedulerListener> listeners = new ArrayList< ISchedulerListener>();
 	private ArrayList< ServoOutputScheduleChannel> outputs = new ArrayList< ServoOutputScheduleChannel>();
@@ -138,7 +138,7 @@ public class CoreScheduler {
 			return;
 		audioFile=f;
 		filename=f.getAbsolutePath();
-    	mp3 = new MP3(f.getAbsolutePath());
+    	mp3 = new SequencerMP3(f.getAbsolutePath());
     	msDuration = mp3.getTrackLength();
 	}
 	public int getTrackLength(){

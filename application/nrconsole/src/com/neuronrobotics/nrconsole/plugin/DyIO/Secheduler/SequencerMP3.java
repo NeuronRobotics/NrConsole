@@ -24,13 +24,13 @@ import java.io.FileInputStream;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import javazoom.jl.player.MyPlayer;
-public class MP3 {
+public class SequencerMP3 {
     private MyPlayer player; 
     private String fn="";
     private boolean pause = false;
     private boolean playing = false;
     // constructor that takes the name of an MP3 file
-    public MP3(String filename) {
+    public SequencerMP3(String filename) {
     	fn = filename;
         try {
             FileInputStream fis     = new FileInputStream(fn);
@@ -109,7 +109,7 @@ public class MP3 {
     public static void main(String[] args) {
         String filename = "track.mp3";
         
-        MP3 mp3 = new MP3(filename);
+        SequencerMP3 mp3 = new SequencerMP3(filename);
         System.out.println("Number of frames="+mp3.getNumFrames());
         mp3.play();
         
