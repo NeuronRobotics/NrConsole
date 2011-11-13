@@ -30,6 +30,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private JTextField kp=new JTextField(10);
 	private JTextField ki=new JTextField(10);
 	private JTextField kd=new JTextField(10);
+	private JTextField indexLatch=new JTextField(10);
 	private JCheckBox  inverted =new JCheckBox("Invert control");
 	JButton  pidSet = new JButton("Configure");
 	JButton  pidStop = new JButton("Stop");
@@ -68,7 +69,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		pidSet.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				double p=0,i=0,d=0;
+				double p=0,i=0,d=0,l=0;
 				try{
 					p=Double.parseDouble(kp.getText());
 				}catch(Exception e){
@@ -90,7 +91,14 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 					showMessage( "Bad PID values, resetting.",e);
 					return;
 				}
-				setPID(p, i, d);
+				try{
+					l=Double.parseDouble(indexLatch.getText());
+				}catch(Exception e){
+					indexLatch.setText(new Double(0).toString());
+					showMessage( "Bad PID values, resetting.",e);
+					return;
+				}
+				setPID(p, i, d,l);
 				int cur = GetPIDPosition();
 				//System.out.println("Current position="+cur+" group="+getGroup());
 				setSetpoint(cur);
@@ -133,6 +141,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	    constants.add(ki,"wrap");
 	    constants.add(new JLabel("derivitive (Kd)"));
 	    constants.add(kd,"wrap");
+	    constants.add(new JLabel("Index Latch Value"));
+	    constants.add(indexLatch,"wrap");
 	    constants.add(pidSet);
 	    constants.add(inverted);
 	    
@@ -182,6 +192,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		kp.setText(new Double(conf.getKP()).toString());
 		ki.setText(new Double(conf.getKI()).toString());
 		kd.setText(new Double(conf.getKD()).toString());
+		indexLatch.setText(new Double(conf.getIndexLatch()).toString());
 		inverted.setSelected(conf.isInverted());
 //		if(conf.isEnabled()){
 //			pidStop.setEnabled(true);
@@ -210,7 +221,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		advanced.setEnabled(false);
 		pidRunning.setVisible(false);
 	}
-	private void setPID(double p,double i,double d){
+	private void setPID(double p,double i,double d, double latch){
 		setSet(true);
 		pidStop.setEnabled(true);
 		getPIDConfiguration().setEnabled(true);
@@ -219,6 +230,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPIDConfiguration().setKP(p);
 		getPIDConfiguration().setKI(i);
 		getPIDConfiguration().setKD(d);
+		getPIDConfiguration().setIndexLatch(latch);
 		ConfigurePIDController();
 		advanced.setEnabled(true);
 	}
@@ -288,14 +300,17 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	
 	public void onPIDReset(int group, int currentValue) {
 		// TODO Auto-generated method stub
-		if(group==getGroup())
+		if(group==getGroup()){
 			setPositionDisplay(currentValue);
+			setSetpoint(currentValue);
+		}
 	}
 
 	
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		if(e.getGroup() == getGroup()){
 			System.out.println("Limit event: "+e);
+			setSetpoint(e.getValue());
 			setPositionDisplay(e.getValue());
 		}
 	}
