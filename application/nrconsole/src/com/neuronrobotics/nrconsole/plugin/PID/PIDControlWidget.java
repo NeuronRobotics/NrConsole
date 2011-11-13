@@ -294,8 +294,10 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 
 	
 	public void onPIDLimitEvent(PIDLimitEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getGroup() == getGroup()){
+			System.out.println("Limit event: "+e);
+			setPositionDisplay(e.getValue());
+		}
 	}
 
 	@Override

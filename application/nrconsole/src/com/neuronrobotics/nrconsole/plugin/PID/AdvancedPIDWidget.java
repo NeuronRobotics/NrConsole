@@ -35,7 +35,7 @@ public class AdvancedPIDWidget extends JPanel{
 	private JButton  stopLoop = new JButton("Stop Loop");
 	private JButton  runSin = new JButton("Run Sin wave");
 	private JButton  jogP = new JButton("Jog+");
-	private JTextField jogV=new JTextField(new Integer(5).toString(),5);
+	private JTextField jogV=new JTextField(new Integer(100).toString(),5);
 	private JButton  jogM = new JButton("Jog-");
 	
 	public AdvancedPIDWidget(PIDControlWidget pid) {
