@@ -23,6 +23,7 @@ import com.neuronrobotics.sdk.pid.IPIDEventListener;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
+import com.neuronrobotics.sdk.pid.PIDLimitEventType;
 
 public class PIDControlWidget extends JPanel implements IPIDEventListener,ActionListener {
 	private static final long serialVersionUID = 3L;
@@ -345,8 +346,10 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		if(e.getGroup() == getGroup()){
 			System.out.println("Limit event: "+e);
-			setInternalSetpoint(e.getValue());
-			setPositionDisplay(e.getValue());
+			if(e.getLimitType() == PIDLimitEventType.INDEXEVENT){
+				setInternalSetpoint(e.getValue());
+				setPositionDisplay(e.getValue());
+			}
 		}
 	}
 
