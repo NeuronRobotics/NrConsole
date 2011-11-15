@@ -32,6 +32,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private JTextField kd=new JTextField(10);
 	private JTextField indexLatch=new JTextField(10);
 	private JCheckBox  inverted =new JCheckBox("Invert control");
+	private JCheckBox  useLatch =new JCheckBox("Use Latch");
+	private JCheckBox  stopOnLatch =new JCheckBox("Stop On Latch");
 	JButton  pidSet = new JButton("Configure");
 	JButton  pidStop = new JButton("Stop");
 	private JTextField setpoint=new JTextField(new Double(0).toString(),5);
@@ -98,7 +100,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 					showMessage( "Bad PID values, resetting.",e);
 					return;
 				}
-				setPID(p, i, d,l);
+				setPID(p, i, d,l, useLatch.isSelected(),  stopOnLatch.isSelected());
 				int cur = GetPIDPosition();
 				//System.out.println("Current position="+cur+" group="+getGroup());
 				setSetpoint(cur);
@@ -141,6 +143,10 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	    constants.add(ki,"wrap");
 	    constants.add(new JLabel("derivitive (Kd)"));
 	    constants.add(kd,"wrap");
+	    useLatch.setSelected(true);
+	    stopOnLatch.setSelected(true);
+	    constants.add(useLatch,"wrap");
+	    constants.add(stopOnLatch,"wrap");
 	    constants.add(new JLabel("Index Latch Value"));
 	    constants.add(indexLatch,"wrap");
 	    constants.add(pidSet);
@@ -221,7 +227,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		advanced.setEnabled(false);
 		pidRunning.setVisible(false);
 	}
-	private void setPID(double p,double i,double d, double latch){
+	private void setPID(double p,double i,double d, double latch, boolean use, boolean stop){
 		setSet(true);
 		pidStop.setEnabled(true);
 		getPIDConfiguration().setEnabled(true);
@@ -231,6 +237,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPIDConfiguration().setKI(i);
 		getPIDConfiguration().setKD(d);
 		getPIDConfiguration().setIndexLatch(latch);
+		getPIDConfiguration().setUseLatch(use);
+		getPIDConfiguration().setStopOnIndex(stop);
 		ConfigurePIDController();
 		advanced.setEnabled(true);
 	}
