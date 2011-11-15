@@ -34,8 +34,9 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private JCheckBox  inverted =new JCheckBox("Invert control");
 	private JCheckBox  useLatch =new JCheckBox("Use Latch");
 	private JCheckBox  stopOnLatch =new JCheckBox("Stop On Latch");
-	JButton  pidSet = new JButton("Configure");
-	JButton  pidStop = new JButton("Stop");
+	private JPanel latchPanel = new JPanel(new MigLayout());
+	private JButton  pidSet = new JButton("Configure");
+	private JButton  pidStop = new JButton("Stop");
 	private JTextField setpoint=new JTextField(new Double(0).toString(),5);
 	private JButton  setSetpoint = new JButton("Set Setpoint");
 	private JButton  zero = new JButton("Zero PID");
@@ -68,7 +69,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPIDConfiguration();
 	    inverted.setSelected(true);
 	    
-		pidSet.addActionListener(new ActionListener() {
+		getPidSet().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				double p=0,i=0,d=0,l=0;
@@ -109,8 +110,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 			}
 		});
 
-		pidStop.setEnabled(false);
-		pidStop.addActionListener(new ActionListener() {
+		getPidStop().setEnabled(false);
+		getPidStop().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				stopPID(true);
@@ -123,6 +124,19 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 				int val = GetPIDPosition();
 				setSetpoint(val);
 				currentPos.setText(new Integer(val).toString());
+			}
+		});
+		
+		useLatch.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(useLatch.isSelected()){
+					latchPanel.setVisible(true);
+				}else{
+					stopOnLatch.setSelected(false);
+					latchPanel.setVisible(false);
+				}
 			}
 		});
 		
@@ -143,19 +157,25 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	    constants.add(ki,"wrap");
 	    constants.add(new JLabel("derivitive (Kd)"));
 	    constants.add(kd,"wrap");
-	    useLatch.setSelected(true);
-	    stopOnLatch.setSelected(true);
+
 	    constants.add(useLatch,"wrap");
-	    constants.add(stopOnLatch,"wrap");
-	    constants.add(new JLabel("Index Latch Value"));
-	    constants.add(indexLatch,"wrap");
-	    constants.add(pidSet);
+	    
+	    latchPanel .add(stopOnLatch,"wrap");
+	    latchPanel .add(new JLabel("Index Latch Value"));
+	    latchPanel .add(indexLatch,"wrap");
+	    constants.add(latchPanel,"wrap");
+	    if(!useLatch.isSelected()){
+	    	latchPanel.setVisible(false);
+	    	stopOnLatch.setSelected(false);
+	    }
+	    
+	    constants.add(getPidSet());
 	    constants.add(inverted);
 	    
 	    pidRunning.add(new JLabel("PID Running for group "+((int)getGroup())),"wrap");
 	    pidRunning.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 	    //pidRunning.add(pidSet);
-	    pidRunning.add(pidStop,"wrap");
+	    pidRunning.add(getPidStop(),"wrap");
 	    //pidRunning.add(inverted);
 	    pidRunning.add(zero,"wrap");
 	    pidRunning.add(setSetpoint);
@@ -199,6 +219,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		ki.setText(new Double(conf.getKI()).toString());
 		kd.setText(new Double(conf.getKD()).toString());
 		indexLatch.setText(new Double(conf.getIndexLatch()).toString());
+	    useLatch.setSelected(conf.isUseLatch());
+	    stopOnLatch.setSelected(conf.isStopOnIndex());
 		inverted.setSelected(conf.isInverted());
 //		if(conf.isEnabled()){
 //			pidStop.setEnabled(true);
@@ -220,7 +242,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		return tab;
 	}
 	void stopPID(boolean b){
-		pidStop.setEnabled(false);
+		getPidStop().setEnabled(false);
 		getPIDConfiguration().setEnabled(false);
 		if(b)
 			ConfigurePIDController();
@@ -229,7 +251,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	}
 	private void setPID(double p,double i,double d, double latch, boolean use, boolean stop){
 		setSet(true);
-		pidStop.setEnabled(true);
+		getPidStop().setEnabled(true);
 		getPIDConfiguration().setEnabled(true);
 		getPIDConfiguration().setInverted(inverted.isSelected());
 		getPIDConfiguration().setAsync(true);
@@ -263,13 +285,18 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 			
 		}
 	}
-	public void setSetpoint(int setPoint){
-		SetPIDSetPoint(setPoint,0);
+	
+	public void setInternalSetpoint(int setPoint){
 		System.out.println("Setting setpoint on group="+getGroup()+" value="+setPoint);
 		setpointValue=setPoint;
 		setpoint.setText(new Integer(setPoint).toString());
 		graphVals();
-		pidStop.setEnabled(true);
+		getPidStop().setEnabled(true);
+	}
+	
+	public void setSetpoint(int setPoint){
+		SetPIDSetPoint(setPoint,0);
+		setInternalSetpoint(setPoint);
 	}
 	private class Updater extends Thread{
 		long lastSet;
@@ -310,7 +337,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		// TODO Auto-generated method stub
 		if(group==getGroup()){
 			setPositionDisplay(currentValue);
-			setSetpoint(currentValue);
+			setInternalSetpoint(currentValue);
 		}
 	}
 
@@ -318,7 +345,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	public void onPIDLimitEvent(PIDLimitEvent e) {
 		if(e.getGroup() == getGroup()){
 			System.out.println("Limit event: "+e);
-			setSetpoint(e.getValue());
+			setInternalSetpoint(e.getValue());
 			setPositionDisplay(e.getValue());
 		}
 	}
@@ -434,6 +461,22 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		}
 		showMessage( "Velocity set failed "+retry+"times on group #"+getGroup(),ex);
         ex.printStackTrace();
+	}
+
+	public void setPidSet(JButton pidSet) {
+		this.pidSet = pidSet;
+	}
+
+	public JButton getPidSet() {
+		return pidSet;
+	}
+
+	public void setPidStop(JButton pidStop) {
+		this.pidStop = pidStop;
+	}
+
+	public JButton getPidStop() {
+		return pidStop;
 	}
 	
 

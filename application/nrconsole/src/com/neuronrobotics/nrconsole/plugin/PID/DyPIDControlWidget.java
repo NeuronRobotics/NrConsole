@@ -103,7 +103,7 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 					}
 				}
 			}
-			widgit.pidSet.setEnabled(true);
+			widgit.getPidSet().setEnabled(true);
 //			if(conf.getInputMode() == DyIOChannelMode.ANALOG_IN){
 //				widgit.setSetpoint(512);
 //			}
@@ -159,14 +159,14 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 		
 
 		
-		widgit.pidStop.setEnabled(false);
-		widgit.pidSet.setEnabled(false);
+		widgit.getPidStop().setEnabled(false);
+		widgit.getPidSet().setEnabled(false);
 		DypidSet.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
 				if(		inChan.getSelectedItem()!=null &&
 						outChan.getSelectedItem()!=null) {
-					widgit.pidSet.setEnabled(true);
+					widgit.getPidSet().setEnabled(true);
 					DyIOChannelMode o = (DyIOChannelMode) outMode.getSelectedItem();
 					if(o==null)
 						o=DyIOChannelMode.OFF;
@@ -183,8 +183,8 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 				}else {
 					JOptionPane.showMessageDialog(null, "DyIO Channel/Modes are not all set", "DyPID ERROR", JOptionPane.ERROR_MESSAGE);
 					widgit.stopPID(true);
-					widgit.pidStop.setEnabled(false);
-					widgit.pidSet.setEnabled(false);
+					widgit.getPidStop().setEnabled(false);
+					widgit.getPidSet().setEnabled(false);
 				}
 			}
 		});
