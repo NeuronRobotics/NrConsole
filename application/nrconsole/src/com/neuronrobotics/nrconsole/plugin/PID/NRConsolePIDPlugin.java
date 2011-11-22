@@ -110,7 +110,7 @@ public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
 
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
-		return new Dimension(1095,1000);
+		return new Dimension(1095,1200);
 	}
 
 }
