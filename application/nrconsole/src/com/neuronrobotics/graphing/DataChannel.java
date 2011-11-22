@@ -16,14 +16,10 @@ public class DataChannel {
 		return title;
 	}
 	
-	public void graphValue(int value) {
-		long time = System.currentTimeMillis() - startTime ;
-		series.add((double) time/1000, value);
-	}
-
 	public void graphValue(double value) {
 		long time = System.currentTimeMillis() - startTime ;
-		series.add((double) time/1000, value);
+		if(series != null)
+			series.add((double) time/1000, value);
 	}
 	
 	public XYSeries getSeries() {

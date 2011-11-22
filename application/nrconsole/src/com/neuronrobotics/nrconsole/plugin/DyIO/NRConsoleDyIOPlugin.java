@@ -99,8 +99,10 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		if(setUp)
 			return true;
 		DyIO.disableFWCheck();
+		
 		DyIORegestry.setConnection(connection);
 		DyIORegestry.get().connect();
+		//DyIORegestry.get()
 		DyIORegestry.get().addDyIOEventListener(this);
 		DyIORegestry.get().setMuteResyncOnModeChange(true);
 		setupDyIO();
