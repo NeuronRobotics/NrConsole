@@ -31,6 +31,7 @@ import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
+import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IDyIOEvent;
@@ -51,7 +52,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private DyIOControlsPanel deviceControls = new DyIOControlsPanel();
 	private ArrayList<ChannelManager> channels = new ArrayList<ChannelManager>();
 	//private HexapodConfigPanel hex=null;
-	private JFrame hexFrame;
+	//private JFrame hexFrame;
 	private JPanel wrapper;
 	private PluginManager manager;
 	public NRConsoleDyIOPlugin(PluginManager pm) {
@@ -318,8 +319,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 	@Override
 	public void onDisconnect() {
-		if(hexFrame!=null)
-			hexFrame.setVisible(false);
+	
 	}
 
 
@@ -339,6 +339,12 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 	@Override
 	public void setActive(boolean b) {
+		if(active && DyIORegestry.get().isAvailable() && !b){
+			DyIORegestry.get().killAllPidGroups();
+			for(int i =0;i<24;i++){
+				//DyIORegestry.get().setMode(i, DyIOChannelMode.DIGITAL_IN);
+			}
+		}
 		active=b;
 	}
 

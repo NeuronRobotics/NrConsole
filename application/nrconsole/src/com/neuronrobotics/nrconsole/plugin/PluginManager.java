@@ -75,11 +75,11 @@ public class PluginManager {
 		}
 	}
 	public boolean disconnect(){
-		if(connection != null) {
-			connection.disconnect();
-		}
 		for(INRConsoleTabedPanelPlugin pl:plugins){
 			pl.setActive(false);
+		}
+		if(connection != null) {
+			connection.disconnect();
 		}
 		return true;
 	}
