@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIO;
+import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIOPowerState;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
@@ -32,6 +33,7 @@ public class DyIOPanel extends JPanel {
 	private bankLED A = new bankLED ();
 	private bankLED B = new bankLED ();
 	private JButton refresh = new JButton("Refresh");
+	private JButton reset = new JButton("Set DyIO to Defaults");
 	private JLabel mac = new JLabel("MAC: 00:00:00:00:00:00");
 	private JLabel fw = new JLabel("FW Version: ?.?.?");
 	public DyIOPanel() {
@@ -58,8 +60,19 @@ public class DyIOPanel extends JPanel {
 				DyIORegestry.get().getBatteryVoltage(true);
 			}
 		});
+	    reset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				DyIORegestry.get().killAllPidGroups();
+				for(int i =0;i<24;i++){
+					if(DyIORegestry.get().getMode(i) != DyIOChannelMode.DIGITAL_IN)
+						DyIORegestry.get().setMode(i, DyIOChannelMode.DIGITAL_IN);
+				}
+			}
+		});
 	    add(voltage, "pos 210 50");
 	    add(refresh, "pos 385 40");
+	    add(reset , "pos  190 490");
+	    
 	    add(mac, "pos 200 150");
 	    add(fw, "pos 200 175");
 		int ledPos = 12*34+125;
