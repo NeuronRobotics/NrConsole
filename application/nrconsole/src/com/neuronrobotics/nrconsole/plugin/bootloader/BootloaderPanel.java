@@ -110,7 +110,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
     	}
     	if(dir2==null){
     		if(SDKBuildInfo.isLinux()){
-    			dir2=new File ("/usr/local/NeuronRobotics/RDK/");
+    			dir2=new File ("/usr/local/NeuronRobotics/RDK/firmware");
     		}else
     			dir2=new File (".");
     	}
