@@ -33,7 +33,6 @@ public class NRConsoleSchedulerPlugin extends AbstractNRConsoleTabedPanelPlugin{
 
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
