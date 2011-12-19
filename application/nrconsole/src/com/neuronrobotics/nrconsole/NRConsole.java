@@ -10,6 +10,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 @SuppressWarnings("unused")
 public class NRConsole implements ActionListener {
@@ -44,7 +45,7 @@ public class NRConsole implements ActionListener {
 		
 		nrcWindow.setLocationRelativeTo(null);
 		nrcWindow.setVisible(true);
-		
+		nrcWindow.setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 		
 		shower.start();
 		if(debug)
