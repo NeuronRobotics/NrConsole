@@ -25,19 +25,25 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeriesCollection;
 
 
+
 public class GraphingWindow extends JFrame {
-	private static final long serialVersionUID = 1L;
 	private XYSeriesCollection xyDataset;
-	private ArrayList<DataChannel> dataChannels = new ArrayList<DataChannel>();
-	
 	private ChartPanel chartPanel;
 	private ValueAxis axis;
 	private JTextField length = new JTextField(5);
-	
-	public GraphingWindow() {	
+	private JSlider window = new JSlider(1, 100);
+	private JSlider scale = new JSlider(1, 100);
+	private ArrayList<DataChannel> dataChannels = new ArrayList<DataChannel>();
+
+	/**
+	 * long 
+	 */
+	private static final long serialVersionUID = 2171583604829088880L;
+	public GraphingWindow() {
 		xyDataset = new XYSeriesCollection();
 
 		JFreeChart chart = ChartFactory.createXYLineChart(
@@ -53,26 +59,30 @@ public class GraphingWindow extends JFrame {
 		chartPanel = new ChartPanel(chart);
 		
 		XYPlot plot = (XYPlot) chart.getPlot();
-		
 		axis = plot.getDomainAxis();
-        axis.setAutoRange(true);
-        axis.setFixedAutoRange(10.0);  // 10 seconds
-        
-        final JSlider scale = new JSlider(1, 100);
-        scale.setValue(10);
+		scale.setValue(100);
+		setDefaultWindow();
+		
         scale.addChangeListener(new ChangeListener() {
-			
-			
 			public void stateChanged(ChangeEvent e) {
-				length.setText("" + scale.getValue());
-				axis.setFixedAutoRange(scale.getValue());
-				
-				invalidate();
-				repaint();
+				if(window.getValue() ==100) {
+					setDefaultWindow();
+				}else {
+					setMovedWindow(window.getValue());
+				}
+			}
+		});
+        window.setValue(100);
+        window.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				if(window.getValue() ==100) {
+					setDefaultWindow();
+				}else {
+					setMovedWindow(window.getValue());
+				}
 			}
 		});
         
-        length.setText("10");
         length.addKeyListener(new KeyListener() {
 			
 			
@@ -117,7 +127,6 @@ public class GraphingWindow extends JFrame {
 			
 			
 			public void actionPerformed(ActionEvent arg0) {
-				DataChannel.restart();
 				for(DataChannel dc : dataChannels) {
 					dc.clear();
 				}
@@ -135,8 +144,43 @@ public class GraphingWindow extends JFrame {
 		setSize(new Dimension(500, 400));
 		add(chartPanel, BorderLayout.CENTER);
 		add(options, BorderLayout.SOUTH);
-	}
 		
+		
+		JPanel opt= new JPanel(new MigLayout());
+		opt.add(new JLabel("View Window"));
+		opt.add(window);
+		
+		JPanel slidingWindow= new JPanel(new MigLayout());
+		slidingWindow.add(options, "wrap");
+		slidingWindow.add(opt, "wrap");
+		add(slidingWindow, BorderLayout.SOUTH);
+	}
+	
+	private void setDefaultWindow() {
+		
+        axis.setAutoRange(true);
+        axis.setFixedAutoRange(scale.getValue());  
+        length.setText("" + scale.getValue());
+		invalidate();
+		repaint();
+	}
+	private void setMovedWindow(double percent) {
+		
+        axis.setAutoRange(false);  
+        Range total = xyDataset.getDomainBounds(true);
+        double lower =total.getLowerBound();
+        double upper =total.getUpperBound();
+        double loc = (upper -lower)*percent/100;
+        
+        
+        double sLower =loc-(scale.getValue()/2);
+        double sUpper =loc+(scale.getValue()/2);
+        axis.setRange(sLower, sUpper);
+        length.setText("" + scale.getValue());
+		invalidate();
+		repaint();
+	}
+	
 	public void toggleDataChannel(DataChannel data) {
 		if(!dataChannels.contains(data)) {
 			dataChannels.add(data);
