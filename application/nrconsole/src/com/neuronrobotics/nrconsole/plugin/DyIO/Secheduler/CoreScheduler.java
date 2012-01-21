@@ -194,6 +194,7 @@ public class CoreScheduler {
 	}
 	public void play(){
 		getSt().setPause(false);
+		callPlay();
 	}
 	public void play(int setpoint,long StartOffset) {
 		setSequenceParams( setpoint, StartOffset);
@@ -202,6 +203,7 @@ public class CoreScheduler {
 	public void pause() {
 		if(getSt()!=null)
 			getSt().pause();
+		callPause();
 	}
 	
 	public void addISchedulerListener(ISchedulerListener l){
@@ -222,9 +224,19 @@ public class CoreScheduler {
 
 	}
 	
-	private void callStop(){
+	private void callReset(){
 		for(ISchedulerListener l:listeners){
-			l.isStopped();
+			l.onReset();
+		}
+	}
+	private void callPause(){
+		for(ISchedulerListener l:listeners){
+			l.onPause();
+		}
+	}
+	private void callPlay(){
+		for(ISchedulerListener l:listeners){
+			l.onPlay();
 		}
 	}
 	public String getXml(){
@@ -261,7 +273,7 @@ public class CoreScheduler {
 					long start = System.currentTimeMillis();
 					if(getDyIO()!=null){
 						//Log.enableDebugPrint(true);
-						double seconds =((double)(getLoopTime()/3))/1000;
+						double seconds =((double)(getLoopTime()))/1000;
 						getDyIO().flushCache(seconds);
 						//Log.enableDebugPrint(false);
 					}
@@ -345,6 +357,8 @@ public class CoreScheduler {
 				}while(isRun());
 				setCurrentTime(0);
 				setPause(true);
+				callReset();
+				callPause();
 			}while(true);
 		}
 		public void pause(){

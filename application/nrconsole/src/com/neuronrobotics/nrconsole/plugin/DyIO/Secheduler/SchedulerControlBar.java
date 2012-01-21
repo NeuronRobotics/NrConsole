@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -36,6 +37,8 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 	private CoreScheduler cs;
 	private File mp3File=null;
 	private ChangeListener sliderListener;
+	private ArrayList<ActionListener> pauseListeners = new ArrayList<ActionListener> ();
+	private ArrayList<ActionListener> playListeners = new ArrayList<ActionListener> ();
 	/**
 	 * long 
 	 */
@@ -79,6 +82,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 				if(!cs.isPlaying()){
 					play();
 				}else{
+
 					pause();
 				}
 			}
@@ -148,12 +152,17 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		cs.play();
 		play.setText("Pause");
 		step.setEnabled(false);
+		for(ActionListener a:playListeners)
+			a.actionPerformed(null);
 	}
 	private void pause() {
 		if(cs != null)
 			cs.pause();
 		play.setText("Play ");
 		step.setEnabled(true);
+		for(ActionListener a:pauseListeners)
+			a.actionPerformed(null);
+		
 	}
 	
 	private void setTrackLegnth(int ms){
@@ -171,8 +180,7 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 		}
 		double cTime = ((double)val)/1000;
 		time.setText("Seconds: "+new DecimalFormat("000.00").format(cTime));
-		if(val == 0)
-			pause();
+
 		//System.out.println("Setting current time="+val+" slider="+slider.getValue());
 	}
 	private void setBounds(double top){
@@ -198,12 +206,34 @@ public class SchedulerControlBar extends JPanel implements ISchedulerListener {
 	}
 
 	@Override
-	public void isStopped() {
+	public void onReset() {
 		play.setText("Play");
 	}
 
 	@Override
 	public void setIntervalTime(int msInterval, int totalTime) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void addPauseListener(ActionListener actionListener) {
+		if(!pauseListeners.contains(actionListener))
+			pauseListeners.add(actionListener);
+	}
+
+	public void addPlayListener(ActionListener actionListener) {
+		if(!playListeners.contains(actionListener))
+			playListeners.add(actionListener);
+	}
+
+	@Override
+	public void onPlay() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPause() {
 		// TODO Auto-generated method stub
 		
 	}

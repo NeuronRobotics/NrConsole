@@ -16,5 +16,9 @@ public interface ISchedulerListener {
 	/**
 	 * This function is called when the seceduler is stopped
 	 */
-	public void isStopped();
+	public void onReset();
+	
+	public void onPlay();
+	
+	public void onPause();
 }

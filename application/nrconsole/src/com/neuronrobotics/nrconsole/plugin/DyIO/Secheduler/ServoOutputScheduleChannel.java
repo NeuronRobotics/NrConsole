@@ -111,10 +111,6 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 	}
 
 	@Override
-	public void isStopped() {
-		// unused
-	}
-	@Override
 	public void onAnalogValueChange(AnalogInputChannel chan, double value) {
 
 		double centerOffset =getInputCenter()-(512*getInputScale());
@@ -274,6 +270,21 @@ public class ServoOutputScheduleChannel implements ISchedulerListener, IAnalogIn
 		public void kill() {
 			running=false;
 		}
+	}
+	@Override
+	public void onReset() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onPlay() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

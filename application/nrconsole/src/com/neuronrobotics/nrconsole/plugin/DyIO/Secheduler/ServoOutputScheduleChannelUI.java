@@ -20,18 +20,18 @@ import com.sun.corba.se.impl.legacy.connection.USLPort;
 
 import net.miginfocom.swing.MigLayout;
 
-public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositionUpdateListener,ActionListener{
+public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositionUpdateListener,ActionListener,ISchedulerListener{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7112414698561768276L;
 	private ServoOutputScheduleChannel channel;
-	private JCheckBox record = new JCheckBox("Record");
-	private JButton startRecording = new JButton("Start Recording");
-	private JButton startTest = new JButton("Start Test");
+	//private JCheckBox record = new JCheckBox("Record");
+	//private JButton startRecording = new JButton("Start Recording");
+	//private JButton startTest = new JButton("Start Test");
 	private JSlider position  = new JSlider();
-	private JCheckBox useSlider = new JCheckBox("Use Slider");
+	private JCheckBox useSlider = new JCheckBox("Record");
 	private JPanel recordConfig = new JPanel();
 	IntegerComboBox inputChannelNumber;
 	private JTextField scale = new JTextField(5);
@@ -40,15 +40,19 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	private double currentScale=.25;
 	
 	private int currentZero = 512;
-	
+
 	ChangeListener posListener = new ChangeListener() {
 		
 		@Override
 		public void stateChanged(ChangeEvent e) {
+			//System.out.println("Pos listener");
 			flush();
-			if(!position.getValueIsAdjusting()){
+			if(!channel.isRecording()){
 				channel.flush();
+			}else{
+				System.out.println("Not flushing");
 			}
+			
 		}
 	};
 	public void flush(){
@@ -64,37 +68,37 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 			inputChannelNumber.addInteger(i);
 		}
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		record.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(record.isSelected()){
-					recordConfig.setVisible(true);
-				}else{
-					recordConfig.setVisible(false);
-					pause();
-				}
-			}
-		});
-		
-		startRecording.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(!getChannel().isRecording()){
-					resume();
-				}
-				else{
-					pause();
-				}
-			}
-		});
-		startTest.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(getChannel().isTesting()) {
-					stopTest();
-				}else
-					startTest();
-			}
-		});
+//		record.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				if(record.isSelected()){
+//					recordConfig.setVisible(true);
+//				}else{
+//					recordConfig.setVisible(false);
+//					pause();
+//				}
+//			}
+//		});
+//		
+//		startRecording.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+//				if(!getChannel().isRecording()){
+//					resume();
+//				}
+//				else{
+//					pause();
+//				}
+//			}
+//		});
+//		startTest.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent arg0) {
+//				if(getChannel().isTesting()) {
+//					stopTest();
+//				}else
+//					startTest();
+//			}
+//		});
 		
 		useSlider.addActionListener(new ActionListener() {
 			@Override
@@ -110,19 +114,19 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		});
 		
 		recordConfig.add(inputChannelNumber);
-		recordConfig.add(startRecording);
-		recordConfig.add(startTest);
+		//recordConfig.add(startRecording);
+		//recordConfig.add(startTest);
 		recordConfig.setVisible(false);
 		
-		JPanel config = new JPanel(new MigLayout());
-		config.add(new JLabel("Input Scale:"));
-		config.add(scale,"wrap");
-		config.add(new JLabel("Output Center:"));
-		config.add(zero,"wrap");
+//		JPanel config = new JPanel(new MigLayout());
+//		config.add(new JLabel("Input Scale:"));
+//		config.add(scale,"wrap");
+//		config.add(new JLabel("Output Center:"));
+//		config.add(zero,"wrap");
 		scale.addActionListener(this);
 		zero.addActionListener(this);
 		
-		recordConfig.add(config);
+		//recordConfig.add(config);
 		
 		position.setEnabled(false);
 		position.setMaximum(0);
@@ -130,21 +134,22 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		position.setMajorTickSpacing(15);
 		position.setPaintTicks(true);
 		position.setValue(chan.getCurrentTargetValue());
+		position.addChangeListener(posListener);
 		
 		
 		add(new JLabel("Output Channel: "+getChannel().getChannelNumber()));
 		add(position);
 		add(useSlider);
-		add(record);
+		//add(record);
 		add(recordConfig);
 		
-		record.setSelected(getChannel().isRecording());
+		//record.setSelected(getChannel().isRecording());
 		try{
 			inputChannelNumber.setSelectedInteger(getChannel().getInputChannelNumber());
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-		recordConfig.setVisible(record.isSelected());
+		//recordConfig.setVisible(record.isSelected());
 		zero.setText(new Integer(getChannel().getInputCenter()).toString());
 		scale.setText(new Double(getChannel().getInputScale()).toString());
 		setScaleingInfo();
@@ -161,29 +166,6 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	}
 	private double getInputScale() {
 		return currentScale;
-	}
-	private void startTest() {
-		startTest.setText("Stop  Test");
-		setScaleingInfo();
-		getChannel().startTest();
-	}
-	private void stopTest() {
-		startTest.setText("Start Test");
-		setScaleingInfo();
-		getChannel().stopTest();
-	}
-	private void pause(){
-		stopTest();
-		getChannel().pauseRecording();
-		setScaleingInfo();
-		startRecording.setText("Start Recording");
-	}
-	private void resume(){
-		stopTest();
-		setScaleingInfo();
-		getChannel().startRecording();
-		startRecording.setText("Pause  Recording");
-		inputChannelNumber.setEditable(false);
 	}
 	
 	public int getChannelNumber() {
@@ -215,5 +197,32 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	public void actionPerformed(ActionEvent e) {
 		 setScaleingInfo();
 	}
+	@Override
+	public void onTimeUpdate(double ms) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setIntervalTime(int msInterval, int totalTime) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void onReset() {
+
+	}
+	@Override
+	public void onPlay() {
+
+		//getChannel().setRecording(true);
+	}
+	@Override
+	public void onPause() {
+		useSlider.setSelected(false);
+		position.setEnabled(false);
+		getChannel().setRecording(false);
+		System.out.println("Setting the pause in output UI");
+	}
+	
 	
 }

@@ -22,6 +22,7 @@ import com.neuronrobotics.nrconsole.util.XmlFilter;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class SchedulerGui extends JPanel{
 
@@ -37,15 +38,13 @@ public class SchedulerGui extends JPanel{
 	private File configFile=null;
 	CoreScheduler cs;
 	SchedulerControlBar cb;
-	private int loopTime =120;
+	private int loopTime =50;
 	public SchedulerGui(){
 		setName("DyIO Sequencer");
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
 		cs = new CoreScheduler(DyIORegestry.get(), loopTime,60000);
 		cb = new SchedulerControlBar(cs);
-		
-		//cb.setAudioFile(new File("track.mp3"));
 		
 		JPanel addBar = new JPanel(new MigLayout());
 		JButton addChannel = new JButton("Add new channel");
@@ -137,6 +136,7 @@ public class SchedulerGui extends JPanel{
 		if(s==null)
 			return;
 		cs.removeServoOutputScheduleChannel(s.getChannel());
+		cs.removeISchedulerListener(s);
 		outputs.remove(s);
 		channelBar.remove(s);
 		usedChans.removeInteger(num);
@@ -145,6 +145,7 @@ public class SchedulerGui extends JPanel{
 	private void addServoChannel( ServoOutputScheduleChannel chan){
 		int selected = chan.getChannelNumber();
 		ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(chan);
+		cs.addISchedulerListener(sosc);
 		outputs.add(sosc);
 		channelBar.add(sosc,"wrap");
 		availibleChans.removeInteger(selected);
@@ -195,8 +196,9 @@ public class SchedulerGui extends JPanel{
 	public static void main(String[] args) {
 		 JFrame frame = new JFrame();
 		 SchedulerGui sg =new SchedulerGui();
-		 sg.setConnection(new SerialConnection("COM48"));
-		 //sg.setConnection(new SerialConnection("COM14"));
+		 //sg.setConnection(new SerialConnection("COM48"));
+		 sg.setConnection(new SerialConnection("/dev/DyIO0"));
+		 //sg.setConnection(ConnectionDialog.promptConnection());
 		 frame .add(sg);
 		 frame.setSize(new Dimension(1024,768));
 		 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
