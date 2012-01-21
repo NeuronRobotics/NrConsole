@@ -50,7 +50,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 			if(!channel.isRecording()){
 				channel.flush();
 			}else{
-				System.out.println("Not flushing");
+				//System.out.println("Not flushing");
 			}
 			
 		}
@@ -221,7 +221,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		useSlider.setSelected(false);
 		position.setEnabled(false);
 		getChannel().setRecording(false);
-		System.out.println("Setting the pause in output UI");
+		//System.out.println("Setting the pause in output UI");
 	}
 	
 	
