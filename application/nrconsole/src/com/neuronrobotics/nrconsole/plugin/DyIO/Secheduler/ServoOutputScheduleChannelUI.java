@@ -16,6 +16,8 @@ import javax.swing.event.ChangeListener;
 import com.neuronrobotics.nrconsole.util.IntegerComboBox;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.dyio.sequencer.ISchedulerListener;
+import com.neuronrobotics.sdk.dyio.sequencer.ServoOutputScheduleChannel;
 import com.sun.corba.se.impl.legacy.connection.USLPort;
 
 import net.miginfocom.swing.MigLayout;

@@ -20,6 +20,8 @@ import javax.swing.filechooser.FileFilter;
 
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.Mp3Filter;
+import com.neuronrobotics.sdk.dyio.sequencer.CoreScheduler;
+import com.neuronrobotics.sdk.dyio.sequencer.ISchedulerListener;
 
 import net.miginfocom.swing.MigLayout;
 
