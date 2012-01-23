@@ -29,10 +29,10 @@ public enum NRBootCoreType {
 	}
 
 	public static NRBootCoreType find(String tagValue) {
-		if (NRBootCoreType.AVRxx4p.getReadableName().contentEquals(tagValue)){
+		if (NRBootCoreType.AVRxx4p.getReadableName().toLowerCase().contentEquals(tagValue.toLowerCase())){
 			return NRBootCoreType.AVRxx4p;
 		}
-		if (NRBootCoreType.PIC32.getReadableName().contentEquals(tagValue)){
+		if (NRBootCoreType.PIC32.getReadableName().toLowerCase().contentEquals(tagValue.toLowerCase())){
 			return NRBootCoreType.PIC32;
 		}
 		return null;
