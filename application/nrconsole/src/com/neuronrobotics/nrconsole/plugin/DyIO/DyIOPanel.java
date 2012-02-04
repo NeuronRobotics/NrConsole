@@ -33,12 +33,12 @@ public class DyIOPanel extends JPanel {
 	private bankLED A = new bankLED ();
 	private bankLED B = new bankLED ();
 	private JButton refresh = new JButton("Refresh");
-	private JButton reset = new JButton("Set DyIO to Defaults");
+	private JButton reset = new JButton("Set Defaults");
 	private JLabel mac = new JLabel("MAC: 00:00:00:00:00:00");
 	private JLabel fw = new JLabel("FW Version: ?.?.?");
 	public DyIOPanel() {
 		try{
-			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio.png"));
+			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio-red2.png"));
 		}catch (Exception e){
 			e.printStackTrace();
 			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio.png"));
@@ -69,23 +69,26 @@ public class DyIOPanel extends JPanel {
 				}
 			}
 		});
-	    add(voltage, "pos 210 50");
-	    add(refresh, "pos 385 40");
-	    add(reset , "pos  190 490");
 	    
-	    add(mac, "pos 200 150");
-	    add(fw, "pos 200 175");
-		int ledPos = 12*34+125;
-		add(A, "pos 440 "+ledPos);
-		add(B, "pos 105 "+ledPos);
+	    int allignment = 220;
+	    add(voltage, "pos "+allignment+" 82");
+	    add(refresh, "pos "+allignment+" 102");
+	    
+	    add(reset , "pos  "+allignment+" 490");
+	    add(new JLabel("MAC:"), "pos "+allignment+" 130");
+	    add(mac, "pos "+allignment+" 150");
+	    add(fw, "pos 220 175");
+		int ledPos = 12*34+135;
+		add(A, "pos 390 "+ledPos);
+		add(B, "pos 155 "+ledPos);
 		
 		
 	}
 	private void setFw(byte[] f){
-		fw.setText("FW Version: "+f[0]+"."+f[1]+"."+f[2]);
+		fw.setText("FW Version: \n"+f[0]+"."+f[1]+"."+f[2]);
 	}
 	private void setMac(MACAddress m){
-		mac.setText("MAC: "+m.toString());
+		mac.setText(m.toString());
 	}
 	
 	public void addChannels(List<ChannelManager> list, boolean alignedLeft) {
@@ -93,8 +96,8 @@ public class DyIOPanel extends JPanel {
 		//removeAll();
 		for(ChannelManager cp : list) {
 			cp.getChannelPanel().setAlignedLeft(alignedLeft);
-			int x = (alignedLeft ? 105 : 370);
-			int y = ((alignedLeft ? 11 - (index % 12) : index % 12) * 34) + 120;
+			int x = (alignedLeft ? 125 : 350);
+			int y = ((alignedLeft ? 11 - (index % 12) : index % 12) * 34) + 130;
 			
 			JLabel channelLabel = new JLabel(new DecimalFormat("00").format(cp.getChannel().getChannelNumber()));
 			channelLabel.setFont(new Font("Sans-Serif", Font.BOLD, 18));
@@ -152,7 +155,8 @@ public class DyIOPanel extends JPanel {
 	    			break;
 	    		}
 	    		Graphics2D g2 = (Graphics2D)g;
-	    		g2.fillRect(0, 0, 50, 50);
+	    		g2.fillRect(0, 0,75, 75);
+	    		//g2.fillOval(0, 0, 75, 75);
 	    	} catch (Exception e) {
 	    		
 	    	}
