@@ -163,7 +163,7 @@ public class SchedulerGui extends JPanel{
 		for(ServoOutputScheduleChannel so:outs){
 			addServoChannel(so);
 		}
-		for(int i=0;i<DyIORegestry.get().getInternalChannels().size();i++){
+		for(int i=0;i<DyIORegestry.get().getChannels().size();i++){
 			DyIORegestry.get().getValue(i);
 		}
 	}
