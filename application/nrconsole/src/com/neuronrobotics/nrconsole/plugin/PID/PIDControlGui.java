@@ -49,7 +49,12 @@ public class PIDControlGui extends JPanel {
 	private void stopAll(){
 		System.out.println("Stopping all PID");
 		try{
-			getPidDevice().killAllPidGroups();
+			try{
+				getPidDevice().killAllPidGroups();
+			}catch (Exception ex){
+				
+			}
+			
 			for(PIDControlWidget w:widgits) {
 				w.stopPID(false);
 			}
