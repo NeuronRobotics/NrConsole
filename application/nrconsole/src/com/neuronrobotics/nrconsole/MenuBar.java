@@ -122,6 +122,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			if(manager.connect(this)) {
 				ready = true;
 				connectionMenu.setEnabled(true);
+				
 			}else {
 				disconnect();
 				onDisconnect();

@@ -13,6 +13,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.neuronrobotics.sdk.common.MACAddress;
@@ -137,11 +138,15 @@ public class DyIOPanel extends JPanel {
 		private static final long serialVersionUID = 3204367369543884223L;
 		private DyIOPowerState state = DyIOPowerState.BATTERY_UNPOWERED;
 		public void setState(DyIOPowerState s){
+			if(state == DyIOPowerState.BATTERY_POWERED && s !=DyIOPowerState.BATTERY_POWERED){
+				JOptionPane.showMessageDialog(null, "Battery needs to be charged or disconnected \nServos have been disabled for safety", "DyIO Power Warning", JOptionPane.WARNING_MESSAGE);
+			}
 			state = s;
 		}
 		@Override
 		public void paintComponent (Graphics g) {
 	    	super.paintComponent(g);
+	    	
 	    	try {
 	    		switch(state){
 	    		case BATTERY_POWERED:
