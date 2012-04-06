@@ -81,7 +81,7 @@ public class NRConsole implements ActionListener {
 					
 					onPluginListUpdate(manager);
 					manager.addIPluginUpdateListener(this);
-					//System.out.println("Starting application");
+					nrcWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);  
 					while(nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
