@@ -22,6 +22,7 @@ import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIOPowerState;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
@@ -137,22 +138,17 @@ public class DyIOPanel extends JPanel {
 		 */
 		private static final long serialVersionUID = 3204367369543884223L;
 		private DyIOPowerState state = DyIOPowerState.BATTERY_UNPOWERED;
-		DyIOPowerState old;
+		//DyIOPowerState old;
+		showOption thread;
+		
 		public void setState(DyIOPowerState s){
-			old = state;
+			//old = state;
 			state = s;
-			new Thread(){
-				public void run(){
-					if(old == DyIOPowerState.BATTERY_POWERED && state !=DyIOPowerState.BATTERY_POWERED){
-						JOptionPane.showMessageDialog(null, "WARNING!\nBattery needs to be charged or has been disconnected \nServos have been disabled for safety", "DyIO Power Warning", JOptionPane.WARNING_MESSAGE);
-					}
-					
-					if(old != DyIOPowerState.BATTERY_POWERED && state ==DyIOPowerState.BATTERY_POWERED){
-						JOptionPane.showMessageDialog(null, "Battery is connected \nServos/Motors need to be re-enabled to start up", "DyIO Power Warning", JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			}.start();
-			
+			if( thread==null) {
+				 thread= new showOption();
+				 thread.start();
+			}
+			thread.setState(s);
 		}
 		@Override
 		public void paintComponent (Graphics g) {
@@ -177,6 +173,38 @@ public class DyIOPanel extends JPanel {
 	    		
 	    	}
 	    }
+		
+	}
+	
+	private class showOption extends Thread{
+		DyIOPowerState old;
+		DyIOPowerState state;
+		boolean newState =false;
+		public void setState(DyIOPowerState s){
+			if(!newState) {
+				old = state;
+				state = s;
+			}
+			if(old!=state)
+				newState =true;
+		}
+		public void run(){
+			while(DyIORegestry.get().isAvailable()) {
+				if(newState) {
+					newState =false;
+					System.out.println("Dialog Start");
+					if(old == DyIOPowerState.BATTERY_POWERED && state !=DyIOPowerState.BATTERY_POWERED){
+						JOptionPane.showMessageDialog(null, "WARNING!\nBattery needs to be charged or has been disconnected \nServos have been disabled for safety", "DyIO Power Warning", JOptionPane.WARNING_MESSAGE);
+					}else 
+					if(old != DyIOPowerState.BATTERY_POWERED && state ==DyIOPowerState.BATTERY_POWERED){
+						JOptionPane.showMessageDialog(null, "Battery is connected \nServos/Motors need to be re-enabled to start up", "DyIO Power Warning", JOptionPane.INFORMATION_MESSAGE);
+					}
+					System.out.println("Dialog done");
+				}else {
+					ThreadUtil.wait(5);
+				}
+			}
+		}
 	}
 
 }
