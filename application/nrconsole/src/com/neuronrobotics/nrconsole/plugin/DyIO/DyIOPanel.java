@@ -183,8 +183,8 @@ public class DyIOPanel extends JPanel {
 		public void setState(DyIOPowerState s){
 			if(!newState) {
 				old = state;
-				state = s;
 			}
+			state = s;
 			if(old!=state)
 				newState =true;
 		}
