@@ -38,6 +38,7 @@ public class DyIOPanel extends JPanel {
 	private JButton reset = new JButton("Set Defaults");
 	private JLabel mac = new JLabel("MAC: 00:00:00:00:00:00");
 	private JLabel fw = new JLabel("FW Version: ?.?.?");
+	private JButton fwInfo = new JButton("About FW...");
 	public DyIOPanel() {
 		try{
 			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio-red2.png"));
@@ -71,6 +72,15 @@ public class DyIOPanel extends JPanel {
 				}
 			}
 		});
+	    fwInfo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Update_Firmware");
+				} catch (Exception e1) {
+					
+				}
+			}
+		});
 	    
 	    int allignment = 220;
 	    add(voltage, "pos "+allignment+" 82");
@@ -79,7 +89,8 @@ public class DyIOPanel extends JPanel {
 	    add(reset , "pos  "+allignment+" 490");
 	    add(new JLabel("MAC:"), "pos "+allignment+" 130");
 	    add(mac, "pos "+allignment+" 150");
-	    add(fw, "pos 220 175");
+	    add(fw, "pos "+allignment+" 175");
+	    add(fwInfo, "pos "+allignment+" 200");
 		int ledPos = 12*34+135;
 		add(A, "pos 390 "+ledPos);
 		add(B, "pos 155 "+ledPos);

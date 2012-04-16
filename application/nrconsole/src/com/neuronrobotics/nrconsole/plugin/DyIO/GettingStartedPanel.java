@@ -28,7 +28,7 @@ public class GettingStartedPanel extends JPanel {
 	private String jDoc1 = "http://downloads.neuronrobotics.com/nrdk/";
 	private String jDoc2 = "/java/docs/api/index.html";
 	private String jDoc;
-	private Desktop desktop = null;
+	private static Desktop desktop = null;
 	public GettingStartedPanel (){
 		setName("Getting Started");
 		setLayout(new MigLayout());
@@ -46,11 +46,24 @@ public class GettingStartedPanel extends JPanel {
 		add(new DocWidget("Online 'JavaDoc' Programming guide", jDoc),"wrap");
 		
 	}
-	public Desktop getDesktop() {
+	
+	static void openPage(String URL) throws Exception {
+		URI uri = new URI(URL);
+		getDesktop().browse(uri);
+	}
+	
+	public static Desktop getDesktop() throws Exception {
+		if(desktop == null) {
+			if (Desktop.isDesktopSupported()) {
+		        setDesktop(Desktop.getDesktop());
+			}else{
+				throw new Exception("Desktop not supported for documentation");
+			}
+		}
 		return desktop;
 	}
-	public void setDesktop(Desktop desktop) {
-		this.desktop = desktop;
+	public static void setDesktop(Desktop d) {
+		desktop = d;
 	}
 	private class DocWidget extends JPanel{
 		/**
@@ -75,9 +88,9 @@ public class GettingStartedPanel extends JPanel {
 				
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-			           try {
+			        try {
 						getDesktop().browse(uri);
-					} catch (IOException e) {
+					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
