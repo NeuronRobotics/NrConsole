@@ -78,6 +78,7 @@ public class PluginManager {
 		for(INRConsoleTabedPanelPlugin pl:plugins){
 			pl.setActive(false);
 		}
+		update();
 		if(connection != null) {
 			connection.disconnect();
 		}
