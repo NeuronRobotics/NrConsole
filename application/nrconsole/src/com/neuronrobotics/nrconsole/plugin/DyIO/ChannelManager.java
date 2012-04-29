@@ -24,10 +24,10 @@ public class ChannelManager  implements IDyIOChannelModeChangeListener {
 	public ChannelManager(DyIOChannel c){
 		channel = c;
 		
-		
+		channelRecorder = new ChannelRecorder(this);
 		controlPanel = new ControlPanel(this);
 		channelPanel = new ChannelPanel(this);
-		channelRecorder = new ChannelRecorder(this);
+		
 		
 		channel.addChannelEventListener(controlPanel);
 		channel.addChannelEventListener(channelPanel);

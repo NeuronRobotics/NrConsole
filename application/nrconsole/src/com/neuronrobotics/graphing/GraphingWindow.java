@@ -30,7 +30,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 
 
-public class GraphingWindow extends JFrame {
+public class GraphingWindow extends JPanel {
 	private XYSeriesCollection xyDataset;
 	private ChartPanel chartPanel;
 	private ValueAxis axis;
@@ -44,6 +44,7 @@ public class GraphingWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 2171583604829088880L;
 	public GraphingWindow() {
+		setName("DyIO Graph");
 		xyDataset = new XYSeriesCollection();
 
 		JFreeChart chart = ChartFactory.createXYLineChart(
@@ -181,15 +182,23 @@ public class GraphingWindow extends JFrame {
 		repaint();
 	}
 	
-	public void toggleDataChannel(DataChannel data) {
+	public void addDataset(DataChannel data) {
+		if(!dataChannels.contains(data)) {
+			dataChannels.add(data);
+		}
+		
+		if(!(xyDataset.indexOf(data.getSeries()) > -1)) {
+			showDataChannel(data);
+		}
+	}
+	
+	public void removeDataset(DataChannel data) {
 		if(!dataChannels.contains(data)) {
 			dataChannels.add(data);
 		}
 		
 		if(xyDataset.indexOf(data.getSeries()) > -1) {
 			hideDataChannel(data);
-		} else {
-			showDataChannel(data);
 		}
 	}
 	

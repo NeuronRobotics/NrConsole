@@ -18,6 +18,8 @@ public abstract class AbstractNRConsoleTabedPanelPlugin implements INRConsoleTab
 	}
 	
 	
+	
+	
 	public ArrayList<JMenu> getMenueItems() {
 		return null;
 	}

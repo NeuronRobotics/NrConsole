@@ -100,10 +100,8 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		setupModesComboBox();
 		modes.setRenderer(new ModeComboRenderer());
 		modes.addActionListener(modeActionListener);
-		
+		recordData.setSelected(true);
 		recordData.addActionListener(new ActionListener() {
-			
-			
 			public void actionPerformed(ActionEvent e) {
 				getManager().fireOnRecordingEvent();
 				if(recordData.isSelected() ) {
@@ -121,6 +119,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 				                                   getManager().getChannel().toString().trim()));
 		
 		setMinimumSize(new Dimension(panelWidth, panelHight));
+		getManager().getChannelRecorder().setGraphing(true);
 	}
 	
 	public void setUpModeUI() {	

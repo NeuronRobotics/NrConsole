@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
+import com.neuronrobotics.graphing.DyIOGraphPlugin;
 import com.neuronrobotics.graphing.ExcelWriter;
 import com.neuronrobotics.graphing.GraphingOptionsDialog;
 import com.neuronrobotics.graphing.GraphingWindow;
@@ -38,8 +39,8 @@ import com.neuronrobotics.sdk.dyio.IDyIOEvent;
 import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
 
 public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelPanelListener,IDyIOEventListener , IConnectionEventListener  {
-	private GraphingWindow graphingWindow = new GraphingWindow();
-	private GraphingOptionsDialog graphingOptionsDialog = new GraphingOptionsDialog(graphingWindow);
+	private DyIOGraphPlugin graph;
+	//private GraphingOptionsDialog graphingOptionsDialog = new GraphingOptionsDialog(graphingWindow);
 	private ExportDataDialog graphingDialog = new ExportDataDialog(this);
 	private JMenuItem showGraphMenuItem = new JMenuItem("Show Graph");
 	private JMenuItem showHexapodConf = new JMenuItem("Show Hexapod Configuration");
@@ -153,10 +154,15 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		collectionMenu.add(showHexapodConf);
 		showGraphMenuItem.setMnemonic(KeyEvent.VK_G);
 		showGraphMenuItem.addActionListener(new ActionListener() {
-			
-			
 			public void actionPerformed(ActionEvent e) {
-				displayGraphingWindow(true);
+				if(graph == null){
+					graph = new DyIOGraphPlugin(manager);
+					manager.firePluginUpdate();
+					showGraphMenuItem.setEnabled(false);
+					for(ChannelManager  cm:channels){
+						addGraph(cm.getChannelRecorder());
+					}
+				}
 			}
 		});
 		showSequencerConf.addActionListener(new ActionListener() {
@@ -225,25 +231,23 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		graphOptionsMenuItem.addActionListener(l);
 		exportData.addActionListener(l);
 	}
-	public void displayGraphingWindow(boolean visible) {
-		graphingWindow.setVisible(visible);
-	}
 	
 	public void displayGraphingDialog() {
 		graphingDialog.showDialog();
 	}
 	
-	public void displayGraphingOptionsDialog(boolean b) {
-		graphingOptionsDialog.setVisible(b);
+	public void addGraph(ChannelRecorder channelRecorder) {
+		graph.getGraphingWindow().addDataset(channelRecorder.getDataChannel());
 	}
-	
-	public void toggleGraph(ChannelRecorder channelRecorder) {
-		graphingWindow.toggleDataChannel(channelRecorder.getDataChannel());
+	public void removeGraph(ChannelRecorder channelRecorder) {
+		graph.getGraphingWindow().removeDataset(channelRecorder.getDataChannel());
 	}
-
 	
 	public void onRecordingEvent(ChannelManager source, boolean enabled) {
-		toggleGraph(source.getChannelRecorder());
+		if(enabled)
+			addGraph(source.getChannelRecorder());
+		else
+			removeGraph(source.getChannelRecorder());
 	}
 	
 	public void selectChannel(ChannelManager cm) {
