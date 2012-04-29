@@ -87,6 +87,7 @@ public class PluginManager {
 	private void updateNamespaces(){
 		for (int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin p = plugins.get(i);
+			p.setActive(false);
 			if(getNameSpaces()!=null)
 				p.isMyNamespace(getNameSpaces());
 		}
@@ -112,12 +113,12 @@ public class PluginManager {
 		}
 		setNameSpaces(gen.getNamespaces());
 		updateNamespaces();
-		 for (int i=0;i<plugins.size();i++){
+		for (int i=0;i<plugins.size();i++){
 			 INRConsoleTabedPanelPlugin p = plugins.get(i);
 			 if(p.isAcvive()){
 				 p.setConnection(connection);
 			 }
-		 }
+		}
 		return true;
 	}
 	public ArrayList<JMenu> getMenueItems(){

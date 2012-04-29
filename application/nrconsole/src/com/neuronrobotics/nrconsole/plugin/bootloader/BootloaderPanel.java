@@ -75,6 +75,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
        
 		blApp = new NRBoot(connection);
 		loadButton.setEnabled(true);
+		selectFile();
 		return connection.isConnected();
 	}
 
@@ -194,11 +195,32 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 			String message = "Success! Your Bowler device is now updated to version: "+hex.getRevision()+" Dont forget to Un-Plug your device!";
     		JOptionPane.showMessageDialog(null, message, message, JOptionPane.INFORMATION_MESSAGE);
     		resetAll();
-    		System.exit(0);
+    		//System.exit(0);
 		}
 	}
 
-	
+	private void selectFile(){
+    	loadFile();
+    	try{
+        	if (getBlApp()!=null){
+        		loadStatus.setStatus(StatusLabel.OK);
+        		////System.out.println("Loading firmware");
+        		reloadFile();
+        		getBlApp().loadCores(hex.getCores());
+	    		loadButton.setText(file.getName()+" Loading....");
+	    		loadButton.setEnabled(false);
+	    		LoaderChecker l = new LoaderChecker();
+	    		l.start();
+        	}	
+    	}catch(InvalidResponseException ex){
+    		String message = "Device is not in bootloader mode!";
+    		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
+    	}catch(NoConnectionAvailableException ex){
+    		String message = "Device is not no longer connected to bootloader";
+    		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
+    		resetLoad();
+    	}
+	}
 	
 	public void actionPerformed(ActionEvent e) {
         //Handle open button action.
@@ -206,26 +228,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 //        	
 //        }
         if (e.getSource() == loadButton) {
-        	loadFile();
-        	try{
-	        	if (getBlApp()!=null){
-	        		loadStatus.setStatus(StatusLabel.OK);
-	        		////System.out.println("Loading firmware");
-	        		reloadFile();
-	        		getBlApp().loadCores(hex.getCores());
-		    		loadButton.setText(file.getName()+" Loading....");
-		    		loadButton.setEnabled(false);
-		    		LoaderChecker l = new LoaderChecker();
-		    		l.start();
-	        	}	
-        	}catch(InvalidResponseException ex){
-        		String message = "Device is not in bootloader mode!";
-        		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
-        	}catch(NoConnectionAvailableException ex){
-        		String message = "Device is not no longer connected to bootloader";
-        		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
-        		resetLoad();
-        	}
+        	selectFile();
         }
 	}
 }
