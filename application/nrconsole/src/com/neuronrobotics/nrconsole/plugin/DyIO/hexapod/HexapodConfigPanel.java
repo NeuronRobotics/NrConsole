@@ -61,8 +61,7 @@ public class HexapodConfigPanel extends JPanel {
 		setName("Hexapod Configuration");
 		setLayout(new MigLayout());
 		
-		defaultConfig.addActionListener(new ActionListener() {	
-			
+		defaultConfig.addActionListener(new ActionListener() {		
 			public void actionPerformed(ActionEvent e) {
 				setConfigEnabled(false);
 				if(defaultConfig.isSelected()){
@@ -98,6 +97,7 @@ public class HexapodConfigPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				start.setEnabled(false);
 				try{
+					DyIORegestry.get().enableBrownOutDetect(false);
 					setConfigEnabled(true);
 					if(defaultConfig.isSelected()){
 						setWalker(new BasicWalker(DyIORegestry.get()));
