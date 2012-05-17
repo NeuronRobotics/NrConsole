@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IDyIOChannelModeChangeListener;
@@ -115,7 +116,7 @@ public class ChannelManager  implements IDyIOChannelModeChangeListener {
 
 	
 	public void onModeChange(DyIOChannelMode newMode) {
-		//System.out.println(this.getClass()+" Updating mode on channel: "+channel.getChannelNumber()+" mode: "+newMode);
+		Log.info("Updating mode on channel: "+channel.getChannelNumber()+" mode: "+newMode);
 		channelPanel.setMode(newMode);
 		controlPanel.setUpModeUI();
 	}

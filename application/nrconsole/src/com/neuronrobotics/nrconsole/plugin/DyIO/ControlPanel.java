@@ -55,6 +55,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	private ActionListener modeActionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent arg0) {
 			DyIOChannelMode mode = (DyIOChannelMode) modes.getSelectedItem();
+			Log.debug("Mode change action listener, setting to: "+mode);
 			getManager().setMode(mode);
 		}
 	};
@@ -126,7 +127,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		
 		DyIOChannelMode mode = getMode();
 		if(previousMode==null || mode != previousMode){
-			Log.debug("BEGIN Setup mode UI: "+getManager().getChannel()+this.getClass());
+			Log.debug("BEGIN Setup mode UI: "+getManager().getChannel().getChannelNumber()+" "+getManager().getChannel()+"\n\tPrevious mode was: "+previousMode);
 			previousMode=mode;
 			try{
 				switch(mode) {
@@ -182,6 +183,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 				setCurrentWidget(new LabelChannelUI(getManager(), "---"));
 			}
 		}else{
+			Log.info(getManager().getChannel().getChannelNumber()+" Mode for UI was "+previousMode+" new mode is: "+ mode);
 			return;
 		}
 
