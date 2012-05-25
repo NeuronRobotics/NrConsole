@@ -2,6 +2,8 @@ package com.neuronrobotics.nrconsole;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 import javax.swing.UIManager;
@@ -14,7 +16,7 @@ import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 @SuppressWarnings("unused")
 public class NRConsole implements ActionListener {
-	private NRConsoleWindow nrcWindow = null;
+	private NRConsoleWindow nrcFrame = null;
 
 	private PluginManager manager=new PluginManager();
 	private MenuBar nrcMenubar = new MenuBar(manager);
@@ -38,29 +40,37 @@ public class NRConsole implements ActionListener {
 	
 	public NRConsole(boolean debug) {
 		self = this;
-		nrcWindow = new NRConsoleWindow();
-		nrcWindow.setJMenuBar(nrcMenubar);
+		nrcFrame = new NRConsoleWindow();
+		nrcFrame.setJMenuBar(nrcMenubar);
 		nrcMenubar.setMenues(null);
 		nrcMenubar.addActionListener(this);
 		
-		nrcWindow.setLocationRelativeTo(null);
-		nrcWindow.setVisible(true);
-		nrcWindow.setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
+		nrcFrame.setLocationRelativeTo(null);
+		nrcFrame.setVisible(true);
+		nrcFrame.setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 		
 		shower.start();
 		if(debug)
 			Log.enableDebugPrint(true);
 		
-		while(!nrcWindow.isShowing()){
-			ThreadUtil.wait(100);
-		}
-		
-		while(nrcWindow.isShowing()){
-			ThreadUtil.wait(500);
-		}
-		manager.disconnect();
-		System.out.println("Exit clean");
-		System.exit(0);
+//		while(!nrcFrame.isShowing()){
+//			ThreadUtil.wait(100);
+//		}
+//		
+//		while(nrcFrame.isShowing()){
+//			ThreadUtil.wait(500);
+//		}
+//		manager.disconnect();
+//		System.out.println("Exit clean");
+//		System.exit(0);
+		nrcFrame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent winEvt) {
+				manager.disconnect();
+				System.out.println("Exit clean");
+		        System.exit(0); 
+		    }
+		});
 	}
 	
 	
@@ -81,7 +91,7 @@ public class NRConsole implements ActionListener {
 					
 					onPluginListUpdate(manager);
 					manager.addIPluginUpdateListener(this);
-					nrcWindow.setExtendedState(JFrame.MAXIMIZED_BOTH);  
+					nrcFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);  
 					while(nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
@@ -89,9 +99,9 @@ public class NRConsole implements ActionListener {
 				}else{
 					manager.removeIPluginUpdateListener(this);
 					nrcMenubar.setMenues(null);
-					nrcWindow.displayLogo(manager);
-					nrcWindow.invalidate();
-					nrcWindow.setVisible(true);
+					nrcFrame.displayLogo(manager);
+					nrcFrame.invalidate();
+					nrcFrame.setVisible(true);
 					//System.out.println("Starting splash");
 					while(!nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
@@ -106,9 +116,9 @@ public class NRConsole implements ActionListener {
 			//System.out.println("NRConsole is refreshing");
 			if(nrcMenubar.isReady()){
 				nrcMenubar.setMenues(manager.getMenueItems());
-				nrcWindow.setDeviceManager(manager);
-				nrcWindow.invalidate();
-				nrcWindow.setVisible(true);
+				nrcFrame.setDeviceManager(manager);
+				nrcFrame.invalidate();
+				nrcFrame.setVisible(true);
 			}
 		}
 	}
