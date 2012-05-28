@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
@@ -90,11 +91,16 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		aboutMenuItem.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-				aboutFrame = new JFrame(about.getName());
-				aboutFrame.add(about);
-				aboutFrame.setLocationRelativeTo(null); 
-				aboutFrame.pack();
-				aboutFrame.setVisible(true);
+
+				try {
+					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Intro");
+				} catch (Exception e1) {
+					aboutFrame = new JFrame(about.getName());
+					aboutFrame.add(about);
+					aboutFrame.setLocationRelativeTo(null); 
+					aboutFrame.pack();
+					aboutFrame.setVisible(true);
+				}
 			}
 		});
 		
