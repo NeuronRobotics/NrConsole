@@ -1,12 +1,15 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
+import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
@@ -20,6 +23,13 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 	private JButton refresh = new JButton("Refresh");
 	private JCheckBox async = new JCheckBox("Async");
 	
+	//Button to launch info page for Digital Input panel
+	private JButton helpButton = new JButton("Help");
+	
+	//Label for Digital Input Panel
+	private JLabel helpLabel = new JLabel("Digital Input Panel");
+	
+	
 	private DigitalInputChannel dic;
 	
 	public DigitalInputWidget(ChannelManager c) {
@@ -29,16 +39,32 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		
 		dic = new DigitalInputChannel(getChannel(),true);
 		
+
+
+		add(helpLabel, "split 2, span 2, align left");
+		add(helpButton, "gapleft 200, wrap, align right");
 		
 		button.setEnabled(false);
 
 		add(button);
 		add(refresh);
+							
 		//add(async);
 		setValue(true);
 		dic.addDigitalInputListener(this);
 		refresh.addActionListener(this);
 		async.addActionListener(this);
+		helpButton.addActionListener(this);
+		
+		//Help button formating
+		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
+		helpButton.setBackground(Color.green);
+			
+	
+		//Digital Input Panel label formating
+		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
+		helpLabel.setForeground(Color.GRAY);
+		
 		Log.debug("END Setting up: "+this.getClass());
 		
 	}
@@ -65,8 +91,16 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 				dic.setAsync(true);
 				dic.addDigitalInputListener(this);
 			}
+		}else if(e.getSource() == helpButton) { //if event is help button being pushed
+			try {
+				GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Digital_Input_Channel");
+			} catch (Exception exceptE) {
+				//TODO: launch error message window
+				
+			}
 		}
 	}
+	
 
 	
 	public void onDigitalValueChange(DigitalInputChannel source, boolean isHigh) {
