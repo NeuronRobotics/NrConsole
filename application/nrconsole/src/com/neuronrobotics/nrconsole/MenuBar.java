@@ -91,7 +91,6 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		aboutMenuItem.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
-
 				try {
 					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Intro");
 				} catch (Exception e1) {
