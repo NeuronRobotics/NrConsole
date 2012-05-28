@@ -49,7 +49,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	private ChannelManager manager;
 	private HashMap<DyIOChannelMode, ControlWidget> widgets = new HashMap<DyIOChannelMode, ControlWidget>();
 	private ControlWidget currentWidget=null;
-	private JCheckBox recordData = new JCheckBox("Record Channel");
+	//private JCheckBox recordData = new JCheckBox("Record Channel");
 	private AdvancedAsyncWidget advanced;
 	private DyIOChannelMode previousMode=null;
 	private ActionListener modeActionListener = new ActionListener() {
@@ -101,19 +101,19 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		setupModesComboBox();
 		modes.setRenderer(new ModeComboRenderer());
 		modes.addActionListener(modeActionListener);
-		recordData.setSelected(true);
-		recordData.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				getManager().fireOnRecordingEvent();
-				if(recordData.isSelected() ) {
-					getManager().getChannelRecorder().setGraphing(true);
-
-				} else {
-					getManager().getChannelRecorder().setGraphing(false);
-
-				}
-			}
-		});
+//		recordData.setSelected(true);
+//		recordData.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				getManager().fireOnRecordingEvent();
+//				if(recordData.isSelected() ) {
+//					getManager().getChannelRecorder().setGraphing(true);
+//
+//				} else {
+//					getManager().getChannelRecorder().setGraphing(false);
+//
+//				}
+//			}
+//		});
 		
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), 
@@ -196,13 +196,14 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		removeAll();		
 		add(new JLabel("Modes "), "cell 0 0");
 		add(modes, "cell 0 0, spanx");
-		add(recordData, "cell 0 0, spanx");
+		//add(recordData, "cell 0 0, spanx");
 		if(getCurrentWidget().getChannel().hasAsync()){
 			add(advanced , "cell 0 1");
 			advanced.setControlPanel(this);
 		}
 		
-
+		setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black, 2), 
+                getManager().getChannel().toString().trim()));
 
 		add(getCurrentWidget(), "cell 0 3, spanx, wrap");
 		revalidate();
@@ -229,9 +230,9 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 			return;
 		}
 		
-		if(!recordData.isSelected()) {
-			return;
-		}
+//		if(!recordData.isSelected()) {
+//			return;
+//		}
 		
 		getCurrentWidget().pollValue();
 	}
@@ -239,7 +240,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	
 
 	public boolean isRecordingEnabled() {
-		return recordData.isSelected();
+		return true;
 	}
 	
 	
