@@ -33,6 +33,7 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
+import com.neuronrobotics.sdk.dyio.DyIOFirmwareOutOfDateException;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.IDyIOEvent;
@@ -105,6 +106,19 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		
 		DyIORegestry.setConnection(connection);
 		DyIORegestry.get().connect();
+		
+		try {
+			DyIO.enableFWCheck();
+			DyIORegestry.get().checkFirmwareRev();
+		}catch(DyIOFirmwareOutOfDateException ex) {
+			try {
+				GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Update_Firmware");
+			} catch (Exception e) {
+			}
+			JOptionPane.showMessageDialog(null, "DyIO Firmware mis-match Warning\n"+ex.getMessage(), "DyIO Warning", JOptionPane.WARNING_MESSAGE);
+		}
+		DyIO.disableFWCheck();
+		
 		DyIORegestry.get().addDyIOEventListener(this);
 		DyIORegestry.get().setMuteResyncOnModeChange(true);
 		setupDyIO();
