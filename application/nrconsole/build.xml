@@ -67,11 +67,12 @@
 	<target name="compile" depends="prepare"
 	   description="Compile Java sources">
 	  <mkdir    dir="${build.home}"/>
-	  <javac srcdir="${src.home}"
-	          destdir="${build.home}"
-	            debug="${compile.debug}"
-	      deprecation="${compile.deprecation}"
-	         optimize="${compile.optimize}">
+	  <javac 	srcdir="${src.home}"
+				destdir="${build.home}"
+				debug="${compile.debug}"
+				deprecation="${compile.deprecation}"
+				optimize="${compile.optimize}"
+	  			target="${app.javac.version}">
 	      <classpath refid="compile.classpath"/>
 	  </javac>
 	  	
