@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -13,6 +14,7 @@ import javax.swing.JSlider;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
+import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
@@ -41,12 +43,37 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 		sliderUI.setPaintTicks(true);
 		sliderUI.setEnabled(false);
 		
-		add(sliderUI);
+		
+		//Button to launch info page for Digital Input panel
+		JButton helpButton = new JButton("Help");
+		//Label for Digital Input Panel
+		JLabel helpLabel = new JLabel("Analog Input Panel");
+		add(helpLabel, "split 2, span 2, align left");
+		add(helpButton, "gapleft 200, wrap, align right");
+		helpButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Analog_Input_Channel");
+				} catch (Exception exceptE) {}
+			}
+		});
+		//Help button formating
+		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
+		helpButton.setBackground(Color.green);
+		//Digital Input Panel label formating
+		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
+		helpLabel.setForeground(Color.GRAY);
+		
+		JPanel pan = new JPanel(new MigLayout()); 
+		
+		
+		pan.add(sliderUI);
 		vals.add(valueUI,"wrap");
 		vals.add(valueUIADC,"wrap");
-		add(vals);
-		add(refresh);
-		//add(async, "wrap");
+		pan.add(vals);
+		pan.add(refresh);
+		add(pan);
 
 		aic.addAnalogInputListener(this);
 		refresh.addActionListener(this);

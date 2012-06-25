@@ -48,19 +48,29 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 
 		add(button);
 		add(refresh);
-							
+					
+		
 		//add(async);
 		setValue(true);
 		dic.addDigitalInputListener(this);
 		refresh.addActionListener(this);
 		async.addActionListener(this);
-		helpButton.addActionListener(this);
+		helpButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Digital_Input_Channel");
+				} catch (Exception exceptE) {
+					//TODO: launch error message window
+					
+				}
+			}
+		});
 		
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
-			
-	
 		//Digital Input Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
@@ -90,13 +100,6 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 			} else {
 				dic.setAsync(true);
 				dic.addDigitalInputListener(this);
-			}
-		}else if(e.getSource() == helpButton) { //if event is help button being pushed
-			try {
-				GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Digital_Input_Channel");
-			} catch (Exception exceptE) {
-				//TODO: launch error message window
-				
 			}
 		}
 	}

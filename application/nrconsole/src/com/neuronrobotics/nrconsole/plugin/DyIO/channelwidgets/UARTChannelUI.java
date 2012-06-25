@@ -1,15 +1,21 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
+import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -61,16 +67,41 @@ public class UARTChannelUI extends ControlWidget implements ActionListener,IUART
 			uart.addUARTStreamListener(this);
 		clear.addActionListener(this);
 		
+		//Button to launch info page for Digital Input panel
+		JButton helpButton = new JButton("Help");
+		//Label for Digital Input Panel
+		JLabel helpLabel = new JLabel("UART Serial Panel");
+		JPanel pan1 = new JPanel(new MigLayout()); 
+		pan1.add(helpLabel, "split 2, span 2, align left");
+		pan1.add(helpButton, "gapleft 150, wrap, align right");
+		add(pan1,"wrap");
+		helpButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/UART_Passthrough_Channel");
+				} catch (Exception exceptE) {}
+			}
+		});
+		//Help button formating
+		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
+		helpButton.setBackground(Color.green);
+		//Digital Input Panel label formating
+		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
+		helpLabel.setForeground(Color.GRAY);
+		JPanel pan = new JPanel(new MigLayout()); 
+		
 		if(mode ==  DyIOChannelMode.USART_TX) {
-			add(transmit);
-			add(send, "wrap");
-			add(baudrates,"wrap");
+			pan.add(transmit);
+			pan.add(send, "wrap");
+			pan.add(baudrates,"wrap");
 		}else {
-			add(clear);
-			add(baudrates,"wrap");
-			add(receive, "wrap");
+			pan.add(clear);
+			pan.add(baudrates,"wrap");
+			pan.add(receive, "wrap");
 			
 		}
+		add(pan);
 	}
 	
 	
