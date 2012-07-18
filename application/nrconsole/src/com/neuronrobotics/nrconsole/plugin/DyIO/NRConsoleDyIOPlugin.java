@@ -43,7 +43,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private DyIOGraphPlugin graph;
 	//private GraphingOptionsDialog graphingOptionsDialog = new GraphingOptionsDialog(graphingWindow);
 	private ExportDataDialog graphingDialog = new ExportDataDialog(this);
-	private JMenuItem showGraphMenuItem = new JMenuItem("Show Graph");
+	//private JMenuItem showGraphMenuItem = new JMenuItem("Show Graph");
 	private JMenuItem showHexapodConf = new JMenuItem("Show Hexapod Configuration");
 	private JMenuItem showSequencerConf = new JMenuItem("Show Sequencer Configuration");
 	private JMenuItem showPidConf = new JMenuItem("Show P.I.D. Configuration");
@@ -126,6 +126,11 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		DyIORegestry.get().getBatteryVoltage(true);
 		manager.removeNRConsoleTabedPanelPlugin("NRConsolePIDPlugin");
 		setUp = true;
+		graph = new DyIOGraphPlugin(manager);
+		manager.firePluginUpdate();
+		for(ChannelManager  cm:channels){
+			addGraph(cm.getChannelRecorder());
+		}
 		return true;
 	}
 	private void setupDyIO(){
@@ -161,24 +166,24 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	public ArrayList<JMenu> getMenueItems() {
 		JMenu collectionMenu = new JMenu("DyIO");
 		collectionMenu.add(showGettingStarted);
-		collectionMenu.add(showGraphMenuItem);
+		//collectionMenu.add(showGraphMenuItem);
 		collectionMenu.add(exportData);
 		collectionMenu.add(showPidConf);
 		collectionMenu.add(showSequencerConf);
 		collectionMenu.add(showHexapodConf);
-		showGraphMenuItem.setMnemonic(KeyEvent.VK_G);
-		showGraphMenuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(graph == null){
-					graph = new DyIOGraphPlugin(manager);
-					manager.firePluginUpdate();
-					showGraphMenuItem.setEnabled(false);
-					for(ChannelManager  cm:channels){
-						addGraph(cm.getChannelRecorder());
-					}
-				}
-			}
-		});
+//		showGraphMenuItem.setMnemonic(KeyEvent.VK_G);
+//		showGraphMenuItem.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				if(graph == null){
+//					graph = new DyIOGraphPlugin(manager);
+//					manager.firePluginUpdate();
+//					showGraphMenuItem.setEnabled(false);
+//					for(ChannelManager  cm:channels){
+//						addGraph(cm.getChannelRecorder());
+//					}
+//				}
+//			}
+//		});
 		showSequencerConf.addActionListener(new ActionListener() {
 			
 			@Override
@@ -241,7 +246,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		return null;
 	}
 	public void addActionListener(ActionListener l) {
-		showGraphMenuItem.addActionListener(l);
+//		showGraphMenuItem.addActionListener(l);
 		graphOptionsMenuItem.addActionListener(l);
 		exportData.addActionListener(l);
 	}
