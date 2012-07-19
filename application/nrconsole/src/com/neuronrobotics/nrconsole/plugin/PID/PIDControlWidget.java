@@ -207,26 +207,30 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		repaint();
 		Updater up = new Updater();
 		up.start();
-		pidRunning.setVisible(false);
-//		if(group==0)
-//			Log.enableDebugPrint(false);
+		
+		if(getPIDConfiguration().isEnabled()){
+			pidStop.setEnabled(true);
+			advanced.setEnabled(true);
+			pidRunning.setVisible(true);
+		}else{
+			pidStop.setEnabled(false);
+			advanced.setEnabled(false);
+			pidRunning.setVisible(false);
+		}
 	}
 	
 	private void populatePID() {
 		advanced = new  AdvancedPIDWidget(this);
 	    advanced.setEnabled(false);
-		PIDConfiguration conf = getPIDConfiguration();
-		kp.setText(new Double(conf.getKP()).toString());
-		ki.setText(new Double(conf.getKI()).toString());
-		kd.setText(new Double(conf.getKD()).toString());
-		indexLatch.setText(new Double(conf.getIndexLatch()).toString());
-	    useLatch.setSelected(conf.isUseLatch());
-	    stopOnLatch.setSelected(conf.isStopOnIndex());
-		inverted.setSelected(conf.isInverted());
-//		if(conf.isEnabled()){
-//			pidStop.setEnabled(true);
-//			advanced.setEnabled(true);
-//		}
+		getPIDConfiguration();
+		kp.setText(new Double(getPIDConfiguration().getKP()).toString());
+		ki.setText(new Double(getPIDConfiguration().getKI()).toString());
+		kd.setText(new Double(getPIDConfiguration().getKD()).toString());
+		indexLatch.setText(new Double(getPIDConfiguration().getIndexLatch()).toString());
+	    useLatch.setSelected(getPIDConfiguration().isUseLatch());
+	    stopOnLatch.setSelected(getPIDConfiguration().isStopOnIndex());
+		inverted.setSelected(getPIDConfiguration().isInverted());
+
 	}
 	
 
@@ -242,7 +246,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	public PIDControlGui getGui() {
 		return tab;
 	}
-	void stopPID(boolean b){
+	public void stopPID(boolean b){
 		getPidStop().setEnabled(false);
 		getPIDConfiguration().setEnabled(false);
 		if(b)
@@ -280,10 +284,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	
 	public void onPIDEvent(PIDEvent e) {
 		if(e.getGroup()==getGroup()){
-			//System.out.println("From PID control widget: "+e);
-			
-			setPositionDisplay(e.getValue());
-			
+			System.out.println("From PID control widget: "+e);
+			setPositionDisplay(e.getValue());	
 		}
 	}
 	
@@ -429,6 +431,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		for(int i=0;i<retry;i++){
 			try{
 				getGui().getPidDevice().ConfigurePIDController(getPIDConfiguration());
+				//throw new RuntimeException("");
 				return;
 			}catch(Exception e){
 				ex=e;
