@@ -375,7 +375,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	@Override
 	public void setActive(boolean b) {
 		if(active && DyIORegestry.get().isAvailable() && !b){
-			DyIORegestry.get().killAllPidGroups();
+			//DyIORegestry.get().killAllPidGroups();
 			for(int i =0;i<24;i++){
 //				if(DyIORegestry.get().getMode(i) != DyIOChannelMode.DIGITAL_IN)
 //					DyIORegestry.get().setMode(i, DyIOChannelMode.DIGITAL_IN);
