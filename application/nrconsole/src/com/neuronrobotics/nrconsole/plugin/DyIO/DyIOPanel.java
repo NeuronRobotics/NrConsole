@@ -215,6 +215,8 @@ public class DyIOPanel extends JPanel {
 		DyIOPowerState state;
 		boolean newState =false;
 		public void setState(DyIOPowerState s){
+			if(!DyIORegestry.get().isBrownOutDetectEnabled())
+				return;
 			if(!newState) {
 				old = state;
 			}
