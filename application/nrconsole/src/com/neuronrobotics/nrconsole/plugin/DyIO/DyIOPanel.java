@@ -40,7 +40,7 @@ public class DyIOPanel extends JPanel {
 	private JLabel mac = new JLabel("MAC: 00:00:00:00:00:00");
 	private JLabel fw = new JLabel("FW Version: ?.?.?");
 	private JButton fwInfo = new JButton("About FW...");
-	private JCheckBox brownOutDetect = new JCheckBox("Brown Out");
+	private JCheckBox brownOutDetect = new JCheckBox("Safe Mode");
 	public DyIOPanel() {
 		try{
 			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio-red2.png"));
