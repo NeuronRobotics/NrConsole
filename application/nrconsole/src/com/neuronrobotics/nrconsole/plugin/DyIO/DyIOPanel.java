@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -39,6 +40,7 @@ public class DyIOPanel extends JPanel {
 	private JLabel mac = new JLabel("MAC: 00:00:00:00:00:00");
 	private JLabel fw = new JLabel("FW Version: ?.?.?");
 	private JButton fwInfo = new JButton("About FW...");
+	private JCheckBox brownOutDetect = new JCheckBox("Brown Out");
 	public DyIOPanel() {
 		try{
 			image = new ImageIcon(DyIOPanel.class.getResource("images/dyio-red2.png"));
@@ -81,16 +83,37 @@ public class DyIOPanel extends JPanel {
 				}
 			}
 		});
+	    brownOutDetect.setSelected(true);
+	    brownOutDetect.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(brownOutDetect.isSelected()){
+					System.out.println("Enabling DyIO Brown Out Detect");
+					DyIORegestry.get().enableBrownOutDetect(true);
+				}else{
+					System.out.println("Disabling DyIO Brown Out Detect");
+					DyIORegestry.get().enableBrownOutDetect(false);
+				}
+				DyIORegestry.get().fireDyIOEvent(new DyIOPowerEvent(	DyIORegestry.get().getBankAState(),
+																		DyIORegestry.get().getBankBState(),
+																		DyIORegestry.get().getBatteryVoltage(true)
+																		)
+				);
+			}
+		});
 	    
 	    int allignment = 220;
 	    add(voltage, "pos "+allignment+" 82");
 	    add(refresh, "pos "+allignment+" 102");
 	    
-	    add(reset , "pos  "+allignment+" 490");
+	   
 	    add(new JLabel("MAC:"), "pos "+allignment+" 130");
 	    add(mac, "pos "+allignment+" 150");
 	    add(fw, "pos "+allignment+" 175");
 	    add(fwInfo, "pos "+allignment+" 200");
+	    add(brownOutDetect, "pos "+allignment+" 465");
+	    add(reset , "pos  "+allignment+" 490");
 		int ledPos = 12*34+135;
 		add(A, "pos 390 "+ledPos);
 		add(B, "pos 155 "+ledPos);

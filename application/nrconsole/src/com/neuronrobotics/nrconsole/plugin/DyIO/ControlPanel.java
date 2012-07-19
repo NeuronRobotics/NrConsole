@@ -71,7 +71,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 			//Invalid state, ignore for now...
 			return;
 		}
-		if(hasServ == false){
+		if(hasServ == false && getManager().getChannel().getDevice().isBrownOutDetectEnabled()){
 			modes.removeItem(DyIOChannelMode.SERVO_OUT);
 		}else{
 			boolean servoExists = false;
