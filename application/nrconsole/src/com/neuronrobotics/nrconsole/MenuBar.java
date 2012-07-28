@@ -15,9 +15,14 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
+import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
+import com.neuronrobotics.nrconsole.plugin.kinematics.NRConsoleKinematicsLabPlugin;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class MenuBar extends JMenuBar implements IConnectionEventListener {
@@ -27,12 +32,15 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	
 	private JMenuItem disconnectMenuItem = new JMenuItem("Disconnect");
 	private JMenuItem connectionMenuItem = new JMenuItem("Set Connection");
+	private JMenuItem virtualPid = new JMenuItem("Virtual PID");
 	private JMenuItem aboutMenuItem = new JMenuItem("About NRConsole");
+	private JMenuItem kinematicsLab = new JMenuItem("Kinematics Lab");
 	private PluginManager manager;
 	private boolean ready=false;
 	JMenu fileMenu;
 	JMenu aboutMenu;
 	JMenu connectionMenu;
+	JMenu advanced;
 	private JFrame aboutFrame;
 	private JPanel about = new JPanel(new MigLayout());
 	public MenuBar(PluginManager console) {
@@ -47,13 +55,18 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		connectionMenu= new JMenu("Connection");
 		connectionMenu.add(connectionMenuItem);
 		connectionMenu.add(disconnectMenuItem);
+		connectionMenu.add(virtualPid);
 		
 		aboutMenu = new JMenu("About");
 		aboutMenu.add(aboutMenuItem);
 		
+		advanced = new JMenu("Advanced");
+		advanced.add(kinematicsLab);
+		
 	    add(fileMenu);
 	    add(connectionMenu);
 	    add(aboutMenu);
+	    add(advanced);
 	    about.add(new JLabel(NRConsoleWindow.getConsoleVersion()),"wrap");
 	    //about.add(new JLabel("Build date: "+SDKBuildInfo.getBuildDate()),"wrap");
 	}
@@ -62,6 +75,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		add(fileMenu);
 	    add(connectionMenu);
 	    add(aboutMenu);
+	    add(advanced);
 	    if(menues != null) {
 		    for(JMenu m:menues){
 		    	if (m != null)
@@ -110,6 +124,16 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 				disconnect();	
 			}
 		});
+		virtualPid.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				disconnect();
+				manager.connectVirtualPID();
+				manager.firePluginUpdate();
+				ready = true;
+			}
+		});
 		
 		//connectionMenuItem.setAction(new ConnectionAction());
 		connectionMenuItem.setMnemonic(KeyEvent.VK_C);
@@ -118,6 +142,17 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 				connect();
 			}
 		});
+		
+		kinematicsLab.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				new NRConsoleKinematicsLabPlugin(manager);
+				manager.firePluginUpdate();
+			}
+		});
+		
 	}
 	
 	public void connect(){

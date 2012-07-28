@@ -28,6 +28,7 @@ public class PluginManager {
 	private ArrayList<String >names=null;
 	private int width=1095;
 	private int height=700;
+	private boolean virtual = false;
 	public PluginManager(){
 		update();
 	}
@@ -234,5 +235,17 @@ public class PluginManager {
 	}
 	public int getMinimumHeight() {
 		return height;
+	}
+
+	public void connectVirtualPID() {
+		for(int i=0;i<plugins.size();i++){
+			INRConsoleTabedPanelPlugin pl= plugins.get(i);
+			if(pl.getClass().toString().contains("NRConsolePIDPlugin")) {
+				NRConsolePIDPlugin pid = (NRConsolePIDPlugin)pl;
+				pid.startVirtual();
+				setNameSpaces(pid.getPidDevice().getNamespaces());
+				updateNamespaces();
+			}
+		}
 	}
 }

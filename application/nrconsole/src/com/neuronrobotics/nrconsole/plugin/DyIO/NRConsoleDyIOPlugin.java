@@ -200,6 +200,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			public void actionPerformed(ActionEvent arg0) {
 				new Thread() {
 					public void run() {
+						manager.removeNRConsoleTabedPanelPlugin("NRConsolePIDPlugin");
 						NRConsolePIDPlugin p =new NRConsolePIDPlugin(manager);
 						p.isMyNamespace(manager.getNameSpaces());
 						p.setConnection(DyIORegestry.get().getConnection());
