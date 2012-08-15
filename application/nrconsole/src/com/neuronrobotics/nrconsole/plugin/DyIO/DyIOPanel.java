@@ -90,10 +90,10 @@ public class DyIOPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				if(brownOutDetect.isSelected()){
 					System.out.println("Enabling DyIO Brown Out Detect");
-					DyIORegestry.get().enableBrownOutDetect(true);
+					DyIORegestry.get().setServoPowerSafeMode(true);
 				}else{
 					System.out.println("Disabling DyIO Brown Out Detect");
-					DyIORegestry.get().enableBrownOutDetect(false);
+					DyIORegestry.get().setServoPowerSafeMode(false);
 				}
 				DyIORegestry.get().fireDyIOEvent(new DyIOPowerEvent(	DyIORegestry.get().getBankAState(),
 																		DyIORegestry.get().getBankBState(),

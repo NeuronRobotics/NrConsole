@@ -97,7 +97,7 @@ public class HexapodConfigPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				start.setEnabled(false);
 				try{
-					DyIORegestry.get().enableBrownOutDetect(false);
+					DyIORegestry.get().setServoPowerSafeMode(false);
 					setConfigEnabled(true);
 					if(defaultConfig.isSelected()){
 						setWalker(new BasicWalker(DyIORegestry.get()));
