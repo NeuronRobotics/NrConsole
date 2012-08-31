@@ -212,6 +212,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 			pidStop.setEnabled(true);
 			advanced.setEnabled(true);
 			pidRunning.setVisible(true);
+			graphVals();
 		}else{
 			pidStop.setEnabled(false);
 			advanced.setEnabled(false);
