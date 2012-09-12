@@ -66,7 +66,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	    add(fileMenu);
 	    add(connectionMenu);
 	    add(aboutMenu);
-	    add(advanced);
+	    //add(advanced);
 	    about.add(new JLabel(NRConsoleWindow.getConsoleVersion()),"wrap");
 	    //about.add(new JLabel("Build date: "+SDKBuildInfo.getBuildDate()),"wrap");
 	}
@@ -75,7 +75,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		add(fileMenu);
 	    add(connectionMenu);
 	    add(aboutMenu);
-	    add(advanced);
+	    //add(advanced);
 	    if(menues != null) {
 		    for(JMenu m:menues){
 		    	if (m != null)
