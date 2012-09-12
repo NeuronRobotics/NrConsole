@@ -171,8 +171,10 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		//collectionMenu.add(showGraphMenuItem);
 		collectionMenu.add(exportData);
 		collectionMenu.add(showPidConf);
+		
 		collectionMenu.add(showSequencerConf);
 		collectionMenu.add(showHexapodConf);
+		collectionMenu.add(showCloud);
 //		showGraphMenuItem.setMnemonic(KeyEvent.VK_G);
 //		showGraphMenuItem.addActionListener(new ActionListener() {
 //			public void actionPerformed(ActionEvent e) {

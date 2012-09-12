@@ -14,7 +14,6 @@ public class NRDyIOGoogleChat extends AbstractNRConsoleTabedPanelPlugin {
 	private GoogleChatLogin gui;
 	public NRDyIOGoogleChat(PluginManager pm) {
 		super(myNames, pm);
-		
 	}
 
 	@Override
