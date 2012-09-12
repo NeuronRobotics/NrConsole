@@ -153,6 +153,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		if(srv == sc){
 			sliderUI.removeChangeListener(this);
 			sliderUI.setValue(position);
+			valueUI.setText(formatValue(position));
 			sliderUI.addChangeListener(this);
 		}
 	}

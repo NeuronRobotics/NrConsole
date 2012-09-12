@@ -92,27 +92,16 @@ public class GoogleChatLogin extends JPanel implements IChatLog {
 		add(new JLabel("Log:"),"wrap");
 		add(log);
 		disconnect.setEnabled(false);
-		connect.addActionListener(new ActionListener() {
-			
+		pass.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String u = user.getText()+"@gmail.com";
-					String p = new String(pass.getPassword());
-					//System.out.println("Login= "+u+":"+p);
-					eng = new GoogleChatEngine(	new DyIOConversationFactory(mine),
-												u,
-												p);
-					connect.setEnabled(false);
-					user.setEnabled(false);
-					pass.setEnabled(false);
-					disconnect.setEnabled(true);
-					log.setText(u+" connected...Success!\n");
-				} catch (XMPPException e1) {
-					Log.error("Connection failed");
-					e1.printStackTrace();
-				}
-
+				onConnect();
+			}
+		});
+		connect.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onConnect();
 			}
 		});
 		
@@ -127,6 +116,25 @@ public class GoogleChatLogin extends JPanel implements IChatLog {
 				disconnect.setEnabled(false);
 			}
 		});
+	}
+	
+	private void onConnect(){
+		try {
+			String u = user.getText()+"@gmail.com";
+			String p = new String(pass.getPassword());
+			//System.out.println("Login= "+u+":"+p);
+			eng = new GoogleChatEngine(	new DyIOConversationFactory(mine),
+										u,
+										p);
+			connect.setEnabled(false);
+			user.setEnabled(false);
+			pass.setEnabled(false);
+			disconnect.setEnabled(true);
+			log.setText(u+" connected...Success!\n");
+		} catch (XMPPException e1) {
+			Log.error("Connection failed");
+			e1.printStackTrace();
+		}
 	}
 
 	public boolean setConnection(BowlerAbstractConnection connection) {
