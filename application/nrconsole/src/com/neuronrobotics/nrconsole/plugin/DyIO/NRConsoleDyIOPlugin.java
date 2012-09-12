@@ -23,6 +23,7 @@ import com.neuronrobotics.graphing.GraphingOptionsDialog;
 import com.neuronrobotics.graphing.GraphingWindow;
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.plugin.DyIO.GoogleChat.NRDyIOGoogleChat;
 import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
@@ -47,6 +48,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private JMenuItem showHexapodConf = new JMenuItem("Show Hexapod Configuration");
 	private JMenuItem showSequencerConf = new JMenuItem("Show Sequencer Configuration");
 	private JMenuItem showPidConf = new JMenuItem("Show P.I.D. Configuration");
+	private JMenuItem showCloud = new JMenuItem("Show Cloud Computing Configuration");
 	private JMenuItem showGettingStarted = new JMenuItem("Getting Started");
 	private JMenuItem graphOptionsMenuItem = new JMenuItem("Graphing Options");
 	private JMenuItem exportData = new JMenuItem("Export Data to File");
@@ -207,6 +209,20 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 						//new NRConsoleSchedulerPlugin(manager);
 						manager.firePluginUpdate();
 						showPidConf.setEnabled(false);
+					}
+				}.start();
+			}
+		});
+		
+		showCloud.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new Thread() {
+					public void run() {
+						NRDyIOGoogleChat p =new NRDyIOGoogleChat(manager);
+						p.setConnection(DyIORegestry.get().getConnection());
+						manager.firePluginUpdate();
+						showCloud.setEnabled(false);
 					}
 				}.start();
 			}
