@@ -45,7 +45,7 @@ public class SliderChannelUI extends ControlWidget implements ChangeListener, Ac
 		sliderUI.setMaximum(255);
 		sliderUI.setMajorTickSpacing(15);
 		sliderUI.setPaintTicks(true);
-		
+		liveUpdate.setSelected(true);
 		
 		add(sliderUI);
 		add(valueUI);
