@@ -210,6 +210,7 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 			switch(mode) {
 			case ANALOG_IN:
 			case COUNT_IN_INT:
+			case DIGITAL_IN:
 				back.add(mode);
 				break;
 			default:
@@ -225,6 +226,7 @@ public class DyPIDControlWidget extends JPanel implements IDyIOEventListener{
 			case SERVO_OUT:
 			case DC_MOTOR_VEL:
 			case PWM_OUT:
+			case DIGITAL_OUT:
 				back.add(mode);
 				break;
 			default:
