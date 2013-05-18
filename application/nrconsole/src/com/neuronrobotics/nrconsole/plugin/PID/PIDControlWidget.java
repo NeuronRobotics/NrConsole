@@ -20,6 +20,7 @@ import net.miginfocom.swing.MigLayout;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PDVelocityConfiguration;
 import com.neuronrobotics.sdk.pid.PIDConfiguration;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
@@ -31,6 +32,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private JTextField kp=new JTextField(10);
 	private JTextField ki=new JTextField(10);
 	private JTextField kd=new JTextField(10);
+	private JTextField vkp=new JTextField(10);
+	private JTextField vkd=new JTextField(10);
 	private JTextField indexLatch=new JTextField(10);
 	private JCheckBox  inverted =new JCheckBox("Invert control");
 	private JCheckBox  useLatch =new JCheckBox("Use Latch");
@@ -54,6 +57,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 
 	private int group;
 	private PIDConfiguration pidconfig; 
+	private PDVelocityConfiguration velconfig; 
 	private int setpointValue;
 	private int positionValue;
 	public PIDControlWidget(int group, int startValue, PIDControlGui tab) {
@@ -73,7 +77,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPidSet().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				double p=0,i=0,d=0,l=0;
+				double p=0,i=0,d=0,l=0,vp,vd;
 				try{
 					p=Double.parseDouble(kp.getText());
 				}catch(Exception e){
@@ -102,7 +106,21 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 					showMessage( "Bad PID values, resetting.",e);
 					return;
 				}
-				setPID(p, i, d,l, useLatch.isSelected(),  stopOnLatch.isSelected());
+				try{
+					vp=Double.parseDouble(vkp.getText());
+				}catch(Exception e){
+					vkp.setText(new Double(.1).toString());
+					showMessage( "Bad PID values, resetting.",e);
+					return;
+				}
+				try{
+					vd=Double.parseDouble(vkd.getText());
+				}catch(Exception e){
+					vkd.setText(new Double(0).toString());
+					showMessage( "Bad PID values, resetting.",e);
+					return;
+				}
+				setPID(p, i, d,vp,vd,l, useLatch.isSelected(),  stopOnLatch.isSelected());
 				int cur = GetPIDPosition();
 				//System.out.println("Current position="+cur+" group="+getGroup());
 				setSetpoint(cur);
@@ -151,13 +169,19 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		JPanel constants = new JPanel(new MigLayout());
 		constants.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 	    constants.setMinimumSize(new Dimension(300, 50));
-	    constants.add(new JLabel("PID Gain Constants"),"wrap");
+	    constants.add(new JLabel("PID Position Gain Constants"),"wrap");
 		constants.add(new JLabel("proportional (Kp)"));
 	    constants.add(kp,"wrap");
 	    constants.add(new JLabel("integral (Ki)"));
 	    constants.add(ki,"wrap");
 	    constants.add(new JLabel("derivitive (Kd)"));
 	    constants.add(kd,"wrap");
+	    
+	    constants.add(new JLabel("PD Velocity Gain Constants"),"wrap");
+		constants.add(new JLabel("proportional (Kp)"));
+	    constants.add(vkp,"wrap");
+	    constants.add(new JLabel("derivitive (Kd)"));
+	    constants.add(vkd,"wrap");
 
 	    constants.add(useLatch,"wrap");
 	    
@@ -227,6 +251,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		kp.setText(new Double(getPIDConfiguration().getKP()).toString());
 		ki.setText(new Double(getPIDConfiguration().getKI()).toString());
 		kd.setText(new Double(getPIDConfiguration().getKD()).toString());
+		vkp.setText(new Double(getPDVelocityConfiguration().getKP()).toString());
+		vkd.setText(new Double(getPDVelocityConfiguration().getKD()).toString());
 		indexLatch.setText(new Double(getPIDConfiguration().getIndexLatch()).toString());
 	    useLatch.setSelected(getPIDConfiguration().isUseLatch());
 	    stopOnLatch.setSelected(getPIDConfiguration().isStopOnIndex());
@@ -255,7 +281,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		advanced.setEnabled(false);
 		pidRunning.setVisible(false);
 	}
-	private void setPID(double p,double i,double d, double latch, boolean use, boolean stop){
+	private void setPID(double p,double i,double d,double vp,double vd, double latch, boolean use, boolean stop){
 		setSet(true);
 		getPidStop().setEnabled(true);
 		getPIDConfiguration().setEnabled(true);
@@ -267,6 +293,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPIDConfiguration().setIndexLatch(latch);
 		getPIDConfiguration().setUseLatch(use);
 		getPIDConfiguration().setStopOnIndex(stop);
+		getPDVelocityConfiguration().setKP(vp);
+		getPDVelocityConfiguration().setKD(vd);
 		ConfigurePIDController();
 		advanced.setEnabled(true);
 	}
@@ -408,6 +436,25 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
         ex.printStackTrace();
 		return 0;
 	}
+	private PDVelocityConfiguration getPDVelocityConfiguration(){
+		Exception ex = new Exception();
+		for(int i=0;i<retry;i++){
+			try{
+				if(velconfig==null){
+					velconfig = getGui().getPidDevice().getPDVelocityConfiguration(getGroup());
+				}
+				velconfig.setGroup(getGroup());
+				return velconfig;
+			}catch(Exception e){
+				ex=e;
+			}
+		}
+		showMessage("Configuration get failed "+retry+"times on group #"+getGroup(),ex);
+        ex.printStackTrace();
+        velconfig =new PDVelocityConfiguration();
+        velconfig.setGroup(getGroup());
+		return velconfig;
+	}
 	private PIDConfiguration getPIDConfiguration(){
 		Exception ex = new Exception();
 		for(int i=0;i<retry;i++){
@@ -432,6 +479,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		for(int i=0;i<retry;i++){
 			try{
 				getGui().getPidDevice().ConfigurePIDController(getPIDConfiguration());
+				getGui().getPidDevice().ConfigurePDVelovityController(getPDVelocityConfiguration());
 				//throw new RuntimeException("");
 				return;
 			}catch(Exception e){

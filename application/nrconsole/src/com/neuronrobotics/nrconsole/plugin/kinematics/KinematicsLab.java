@@ -24,7 +24,7 @@ import com.neuronrobotics.nrconsole.util.XmlFilter;
 import com.neuronrobotics.sdk.addons.kinematics.DHParameterKinematics;
 import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
 import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.IPIDControl;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 

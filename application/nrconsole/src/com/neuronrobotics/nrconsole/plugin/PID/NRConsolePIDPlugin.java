@@ -23,7 +23,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
-import com.neuronrobotics.sdk.genericdevice.GenericPIDDevice;
+import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
 
 public class NRConsolePIDPlugin extends AbstractNRConsoleTabedPanelPlugin {
