@@ -4,14 +4,18 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerMethod;
 import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 
-public class BowlerRPCDisplay extends JPanel {
+public class BowlerRPCDisplay extends JPanel implements TreeSelectionListener {
 
 	/**
 	 * 
@@ -21,9 +25,12 @@ public class BowlerRPCDisplay extends JPanel {
 	private GenericDevice dev;
 	private JTree display;
 	private DefaultMutableTreeNode root = new DefaultMutableTreeNode("Bowler Namespaces");
+	private ArrayList< RpcCommandPanel> commandPanels = new ArrayList< RpcCommandPanel>();
+	private JPanel controlPanel = new JPanel();
 	
  	public BowlerRPCDisplay(){
 		setName("Bowler RPC");
+		setLayout(new MigLayout());
 		
 	}
 
@@ -44,27 +51,33 @@ public class BowlerRPCDisplay extends JPanel {
 			ArrayList<RpcEncapsulation> rpcSet = dev.getRpcList(s);
 			
 			for(RpcEncapsulation r:rpcSet){
-				DefaultMutableTreeNode rpcDhild = new DefaultMutableTreeNode(r.getRpc());
-				if(r.getMethod() == BowlerMethod.GET){
+				
+				DefaultMutableTreeNode rpcDhild = new DefaultMutableTreeNode(r.getRpc());			
+				RpcCommandPanel control = new RpcCommandPanel(r, dev,rpcDhild);
+				
+				if(r.getDownstreamMethod() == BowlerMethod.GET){
 					if(getTree == null)
 						getTree = new DefaultMutableTreeNode("GET");
 					getTree.add(rpcDhild);
 				}
-				if(r.getMethod() == BowlerMethod.POST){
+				if(r.getDownstreamMethod() == BowlerMethod.POST){
 					if(postTree == null)
 						postTree = new DefaultMutableTreeNode("POST");
 					postTree.add(rpcDhild);
 				}
-				if(r.getMethod() == BowlerMethod.CRITICAL){
+				if(r.getDownstreamMethod() == BowlerMethod.CRITICAL){
 					if(critTree == null)
 						critTree = new DefaultMutableTreeNode("CRITICAL");
 					critTree.add(rpcDhild);
 				}
-				if(r.getMethod() == BowlerMethod.ASYNCHRONOUS){
+				if(r.getDownstreamMethod() == BowlerMethod.ASYNCHRONOUS){
 					if(asynTree == null)
 						asynTree = new DefaultMutableTreeNode("ASYNCHRONOUS");
 					asynTree.add(rpcDhild);
 				}
+				
+				
+				commandPanels.add(control);
 			}
 			if(getTree!=null)
 				namespaceTree.add(getTree);
@@ -79,7 +92,22 @@ public class BowlerRPCDisplay extends JPanel {
 		}
 		
 		display= new JTree(root);
-		add(display);
+		display.addTreeSelectionListener(this);
+		
+		add(display,"cell 0 0,alignx leading");
+		add(controlPanel,"cell 1 0,alignx trailing");
 		return dev.connect();
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent arg0) {
+		
+		for(RpcCommandPanel r:commandPanels){
+			if(r.getRpcDhild() == display.getLastSelectedPathComponent()){
+				controlPanel.removeAll();
+				r.enableCommands();
+				controlPanel.add(r);
+			}
+		}
 	}
 }

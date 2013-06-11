@@ -10,7 +10,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class NRConsoleBowlerRPCDisplayPlugin extends AbstractNRConsoleTabedPanelPlugin {
 	
-	public static final String[] myNames ={"bcs.core.*"};
+	public static final String[] myNames ={"bcs.rpc.*"};
 	
 	BowlerRPCDisplay display = new BowlerRPCDisplay();
 	
