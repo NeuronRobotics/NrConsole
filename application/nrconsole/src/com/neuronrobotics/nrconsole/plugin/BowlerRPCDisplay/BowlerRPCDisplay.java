@@ -7,6 +7,8 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.RpcEncapsulation;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 
 public class BowlerRPCDisplay extends JPanel {
@@ -33,15 +35,47 @@ public class BowlerRPCDisplay extends JPanel {
 		
 		for(String s:namespaces){
 			String [] split = s.split(";");
-			DefaultMutableTreeNode child = new DefaultMutableTreeNode(split[0]);
+			DefaultMutableTreeNode namespaceTree = new DefaultMutableTreeNode(split[0]);
+			DefaultMutableTreeNode getTree = null;
+			DefaultMutableTreeNode postTree = null;
+			DefaultMutableTreeNode critTree = null;
+			DefaultMutableTreeNode asynTree = null;
+
+			ArrayList<RpcEncapsulation> rpcSet = dev.getRpcList(s);
 			
-			ArrayList<String> rpcSet = dev.getRpcList(s);
-			for(String r:rpcSet){
-				DefaultMutableTreeNode rpcDhild = new DefaultMutableTreeNode(r);
-				child.add(rpcDhild);
+			for(RpcEncapsulation r:rpcSet){
+				DefaultMutableTreeNode rpcDhild = new DefaultMutableTreeNode(r.getRpc());
+				if(r.getMethod() == BowlerMethod.GET){
+					if(getTree == null)
+						getTree = new DefaultMutableTreeNode("GET");
+					getTree.add(rpcDhild);
+				}
+				if(r.getMethod() == BowlerMethod.POST){
+					if(postTree == null)
+						postTree = new DefaultMutableTreeNode("POST");
+					postTree.add(rpcDhild);
+				}
+				if(r.getMethod() == BowlerMethod.CRITICAL){
+					if(critTree == null)
+						critTree = new DefaultMutableTreeNode("CRITICAL");
+					critTree.add(rpcDhild);
+				}
+				if(r.getMethod() == BowlerMethod.ASYNCHRONOUS){
+					if(asynTree == null)
+						asynTree = new DefaultMutableTreeNode("ASYNCHRONOUS");
+					asynTree.add(rpcDhild);
+				}
 			}
+			if(getTree!=null)
+				namespaceTree.add(getTree);
+			if(postTree!=null)
+				namespaceTree.add(postTree);
+			if(critTree!=null)
+				namespaceTree.add(critTree);
+			if(asynTree!=null)
+				namespaceTree.add(asynTree);
 			
-			root.add(child);
+			root.add(namespaceTree);
 		}
 		
 		display= new JTree(root);
