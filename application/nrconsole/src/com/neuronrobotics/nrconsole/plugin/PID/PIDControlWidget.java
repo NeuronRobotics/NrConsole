@@ -313,13 +313,13 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	
 	public void onPIDEvent(PIDEvent e) {
 		if(e.getGroup()==getGroup()){
-			System.out.println("From PID control widget: "+e);
+			//System.out.println("From PID control widget: "+e);
 			setPositionDisplay(e.getValue());	
 		}
 	}
 	
 	public void setInternalSetpoint(int setPoint){
-		System.out.println("Setting setpoint on group="+getGroup()+" value="+setPoint);
+		//System.out.println("Setting setpoint on group="+getGroup()+" value="+setPoint);
 		setpointValue=setPoint;
 		setpoint.setText(new Integer(setPoint).toString());
 		graphVals();

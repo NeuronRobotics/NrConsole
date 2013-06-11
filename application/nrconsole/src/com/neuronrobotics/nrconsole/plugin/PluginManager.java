@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javazoom.jl.decoder.Manager;
 
 import com.neuronrobotics.nrconsole.plugin.BowlerCam.NRConsoleBowlerCameraPlugin;
+import com.neuronrobotics.nrconsole.plugin.BowlerRPCDisplay.NRConsoleBowlerRPCDisplayPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.NRConsoleDyIOPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
@@ -193,6 +194,7 @@ public class PluginManager {
 		new NRConsolePIDPlugin(this);
 		new NRConsoleBowlerCameraPlugin(this);
 		new NRConsoleBootloaderPlugin(this);
+		new NRConsoleBowlerRPCDisplayPlugin(this);
 		//System.out.println("Updating plugins:"+plugins);
 		
 		//END HACK
