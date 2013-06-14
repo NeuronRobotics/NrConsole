@@ -107,6 +107,7 @@ public class BowlerRPCDisplay extends JPanel implements TreeSelectionListener {
 				controlPanel.removeAll();
 				r.enableCommands();
 				controlPanel.add(r);
+				controlPanel.repaint();
 			}
 		}
 	}

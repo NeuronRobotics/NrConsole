@@ -81,7 +81,7 @@ public class PIDGraph extends JPanel  {
 	 * long 
 	 */
 	private static final long serialVersionUID = 1L;
-	public void addEvent(double setpoint, double position) {
+	public synchronized void addEvent(double setpoint, double position) {
 		try{
 			
 			double[] data = {setpoint,position};
@@ -90,19 +90,17 @@ public class PIDGraph extends JPanel  {
 			dataTable.add(new GraphDataElement((long) time,data));
 			XYDataItem s = new XYDataItem(time,setpoint);
 			XYDataItem p = new XYDataItem(time,position);
-			
-			synchronized (xyDataset){
-				
-				if(setpoints.getItemCount()>99){
-					setpoints.remove(0);
-				}
-				setpoints.add(s);
-				
-				if(positions.getItemCount()>99){
-					positions.remove(0);
-				}
-				positions.add(p);
+
+			if(setpoints.getItemCount()>99){
+				setpoints.remove(0);
 			}
+			setpoints.add(s);
+			
+			if(positions.getItemCount()>99){
+				positions.remove(0);
+			}
+			positions.add(p);
+			Thread.sleep(5);
 
 		}catch(Exception e){
 			System.err.println("Failed to set a data point");
