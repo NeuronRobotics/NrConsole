@@ -68,7 +68,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		currentPos.setText(new Integer(startValue).toString());
 		setpointValue=startValue;
 		setPositionDisplay(startValue);
-		setLayout(new MigLayout());
+		setLayout(new MigLayout("", "[]", "[][][]"));
 		setGui(tab);
 		setGroup(group);
 		getPIDConfiguration();
@@ -225,8 +225,8 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		
 		graph = new PIDGraph(group);
 		
-		add(config,"wrap");
-		add(graph,"wrap");
+		add(config,"cell 0 0");
+		add(graph,"cell 0 1");
 		
 		repaint();
 		Updater up = new Updater();
