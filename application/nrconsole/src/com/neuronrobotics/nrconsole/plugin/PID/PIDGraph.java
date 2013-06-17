@@ -23,6 +23,7 @@ import org.jfree.util.Log;
 
 import com.neuronrobotics.graphing.CSVWriter;
 import com.neuronrobotics.graphing.GraphDataElement;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class PIDGraph extends JPanel  {
 	private ArrayList<GraphDataElement> dataTable = new ArrayList<GraphDataElement>();
@@ -34,6 +35,9 @@ public class PIDGraph extends JPanel  {
 	private int channel;
 	
 	private double startTime=System.currentTimeMillis();
+	
+	double[] data = {0,0};
+	
 	public PIDGraph(int channel){
 		this.channel=channel;
 		setLayout(new MigLayout());
@@ -81,34 +85,9 @@ public class PIDGraph extends JPanel  {
 	 * long 
 	 */
 	private static final long serialVersionUID = 1L;
-	public synchronized void addEvent(double setpoint, double position) {
-		try{
-			
-			double[] data = {setpoint,position};
-			double time = (System.currentTimeMillis()-startTime);
-			
-			dataTable.add(new GraphDataElement((long) time,data));
-			XYDataItem s = new XYDataItem(time,setpoint);
-			XYDataItem p = new XYDataItem(time,position);
-
-			if(setpoints.getItemCount()>99){
-				setpoints.remove(0);
-			}
-			setpoints.add(s);
-			
-			if(positions.getItemCount()>99){
-				positions.remove(0);
-			}
-			positions.add(p);
-			Thread.sleep(5);
-
-		}catch(Exception e){
-			System.err.println("Failed to set a data point");
-			e.printStackTrace();
-			Log.error(e);
-			Log.error(e.getStackTrace());
-			init();
-		}
+	public void addEvent(double setpoint, double position) {
+		data[0] =  setpoint;
+		data[1] =  position;
 	}
 	private void init(){
 		xyDataset.removeAllSeries();
@@ -116,9 +95,50 @@ public class PIDGraph extends JPanel  {
 		positions = new  XYSeries("Position");
 		xyDataset.addSeries(setpoints);
 		xyDataset.addSeries(positions);
+		new updaterThread().start();
 	}
 	private int getChannel() {
 		return channel;
+	}
+	
+	private class updaterThread extends Thread{
+		double[] lastData= {0,0};
+		public void run(){
+			while (true){
+				ThreadUtil.wait(50);
+				if(lastData[0] != data[0] || lastData[1]!=data[1]){
+					lastData[0]=data[0];
+					lastData[1]=data[1];
+					try{
+						
+						
+						double time = (System.currentTimeMillis()-startTime);
+						
+						dataTable.add(new GraphDataElement((long) time,data));
+						XYDataItem s = new XYDataItem(time,data[0]);
+						XYDataItem p = new XYDataItem(time,data[1]);
+
+						if(setpoints.getItemCount()>99){
+							setpoints.remove(0);
+						}
+						setpoints.add(s);
+						
+						if(positions.getItemCount()>99){
+							positions.remove(0);
+						}
+						positions.add(p);
+
+					}catch(Exception e){
+						System.err.println("Failed to set a data point");
+						e.printStackTrace();
+						Log.error(e);
+						Log.error(e.getStackTrace());
+						init();
+					}
+				}
+			}
+		}
+		
 	}
 
 }
