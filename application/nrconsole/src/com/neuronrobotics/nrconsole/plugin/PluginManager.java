@@ -158,10 +158,12 @@ public class PluginManager {
 		 for (INRConsoleTabedPanelPlugin p:plugins){
 			 if(p.isAcvive()){
 				 //System.out.println("Displaying: "+p.getClass());
-				 p.getTabPane().setBorder(BorderFactory.createLoweredBevelBorder());
-				 p.getTabPane().setSize(getMinimumDimention());
-				 p.getTabPane().setVisible(true);
-				 back.add(p.getTabPane());
+				 if(p.getTabPane()!=null){
+					 p.getTabPane().setBorder(BorderFactory.createLoweredBevelBorder());
+					 p.getTabPane().setSize(getMinimumDimention());
+					 p.getTabPane().setVisible(true);
+					 back.add(p.getTabPane());
+				 }
 			 }else {
 				 //System.out.println("\t\tInactive: "+p.getClass());
 			 }
