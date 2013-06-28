@@ -83,7 +83,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 		//We expect this to fail the connection.
 		//No response is expected
 		//Disconnect afterwards
-		BowlerDatagram bd =BowlerDatagramFactory.build(getAddress(), new ResetChipCommand(),0);
+		BowlerDatagram bd =BowlerDatagramFactory.build(getAddress(), new ResetChipCommand());
 		getConnection().sendAsync(bd);
 		try {
 			getConnection().getDataOuts().flush();
