@@ -127,7 +127,7 @@ public class RpcCommandPanel extends JPanel implements ActionListener {
 		Object[] values = new Object[tx.size()];
 		for (int i=0;i<values.length;i++){
 			values[i] = Integer.parseInt(tx.get(i).getText());
-		}
+		}	 
 		BowlerDatagram bd =device.send(rpc.getCommand(values));
 		rxRpc.setText(bd.getRPC());
 		Object [] up = rpc.parseResponse(bd);
