@@ -372,13 +372,13 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 
 	@Override
-	public void onDisconnect() {
+	public void onDisconnect(BowlerAbstractConnection source) {
 	
 	}
 
 
 	@Override
-	public void onConnect() {
+	public void onConnect(BowlerAbstractConnection source) {
 		// TODO Auto-generated method stub
 		
 	}

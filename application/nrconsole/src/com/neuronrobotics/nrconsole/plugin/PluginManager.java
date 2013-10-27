@@ -252,4 +252,8 @@ public class PluginManager {
 			}
 		}
 	}
+
+	public BowlerAbstractConnection getConnection() {
+		return connection;
+	}
 }

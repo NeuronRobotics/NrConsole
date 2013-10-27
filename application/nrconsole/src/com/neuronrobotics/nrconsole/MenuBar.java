@@ -21,6 +21,7 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
 import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.kinematics.NRConsoleKinematicsLabPlugin;
+import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -165,11 +166,11 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 				
 			}else {
 				disconnect();
-				onDisconnect();
+				onDisconnect(manager.getConnection());
 			}
 		}catch(Exception ex){
 			disconnect();
-			onDisconnect();
+			onDisconnect(manager.getConnection());
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Failed to connect to device, "+ex.getMessage(), "Bowler ERROR", JOptionPane.ERROR_MESSAGE);
 		}
@@ -188,14 +189,14 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	}
 	
 	@Override
-	public void onDisconnect() {
+	public void onDisconnect(BowlerAbstractConnection source) {
 		disconnectMenuItem.setEnabled(false);
 		connectionMenu.setEnabled(true);
 		setMenues(null);
 		ready = false;	
 	}
 	@Override
-	public void onConnect() {
+	public void onConnect(BowlerAbstractConnection source) {
 		disconnectMenuItem.setEnabled(true);
 		connectionMenu.setEnabled(true);
 	}
