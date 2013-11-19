@@ -106,7 +106,7 @@ public class PluginManager {
 			if(!gen.connect()) {
 				throw new InvalidConnectionException("Connection is invalid");
 			}
-			if(gen.ping()==null){
+			if(!gen.ping()){
 				connection = null;
 				throw new InvalidConnectionException("Communication failed");
 			}

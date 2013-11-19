@@ -33,7 +33,7 @@ public class NRBoot {
 	public NRBoot(String serialPort){
 		this.boot=new NRBootLoader(new SerialConnection(serialPort));
 		boot.connect();
-		if (boot.ping()!=null){
+		if (boot.ping()){
 			//System.out.println("Connection to bowler device ready");
 			return;
 		}

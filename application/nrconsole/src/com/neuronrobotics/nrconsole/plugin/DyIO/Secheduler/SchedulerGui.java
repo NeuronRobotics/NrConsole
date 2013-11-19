@@ -190,7 +190,7 @@ public class SchedulerGui extends JPanel{
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		DyIORegestry.setConnection(connection);
 		
-		return DyIORegestry.get().ping()!=null;
+		return DyIORegestry.get().ping();
 	}
 	
 	
