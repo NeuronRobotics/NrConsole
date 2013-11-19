@@ -113,11 +113,11 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 			DyIO.enableFWCheck();
 			DyIORegestry.get().checkFirmwareRev();
 		}catch(DyIOFirmwareOutOfDateException ex) {
-			try {
-				GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Update_Firmware");
-			} catch (Exception e) {
-			}
-			JOptionPane.showMessageDialog(null, "DyIO Firmware mis-match Warning\n"+ex.getMessage(), "DyIO Warning", JOptionPane.WARNING_MESSAGE);
+//			try {
+//				GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Update_Firmware");
+//			} catch (Exception e) {
+//			}
+//			JOptionPane.showMessageDialog(null, "DyIO Firmware mis-match Warning\n"+ex.getMessage(), "DyIO Warning", JOptionPane.WARNING_MESSAGE);
 		}
 		DyIO.disableFWCheck();
 		
