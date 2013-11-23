@@ -50,8 +50,9 @@ public class NRConsole implements ActionListener {
 		nrcFrame.setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 		
 		shower.start();
-		if(debug)
-			Log.enableDebugPrint(true);
+		if(debug){
+			Log.enableInfoPrint(true);
+		}
 		
 //		while(!nrcFrame.isShowing()){
 //			ThreadUtil.wait(100);
