@@ -51,7 +51,7 @@ public class NRConsole implements ActionListener {
 		
 		shower.start();
 		if(debug){
-			Log.enableInfoPrint(true);
+			Log.enableDebugPrint(true);
 		}
 		
 //		while(!nrcFrame.isShowing()){
