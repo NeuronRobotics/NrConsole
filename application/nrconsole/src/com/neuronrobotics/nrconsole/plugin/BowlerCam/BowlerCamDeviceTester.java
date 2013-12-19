@@ -60,8 +60,6 @@ public class BowlerCamDeviceTester{
 	 */
 	public static void main(String[] args) {
 		try {
-			Log.enableDebugPrint(true);
-			Log.enableSystemPrint(true);
 			new BowlerCamDeviceTester();
 		}catch (Exception e) {
 			e.printStackTrace();
