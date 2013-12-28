@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -19,18 +20,19 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 
-import com.neuronrobotics.sdk.pid.IPIDControl;
+import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 
 public class PIDControlGui extends JPanel {
 	private static final long serialVersionUID = 1L;
 	//private DyIO dyio=null;
-	private IPIDControl pid=null;
+	private IPidControlNamespace pid=null;
 	private boolean DyPID=false;
 	
 	private ArrayList<PIDControlWidget> widgits = new ArrayList<PIDControlWidget> ();
-	private JComboBox groupSelector = new JComboBox();
+	private JTabbedPane tabbedPane;
 	private JButton stopAll = new JButton("Stop All PID");
-	private PIDControlWidget selected;
+
+	
 	
 	public PIDControlGui() {
 		Log.info("Connecteing DyPID panel");
@@ -40,7 +42,7 @@ public class PIDControlGui extends JPanel {
 		init();
 	}
 	
-	public PIDControlGui(IPIDControl d) {
+	public PIDControlGui(IPidControlNamespace d) {
 		Log.info("Connecteing PID panel");
 		setPidDevice(d);
 		setDyPID(false);
@@ -66,7 +68,7 @@ public class PIDControlGui extends JPanel {
 		}
 	}
 	private void init() {
-		
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		setName("P.I.D.");
 		Log.info("Begining PID Control Gui");
 		setLayout(new MigLayout());
@@ -89,22 +91,10 @@ public class PIDControlGui extends JPanel {
 				JOptionPane.showMessageDialog(null, "Failed to create a PID widget", "DyPID ERROR", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			groupSelector.addItem(widgits.get(i));
+			tabbedPane.addTab("P.I.D. Chan "+i,widgits.get(i));
+			//groupSelector.addItem(widgits.get(i));
 		}
-		groupSelector.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				remove(selected);
-				selected =(PIDControlWidget) groupSelector.getSelectedItem();
-				selected.setVisible(true);
-				add(selected);
-				setVisible(true);
-				repaint();
-				selected.repaint();
-				selected.revalidate();
-				revalidate();
-			}
-		});
+
 		stopAll.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -112,11 +102,9 @@ public class PIDControlGui extends JPanel {
 			}
 		});
 		JPanel groups = new JPanel(new MigLayout());
-		groups.add(groupSelector,"wrap");
 		groups.add(stopAll,"wrap");
-		selected = widgits.get(0);
 		add(groups,"wrap");
-		add(selected,"wrap");
+		add(tabbedPane,"wrap");
 		Log.info("Started PID Control Gui");
 		//stopAll();
 	}
@@ -133,11 +121,11 @@ public class PIDControlGui extends JPanel {
 		return DyIORegestry.get();
 	}
 	
-	public void setPidDevice(IPIDControl pid) {
+	public void setPidDevice(IPidControlNamespace pid) {
 		this.pid = pid;
 	}
 	
-	public IPIDControl getPidDevice() {
+	public IPidControlNamespace getPidDevice() {
 		return pid;
 	}
 
