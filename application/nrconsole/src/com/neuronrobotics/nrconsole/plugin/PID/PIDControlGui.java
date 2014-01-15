@@ -91,7 +91,7 @@ public class PIDControlGui extends JPanel {
 				JOptionPane.showMessageDialog(null, "Failed to create a PID widget", "DyPID ERROR", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			tabbedPane.addTab("P.I.D. Chan "+i,widgits.get(i));
+			tabbedPane.addTab("PID "+i,widgits.get(i));
 			//groupSelector.addItem(widgits.get(i));
 		}
 
