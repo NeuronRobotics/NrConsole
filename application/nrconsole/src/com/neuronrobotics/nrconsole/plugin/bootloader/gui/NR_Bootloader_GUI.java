@@ -164,14 +164,14 @@ public class NR_Bootloader_GUI implements ActionListener {
     	}
     	if(file!=null){
     		fc.setSelectedFile(file);
-    		//System.out.println("Starting with: "+file.getAbsolutePath());
+    		System.out.println("Starting with: "+file.getAbsolutePath());
     	}else{
     		if(dir2 == null) {
     			fc.setCurrentDirectory(dir1);
-    			//System.out.println("Starting in: "+dir1.getAbsolutePath());
+    			System.out.println("Starting in: "+dir1.getAbsolutePath());
     		}
     		else {
-    			//System.out.println("Starting in: "+dir2.getAbsolutePath());
+    			System.out.println("Starting in: "+dir2.getAbsolutePath());
     			fc.setCurrentDirectory(dir2);
     		}
     	}
