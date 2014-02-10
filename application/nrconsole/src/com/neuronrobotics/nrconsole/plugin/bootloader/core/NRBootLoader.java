@@ -44,6 +44,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 				disconnect();
 			}
 		}
+		getConnection().setSynchronusPacketTimeoutTime(3000);
 		return isAvailable();
 		//Log.enableDebugPrint(true);
 		//Log.enableSystemPrint(true);

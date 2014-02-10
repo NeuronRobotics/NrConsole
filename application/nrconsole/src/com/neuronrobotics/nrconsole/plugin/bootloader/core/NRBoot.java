@@ -132,6 +132,7 @@ public class NRBoot {
 				}
 				reset();
 			}catch(Exception e) {
+				e.printStackTrace();
 				String message = "This device is not a bootloader";
         		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
 			}

@@ -101,9 +101,11 @@ public class NR_Bootloader_GUI implements ActionListener {
 		    		l.start();
 	        	}	
         	}catch(InvalidResponseException ex){
+        		ex.printStackTrace();
         		String message = "Device is not in bootloader mode!";
         		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
         	}catch(NoConnectionAvailableException ex){
+        		ex.printStackTrace();
         		String message = "Device is not no longer connected to bootloader";
         		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
         		resetPort();
