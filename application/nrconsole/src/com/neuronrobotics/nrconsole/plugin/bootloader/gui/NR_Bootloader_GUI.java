@@ -156,7 +156,7 @@ public class NR_Bootloader_GUI implements ActionListener {
     	File dir1 = new File (".");
     	File dir2=null; 
     	try {
-    		dir2 = new File ("../DyIO/FirmwarePublish/Dev/");
+    		dir2 = new File ("../../../microcontroller-bowler/DyIO/development/FirmwarePublish/Dev/");
     	}catch(Exception ex) {
     		ex.printStackTrace();
     	}
