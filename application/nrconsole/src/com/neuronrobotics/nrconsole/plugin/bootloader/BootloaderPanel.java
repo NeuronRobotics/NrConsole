@@ -99,7 +99,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
     	JFileChooser fc = new JFileChooser();
     	File dir2=null; 
     	try {
-    		dir2 = new File ("../DyIO/FirmwarePublish/Dev/");
+    		dir2 = new File ("../../../microcontroller-bowler/DyIO/development/FirmwarePublish/Dev/");
     		if(!dir2.exists()) {
     			dir2=new File ("../firmware/");
     			if(!dir2.exists()) {

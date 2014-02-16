@@ -101,9 +101,11 @@ public class NR_Bootloader_GUI implements ActionListener {
 		    		l.start();
 	        	}	
         	}catch(InvalidResponseException ex){
+        		ex.printStackTrace();
         		String message = "Device is not in bootloader mode!";
         		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
         	}catch(NoConnectionAvailableException ex){
+        		ex.printStackTrace();
         		String message = "Device is not no longer connected to bootloader";
         		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
         		resetPort();
@@ -156,20 +158,20 @@ public class NR_Bootloader_GUI implements ActionListener {
     	File dir1 = new File (".");
     	File dir2=null; 
     	try {
-    		dir2 = new File ("../DyIO/FirmwarePublish/Dev/");
+    		dir2 = new File ("../../../microcontroller-bowler/DyIO/development/FirmwarePublish/Dev/");
     	}catch(Exception ex) {
     		ex.printStackTrace();
     	}
     	if(file!=null){
     		fc.setSelectedFile(file);
-    		//System.out.println("Starting with: "+file.getAbsolutePath());
+    		System.out.println("Starting with: "+file.getAbsolutePath());
     	}else{
     		if(dir2 == null) {
     			fc.setCurrentDirectory(dir1);
-    			//System.out.println("Starting in: "+dir1.getAbsolutePath());
+    			System.out.println("Starting in: "+dir1.getAbsolutePath());
     		}
     		else {
-    			//System.out.println("Starting in: "+dir2.getAbsolutePath());
+    			System.out.println("Starting in: "+dir2.getAbsolutePath());
     			fc.setCurrentDirectory(dir2);
     		}
     	}
