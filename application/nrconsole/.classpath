@@ -12,5 +12,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/smack.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
+	<classpathentry kind="con" path="org.dyno.visual.swing.VS_LIBRARY/layoutext"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -11,12 +11,11 @@ import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.replicator.driver.DeltaForgeDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.serial.SerialConnection;
 
 public class CartesianController extends AbstractNRConsoleTabedPanelPlugin{
 	public static final String[] myNames ={"bcs.cartesian.*"};
 	
-	private JPanel panel=new JPanel(new MigLayout());
+	private CartesianPanel panel=new CartesianPanel();
 	private DeltaForgeDevice delt = new DeltaForgeDevice();
 	private NRPrinter printer=null;
 	
@@ -36,6 +35,8 @@ public class CartesianController extends AbstractNRConsoleTabedPanelPlugin{
 		delt.setConnection(connection);
 		delt.connect();
 		printer = new NRPrinter(delt);
+		
+		panel.setDevices(delt,printer);
 		
 		return delt.isAvailable();
 	}
