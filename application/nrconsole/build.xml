@@ -2,7 +2,7 @@
 <project default="deploy" name="Create Runnable Jar for Project NRConsole">
   <!--this file was created by Eclipse Runnable JAR Export Wizard-->
   <!--ANT 1.7 is required  -->
-	<property file="../NRSDK/src/com/neuronrobotics/sdk/config/build.properties"/>
+	<property file="../../../java-bowler/javasdk/NRSDK/src/com/neuronrobotics/sdk/config/build.properties"/>
 	<property name="app.path"      value="/${app.name}"/>
 	<property name="build.home"    value="${basedir}/build"/>
 	<property name="lib.home"      value="${basedir}/lib"/>
@@ -18,7 +18,7 @@
 	<property name="compile.deprecation" value="false"/>
 	<property name="compile.optimize"    value="true"/>
 	
-	<property name="baseDirUpOne"      value="${basedir}/.."/>
+	<property name="baseDirUpOne"      value="${basedir}/../../../java-bowler/javasdk/"/>
 	
 	<property name="jar.module" value="nr-console.jar"/>
 	<target name="clean"
@@ -36,7 +36,7 @@
 		<copy file="${baseDirUpOne}/NRSDK/target/${app.name}-${app.version}-jar-with-dependencies.jar" 
 			  				toFile="${basedir}/lib/${app.name}-${app.version}-jar-with-dependencies.jar" />
 	  	<!--<delete dir="/home/hephaestus/workspace/NRSDK/target/"/>-->
-	  	<ant antfile="${baseDirUpOne}/NRSDK/build.xml" inheritAll="true" target="deploy" dir="../NRSDK/"> 
+	  	<ant antfile="${baseDirUpOne}/NRSDK/build.xml" inheritAll="true" target="deploy" dir="${baseDirUpOne}/NRSDK/"> 
 	  		
 	  	</ant>
 		<delete file="${basedir}/lib/nrsdk*.jar"/>
