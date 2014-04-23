@@ -10,14 +10,16 @@ import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.replicator.driver.DeltaForgeDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class CartesianController extends AbstractNRConsoleTabedPanelPlugin{
 	public static final String[] myNames ={"bcs.cartesian.*"};
 	
-	private CartesianPanel panel=new CartesianPanel();
+	private SampleGuiNR gui = new SampleGuiNR();
 	private DeltaForgeDevice delt = new DeltaForgeDevice();
 	private NRPrinter printer=null;
+	
 	
 	public CartesianController(PluginManager pm) {
 		super(myNames, pm);
@@ -27,7 +29,8 @@ public class CartesianController extends AbstractNRConsoleTabedPanelPlugin{
 	@Override
 	public JPanel getTabPane() {
 		// TODO Auto-generated method stub
-		return  panel;
+		gui.setName("Cartesian Robot");
+		return  gui;
 	}
 
 	@Override
@@ -36,7 +39,7 @@ public class CartesianController extends AbstractNRConsoleTabedPanelPlugin{
 		delt.connect();
 		printer = new NRPrinter(delt);
 		
-		panel.setDevices(delt,printer);
+		gui.setKinematicsModel(printer);
 		
 		return delt.isAvailable();
 	}

@@ -16,6 +16,7 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlu
 import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.bootloader.NRConsoleBootloaderPlugin;
+import com.neuronrobotics.nrconsole.plugin.cartesian.CartesianController;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
@@ -192,6 +193,7 @@ public class PluginManager {
 		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 		// HACK this should load using OSGI
 		// Once instantiated they add themselves to the static list of plugins
+		new CartesianController(this);
 		new NRConsoleDyIOPlugin(this);
 		new NRConsolePIDPlugin(this);
 		new NRConsoleBowlerCameraPlugin(this);

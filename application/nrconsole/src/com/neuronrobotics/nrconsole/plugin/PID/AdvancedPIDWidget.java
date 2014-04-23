@@ -16,12 +16,9 @@ import net.miginfocom.swing.MigLayout;
 
 public class AdvancedPIDWidget extends JPanel{
 
-	private JButton advanced = new JButton("Advanced +");
-	private JFrame frame = new JFrame("Advanced PID controls");
 	private static final long serialVersionUID = 1L;
 	private PIDControlWidget pid;
-	
-	private JPanel PIDpanel;
+
 	
 	private StepLoop looper=null;
 	private SineTrack siner=null;
@@ -41,29 +38,13 @@ public class AdvancedPIDWidget extends JPanel{
 	public AdvancedPIDWidget(PIDControlWidget pid) {
 		setPid(pid);
 		setLayout(new MigLayout());
-		frame.setVisible(false);
-		add(advanced);
-		advanced.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				frame.setTitle("Group # "+(int)getPid().getGroup()+" Advanced Controls");
-				frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		        frame.pack();
-		        frame.setLocationRelativeTo(null);
-		        //frame.setSize(new Dimension(400, 400));
-		        frame.setVisible(true);
-			}
-		});
+
 		initFrame();
 	}
 	 
-	public void setEnabled(boolean vis) {
-		advanced.setEnabled(vis);
-		if(!vis)
-			frame.setVisible(false);
-	}
+
 	private void initFrame() {
-		PIDpanel = new JPanel(new MigLayout());
+		setLayout(new MigLayout());
 
 		JPanel stepPanel = new JPanel(new MigLayout());
 		
@@ -158,12 +139,8 @@ public class AdvancedPIDWidget extends JPanel{
 	    loopPanel.add(stopLoop);
 	    stopLoop.setEnabled(false);
 	    
-	    PIDpanel.add(stepPanel);
-	    PIDpanel.add(loopPanel);
-	 
-		PIDpanel.setVisible(true);
-		frame.add(PIDpanel);
-		frame.pack();
+	    add(stepPanel);
+	    add(loopPanel);
 	}
 	private void setPid(PIDControlWidget pid) {
 		this.pid = pid;

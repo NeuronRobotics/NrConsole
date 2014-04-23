@@ -193,9 +193,10 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	    	latchPanel.setVisible(false);
 	    	stopOnLatch.setSelected(false);
 	    }
-	    
 	    constants.add(getPidSet());
 	    constants.add(inverted);
+	    
+	    
 	    
 	    pidRunning.add(new JLabel("PID Running for group "+((int)getGroup())),"wrap");
 	    pidRunning.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
@@ -234,19 +235,18 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		
 		if(getPIDConfiguration().isEnabled()){
 			pidStop.setEnabled(true);
-			advanced.setEnabled(true);
 			pidRunning.setVisible(true);
 			graphVals();
 		}else{
 			pidStop.setEnabled(false);
-			advanced.setEnabled(false);
 			pidRunning.setVisible(false);
 		}
+		
+		
 	}
 	
 	private void populatePID() {
 		advanced = new  AdvancedPIDWidget(this);
-	    advanced.setEnabled(false);
 		getPIDConfiguration();
 		kp.setText(new Double(getPIDConfiguration().getKP()).toString());
 		ki.setText(new Double(getPIDConfiguration().getKI()).toString());
@@ -278,7 +278,6 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPIDConfiguration().setEnabled(false);
 		if(b)
 			ConfigurePIDController();
-		advanced.setEnabled(false);
 		pidRunning.setVisible(false);
 	}
 	private void setPID(double p,double i,double d,double vp,double vd, double latch, boolean use, boolean stop){
@@ -296,7 +295,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPDVelocityConfiguration().setKP(vp);
 		getPDVelocityConfiguration().setKD(vd);
 		ConfigurePIDController();
-		advanced.setEnabled(true);
+
 	}
 	public void setSet(boolean set) {
 		this.set = set;
