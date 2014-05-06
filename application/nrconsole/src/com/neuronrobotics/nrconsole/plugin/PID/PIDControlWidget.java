@@ -34,6 +34,9 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	private JTextField kd=new JTextField(10);
 	private JTextField vkp=new JTextField(10);
 	private JTextField vkd=new JTextField(10);
+	private JTextField upHys=new JTextField(10);
+	private JTextField lowHys=new JTextField(10);
+	
 	private JTextField indexLatch=new JTextField(10);
 	private JCheckBox  inverted =new JCheckBox("Invert control");
 	private JCheckBox  useLatch =new JCheckBox("Use Latch");
@@ -77,7 +80,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPidSet().addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
-				double p=0,i=0,d=0,l=0,vp,vd;
+				double p=0,i=0,d=0,l=0,vp,vd,up,low;
 				try{
 					p=Double.parseDouble(kp.getText());
 				}catch(Exception e){
@@ -120,7 +123,21 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 					showMessage( "Bad PID values, resetting.",e);
 					return;
 				}
-				setPID(p, i, d,vp,vd,l, useLatch.isSelected(),  stopOnLatch.isSelected());
+				try{
+					up=Double.parseDouble(upHys.getText());
+				}catch(Exception e){
+					upHys.setText(new Double(0).toString());
+					showMessage( "Bad PID values, resetting.",e);
+					return;
+				}
+				try{
+					low=Double.parseDouble(lowHys.getText());
+				}catch(Exception e){
+					lowHys.setText(new Double(0).toString());
+					showMessage( "Bad PID values, resetting.",e);
+					return;
+				}
+				setPID(p, i, d,vp,vd,l, useLatch.isSelected(),  stopOnLatch.isSelected(),up,low);
 				int cur = GetPIDPosition();
 				//System.out.println("Current position="+cur+" group="+getGroup());
 				setSetpoint(cur);
@@ -177,12 +194,20 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	    constants.add(new JLabel("derivitive (Kd)"));
 	    constants.add(kd,"wrap");
 	    
+	    
+	    
 	    constants.add(new JLabel("PD Velocity Gain Constants"),"wrap");
 		constants.add(new JLabel("proportional (Kp)"));
 	    constants.add(vkp,"wrap");
 	    constants.add(new JLabel("derivitive (Kd)"));
 	    constants.add(vkd,"wrap");
-
+	    
+	    constants.add(new JLabel("PID Hysterisys"),"wrap");
+		constants.add(new JLabel("Upper Bound"));
+	    constants.add(upHys,"wrap");
+	    constants.add(new JLabel("Lower Bound"));
+	    constants.add(lowHys,"wrap");
+	    
 	    constants.add(useLatch,"wrap");
 	    
 	    latchPanel .add(stopOnLatch,"wrap");
@@ -251,6 +276,10 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		kp.setText(new Double(getPIDConfiguration().getKP()).toString());
 		ki.setText(new Double(getPIDConfiguration().getKI()).toString());
 		kd.setText(new Double(getPIDConfiguration().getKD()).toString());
+		
+		upHys.setText(new Double(getPIDConfiguration().getUpperHystersys()).toString());
+		lowHys.setText(new Double(getPIDConfiguration().getLowerHystersys()).toString());
+		
 		vkp.setText(new Double(getPDVelocityConfiguration().getKP()).toString());
 		vkd.setText(new Double(getPDVelocityConfiguration().getKD()).toString());
 		indexLatch.setText(new Double(getPIDConfiguration().getIndexLatch()).toString());
@@ -280,7 +309,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 			ConfigurePIDController();
 		pidRunning.setVisible(false);
 	}
-	private void setPID(double p,double i,double d,double vp,double vd, double latch, boolean use, boolean stop){
+	private void setPID(double p,double i,double d,double vp,double vd, double latch, boolean use, boolean stop, double up, double low){
 		setSet(true);
 		getPidStop().setEnabled(true);
 		getPIDConfiguration().setEnabled(true);
@@ -292,6 +321,9 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		getPIDConfiguration().setIndexLatch(latch);
 		getPIDConfiguration().setUseLatch(use);
 		getPIDConfiguration().setStopOnIndex(stop);
+		getPIDConfiguration().setUpperHystersys(up);
+		getPIDConfiguration().setLowerHystersys(low);
+		getPIDConfiguration().setHystersysStop((up+low)/2);
 		getPDVelocityConfiguration().setKP(vp);
 		getPDVelocityConfiguration().setKD(vd);
 		ConfigurePIDController();
