@@ -29,7 +29,8 @@ public class CartesianController extends AbstractNRConsoleTabedPanelPlugin{
 	@Override
 	public JPanel getTabPane() {
 		// TODO Auto-generated method stub
-		gui.setName("Cartesian Robot");
+		if(gui != null)
+			gui.setName("Cartesian Robot");
 		return  gui;
 	}
 
