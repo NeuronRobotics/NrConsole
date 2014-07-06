@@ -17,6 +17,7 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.bootloader.NRConsoleBootloaderPlugin;
 import com.neuronrobotics.nrconsole.plugin.cartesian.CartesianController;
+import com.neuronrobotics.nrconsole.plugin.JobExec.NRConsoleJobExecPlugin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
@@ -199,6 +200,7 @@ public class PluginManager {
 		new NRConsoleBowlerCameraPlugin(this);
 		new NRConsoleBootloaderPlugin(this);
 		new NRConsoleBowlerRPCDisplayPlugin(this);
+		new NRConsoleJobExecPlugin(this);
 		//System.out.println("Updating plugins:"+plugins);
 		
 		//END HACK
