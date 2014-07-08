@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.neuronrobotics.replicator.driver.DeltaForgeDevice;
+import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 
 
@@ -19,7 +19,7 @@ public class CartesianPanel extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private DeltaForgeDevice delt;
+	private BowlerBoardDevice delt;
 	private NRPrinter printer;
 	private JLabel jLabel0;
 	private JLabel jLabel1;
@@ -33,7 +33,7 @@ public class CartesianPanel extends JPanel{
 	private JTextField jTextField4;
 	private JButton jButton0;
 
-	public void setDevices(DeltaForgeDevice delt, NRPrinter printer) {
+	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
 		this.delt = delt;
 		this.printer = printer;
 		
