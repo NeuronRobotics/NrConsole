@@ -49,6 +49,7 @@ public class JobExecPanel extends JPanel{
 	private JButton jButtonOpenGCode;
 	private JButton jButtonRunJob;
 	private TempGraphs hotendTemp;
+	private TempGraphs bedTemp;
 	public void setDevices(DeltaForgeDevice delt, NRPrinter printer) {
 		this.delt = delt;
 		this.printer = printer;
@@ -58,7 +59,7 @@ public class JobExecPanel extends JPanel{
 	private void initComponents() {
 		add(getJButtonOpenGCode());
 		add(getJButtonRunJob());
-		add(getHotendTemp());
+		
 		add(getJLabel0());
 		add(getJTextField0());
 		add(getJLabel1());
@@ -69,8 +70,9 @@ public class JobExecPanel extends JPanel{
 		add(getJTextField3());
 		add(getJLabel4());
 		add(getJTextField4());
-		add(getJButton0());
-		
+		add(getJButton0(),"wrap");
+		add(getHotendTemp(), "span");
+		add(getBedTemp(), "span" );
 		setSize(358, 291);
 	}
 
@@ -85,10 +87,17 @@ public class JobExecPanel extends JPanel{
 	
 	private TempGraphs getHotendTemp(){
 		if (hotendTemp == null){
-			hotendTemp = new TempGraphs(0);
+			hotendTemp = new TempGraphs(0,"Hotend Temp");
 			
 		}
 		return hotendTemp;
+	}
+	private TempGraphs getBedTemp(){
+		if (bedTemp == null){
+			bedTemp = new TempGraphs(1,"Bed Temp");
+			
+		}
+		return bedTemp;
 	}
 	private JButton getJButtonRunJob() {
 		if (jButtonRunJob == null) {
