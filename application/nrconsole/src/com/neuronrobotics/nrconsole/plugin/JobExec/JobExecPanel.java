@@ -18,7 +18,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
-import com.neuronrobotics.replicator.driver.DeltaForgeDevice;
+import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.GCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.sun.deploy.uitoolkit.impl.fx.Utils;
@@ -30,7 +30,7 @@ public class JobExecPanel extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = 12345L;
-	private DeltaForgeDevice delt;
+	private BowlerBoardDevice delt;
 	private NRPrinter printer;
 	File gCodes = null;
 	FileInputStream gCodeStream;
@@ -50,7 +50,7 @@ public class JobExecPanel extends JPanel{
 	private JButton jButtonRunJob;
 	private TempGraphs hotendTemp;
 	private TempGraphs bedTemp;
-	public void setDevices(DeltaForgeDevice delt, NRPrinter printer) {
+	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
 		this.delt = delt;
 		this.printer = printer;
 		

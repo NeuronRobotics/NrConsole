@@ -8,7 +8,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-import com.neuronrobotics.replicator.driver.DeltaForgeDevice;
+import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -18,7 +18,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	
 	private JobExecPanel gui;
 	private JPanel holder;
-	private DeltaForgeDevice delt = new DeltaForgeDevice();
+	private BowlerBoardDevice delt = new BowlerBoardDevice();
 	private NRPrinter printer=null;
 	
 	private PluginManager manager;
