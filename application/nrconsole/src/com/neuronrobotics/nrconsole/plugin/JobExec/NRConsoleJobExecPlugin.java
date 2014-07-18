@@ -52,7 +52,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		//holder.add(gui);
 		//holder.invalidate();
 		
-		printer = new NRPrinter(delt);
+	
 		
 		
 		//printer.
