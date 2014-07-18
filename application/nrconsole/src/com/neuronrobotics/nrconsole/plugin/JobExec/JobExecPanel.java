@@ -50,6 +50,13 @@ public class JobExecPanel extends JPanel{
 	private JButton jButtonRunJob;
 	private TempGraphs hotendTemp;
 	private TempGraphs bedTemp;
+	
+	public JobExecPanel() {
+		setLayout(new MigLayout());
+		initComponents();
+	}
+	
+	
 	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
 		this.delt = delt;
 		this.printer = printer;
@@ -249,10 +256,7 @@ public class JobExecPanel extends JPanel{
 		return jLabel0;
 	}
 
-	public JobExecPanel() {
-		setLayout(new MigLayout());
-		initComponents();
-	}
+	
 
 	private void jTextField4ActionActionPerformed(ActionEvent event) {
 		//set temp
