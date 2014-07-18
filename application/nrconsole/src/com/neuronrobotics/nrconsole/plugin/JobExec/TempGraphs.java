@@ -38,12 +38,12 @@ public class TempGraphs extends JPanel  {
 	
 	double[] data = {0,0};
 	
-	public TempGraphs(int channel){
+	public TempGraphs(int channel, String title){
 		this.channel=channel;
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		JFreeChart chart = ChartFactory.createXYLineChart(
-				"Live Data", 
+				title, 
 				"Time", 
 				"Value",
 				xyDataset, 
