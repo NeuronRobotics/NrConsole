@@ -16,7 +16,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 public class NRConsoleBowlerConfigPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	public static final String[] myNames ={"bcs.cartesian.*"};
 	
-	private SampleGuiNR gui = new SampleGuiNR();
+	private BowlerConfigPanel gui;
 	private BowlerBoardDevice delt = new BowlerBoardDevice();
 	private NRPrinter printer=null;
 	
@@ -29,7 +29,8 @@ public class NRConsoleBowlerConfigPlugin extends AbstractNRConsoleTabedPanelPlug
 	@Override
 	public JPanel getTabPane() {
 		// TODO Auto-generated method stub
-		if(gui != null)
+		if(gui == null)
+			gui = new BowlerConfigPanel();
 			gui.setName("Bowler Config");
 		return  gui;
 	}
@@ -40,7 +41,7 @@ public class NRConsoleBowlerConfigPlugin extends AbstractNRConsoleTabedPanelPlug
 		delt.connect();
 		printer = new NRPrinter(delt);
 		
-		gui.setKinematicsModel(printer);
+		//gui.setKinematicsModel(printer);
 		
 		return delt.isAvailable();
 	}
