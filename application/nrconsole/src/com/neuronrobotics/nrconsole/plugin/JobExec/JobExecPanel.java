@@ -1,6 +1,7 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -52,7 +53,6 @@ public class JobExecPanel extends JPanel{
 	private TempGraphs bedTemp;
 	
 	public JobExecPanel() {
-		setLayout(new MigLayout());
 		initComponents();
 	}
 	
@@ -64,23 +64,26 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void initComponents() {
-		add(getJButtonOpenGCode());
-		add(getJButtonRunJob());
+		setLayout(new MigLayout("", "[157px][][][grow][][grow][][grow][][grow][][grow][]", "[][grow,fill][grow,fill]"));
+		add(getJButtonOpenGCode(), "flowx,cell 0 0,alignx center,aligny top");
+		add(getJButtonRunJob(), "cell 1 0,alignx center,aligny top");
 		
-		add(getJLabel0());
-		add(getJTextField0());
-		add(getJLabel1());
-		add(getJTextField1());
-		add(getJLabel2());
-		add(getJTextField2());
-		add(getJLabel3());
-		add(getJTextField3());
-		add(getJLabel4());
-		add(getJTextField4());
-		add(getJButton0(),"wrap");
-		add(getHotendTemp(), "span");
-		add(getBedTemp(), "span" );
-		setSize(358, 291);
+		add(getJLabel0(), "cell 2 0,alignx right,aligny center");
+		add(getJTextField0(), "cell 3 0,growx,aligny center");
+		add(getJLabel1(), "cell 4 0,alignx right,aligny center");
+		add(getJTextField1(), "cell 5 0,growx,aligny center");
+		add(getJLabel2(), "cell 6 0,alignx right,aligny center");
+		add(getJTextField2(), "cell 7 0,growx,aligny center");
+		add(getJLabel3(), "cell 8 0,alignx right,aligny center");
+		add(getJTextField4(), "cell 9 0,growx");
+		add(getJLabel4(), "cell 10 0,alignx right,aligny center");
+		add(getJTextField3(), "cell 11 0,growx,aligny center");
+		add(getJButton0(), "cell 12 0,alignx center,aligny top");
+		add(getHotendTemp(), "cell 0 1 13 1,grow");
+		
+		add(getBedTemp(), "cell 0 2 13 1,grow" );
+		
+		setSize(693, 476);
 	}
 
 	
@@ -149,7 +152,7 @@ public class JobExecPanel extends JPanel{
 	private JTextField getJTextField4() {
 		if (jTextField4 == null) {
 			jTextField4 = new JTextField();
-			jTextField4.setText("tempTarget");
+			jTextField4.setText("0");
 			jTextField4.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {
@@ -163,7 +166,7 @@ public class JobExecPanel extends JPanel{
 	private JTextField getJTextField3() {
 		if (jTextField3 == null) {
 			jTextField3 = new JTextField();
-			jTextField3.setText("extrudeTarget");
+			jTextField3.setText("0");
 			jTextField3.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {
@@ -177,7 +180,7 @@ public class JobExecPanel extends JPanel{
 	private JTextField getJTextField2() {
 		if (jTextField2 == null) {
 			jTextField2 = new JTextField();
-			jTextField2.setText("ztarget");
+			jTextField2.setText("0");
 			jTextField2.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {
@@ -191,7 +194,7 @@ public class JobExecPanel extends JPanel{
 	private JTextField getJTextField1() {
 		if (jTextField1 == null) {
 			jTextField1 = new JTextField();
-			jTextField1.setText("open G-code");
+			jTextField1.setText("0");
 			jTextField1.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {
@@ -205,7 +208,7 @@ public class JobExecPanel extends JPanel{
 	private JTextField getJTextField0() {
 		if (jTextField0 == null) {
 			jTextField0 = new JTextField();
-			jTextField0.setText("print");
+			jTextField0.setText("0");
 			jTextField0.addActionListener(new ActionListener() {
 	
 				public void actionPerformed(ActionEvent event) {
