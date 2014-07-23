@@ -29,6 +29,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class BowlerConfigPanel extends JPanel implements KeyListener{
@@ -45,7 +47,7 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 	private JTextField tfName;
 	private JTextField tfNumAxes;
 	private JList<String> listAxes;
-	private JTextField tfCurrVal;
+	private JTextField tfHardIndex;
 	private JTextField tfkP;
 	private JTextField tfkI;
 	private JTextField tfkD;
@@ -73,6 +75,12 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		
 		
 		listAxes = new JList<String>();
+		listAxes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				updateLinkData();
+			}
+		});
 		listAxes.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				updateLinkData();
@@ -80,13 +88,13 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		});
 		add(listAxes, "cell 0 2 1 6,grow");
 		
-		JLabel lblNewLabel = new JLabel("Current Value");
+		JLabel lblNewLabel = new JLabel("Hardware Index");
 		add(lblNewLabel, "cell 1 2,alignx trailing");
 		
-		tfCurrVal = new JTextField();
-		tfCurrVal.addKeyListener(this);		
-		add(tfCurrVal, "cell 2 2,growx");
-		tfCurrVal.setColumns(10);
+		tfHardIndex = new JTextField();
+		tfHardIndex.addKeyListener(this);		
+		add(tfHardIndex, "cell 2 2,growx");
+		tfHardIndex.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("kP");
 		add(lblNewLabel_1, "cell 1 3,alignx trailing");
@@ -133,6 +141,11 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		JButton btnSendNewValues = new JButton("Send New Values");
 		btnSendNewValues.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//getSelectedLink().setLowerLimit(Integer.parseInt(tfMin.getText()));
+				//getSelectedLink().setUpperLimit(Integer.parseInt(tfMax.getText()));
+				//getSelectedLink().
+				
+				
 				
 			}
 		});
@@ -183,14 +196,18 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		}
 	}
 	private void updateLinkData(){
-		LinkConfiguration selectedLink = printer.getLinkConfiguration(listAxes.getSelectedIndex());
+		LinkConfiguration selectedLink = getSelectedLink();
 		tfkP.setText(String.valueOf(selectedLink.getKP()));
 		tfkI.setText(String.valueOf(selectedLink.getKI()));
 		tfkD.setText(String.valueOf(selectedLink.getKD()));
 		tfMin.setText(String.valueOf(selectedLink.getLowerLimit()));
 		tfMax.setText(String.valueOf(selectedLink.getUpperLimit()));
+		tfHardIndex.setText(String.valueOf(selectedLink.getHardwareIndex()));
+		
 	}
-
+private LinkConfiguration getSelectedLink(){
+	return printer.getLinkConfiguration(listAxes.getSelectedIndex());
+}
 	
 	
 
