@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -15,6 +16,7 @@ import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.sun.org.apache.xml.internal.serialize.Printer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -32,9 +34,11 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private BowlerBoardDevice delt;
+	
 	private NRPrinter printer;
-	private List<String> axesNames;
+	private List<String> axesNames = new ArrayList<String>();
 	private JTextField tfName;
 	private JTextField tfNumAxes;
 	private JList<String> listAxes;
@@ -48,6 +52,12 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 	public BowlerConfigPanel(){
 		setLayout(new MigLayout("", "[grow][grow][grow]", "[][][grow,center][grow][grow][grow][grow][][][]"));
 		
+		
+		
+	}
+	
+	
+	private void initializeGUI(){
 		JLabel lblName = new JLabel("Device Name:");
 		add(lblName, "cell 0 0,alignx trailing");
 		
@@ -151,6 +161,7 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
 		this.delt = delt;
 		this.printer = printer;
+		initializeGUI();
 		
 	}
 	
@@ -169,6 +180,22 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		if (!Character.isDigit(arg0.getKeyChar())){
 			arg0.consume();
 		}
+	}
+
+
+	/**
+	 * @return the model
+	 */
+	public AbstractKinematicsNR getModel() {
+		return model;
+	}
+
+
+	/**
+	 * @param model the model to set
+	 */
+	public void setModel(AbstractKinematicsNR model) {
+		this.model = model;
 	}
 	
 
