@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.BowlerConfig;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +27,8 @@ import org.jfree.ui.WizardDialog;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 
 public class BowlerConfigPanel extends JPanel implements KeyListener{
@@ -50,14 +53,7 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 	private JTextField tfMax;
 
 	public BowlerConfigPanel(){
-		setLayout(new MigLayout("", "[grow][grow][grow]", "[][][grow,center][grow][grow][grow][grow][][][]"));
-		
-		
-		
-	}
-	
-	
-	private void initializeGUI(){
+		setLayout(new MigLayout("", "[grow][][grow]", "[][][grow,center][grow][grow][grow][grow][][][]"));
 		JLabel lblName = new JLabel("Device Name:");
 		add(lblName, "cell 0 0,alignx trailing");
 		
@@ -74,9 +70,14 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		tfNumAxes.setEditable(false);
 		add(tfNumAxes, "cell 1 1 2 1,growx");
 		tfNumAxes.setColumns(10);
-		tfNumAxes.setText(String.valueOf(printer.getNumberOfLinks()));
+		
 		
 		listAxes = new JList<String>();
+		listAxes.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				updateLinkData();
+			}
+		});
 		add(listAxes, "cell 0 2 1 6,grow");
 		
 		JLabel lblNewLabel = new JLabel("Current Value");
@@ -140,28 +141,28 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		JButton btnGetCurrentValues = new JButton("Get Current Values");
 		btnGetCurrentValues.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				LinkConfiguration selectedLink = printer.getLinkConfiguration(listAxes.getSelectedIndex());
-				tfkP.setText(String.valueOf(selectedLink.getKP()));
-				tfkI.setText(String.valueOf(selectedLink.getKI()));
-				tfkD.setText(String.valueOf(selectedLink.getKD()));
-				tfMin.setText(String.valueOf(selectedLink.getLowerLimit()));
-				tfMax.setText(String.valueOf(selectedLink.getUpperLimit()));
+				updateLinkData();
 				
 				
 				
 			}
 		});
 		add(btnGetCurrentValues, "cell 0 9 3 1,growx");
+		setMinimumSize(new Dimension(450,350));
+		
+		
+	}
+	private void initializeValues(){
+		tfNumAxes.setText(String.valueOf(printer.getNumberOfLinks()));
 		for (LinkConfiguration link : printer.getLinkConfigurations()) {
 			axesNames.add(0, link.getName());
 		}
 		listAxes.setListData(axesNames.toArray(new String[axesNames.size()]));
 	}
-	
 	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
 		this.delt = delt;
 		this.printer = printer;
-		initializeGUI();
+		initializeValues();
 		
 	}
 	
@@ -181,7 +182,14 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 			arg0.consume();
 		}
 	}
-	
+	private void updateLinkData(){
+		LinkConfiguration selectedLink = printer.getLinkConfiguration(listAxes.getSelectedIndex());
+		tfkP.setText(String.valueOf(selectedLink.getKP()));
+		tfkI.setText(String.valueOf(selectedLink.getKI()));
+		tfkD.setText(String.valueOf(selectedLink.getKD()));
+		tfMin.setText(String.valueOf(selectedLink.getLowerLimit()));
+		tfMax.setText(String.valueOf(selectedLink.getUpperLimit()));
+	}
 
 	
 	
