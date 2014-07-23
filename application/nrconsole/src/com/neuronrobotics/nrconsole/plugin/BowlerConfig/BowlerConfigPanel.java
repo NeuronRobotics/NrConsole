@@ -181,22 +181,6 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 			arg0.consume();
 		}
 	}
-
-
-	/**
-	 * @return the model
-	 */
-	public AbstractKinematicsNR getModel() {
-		return model;
-	}
-
-
-	/**
-	 * @param model the model to set
-	 */
-	public void setModel(AbstractKinematicsNR model) {
-		this.model = model;
-	}
 	
 
 	
