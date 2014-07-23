@@ -46,15 +46,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		delt.setConnection(connection);
 		delt.connect();
 		printer = new NRPrinter(delt);
-		
-		//gui.setKinematicsModel(printer);
-		//gui = new JobExecPanel();
-		//holder.add(gui);
-		//holder.invalidate();
-		
-	
-		
-		
+				
 		//printer.
 		return delt.isAvailable();
 		
