@@ -83,7 +83,7 @@ public class JobExecPanel extends JPanel{
 		
 		add(getBedTemp(), "cell 0 2 13 1,grow" );
 		
-		setSize(693, 476);
+		setMinimumSize(new Dimension(693, 476));
 	}
 
 	

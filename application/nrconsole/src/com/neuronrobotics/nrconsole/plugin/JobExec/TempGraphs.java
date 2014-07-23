@@ -40,7 +40,6 @@ public class TempGraphs extends JPanel  {
 	
 	public TempGraphs(int channel, String title){
 		this.channel=channel;
-		setLayout(new MigLayout());
 		setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		JFreeChart chart = ChartFactory.createXYLineChart(
 				title, 
@@ -51,12 +50,13 @@ public class TempGraphs extends JPanel  {
 				true, 
 				false, 
 				false);
-		ChartPanel cp = new ChartPanel(chart);
+		setLayout(new MigLayout("", "[408px,grow]", "[][grow]"));
+		
+		setSize(new Dimension(578, 383));
 		JPanel buttons = new JPanel();
 		buttons.add(save);
 		buttons.add(clear);
-		add(buttons,"wrap");
-		add(cp,"wrap");
+		add(buttons, "cell 0 0,alignx left,aligny top");
 		//add(save);
 		//add(clear,"wrap");
 		save.addActionListener(new ActionListener() {
@@ -77,8 +77,8 @@ public class TempGraphs extends JPanel  {
 				positions.clear();
 			}
 		});
-		
-		setSize(new Dimension(150,100));
+		ChartPanel cp = new ChartPanel(chart);
+		add(cp, "cell 0 1,grow");
 		init();
 	}
 	/**

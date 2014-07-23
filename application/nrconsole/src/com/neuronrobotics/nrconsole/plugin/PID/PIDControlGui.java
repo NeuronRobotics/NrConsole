@@ -1,8 +1,10 @@
 package com.neuronrobotics.nrconsole.plugin.PID;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 
 
 import javax.swing.JButton;
@@ -14,12 +16,10 @@ import javax.swing.JTabbedPane;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
-
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
-
 import com.neuronrobotics.sdk.namespace.bcs.pid.IPidControlNamespace;
 
 public class PIDControlGui extends JPanel {
@@ -107,6 +107,7 @@ public class PIDControlGui extends JPanel {
 		add(tabbedPane,"wrap");
 		Log.info("Started PID Control Gui");
 		//stopAll();
+		setMinimumSize(new Dimension(1095,1300));
 	}
 	
 	private void setDyPID(boolean hadDyPID) {
