@@ -119,7 +119,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	private void updateUI(){
 		//setSize(new Dimension(panelWidth+53,panelHight+105));
 		if (manager !=null){
-			setSize((getCurrentPanelMinSize().width+53),805);
+			//setSize((getCurrentPanelMinSize().width+53),805);
 			modePane.setSize(getCurrentPanelMinSize());	
 		}else {
 			setSize((1095+53),805);
