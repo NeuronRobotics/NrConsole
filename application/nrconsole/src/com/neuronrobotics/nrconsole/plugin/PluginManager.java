@@ -202,7 +202,7 @@ public class PluginManager {
 		new NRConsoleBootloaderPlugin(this);
 		new NRConsoleBowlerRPCDisplayPlugin(this);
 		new NRConsoleJobExecPlugin(this);
-		//new NRConsoleBowlerConfigPlugin(this);
+		new NRConsoleBowlerConfigPlugin(this);
 		//System.out.println("Updating plugins:"+plugins);
 		
 		//END HACK
