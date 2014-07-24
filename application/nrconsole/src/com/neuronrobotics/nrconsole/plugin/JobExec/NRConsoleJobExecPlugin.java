@@ -16,7 +16,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	public static final String[] myNames ={"bcs.cartesian.*"};
 	
-	private JobExecPanel gui;
+	private JobExecPanel gui = new JobExecPanel();
 	private JPanel holder;
 	private BowlerBoardDevice delt = new BowlerBoardDevice();
 	private NRPrinter printer=null;
@@ -33,10 +33,10 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	@Override
 	public JPanel getTabPane() {
 		// TODO Auto-generated method stub
-		if(gui== null){
+		if(gui!= null){
 			//gui = new JPanel(new MigLayout());
-			gui = new JobExecPanel();
 			gui.setName("Job Executor");
+			
 		}
 		return gui;
 	}
@@ -46,7 +46,9 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		delt.setConnection(connection);
 		delt.connect();
 		printer = new NRPrinter(delt);
-				
+		if (delt.isAvailable()){
+			gui.setDevices(delt, printer);
+		}
 		//printer.
 		return delt.isAvailable();
 		

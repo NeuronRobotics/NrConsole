@@ -22,6 +22,11 @@ import com.neuronrobotics.nrconsole.util.GCodeFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.GCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.pid.IPIDEventListener;
+import com.neuronrobotics.sdk.pid.PIDChannel;
+import com.neuronrobotics.sdk.pid.PIDEvent;
+import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.sun.deploy.uitoolkit.impl.fx.Utils;
 
 
@@ -49,10 +54,14 @@ public class JobExecPanel extends JPanel{
 	private JButton jButton0;
 	private JButton jButtonOpenGCode;
 	private JButton jButtonRunJob;
-	private TempGraphs hotendTemp;
-	private TempGraphs bedTemp;
+	private TempGraphs grfHotendTemp;
+	private TempGraphs grfBedTemp;
+	private int channelHotEnd = -1;
+	private int channelBed = -1;
+	
 	
 	public JobExecPanel() {
+	
 		initComponents();
 	}
 	
@@ -60,7 +69,19 @@ public class JobExecPanel extends JPanel{
 	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
 		this.delt = delt;
 		this.printer = printer;
-		
+		for (LinkConfiguration link : printer.getLinkConfigurations()) {
+			if (link.getName().toLowerCase().contains("hotend")){
+				channelHotEnd = link.getHardwareIndex();
+			}
+			if (link.getName().toLowerCase().contains("heat")){
+				channelHotEnd = link.getHardwareIndex();
+			}
+			if (link.getName().toLowerCase().contains("bed")){
+				channelBed = link.getHardwareIndex();
+			}
+		}
+		Updater up = new Updater();
+		up.start();
 	}
 
 	private void initComponents() {
@@ -79,11 +100,12 @@ public class JobExecPanel extends JPanel{
 		add(getJLabel4(), "cell 10 0,alignx right,aligny center");
 		add(getJTextField3(), "cell 11 0,growx,aligny center");
 		add(getJButton0(), "cell 12 0,alignx center,aligny top");
-		add(getHotendTemp(), "cell 0 1 13 1,grow");
+		add(getGrfHotendTemp(), "cell 0 1 13 1,grow");
 		
-		add(getBedTemp(), "cell 0 2 13 1,grow" );
+		add(getGrfBedTemp(), "cell 0 2 13 1,grow" );
 		
 		setMinimumSize(new Dimension(693, 476));
+		
 	}
 
 	
@@ -95,19 +117,20 @@ public class JobExecPanel extends JPanel{
 		return jButton0;
 	}
 	
-	private TempGraphs getHotendTemp(){
-		if (hotendTemp == null){
-			hotendTemp = new TempGraphs(0,"Hotend Temp");
+	private TempGraphs getGrfHotendTemp(){
+		if (grfHotendTemp == null){
+			grfHotendTemp = new TempGraphs(0,"Hotend Temp");
+			
 			
 		}
-		return hotendTemp;
+		return grfHotendTemp;
 	}
-	private TempGraphs getBedTemp(){
-		if (bedTemp == null){
-			bedTemp = new TempGraphs(1,"Bed Temp");
+	private TempGraphs getGrfBedTemp(){
+		if (grfBedTemp == null){
+			grfBedTemp = new TempGraphs(1,"Bed Temp");
 			
 		}
-		return bedTemp;
+		return grfBedTemp;
 	}
 	private JButton getJButtonRunJob() {
 		if (jButtonRunJob == null) {
@@ -298,12 +321,14 @@ public class JobExecPanel extends JPanel{
 	}
 	
 		private class Updater extends Thread{
-			long lastSet;
-			long lastPos;
+			
 			public void run() {
 				while(true) {
 					try {
 						Thread.sleep(500);
+						
+						getGrfHotendTemp().addEvent(getHotEndSetpoint(), getHotendTemp());
+						getGrfBedTemp().addEvent(getBedSetpoint(), getBedTemp());
 					} catch (InterruptedException e) {
 					}
 						//graphVals();
@@ -311,7 +336,21 @@ public class JobExecPanel extends JPanel{
 				}
 			}
 		}
+
+		
+		
+	private int getHotendTemp(){
 	
-
-
+		return delt.GetPIDPosition(channelHotEnd);
+		
+	}
+	private int getHotEndSetpoint(){
+		return delt.getPIDChannel(channelHotEnd).getCachedTargetValue();
+	}
+	private int getBedTemp(){
+		return delt.GetPIDPosition(2);
+	}
+	private int getBedSetpoint(){
+		return delt.getPIDChannel(2).getCachedTargetValue();
+	}
 }

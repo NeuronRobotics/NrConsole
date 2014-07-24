@@ -50,6 +50,8 @@ public class TempGraphs extends JPanel  {
 				true, 
 				false, 
 				false);
+		chart.getXYPlot().getDomainAxis().setTickLabelsVisible(false);
+		
 		setLayout(new MigLayout("", "[408px,grow]", "[][grow]"));
 		
 		setSize(new Dimension(578, 383));
@@ -115,15 +117,15 @@ public class TempGraphs extends JPanel  {
 						double time = (System.currentTimeMillis()-startTime);
 						
 						dataTable.add(new GraphDataElement((long) time,data));
-						XYDataItem s = new XYDataItem(time,data[0]);
-						XYDataItem p = new XYDataItem(time,data[1]);
+						XYDataItem s = new XYDataItem((time/1000),data[0]);
+						XYDataItem p = new XYDataItem((time/1000),data[1]);
 
-						if(setpoints.getItemCount()>99){
+						if(setpoints.getItemCount()>50){
 							setpoints.remove(0);
 						}
 						setpoints.add(s);
 						
-						if(positions.getItemCount()>99){
+						if(positions.getItemCount()>50){
 							positions.remove(0);
 						}
 						positions.add(p);
