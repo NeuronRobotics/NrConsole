@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
+import java.awt.BorderLayout;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -8,15 +9,20 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.jme3.system.AppSettings;
+import com.jme3.system.JmeCanvasContext;
+import com.jme3.system.JmeSystem;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
@@ -28,6 +34,7 @@ import com.neuronrobotics.sdk.pid.PIDChannel;
 import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.sun.deploy.uitoolkit.impl.fx.Utils;
+import javax.swing.JSplitPane;
 
 
 public class JobExecPanel extends JPanel{
@@ -58,11 +65,19 @@ public class JobExecPanel extends JPanel{
 	private TempGraphs grfBedTemp;
 	private int channelHotEnd = -1;
 	private int channelBed = -1;
-	
-	
+	private GCodeLoader codeOps;
+	private JPanel panel;
+	private JSplitPane splitPane;
+	private JPanel panel_1;
+	private JPanel panel_2;
+	MachineSimDisplay app;
 	public JobExecPanel() {
-	
-		initComponents();
+		java.awt.EventQueue.invokeLater(new Runnable() {
+		      public void run() {
+		    	  initComponents();
+		      }
+		    });
+		
 	}
 	
 	
@@ -85,7 +100,7 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void initComponents() {
-		setLayout(new MigLayout("", "[157px][][][grow][][grow][][grow][][grow][][grow][]", "[][grow,fill][grow,fill]"));
+		setLayout(new MigLayout("", "[157px,grow][][][grow][][grow][][grow][][grow][][grow][145.00,center]", "[][grow][grow][grow,fill][394.00,grow,fill]"));
 		add(getJButtonOpenGCode(), "flowx,cell 0 0,alignx center,aligny top");
 		add(getJButtonRunJob(), "cell 1 0,alignx center,aligny top");
 		
@@ -100,9 +115,7 @@ public class JobExecPanel extends JPanel{
 		add(getJLabel4(), "cell 10 0,alignx right,aligny center");
 		add(getJTextField3(), "cell 11 0,growx,aligny center");
 		add(getJButton0(), "cell 12 0,alignx center,aligny top");
-		add(getGrfHotendTemp(), "cell 0 1 13 1,grow");
-		
-		add(getGrfBedTemp(), "cell 0 2 13 1,grow" );
+		add(getSplitPane(), "cell 0 1 13 1,grow");
 		
 		setMinimumSize(new Dimension(693, 476));
 		
@@ -162,6 +175,17 @@ public class JobExecPanel extends JPanel{
 	private void loadGcodeFile(){
 		try {
 			gCodeStream = new FileInputStream(gCodes);
+			codeOps = new GCodeLoader();
+			try {
+				System.out.println(gCodeStream.available());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			codeOps.loadCodes(gCodeStream);
+			codeOps.getCodes().printOutput();
+			app.loadGCode(codeOps.getCodes());
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
@@ -352,5 +376,54 @@ public class JobExecPanel extends JPanel{
 	}
 	private int getBedSetpoint(){
 		return delt.getPIDChannel(2).getCachedTargetValue();
+	}
+	private JPanel getPanel_1() {
+		if (panel == null) {
+			panel = new JPanel();
+			panel.setBorder(new EmptyBorder(5, 5, 5, 5));
+			panel.setLayout(new BorderLayout(0, 0));
+			
+			app = new MachineSimDisplay(panel);
+			app.start();
+			AppSettings settings = new AppSettings(true);
+			
+			//settings.setWidth(640);
+			//settings.setHeight(480);
+			//app.setSettings(settings);
+			
+			//Dimension dim = new Dimension(640, 480);
+			
+			//ctx.getCanvas().setPreferredSize(dim);     
+		      
+		     
+		     
+		     
+		}
+		return panel;
+	}
+	private JSplitPane getSplitPane() {
+		if (splitPane == null) {
+			splitPane = new JSplitPane();
+			splitPane.setLeftComponent(getPanel_1_1());
+			splitPane.setRightComponent(getPanel_2());
+		}
+		return splitPane;
+	}
+	private JPanel getPanel_1_1() {
+		if (panel_1 == null) {
+			panel_1 = new JPanel();
+			panel_1.setLayout(new MigLayout("", "[grow]", "[grow][grow][]"));
+			panel_1.add(getGrfHotendTemp(), "cell 0 0,grow");
+			panel_1.add(getGrfBedTemp(), "cell 0 1,grow");
+		}
+		return panel_1;
+	}
+	private JPanel getPanel_2() {
+		if (panel_2 == null) {
+			panel_2 = new JPanel();
+			panel_2.setLayout(new BorderLayout(0, 0));
+			panel_2.add(getPanel_1(), BorderLayout.CENTER);
+		}
+		return panel_2;
 	}
 }
