@@ -19,8 +19,8 @@
 	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jglfont-core.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jinput.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-blender.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-core.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-desktop.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-core.jar" sourcepath="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/source"/>
+	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-desktop.jar" sourcepath="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/source"/>
 	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-effects.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-jbullet.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Richard/Desktop/eclipse/jME3_2014-06-12/lib/jME3-jogg.jar"/>
