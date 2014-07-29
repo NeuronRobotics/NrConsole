@@ -36,7 +36,7 @@ import com.neuronrobotics.sdk.bowlercam.device.BowlerCamDevice;
 import com.neuronrobotics.sdk.bowlercam.device.IWebcamImageListener;
 import com.neuronrobotics.sdk.bowlercam.device.ItemMarker;
 import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.network.BowlerUDPClient;
+import com.neuronrobotics.sdk.network.UDPBowlerConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 @SuppressWarnings("unused")
@@ -53,7 +53,7 @@ public class BowlerCamDeviceTester{
 //		if (!ConnectionDialog.getBowlerDevice(cam)){
 //			System.exit(1);
 //		}
-		bcp.setConnection(new BowlerUDPClient());
+		bcp.setConnection(new UDPBowlerConnection());
 	}
 	/**
 	 * @param args
