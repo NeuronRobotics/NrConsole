@@ -1,9 +1,7 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
 import java.awt.BorderLayout;
-import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -21,19 +18,13 @@ import javax.swing.border.EmptyBorder;
 import net.miginfocom.swing.MigLayout;
 
 import com.jme3.system.AppSettings;
-import com.jme3.system.JmeCanvasContext;
-import com.jme3.system.JmeSystem;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.GCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
-import com.neuronrobotics.sdk.pid.IPIDEventListener;
-import com.neuronrobotics.sdk.pid.PIDChannel;
-import com.neuronrobotics.sdk.pid.PIDEvent;
-import com.neuronrobotics.sdk.pid.PIDLimitEvent;
-import com.sun.deploy.uitoolkit.impl.fx.Utils;
+//import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
