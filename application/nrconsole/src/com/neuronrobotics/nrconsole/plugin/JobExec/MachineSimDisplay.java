@@ -245,8 +245,8 @@ public class MachineSimDisplay extends SimpleApplication{
         chaseCam.setMinVerticalRotation(((float) Math.PI)*-1);
         chaseCam.setInvertVerticalAxis(true);
         
-        //chaseCam.setDefaultHorizontalRotation((float) ((Math.PI/2)));
-        //chaseCam.setDefaultVerticalRotation((float) (-1*(Math.PI/4)));
+        chaseCam.setDefaultHorizontalRotation((float) ((Math.PI/2)));
+        chaseCam.setDefaultVerticalRotation((float) (-1*(Math.PI/4)));
         //chaseCam.setUpVector(new Vector3f(0,0,-1));
         
        // chaseCam.setDragToRotate(true);
