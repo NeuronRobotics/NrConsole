@@ -98,7 +98,7 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void initComponents() {
-		setLayout(new MigLayout("", "[157px,grow][][][grow][][grow][][grow][][grow][][grow][145.00,center]", "[][grow][grow][grow,fill][394.00,grow,fill]"));
+		setLayout(new MigLayout("", "[157px,grow][][][grow][][grow][][grow][][grow][][grow][145.00,center]", "[][grow]"));
 		add(getJButtonOpenGCode(), "flowx,cell 0 0,alignx center,aligny top");
 		add(getJButtonRunJob(), "cell 1 0,alignx center,aligny top");
 		
