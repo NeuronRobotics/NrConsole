@@ -53,6 +53,26 @@ public class GCodeLoader {
 				
 			}
 		});
+		interp.addMHandler(107, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				
+			}
+		});
+		interp.addMHandler(106, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				
+			}
+		});
+		interp.addMHandler(109, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				
+			}
+		});
+		interp.addMHandler(82, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				
+			}
+		});
 		interp.addMHandler(73, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				
@@ -62,8 +82,9 @@ public class GCodeLoader {
 		interp.addGHandler(92, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 			if (codes.size() > 1){
-					System.out.println("Extruder Reset: " + codes.get(codes.size() - 2).getE());
+					System.out.println("Extruder Reset: " + codes.get(codes.size() - 2).getE());					
 					extOffset = codes.get(codes.size() - 2).getE();
+					codes.get(codes.size() - 1).setE(extOffset);
 			}
 			}
 		});
