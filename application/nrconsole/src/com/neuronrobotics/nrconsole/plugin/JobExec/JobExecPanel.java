@@ -35,6 +35,12 @@ import com.neuronrobotics.sdk.pid.PIDEvent;
 import com.neuronrobotics.sdk.pid.PIDLimitEvent;
 import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class JobExecPanel extends JPanel{
@@ -71,6 +77,7 @@ public class JobExecPanel extends JPanel{
 	private JPanel panel_1;
 	private JPanel panel_2;
 	MachineSimDisplay app;
+	private JSlider sliderLayer;
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 		      public void run() {
@@ -184,7 +191,9 @@ public class JobExecPanel extends JPanel{
 			}
 			codeOps.loadCodes(gCodeStream);
 			codeOps.getCodes().printOutput();
-			app.loadGCode(codeOps.getCodes());
+			int numLayers = app.loadGCode(codeOps.getCodes());
+			sliderLayer.setMaximum(numLayers);
+			sliderLayer.setValue(numLayers);
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -384,6 +393,7 @@ public class JobExecPanel extends JPanel{
 			panel.setLayout(new BorderLayout(0, 0));
 			
 			app = new MachineSimDisplay(panel);
+			panel.add(getSliderLayer(), BorderLayout.EAST);
 			app.start();
 			AppSettings settings = new AppSettings(true);
 			
@@ -425,5 +435,26 @@ public class JobExecPanel extends JPanel{
 			panel_2.add(getPanel_1(), BorderLayout.CENTER);
 		}
 		return panel_2;
+	}
+	private JSlider getSliderLayer() {
+		if (sliderLayer == null) {
+			sliderLayer = new JSlider();
+			sliderLayer.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent arg0) {
+					app.setLayersToShow(sliderLayer.getValue());
+					System.out.println("Mouse");
+				}
+			});
+			sliderLayer.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent arg0) {
+					System.out.println("State");
+				}
+			});
+			sliderLayer.setSnapToTicks(true);
+			sliderLayer.setPaintTicks(true);
+			sliderLayer.setOrientation(SwingConstants.VERTICAL);
+		}
+		return sliderLayer;
 	}
 }

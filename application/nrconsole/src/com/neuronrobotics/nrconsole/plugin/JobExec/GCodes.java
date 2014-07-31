@@ -108,7 +108,21 @@ public int numLayers(){
 		}
 		return layers;
 	}
+public int getLayer(GCodePosition _code){
+	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
+	int layers = 0;
+	for (int i = 1; i < indexOf(_code); i++) {
+		if (get(i).getZ() != -1){
+			if (get(i).getZ() != prevZ){
+				prevZ = get(i).getZ();
+				layers++;
+				}
+			}
+		}
+		return layers;
+	}
 	
+
 public double getMoveLength(GCodePosition _code){
 	GCodePosition prevCode = getPrevCode(_code);
 	if (prevCode != null){	

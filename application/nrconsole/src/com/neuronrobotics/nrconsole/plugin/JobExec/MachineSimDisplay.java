@@ -44,12 +44,37 @@ public class MachineSimDisplay extends SimpleApplication{
 	private ChaseCamera chaseCam;
 	Node obj;
 	Matrix3f rotateUp;
+	private int layersToShow;
 	public MachineSimDisplay(JPanel _panel){
 		
 		panel = _panel;
 	}
-	
-	public void loadGCode(GCodes _codes){
+	public int getLayersToShow(){
+		return layersToShow;
+	}
+	public void setLayersToShow(int numLayers){
+		shapes.clear();
+		layersToShow= numLayers;
+		updateDisplay();
+		hasChanged = true;
+	}
+	public void updateDisplay(){
+		for (int i = 1; i < codes.size(); i++) {
+			GCodePosition code = codes.get(i);
+			if (codes.getLayer(code) > layersToShow){
+				return;
+			}
+			if (codes.isPrintMove(code)){
+				boxBuilder(code);
+			}
+			else{
+				lineBuilder(code);
+			}
+			
+		}
+		
+	}
+	public int loadGCode(GCodes _codes){
 		shapes.clear();
 		codes = _codes;
 		for (int i = 1; i < _codes.size(); i++) {
@@ -65,6 +90,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		System.out.println("Num of Codes: " + _codes.size());
 		System.out.println("Num of Shapes: " + shapes.size());
 		hasChanged = true;
+		return codes.numLayers();
 	}
 	
 	public void boxBuilder(GCodePosition _code){
@@ -256,14 +282,8 @@ public class MachineSimDisplay extends SimpleApplication{
 			}
 			System.out.println("How many children: " + rootNode.getChildren().size());
 		}
-		System.out.println("Vertical: " + chaseCam.getVerticalRotation() + "Horizontal: " + chaseCam.getHorizontalRotation());
+		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + "Horizontal: " + chaseCam.getHorizontalRotation());
 	 }
 	
-	protected class SwingApplicationStarter implements Runnable {
-		@Override
-		public void run() {
-		
-		
-		}
-		}
+	
 }
