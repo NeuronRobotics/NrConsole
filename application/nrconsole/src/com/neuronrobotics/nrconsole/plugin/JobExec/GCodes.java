@@ -67,19 +67,22 @@ public double getLayerHeight(int _layer){
 		return 0;
 }
 public double getLayerHeight(GCodePosition _code){
-	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
-	int layers = 0;
-	for (GCodePosition code : this) {
-		if (code.getZ() != -1){
-			if (code.getZ() != prevZ && code.getZ() != _code.getZ()){
-				prevZ = code.getZ();
-			}
-			else if (code.getZ() == _code.getZ()){
-				return _code.getZ() - prevZ;
-			}
+	
+	
+	int inCode = indexOf(_code);
+	double currZ = _code.getZ();
+	double layerHeight = 0;
+	while(layerHeight == 0 && inCode > -1){
+		double prevZ = get(inCode).getZ();
+		layerHeight = currZ - prevZ;
+		if (layerHeight < 0){		//** Really Hack** This is for handling slicers which do not
+			layerHeight = currZ;	//set the z height to zero before beginning the first layer
 		}
+		System.out.println("Current Z: " + currZ + " Previous Z: " + prevZ + " inCode: " + inCode);
+		inCode--;
 	}
-		return 0;
+	
+		return layerHeight;
 }
 public int numLayers(){
 	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
