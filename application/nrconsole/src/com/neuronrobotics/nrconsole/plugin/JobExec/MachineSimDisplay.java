@@ -18,8 +18,10 @@ import com.jme3.input.event.KeyInputEvent;
 import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.input.event.MouseMotionEvent;
 import com.jme3.input.event.TouchEvent;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.Light;
+import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Matrix3f;
@@ -30,6 +32,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
+import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeCanvasContext;
 import com.jme3.system.JmeSystem;
@@ -45,6 +48,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	Node obj;
 	Matrix3f rotateUp;
 	private int layersToShow;
+	private int lastShownIndex;
 	public MachineSimDisplay(JPanel _panel){
 		
 		panel = _panel;
@@ -53,23 +57,19 @@ public class MachineSimDisplay extends SimpleApplication{
 		return layersToShow;
 	}
 	public void setLayersToShow(int numLayers){
-		shapes.clear();
+		
 		layersToShow= numLayers;
 		updateDisplay();
 		hasChanged = true;
 	}
 	public void updateDisplay(){
-		for (int i = 1; i < codes.size(); i++) {
-			GCodePosition code = codes.get(i);
+		for (GCodePosition code : codes) {
+			
 			if (codes.getLayer(code) > layersToShow){
+				lastShownIndex = codes.indexOf(code);
 				return;
 			}
-			if (codes.isPrintMove(code)){
-				boxBuilder(code);
-			}
-			else{
-				lineBuilder(code);
-			}
+			lastShownIndex = shapes.size();
 			
 		}
 		
@@ -77,8 +77,8 @@ public class MachineSimDisplay extends SimpleApplication{
 	public int loadGCode(GCodes _codes){
 		shapes.clear();
 		codes = _codes;
-		for (int i = 1; i < _codes.size(); i++) {
-			GCodePosition code = _codes.get(i);
+		
+		for (GCodePosition code : _codes) {
 			if (_codes.isPrintMove(code)){
 				boxBuilder(code);
 			}
@@ -89,6 +89,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		}
 		System.out.println("Num of Codes: " + _codes.size());
 		System.out.println("Num of Shapes: " + shapes.size());
+		lastShownIndex = shapes.size();
 		hasChanged = true;
 		return codes.numLayers();
 	}
@@ -142,21 +143,33 @@ public class MachineSimDisplay extends SimpleApplication{
         geom.setLocalRotation(direction);
         geom.setLocalTranslation(newCenter);
         
-        Material mat = new Material(assetManager,
-          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material        \
+        Material mat = new Material(assetManager,  // Create new material and...
+        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+        	
+        	            
         
         if (codes.isGoodExtrusion(_code)){
-        	mat.setColor("Color", ColorRGBA.Green);
+        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	mat.setColor("Ambient", ColorRGBA.Green);   // ... color of this object
+        	mat.setColor("Diffuse", ColorRGBA.Green);   // ... color of light being reflected
         }
         else{
-        	mat.setColor("Color", ColorRGBA.Red);
+        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	mat.setColor("Ambient", ColorRGBA.Red);   // ... color of this object
+        	mat.setColor("Diffuse", ColorRGBA.Red);   // ... color of light being reflected
         }
         if ((extentX > 100) || (extentY > 1) || (extentZ > 1)){
 		//	System.out.println("The Extents: (" + x2 + ","+ y2 + "," + z2 + ")");
-			mat.setColor("Color", ColorRGBA.Yellow);
+        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	mat.setColor("Ambient", ColorRGBA.Yellow);   // ... color of this object
+        	mat.setColor("Diffuse", ColorRGBA.Yellow);   // ... color of light being reflected
 		}
         geom.setMaterial(mat);                   // set the cube's material
-        shapes.add(geom);
+        
+			shapes.add(geom);
+		
+        
+        //hasChanged = true;
 		}
        
 	}
@@ -194,7 +207,12 @@ public class MachineSimDisplay extends SimpleApplication{
 		}
 		*/
         geom.setMaterial(mat);                   // set the cube's material
-        shapes.add(geom);
+        try {
+			shapes.set(codes.indexOf(_code), geom);
+		} catch (Exception e) {
+			shapes.add(geom);
+		}
+        //hasChanged = true;
 		}
        
 	}
@@ -244,20 +262,44 @@ public class MachineSimDisplay extends SimpleApplication{
         chaseCam.setMaxVerticalRotation((float) Math.PI);
         chaseCam.setMinVerticalRotation(((float) Math.PI)*-1);
         chaseCam.setInvertVerticalAxis(true);
-        
+       
         chaseCam.setDefaultHorizontalRotation((float) ((Math.PI/2)));
         chaseCam.setDefaultVerticalRotation((float) (-1*(Math.PI/4)));
         //chaseCam.setUpVector(new Vector3f(0,0,-1));
         
        // chaseCam.setDragToRotate(true);
         setPauseOnLostFocus(false);
-        Node nodeLight = new Node();
-        nodeLight.move(0, 200, 0);
-        Light mainLight;
+        
+        /*
         DirectionalLight sun = new DirectionalLight();
-        sun.setDirection(new Vector3f(1,-1,1).normalizeLocal());
         sun.setColor(ColorRGBA.White);
-        nodeLight.addLight(sun);
+        sun.setDirection(new Vector3f(0,0,-1f).normalizeLocal());
+        rootNode.addLight(sun);
+        */
+       
+        PointLight lamp_light = new PointLight();
+        lamp_light.setColor(ColorRGBA.White);
+        lamp_light.setRadius(700f);
+        lamp_light.setPosition(new Vector3f(0,0,200));
+        rootNode.addLight(lamp_light);
+        
+        PointLight lamp_light1 = new PointLight();
+        lamp_light1.setColor(ColorRGBA.White);
+        lamp_light1.setRadius(700f);
+        lamp_light1.setPosition(new Vector3f(0,200,200));
+        rootNode.addLight(lamp_light1);
+        
+        PointLight lamp_light2 = new PointLight();
+        lamp_light2.setColor(ColorRGBA.White);
+        lamp_light2.setRadius(700f);
+        lamp_light2.setPosition(new Vector3f(200,200,200));
+        rootNode.addLight(lamp_light2);
+        
+        PointLight lamp_light3 = new PointLight();
+        lamp_light3.setColor(ColorRGBA.White);
+        lamp_light3.setRadius(700f);
+        lamp_light3.setPosition(new Vector3f(200,0,200));
+        rootNode.addLight(lamp_light3);
         
         obj = new Node();
         Vector3f init = new Vector3f(0,1,0);
@@ -267,20 +309,29 @@ public class MachineSimDisplay extends SimpleApplication{
         //obj.setLocalRotation(rotateUp);
         rootNode.attachChild(obj);
         //getFlyByCamera().setDragToRotate(true);
-        
-        
-        
+        Quad base = new Quad(200, 200);
+        Geometry geom = new Geometry("Base", base);
+        //geom.setLocalTranslation(new Vector3f(-250,-250,0));
+        Material mat = new Material(assetManager,  // Create new material and...
+        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+        mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+    	mat.setColor("Ambient", ColorRGBA.Gray);   // ... color of this object
+    	mat.setColor("Diffuse", ColorRGBA.Gray);   // ... color of light being reflected
+    	geom.setMaterial(mat);
+    	rootNode.attachChild(geom);
 	}
+	
 	@Override
 	 public void simpleUpdate(float tpf){
 		if (hasChanged == true){
 			hasChanged = false;
 			System.out.println("Number of lines: " + shapes.size());
+			
 			obj.detachAllChildren();
-			for (int i = 0; i < shapes.size(); i++) {
+			for (int i = 0; i < lastShownIndex; i++) {				
 				obj.attachChild(shapes.get(i));
-			}
-			System.out.println("How many children: " + rootNode.getChildren().size());
+			} 
+			System.out.println("How many children: " + obj.getChildren().size());
 		}
 		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + "Horizontal: " + chaseCam.getHorizontalRotation());
 	 }
