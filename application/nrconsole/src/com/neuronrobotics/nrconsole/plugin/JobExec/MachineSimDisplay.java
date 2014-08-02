@@ -49,6 +49,42 @@ public class MachineSimDisplay extends SimpleApplication{
 	Matrix3f rotateUp;
 	private int layersToShow;
 	private int lastShownIndex;
+	private Material matGood;
+	private Material matBad;
+	private Material matLine;
+	
+	
+	private Material getMatGood(){
+		if (matGood == null){
+			matGood = new Material(assetManager,  // Create new material and...
+	        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+			matGood.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	matGood.setColor("Ambient", ColorRGBA.Green);   // ... color of this object
+        	matGood.setColor("Diffuse", ColorRGBA.Green);   // ... color of light being reflected
+		}
+		return matGood;
+	}
+	
+	private Material getMatBad(){
+		if (matBad == null){
+			matBad = new Material(assetManager,  // Create new material and...
+	        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+			matBad.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	matBad.setColor("Ambient", ColorRGBA.Red);   // ... color of this object
+        	matBad.setColor("Diffuse", ColorRGBA.Red);   // ... color of light being reflected
+		}
+		return matBad;
+	}
+	private Material getMatLine(){
+		if (matLine == null){
+			matLine = new Material(assetManager,
+			          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material        \
+	        
+		       matLine.setColor("Color", ColorRGBA.Blue); 
+		}
+		return matLine;
+	}
+	
 	public MachineSimDisplay(JPanel _panel){
 		
 		panel = _panel;
@@ -143,28 +179,21 @@ public class MachineSimDisplay extends SimpleApplication{
         geom.setLocalRotation(direction);
         geom.setLocalTranslation(newCenter);
         
-        Material mat = new Material(assetManager,  // Create new material and...
-        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+        
         	
         	            
         
         if (codes.isGoodExtrusion(_code)){
-        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-        	mat.setColor("Ambient", ColorRGBA.Green);   // ... color of this object
-        	mat.setColor("Diffuse", ColorRGBA.Green);   // ... color of light being reflected
+        	geom.setMaterial(getMatGood());
         }
         else{
-        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-        	mat.setColor("Ambient", ColorRGBA.Red);   // ... color of this object
-        	mat.setColor("Diffuse", ColorRGBA.Red);   // ... color of light being reflected
+        	geom.setMaterial(getMatBad());
         }
         if ((extentX > 100) || (extentY > 1) || (extentZ > 1)){
 		//	System.out.println("The Extents: (" + x2 + ","+ y2 + "," + z2 + ")");
-        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-        	mat.setColor("Ambient", ColorRGBA.Yellow);   // ... color of this object
-        	mat.setColor("Diffuse", ColorRGBA.Yellow);   // ... color of light being reflected
+        	geom.setMaterial(getMatBad());
 		}
-        geom.setMaterial(mat);                   // set the cube's material
+                           // set the cube's material
         
 			shapes.add(geom);
 		
@@ -196,17 +225,14 @@ public class MachineSimDisplay extends SimpleApplication{
         
         
         
-        Material mat = new Material(assetManager,
-          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material        \
         
-       mat.setColor("Color", ColorRGBA.Blue);
        
        /* if ((extentX > 100) || (extentY > 1) || (extentZ > 1)){
 			System.out.println("The Extents: (" + x2 + ","+ y2 + "," + z2 + ")");
 			mat.setColor("Color", ColorRGBA.Green);
 		}
 		*/
-        geom.setMaterial(mat);                   // set the cube's material
+        geom.setMaterial(getMatLine());                   // set the cube's material
         try {
 			shapes.set(codes.indexOf(_code), geom);
 		} catch (Exception e) {
