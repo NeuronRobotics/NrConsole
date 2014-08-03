@@ -290,22 +290,22 @@ public class MachineSimDisplay extends SimpleApplication{
         
         chaseCam = new ChaseCamera(getCamera(),rootNode, getInputManager());
         chaseCam.setHideCursorOnRotate(true);
-        chaseCam.setDefaultDistance(200);
+        chaseCam.setDefaultDistance(353);
         chaseCam.setMaxDistance(100000);
         chaseCam.setEnabled(true);
         Vector3f viewOff = new Vector3f(100,0,-100);
         
         chaseCam.setLookAtOffset(viewOff);
-        chaseCam.setMaxVerticalRotation((float) Math.PI);
-        chaseCam.setMinVerticalRotation(((float) Math.PI)*-1);
+        chaseCam.setMaxVerticalRotation((float) (Math.PI/2));
+        chaseCam.setMinVerticalRotation(0);
         chaseCam.setInvertVerticalAxis(true);
        
-        //chaseCam.setDefaultHorizontalRotation((float) ((Math.PI/2)));
-        //chaseCam.setDefaultVerticalRotation((float) (-1*(Math.PI/4)));
+        chaseCam.setDefaultHorizontalRotation(2);
+        chaseCam.setDefaultVerticalRotation(0.824f);
         //chaseCam.setUpVector(new Vector3f(0,0,-1));
         
         chaseCam.setDragToRotate(true);
-        setPauseOnLostFocus(true);
+        setPauseOnLostFocus(false);
               
         PointLight lamp_light = new PointLight();
         lamp_light.setColor(ColorRGBA.White);
@@ -405,7 +405,9 @@ public class MachineSimDisplay extends SimpleApplication{
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
 		}
-		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + "Horizontal: " + chaseCam.getHorizontalRotation());
+		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + 
+			//	"Horizontal: " + chaseCam.getHorizontalRotation()+
+				//"Zoom: " + chaseCam.getDistanceToTarget());
 	 }
 	
 	
