@@ -102,10 +102,10 @@ public class MachineSimDisplay extends SimpleApplication{
 	public void setLayersToShow(int numLayers){
 		
 		layersToShow= numLayers;
-		updateDisplay();
-		for (Geometry shape : shapes) {
-			System.out.println(shape.toString());
-			if (shapes.indexOf(shape) > lastShownIndex){
+		for (int i = 0; i < shapes.size(); i++) {
+			Geometry shape = shapes.get(i);
+			
+			if (codes.getLayer(codes.get(i)) > layersToShow){
 				shape.setCullHint(CullHint.Always);
 			}
 			else{
@@ -113,22 +113,13 @@ public class MachineSimDisplay extends SimpleApplication{
 			}
 		}
 		shapesCombined = (ArrayList<Geometry>) GeometryBatchFactory.makeBatches(shapes);
+		
 		System.out.println("Items after Combination: " + shapesCombined.size());
+		
 		hasChanged = true;
 	}
-	private void updateDisplay(){
-		for (GCodePosition code : codes) {
-			System.out.println(code.toString());
-			if (codes.getLayer(code) > layersToShow){
-				lastShownIndex = codes.indexOf(code);
-				
-				return;
-			}
-			lastShownIndex = shapes.size();
-			
-		}
-		
-	}
+	
+	
 	public int loadGCode(GCodes _codes){
 		shapes.clear();
 		codes = _codes;
@@ -381,7 +372,7 @@ public class MachineSimDisplay extends SimpleApplication{
 			for (Geometry geom : shapesCombined) {
 				obj.attachChild(geom);
 			}
-			 
+			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
 		}
 		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + "Horizontal: " + chaseCam.getHorizontalRotation());

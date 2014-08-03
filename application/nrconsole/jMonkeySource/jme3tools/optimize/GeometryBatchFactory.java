@@ -6,11 +6,13 @@ import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.*;
 import com.jme3.scene.Mesh.Mode;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.VertexBuffer.Format;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.VertexBuffer.Usage;
 import com.jme3.scene.mesh.IndexBuffer;
 import com.jme3.util.BufferUtils;
+
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
@@ -319,7 +321,9 @@ public class GeometryBatchFactory {
                 outList = new ArrayList<Geometry>();
                 matToGeom.put(geom.getMaterial(), outList);
             }
-            outList.add(geom);
+            if (geom.getCullHint() != CullHint.Always){
+            	outList.add(geom);
+            }
         }
 
         int batchNum = 0;
