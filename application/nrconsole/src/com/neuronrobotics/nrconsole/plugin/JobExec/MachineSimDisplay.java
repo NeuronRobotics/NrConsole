@@ -56,8 +56,6 @@ public class MachineSimDisplay extends SimpleApplication{
 	private Material matGood;
 	private Material matBad;
 	private Material matLine;
-	
-	
 	public MachineSimDisplay(JPanel _panel){
 		
 		panel = _panel;
@@ -278,7 +276,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		ctx = (JmeCanvasContext) getContext();
 		ctx.setSystemListener(this);
 		panel.add(ctx.getCanvas());
-		//SwingUtilities.invokeLater(new SwingApplicationStarter ());
+		
     }
 	
 	@Override
@@ -290,75 +288,107 @@ public class MachineSimDisplay extends SimpleApplication{
        
         
         
-       
         chaseCam = new ChaseCamera(getCamera(),rootNode, getInputManager());
+        chaseCam.setHideCursorOnRotate(true);
         chaseCam.setDefaultDistance(200);
         chaseCam.setMaxDistance(100000);
         chaseCam.setEnabled(true);
-        Vector3f viewOff = new Vector3f(100,100,0);
+        Vector3f viewOff = new Vector3f(100,0,-100);
+        
         chaseCam.setLookAtOffset(viewOff);
         chaseCam.setMaxVerticalRotation((float) Math.PI);
         chaseCam.setMinVerticalRotation(((float) Math.PI)*-1);
         chaseCam.setInvertVerticalAxis(true);
        
-        chaseCam.setDefaultHorizontalRotation((float) ((Math.PI/2)));
-        chaseCam.setDefaultVerticalRotation((float) (-1*(Math.PI/4)));
+        //chaseCam.setDefaultHorizontalRotation((float) ((Math.PI/2)));
+        //chaseCam.setDefaultVerticalRotation((float) (-1*(Math.PI/4)));
         //chaseCam.setUpVector(new Vector3f(0,0,-1));
         
-       // chaseCam.setDragToRotate(true);
-        setPauseOnLostFocus(false);
-        
-        /*
-        DirectionalLight sun = new DirectionalLight();
-        sun.setColor(ColorRGBA.White);
-        sun.setDirection(new Vector3f(0,0,-1f).normalizeLocal());
-        rootNode.addLight(sun);
-        */
-       
+        chaseCam.setDragToRotate(true);
+        setPauseOnLostFocus(true);
+              
         PointLight lamp_light = new PointLight();
         lamp_light.setColor(ColorRGBA.White);
         lamp_light.setRadius(700f);
-        lamp_light.setPosition(new Vector3f(0,0,200));
+        lamp_light.setPosition(new Vector3f(0,200,0));
         rootNode.addLight(lamp_light);
         
         PointLight lamp_light1 = new PointLight();
         lamp_light1.setColor(ColorRGBA.White);
         lamp_light1.setRadius(700f);
-        lamp_light1.setPosition(new Vector3f(0,200,200));
+        lamp_light1.setPosition(new Vector3f(200,200,0));
         rootNode.addLight(lamp_light1);
         
         PointLight lamp_light2 = new PointLight();
         lamp_light2.setColor(ColorRGBA.White);
         lamp_light2.setRadius(700f);
-        lamp_light2.setPosition(new Vector3f(200,200,200));
+        lamp_light2.setPosition(new Vector3f(0,200,-200));
         rootNode.addLight(lamp_light2);
         
         PointLight lamp_light3 = new PointLight();
         lamp_light3.setColor(ColorRGBA.White);
         lamp_light3.setRadius(700f);
-        lamp_light3.setPosition(new Vector3f(200,0,200));
+        lamp_light3.setPosition(new Vector3f(200,200,-200));
+        
         rootNode.addLight(lamp_light3);
         
         obj = new Node();
-        Vector3f init = new Vector3f(0,1,0);
-        Vector3f end = new Vector3f(0,0,1);
-        rotateUp = new Matrix3f();
-        rotateUp.fromStartEndVectors(init, end);
-        //obj.setLocalRotation(rotateUp);
+        
         rootNode.attachChild(obj);
-        //getFlyByCamera().setDragToRotate(true);
+        
+        
+        
         Quad base = new Quad(200, 200);
         Geometry geom = new Geometry("Base", base);
         //geom.setLocalTranslation(new Vector3f(-250,-250,0));
         Material mat = new Material(assetManager,  // Create new material and...
         	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+        		
         mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-    	mat.setColor("Ambient", ColorRGBA.Gray);   // ... color of this object
-    	mat.setColor("Diffuse", ColorRGBA.Gray);   // ... color of light being reflected
+    	mat.setColor("Ambient", ColorRGBA.DarkGray);   // ... color of this object
+    	mat.setColor("Diffuse", ColorRGBA.DarkGray);   // ... color of light being reflected
+        		
+     
     	geom.setMaterial(mat);
     	rootNode.attachChild(geom);
+    	
+        Vector3f init = new Vector3f(0,1,0);
+        Vector3f end = new Vector3f(0,0,-1);
+        rotateUp = new Matrix3f();
+        rotateUp.fromStartEndVectors(init, end);
+        rootNode.setLocalRotation(rotateUp);
+       
+        
+       
+        loadAxes(0,0,0);
+        
+	}
+	public void loadAxes(int xOff, int yOff, int zOff){
+		Vector3f zero = new Vector3f(xOff,yOff,zOff);
+		Vector3f xV = new Vector3f(25 + xOff,yOff,zOff);
+		Vector3f yV = new Vector3f(xOff,25 + yOff,zOff);
+		Vector3f zV = new Vector3f(xOff,yOff,25 + zOff);
+		Line x = new Line(zero, xV);
+		Line y = new Line(zero, yV);
+		Line z = new Line(zero, zV);
+		Geometry geomX = new Geometry("X Axis", x);
+		Geometry geomY = new Geometry("Y Axis", y);
+		Geometry geomZ = new Geometry("Z Axis", z);
+		geomX.setMaterial(getUnshadedColor(ColorRGBA.Green));
+		geomY.setMaterial(getUnshadedColor(ColorRGBA.Red));
+		geomZ.setMaterial(getUnshadedColor(ColorRGBA.Blue));
+		
+		rootNode.attachChild(geomX);
+		rootNode.attachChild(geomY);
+		rootNode.attachChild(geomZ);
 	}
 	
+	public Material getUnshadedColor(ColorRGBA _color){
+		Material mat = new Material(assetManager,
+		          "Common/MatDefs/Misc/Unshaded.j3md");
+		mat.setColor("Color", _color);
+		return mat;
+	}
 	@Override
 	 public void simpleUpdate(float tpf){
 		if (hasChanged == true){

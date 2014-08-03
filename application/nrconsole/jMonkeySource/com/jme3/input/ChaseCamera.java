@@ -71,6 +71,9 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
     protected float trailingLerpFactor = 0;
     protected boolean rotating = false;
     protected boolean vRotating = false;
+    protected boolean strafing = false;
+    protected boolean vStrafing = false;
+    
     protected float targetRotation = rotation;
     protected InputManager inputManager;
     protected Vector3f initialUpVec;
@@ -83,6 +86,7 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
     protected boolean chasing = false;
     protected boolean veryCloseRotation = true;
     protected boolean canRotate;
+    protected boolean canStrafe;
     protected float offsetDistance = 0.002f;
     protected Vector3f prevPos;
     protected boolean targetMoves = false;
@@ -106,9 +110,11 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
     public final static String ChaseCamMoveLeft = "ChaseCamMoveLeft";
     public final static String ChaseCamMoveRight = "ChaseCamMoveRight";
     public final static String ChaseCamToggleRotate = "ChaseCamToggleRotate";
+    public final static String ChaseCamToggleStrafe = "ChaseCamToggleStrafe";
     protected boolean zoomin;
     protected boolean hideCursorOnRotate = true;
-
+    protected Vector3f targetStrafing = new Vector3f(0,0,0);
+    protected float strafeSpeed = 25;
     /**
      * Constructs the chase camera
      * @param cam the application camera
@@ -154,14 +160,33 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
     }
 
     public void onAction(String name, boolean keyPressed, float tpf) {
+    	;
         if (dragToRotate) {
             if (name.equals(ChaseCamToggleRotate) && enabled) {
                 if (keyPressed) {
                     canRotate = true;
+                    canStrafe = false;
                     if (hideCursorOnRotate) {
                         inputManager.setCursorVisible(false);
                     }
                 } else {
+                    canRotate = false;
+                    canStrafe = false;
+                    if (hideCursorOnRotate) {
+                        inputManager.setCursorVisible(true);
+                    }
+                }
+            }
+            else if(name.equals(ChaseCamToggleStrafe) && enabled) {
+            	
+                if (keyPressed) {
+                	canStrafe = true;
+                    canRotate = false;
+                    if (hideCursorOnRotate) {
+                        inputManager.setCursorVisible(false);
+                    }
+                } else {
+                	canStrafe = false;
                     canRotate = false;
                     if (hideCursorOnRotate) {
                         inputManager.setCursorVisible(true);
@@ -203,7 +228,7 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
      */
     public final void registerWithInput(InputManager inputManager) {
 
-        String[] inputs = {ChaseCamToggleRotate,
+        String[] inputs = {ChaseCamToggleRotate,ChaseCamToggleStrafe,
             ChaseCamDown,
             ChaseCamUp,
             ChaseCamMoveLeft,
@@ -229,7 +254,7 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
             inputManager.addMapping(ChaseCamMoveRight, new MouseAxisTrigger(MouseInput.AXIS_X, true));
         }
         inputManager.addMapping(ChaseCamToggleRotate, new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        inputManager.addMapping(ChaseCamToggleRotate, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+        inputManager.addMapping(ChaseCamToggleStrafe, new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
 
         inputManager.addListener(this, inputs);
     }
@@ -280,11 +305,24 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
 
     //rotate the camera around the target on the horizontal plane
     protected void rotateCamera(float value) {
-        if (!canRotate || !enabled) {
+        if (!enabled) {
             return;
         }
-        rotating = true;
-        targetRotation += value * rotationSpeed;
+        if (canRotate){
+        	rotating = true;
+            targetRotation += value * rotationSpeed;
+        }
+        if (canStrafe){
+        	strafing = true;
+        	Vector3f vec = new Vector3f();
+        	pos.subtract(targetLocation, vec);
+        	
+        	vec.crossLocal(0,vec.getY(),0);
+        	vec = vec.normalize().mult(value * strafeSpeed);
+        	
+        	lookAtOffset.addLocal(vec.x, 0 , vec.z);
+        	System.out.println(lookAtOffset);
+        }
 
 
     }
@@ -312,9 +350,10 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
 
     //rotate the camera around the target on the vertical plane
     protected void vRotateCamera(float value) {
-        if (!canRotate || !enabled) {
+        if (!enabled) {
             return;
         }
+        if (canRotate){
         vRotating = true;
         float lastGoodRot = targetVRotation;
         targetVRotation += value * rotationSpeed;
@@ -332,6 +371,16 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
                 targetVRotation = lastGoodRot;
             }
         }
+        }
+        if (canStrafe){
+        	strafing = true;
+        	Vector3f vec = new Vector3f();
+        	pos.subtract(targetLocation, vec);
+        	vec.normalizeLocal();
+        	vec.multLocal(value*strafeSpeed);
+        	lookAtOffset.subtractLocal(vec.x, 0, vec.z);
+        	System.out.println(lookAtOffset);
+        }
     }
 
     /**
@@ -339,7 +388,9 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
      */
     protected void updateCamera(float tpf) {
         if (enabled) {
+        	
             targetLocation.set(target.getWorldTranslation()).addLocal(lookAtOffset);
+            
             if (smoothMotion) {
 
                 //computation of target direction
