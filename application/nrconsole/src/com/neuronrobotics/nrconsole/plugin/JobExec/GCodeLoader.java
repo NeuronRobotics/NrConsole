@@ -17,7 +17,8 @@ public class GCodeLoader {
 	private GCodeInterpreter interp;
 	private GCodes codes = new GCodes();
 	private double extOffset = 0;
-	
+	public double currlayer;
+	public double prevLayer;
 	public GCodes getCodes() {
 		return codes;
 	}

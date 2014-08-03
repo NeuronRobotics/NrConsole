@@ -9,13 +9,26 @@ import java.util.ListIterator;
 public class GCodes extends ArrayList<GCodePosition>{
 double filaDia = 3;
 double nozzleDia = .5;	
-	
+int layers = 0;
+
 public double getFilaDia() {
 	return filaDia;
 }
-public boolean add(double _x, double _y, double _z, double _e){
-	return add(new GCodePosition(_x, _y, _z, _e));
+public boolean add(double _x, double _y, double _z, double _e, int _layer){
+	if (_layer > layers){
+		layers = _layer;
+	}
+	return add(new GCodePosition(_x, _y, _z, _e, _layer));
 }
+
+public boolean add(double _x, double _y, double _z, double _e){
+	if (get(size()-1).getZ() != _z){
+		layers++;
+	}
+	return add(new GCodePosition(_x, _y, _z, _e, layers));
+}
+
+
 
 public void setFilaDia(double _filaDia) {
 	filaDia = _filaDia;
@@ -96,30 +109,10 @@ public double getLayerHeight(GCodePosition _code){
 		return layerHeight;
 }
 public int numLayers(){
-	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
-	int layers = 0;
-	for (GCodePosition code : this) {
-		if (code.getZ() != -1){
-			if (code.getZ() != prevZ){
-				prevZ = code.getZ();
-				layers++;
-				}
-			}
-		}
-		return layers;
+	return layers;
 	}
 public int getLayer(GCodePosition _code){
-	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
-	int layers = 0;
-	for (int i = 1; i < indexOf(_code); i++) {
-		if (get(i).getZ() != -1){
-			if (get(i).getZ() != prevZ){
-				prevZ = get(i).getZ();
-				layers++;
-				}
-			}
-		}
-		return layers;
+	return _code.getLayer();
 	}
 	
 

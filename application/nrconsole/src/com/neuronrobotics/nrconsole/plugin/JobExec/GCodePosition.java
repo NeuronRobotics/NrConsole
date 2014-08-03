@@ -5,17 +5,18 @@ public class GCodePosition {
 	private double y = -1;
 	private double z = -1;
 	private double e = -1;
-	
+	private int layer;
 public GCodePosition(){
 	
 }
-public GCodePosition(double _x, double _y, double _z, double _e){
+public GCodePosition(double _x, double _y, double _z, double _e, int _layer){
 	setX(_x);
 	setY(_y);
 	setZ(_z);
 	setE(_e);
-	
+	setLayer(_layer);
 }
+
 public GCodePosition(double _x, double _y, double _e){
 	setX(_x);
 	setY(_y);
@@ -77,5 +78,11 @@ public double getE() {
  */
 public void setE(double _e) {
 	e = _e;
+}
+public int getLayer() {
+	return layer;
+}
+public void setLayer(int layer) {
+	this.layer = layer;
 }
 }
