@@ -430,6 +430,9 @@ public class JobExecPanel extends JPanel{
 	private JSlider getSliderLayer() {
 		if (sliderLayer == null) {
 			sliderLayer = new JSlider();
+			sliderLayer.setValue(0);
+			sliderLayer.setMaximum(0);
+			sliderLayer.setMajorTickSpacing(1);
 			sliderLayer.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
