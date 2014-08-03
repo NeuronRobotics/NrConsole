@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import jme3tools.optimize.GeometryBatchFactory;
+
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.ChaseCamera;
@@ -29,6 +31,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Line;
@@ -42,6 +45,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	JmeCanvasContext ctx;
 	JPanel panel;
 	private ArrayList<Geometry> shapes = new ArrayList<Geometry>();
+	private ArrayList<Geometry> shapesCombined = new ArrayList<Geometry>();
 	private boolean hasChanged = false;
 	GCodes codes;
 	private ChaseCamera chaseCam;
@@ -54,6 +58,11 @@ public class MachineSimDisplay extends SimpleApplication{
 	private Material matLine;
 	
 	
+	public MachineSimDisplay(JPanel _panel){
+		
+		panel = _panel;
+	}
+	
 	private Material getMatGood(){
 		if (matGood == null){
 			matGood = new Material(assetManager,  // Create new material and...
@@ -63,6 +72,7 @@ public class MachineSimDisplay extends SimpleApplication{
         	matGood.setColor("Diffuse", ColorRGBA.Green);   // ... color of light being reflected
 		}
 		return matGood;
+		
 	}
 	
 	private Material getMatBad(){
@@ -85,10 +95,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		return matLine;
 	}
 	
-	public MachineSimDisplay(JPanel _panel){
-		
-		panel = _panel;
-	}
+	
 	public int getLayersToShow(){
 		return layersToShow;
 	}
@@ -96,13 +103,25 @@ public class MachineSimDisplay extends SimpleApplication{
 		
 		layersToShow= numLayers;
 		updateDisplay();
+		for (Geometry shape : shapes) {
+			System.out.println(shape.toString());
+			if (shapes.indexOf(shape) > lastShownIndex){
+				shape.setCullHint(CullHint.Always);
+			}
+			else{
+				shape.setCullHint(CullHint.Inherit);
+			}
+		}
+		shapesCombined = (ArrayList<Geometry>) GeometryBatchFactory.makeBatches(shapes);
+		System.out.println("Items after Combination: " + shapesCombined.size());
 		hasChanged = true;
 	}
-	public void updateDisplay(){
+	private void updateDisplay(){
 		for (GCodePosition code : codes) {
-			
+			System.out.println(code.toString());
 			if (codes.getLayer(code) > layersToShow){
 				lastShownIndex = codes.indexOf(code);
+				
 				return;
 			}
 			lastShownIndex = shapes.size();
@@ -126,6 +145,8 @@ public class MachineSimDisplay extends SimpleApplication{
 		System.out.println("Num of Codes: " + _codes.size());
 		System.out.println("Num of Shapes: " + shapes.size());
 		lastShownIndex = shapes.size();
+		shapesCombined = (ArrayList<Geometry>) GeometryBatchFactory.makeBatches(shapes);
+		System.out.println("Items after Combination: " + shapesCombined.size());
 		hasChanged = true;
 		return codes.numLayers();
 	}
@@ -353,10 +374,14 @@ public class MachineSimDisplay extends SimpleApplication{
 			hasChanged = false;
 			System.out.println("Number of lines: " + shapes.size());
 			
+						
+			
 			obj.detachAllChildren();
-			for (int i = 0; i < lastShownIndex; i++) {				
-				obj.attachChild(shapes.get(i));
-			} 
+			
+			for (Geometry geom : shapesCombined) {
+				obj.attachChild(geom);
+			}
+			 
 			System.out.println("How many children: " + obj.getChildren().size());
 		}
 		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + "Horizontal: " + chaseCam.getHorizontalRotation());
