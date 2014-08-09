@@ -39,7 +39,7 @@ public void setFilaDia(double _filaDia) {
 public void printOutput(){
 	
 	for (GCodePosition code : this) {
-		//System.out.println("Position #: " + indexOf(code) + " x: " + code.getX() + " y: " + code.getY() + " z: " + code.getZ() + " e: " + code.getE());
+		System.out.println("Position #: " + indexOf(code) + " x: " + code.getX() + " y: " + code.getY() + " z: " + code.getZ() + " e: " + code.getE());
 	}
 	System.out.println("Number of Layers: " + numLayers());
 	System.out.println("Total Extrusion Length: " + totalExtrusionLength());
