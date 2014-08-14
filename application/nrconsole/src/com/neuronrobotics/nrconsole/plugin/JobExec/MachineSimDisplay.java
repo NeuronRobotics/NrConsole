@@ -72,6 +72,10 @@ public class MachineSimDisplay extends SimpleApplication{
 	private Mesh pVol;
 	private JobExecPanel jep;
 	private BoundingBox pbb;
+	private boolean showGood = true;
+	private boolean showTroubled = true;
+	private boolean showDangerous = true;
+	private boolean showNonExtrude = true;
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	public MachineSimDisplay(JPanel _panel){		
 		panel = _panel;
@@ -252,6 +256,15 @@ public class MachineSimDisplay extends SimpleApplication{
 		GCodePosition prevCode =codes.getPrevCode(_code);
 		if (prevCode != null){
 			
+			float extentX = (float) codes.getMoveLength(_code);
+			
+			extentX = extentX/2;
+			float extentY = (float) ((codes.getMoveVolExtWidth(_code))/2);
+			float extentZ = (float) ((codes.getLayerHeight(_code))/2);
+			if (!Float.isFinite(extentX) || !Float.isFinite(extentY) || !Float.isFinite(extentZ)){
+				return;
+			}
+			
 			double x1 =  prevCode.getX();
 			double y1 =  prevCode.getY();
 			double z1 =  prevCode.getZ();
@@ -270,11 +283,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		float centerY = (float) ((y1 + y2)/2);
 		float centerZ = (float) ((z1 +z2)/2);
 		
-		float extentX = (float) codes.getMoveLength(_code);
 		
-		extentX = extentX/2;
-		float extentY = (float) ((codes.getMoveVolExtWidth(_code))/2);
-		float extentZ = (float) ((codes.getLayerHeight(_code))/2);
 	
 		
 		
@@ -463,13 +472,13 @@ public class MachineSimDisplay extends SimpleApplication{
         PointLight lamp_light2 = new PointLight();
         lamp_light2.setColor(ColorRGBA.White);
         lamp_light2.setRadius(700f);
-        lamp_light2.setPosition(new Vector3f(min.getX(),max.getZ(),max.getY()));
+        lamp_light2.setPosition(new Vector3f(min.getX(),max.getZ(),max.getY()*-1));
         rootNode.addLight(lamp_light2);
         
         PointLight lamp_light3 = new PointLight();
         lamp_light3.setColor(ColorRGBA.White);
         lamp_light3.setRadius(700f);
-        lamp_light3.setPosition(new Vector3f(max.getX(),max.getZ(),max.getY()));
+        lamp_light3.setPosition(new Vector3f(max.getX(),max.getZ(),max.getY()*-1));
         
         rootNode.addLight(lamp_light3);
         
@@ -481,7 +490,7 @@ public class MachineSimDisplay extends SimpleApplication{
         
         //Quad base = new Quad(200, 200);
         
-        Geometry geom = new Geometry("Base", getPrintBase());
+        Geometry base = new Geometry("Base", getPrintBase());
         //geom.setLocalTranslation(new Vector3f(-250,-250,0));
         Material mat = new Material(assetManager,  // Create new material and...
         	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
@@ -491,8 +500,8 @@ public class MachineSimDisplay extends SimpleApplication{
     	mat.setColor("Diffuse", ColorRGBA.DarkGray);   // ... color of light being reflected
         		
      
-    	geom.setMaterial(mat);
-    	rootNode.attachChild(geom);
+    	base.setMaterial(mat);
+    	rootNode.attachChild(base);
     	
         Vector3f init = new Vector3f(0,1,0);
         Vector3f end = new Vector3f(0,0,-1);
@@ -583,6 +592,8 @@ public class MachineSimDisplay extends SimpleApplication{
 			ptl.printIsWarn();
 		}
 	}
+	
+	
 	@Override
 	 public void simpleUpdate(float tpf){
 		if (loading == true  && hasChanged == false){
@@ -595,7 +606,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		}
 		
 		if (hasChanged == true){
-			loading =  false;
+			
 			hasChanged = false;
 			System.out.println("Number of lines: " + shapes.size());
 			
@@ -604,22 +615,75 @@ public class MachineSimDisplay extends SimpleApplication{
 			obj.detachAllChildren();
 			
 			for (Geometry geom : shapesCombined) {
-				obj.attachChild(geom);
-				
+				if (geom.getMaterial() == getMatGood() && isShowGood()){
+					obj.attachChild(geom);
+				}
+				if (geom.getMaterial() == getMatProblem() && isShowTroubled()){
+					obj.attachChild(geom);
+				}
+				if (geom.getMaterial() == getMatFail() && isShowDangerous()){
+					obj.attachChild(geom);
+				}
+				if (geom.getMaterial() == getMatLine() && isShowNonExtrude()){
+					obj.attachChild(geom);
+				}
 			}
-			if (!isPrintAllowed()){
-				notifyIllegalPrint();
+			if (loading == true){// Only run these bits if this is the first time we are loading this file
+				if (!isPrintAllowed()){
+					notifyIllegalPrint();
+				}
+				if (isPrintWarned()){
+					notifyWarnPrint();
+				}
 			}
-			if (isPrintWarned()){
-				notifyWarnPrint();
-			}
+			
+			
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
+			loading =  false;
 		}
 		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + 
 			//	"Horizontal: " + chaseCam.getHorizontalRotation()+
 				//"Zoom: " + chaseCam.getDistanceToTarget());
 	 }
+
+	public boolean isShowGood() {
+		return showGood;
+	}
+
+	public void setShowGood(boolean showGood) {
+		this.showGood = showGood;
+		hasChanged = true;
+	}
+
+	public boolean isShowTroubled() {
+		return showTroubled;
+	}
+
+	public void setShowTroubled(boolean showTroubled) {
+		
+		this.showTroubled = showTroubled;
+		hasChanged = true;
+	}
+
+	public boolean isShowDangerous() {
+		return showDangerous;
+	}
+
+	public void setShowDangerous(boolean showDangerous) {
+		
+		this.showDangerous = showDangerous;
+		hasChanged = true;
+	}
+
+	public boolean isShowNonExtrude() {
+		return showNonExtrude;
+	}
+
+	public void setShowNonExtrude(boolean showNonExtrude) {
+		this.showNonExtrude = showNonExtrude;
+		hasChanged = true;
+	}
 	
 	
 }

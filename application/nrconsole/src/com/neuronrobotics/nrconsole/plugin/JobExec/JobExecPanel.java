@@ -35,6 +35,11 @@ import javax.swing.event.ChangeEvent;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JCheckBox;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 
 public class JobExecPanel extends JPanel{
@@ -75,6 +80,12 @@ public class JobExecPanel extends JPanel{
 	private boolean isGoodFile;
 	private boolean isWarn = false;
 	private boolean isIllegal = false;
+	private JPanel panel_3;
+	private JPanel panel_4;
+	private JCheckBox chckbxShowGoodLines;
+	private JCheckBox chckbxShowTroubledLines;
+	private JCheckBox chckbxShowDangerousLines;
+	private JCheckBox chckbxShowNonextrudeLines;
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 		      public void run() {
@@ -104,24 +115,12 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void initComponents() {
-		setLayout(new MigLayout("", "[157px,grow][][][grow][][grow][][grow][][grow][][grow][145.00,center]", "[][grow]"));
-		add(getJButtonOpenGCode(), "flowx,cell 0 0,alignx center,aligny top");
-		add(getJButtonRunJob(), "cell 1 0,alignx center,aligny top");
-		
-		add(getJLabel0(), "cell 2 0,alignx right,aligny center");
-		add(getJTextField0(), "cell 3 0,growx,aligny center");
-		add(getJLabel1(), "cell 4 0,alignx right,aligny center");
-		add(getJTextField1(), "cell 5 0,growx,aligny center");
-		add(getJLabel2(), "cell 6 0,alignx right,aligny center");
-		add(getJTextField2(), "cell 7 0,growx,aligny center");
-		add(getJLabel3(), "cell 8 0,alignx right,aligny center");
-		add(getJTextField4(), "cell 9 0,growx");
-		add(getJLabel4(), "cell 10 0,alignx right,aligny center");
-		add(getJTextField3(), "cell 11 0,growx,aligny center");
-		add(getJButton0(), "cell 12 0,alignx center,aligny top");
-		add(getSplitPane(), "cell 0 1 13 1,grow");
+		setLayout(new MigLayout("", "[157px,grow]", "[grow][][grow][grow][]"));
+		add(getPanel_3(), "cell 0 0,grow");
+		add(getSplitPane(), "cell 0 2,grow");
 		
 		setMinimumSize(new Dimension(693, 476));
+		add(getPanel_4(), "cell 0 3,grow");
 		
 	}
 
@@ -542,5 +541,84 @@ public class JobExecPanel extends JPanel{
 			sliderLayer.setOrientation(SwingConstants.VERTICAL);
 		}
 		return sliderLayer;
+	}
+	private JPanel getPanel_3() {
+		if (panel_3 == null) {
+			panel_3 = new JPanel();
+			panel_3.setLayout(new MigLayout("", "[][][9.00,center][grow][10.00][grow][10.00][grow][][grow][][grow][]", "[center][]"));
+			panel_3.add(getJButtonOpenGCode(), "cell 0 0,grow");
+			panel_3.add(getJButtonRunJob(), "cell 1 0,grow");
+			panel_3.add(getJLabel0(), "cell 2 0,alignx right");
+			panel_3.add(getJTextField0(), "cell 3 0,growx");
+			panel_3.add(getJLabel1(), "cell 4 0,alignx right,growy");
+			panel_3.add(getJTextField1(), "cell 5 0,growx");
+			panel_3.add(getJLabel2(), "cell 6 0,alignx right");
+			panel_3.add(getJTextField2(), "cell 7 0,growx");
+			panel_3.add(getJLabel3(), "cell 8 0");
+			panel_3.add(getJTextField4(), "cell 9 0,growx");
+			panel_3.add(getJLabel4(), "cell 10 0");
+			panel_3.add(getJTextField3(), "cell 11 0,growx");
+			panel_3.add(getJButton0(), "cell 12 0,growy");
+		}
+		return panel_3;
+	}
+	private JPanel getPanel_4() {
+		if (panel_4 == null) {
+			panel_4 = new JPanel();
+			panel_4.setLayout(new MigLayout("", "[][][][][]", "[][]"));
+			panel_4.add(getChckbxShowGoodLines(), "cell 0 0");
+			panel_4.add(getChckbxShowTroubledLines(), "cell 1 0");
+			panel_4.add(getChckbxShowDangerousLines(), "cell 2 0");
+			panel_4.add(getChckbxShowNonextrudeLines(), "cell 3 0");
+		}
+		return panel_4;
+	}
+	private JCheckBox getChckbxShowGoodLines() {
+		if (chckbxShowGoodLines == null) {
+			chckbxShowGoodLines = new JCheckBox("Show Good Lines");
+			chckbxShowGoodLines.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					app.setShowGood(chckbxShowGoodLines.isSelected());
+				}
+			});
+			chckbxShowGoodLines.setSelected(true);
+		}
+		return chckbxShowGoodLines;
+	}
+	private JCheckBox getChckbxShowTroubledLines() {
+		if (chckbxShowTroubledLines == null) {
+			chckbxShowTroubledLines = new JCheckBox("Show Troubled Lines");
+			chckbxShowTroubledLines.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					app.setShowTroubled(chckbxShowTroubledLines.isSelected());
+				}
+			});
+			chckbxShowTroubledLines.setSelected(true);
+		}
+		return chckbxShowTroubledLines;
+	}
+	private JCheckBox getChckbxShowDangerousLines() {
+		if (chckbxShowDangerousLines == null) {
+			chckbxShowDangerousLines = new JCheckBox("Show Dangerous Lines");
+			chckbxShowDangerousLines.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					app.setShowDangerous(chckbxShowDangerousLines.isSelected());
+				}
+			});
+			chckbxShowDangerousLines.setSelected(true);
+		}
+		return chckbxShowDangerousLines;
+	}
+	private JCheckBox getChckbxShowNonextrudeLines() {
+		if (chckbxShowNonextrudeLines == null) {
+			chckbxShowNonextrudeLines = new JCheckBox("Show Non-Extrude Lines");
+			chckbxShowNonextrudeLines.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					app.setShowNonExtrude(chckbxShowNonextrudeLines.isSelected());
+				}
+			});
+			chckbxShowNonextrudeLines.setSelected(true);
+		}
+		return chckbxShowNonextrudeLines;
 	}
 }
