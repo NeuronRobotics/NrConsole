@@ -207,7 +207,7 @@ public double getMoveVolExtWidth(GCodePosition _code){
 	double length = getMoveLength(_code);
 	double width = (vol/(height*length));
 	if (width > 1){
-		System.out.println("Height: " + height + " Ext Length: " + getMoveExtLength(_code) + " Length: " + length + " Width: " + width);
+		//System.out.println("Height: " + height + " Ext Length: " + getMoveExtLength(_code) + " Length: " + length + " Width: " + width);
 	}
 	
 	return width;
