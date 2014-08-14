@@ -176,6 +176,7 @@ public class JobExecPanel extends JPanel{
 	}
 	private void loadGcodeFile(){
 		try {
+			app.loadingGCode();
 			gCodeStream = new FileInputStream(gCodes);
 			codeOps = new GCodeLoader();
 			
@@ -319,7 +320,8 @@ public class JobExecPanel extends JPanel{
 
 	private void jTextField4ActionActionPerformed(ActionEvent event) {
 		//set temp
-	}
+		
+		}
 
 	private void jTextField3ActionActionPerformed(ActionEvent event) {
 		//set extrude
@@ -382,6 +384,7 @@ public class JobExecPanel extends JPanel{
 	}
 	private int getBedTemp(){
 		return delt.GetPIDPosition(2);
+		
 	}
 	private int getBedSetpoint(){
 		return delt.getPIDChannel(2).getCachedTargetValue();
