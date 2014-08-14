@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -62,33 +63,53 @@ public class MachineSimDisplay extends SimpleApplication{
 	private int lastShownIndex;
 	private Material matGood;
 	private Material matBad;
+	private Material matFail;
 	private Material matLine;
 	private boolean loading= false;
 	private BitmapText loadingText = null;
 	private Vector3f scaleRate = new Vector3f(.5f,.5f,.5f);
 	private Vector3f printVolume = new Vector3f(200,200,200);
 	private Mesh pVol;
-	
+	private JobExecPanel jep;
 	private BoundingBox pbb;
+	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	public MachineSimDisplay(JPanel _panel){		
 		panel = _panel;
+		
 	}
 	
 	public void configure(float _printX, float _printY, float _printZ){
 		printVolume.set(_printX, _printY, _printZ);
 	}
 	
-	
+	public void addListener(PrintTestListener toAdd) {
+        listeners.add(toAdd);
+    }
 	public void loadingGCode(){
 		loading = true;
 	}
 	
-	
+	public boolean isPrintAllowed(){
+		for (Geometry geo : shapesCombined) {
+			if (geo.getMaterial() == getMatFail()){
+				return false;
+			}
+		}
+		return true;
+	}
+	public boolean isPrintWarned(){
+		for (Geometry geo : shapesCombined) {
+			if (geo.getMaterial() == getMatProblem()){
+				return true;
+			}
+		}
+		return false;
+	}
 	private Mesh getPrintVol(){
 		if (pVol == null){
 		
 		if (printVolume.getY()==0){//It's a cylinder
-			pVol = new Cylinder(100,100,printVolume.getX(),printVolume.getZ(), true, false);
+			pVol = new Cylinder(100,100,(printVolume.getX()/2),printVolume.getZ(), true, false);
 		}
 		else{//It's a cube
 			Box b = new Box();
@@ -101,11 +122,19 @@ public class MachineSimDisplay extends SimpleApplication{
 		return pVol;
 		
 	}
+	private boolean isCubeVol(){
+		if (printVolume.getY() == 0){
+			return false;
+		}
+		else{
+			return true;
+		}
+	}
 	private Mesh getPrintBase(){
 		Mesh base;
 		
 		if (printVolume.getY()==0){//It's a cylinder
-			base = new Cylinder(100,100,printVolume.getX(),0,true,false);
+			base = new Cylinder(100,100,(printVolume.getX()/2),0,true,false);
 		}
 		else{//It's a cube
 			Box b = new Box();
@@ -160,14 +189,14 @@ public class MachineSimDisplay extends SimpleApplication{
 		return matLine;
 	}
 	private Material getMatFail(){
-		if (matBad == null){
-			matBad = new Material(assetManager,  // Create new material and...
+		if (matFail == null){
+			matFail = new Material(assetManager,  // Create new material and...
 	        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
-			matBad.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-        	matBad.setColor("Ambient", ColorRGBA.Red);   // ... color of this object
-        	matBad.setColor("Diffuse", ColorRGBA.Red);   // ... color of light being reflected
+			matFail.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	matFail.setColor("Ambient", ColorRGBA.Red);   // ... color of this object
+        	matFail.setColor("Diffuse", ColorRGBA.Red);   // ... color of light being reflected
 		}
-		return matBad;
+		return matFail;
 	}
 	
 	public int getLayersToShow(){
@@ -274,16 +303,39 @@ public class MachineSimDisplay extends SimpleApplication{
         
         if (codes.isGoodExtrusion(_code)){
         	geom.setMaterial(getMatGood());
+        	geom.setName("Good Extrude");
         }
         else{
         	geom.setMaterial(getMatProblem());
+        	geom.setName("Problem Extrude");
         }
         if ((extentX > 100) || (extentY > 1) || (extentZ > 1)){
 		//	System.out.println("The Extents: (" + x2 + ","+ y2 + "," + z2 + ")");
         	geom.setMaterial(getMatProblem());
+        	geom.setName("Problem Extrude");
 		}
-        //TODO: Need to add some way to check if the GCodes are contained in the build area
-        
+               
+        /*TODO: this is bad...
+         * we should be able to find a way to check for this regardless of build volume shape
+         */
+        if (isCubeVol()){
+        	if (!getVolBB().contains(end) || !getVolBB().contains(start)){
+        		geom.setMaterial(getMatFail());
+        		geom.setName("Fail Extrude");
+        	}
+        }
+        else{
+        	Vector3f layerCenterStart = new Vector3f(getVolBB().getCenter().getX(), getVolBB().getCenter().getY(), start.getZ());
+        	Vector3f layerCenterEnd = new Vector3f(getVolBB().getCenter().getX(), getVolBB().getCenter().getY(), end.getZ());
+        	if (layerCenterEnd.distance(end) > (printVolume.getX()/2)){
+        		geom.setMaterial(getMatFail());
+        		geom.setName("Fail Extrude");
+        	}
+        	if (layerCenterStart.distance(start) > (printVolume.getX()/2)){
+        		geom.setMaterial(getMatFail());
+        		geom.setName("Fail Extrude");
+        	}
+        }
         
         	  
         	  // set the cube's material
@@ -521,7 +573,16 @@ public class MachineSimDisplay extends SimpleApplication{
 		
 		return loadingText;
 	}
-	
+	private void notifyIllegalPrint(){
+		for (PrintTestListener ptl : listeners) {
+			ptl.printIsIllegal();
+		}
+	}
+	private void notifyWarnPrint(){
+		for (PrintTestListener ptl : listeners) {
+			ptl.printIsWarn();
+		}
+	}
 	@Override
 	 public void simpleUpdate(float tpf){
 		if (loading == true  && hasChanged == false){
@@ -544,6 +605,13 @@ public class MachineSimDisplay extends SimpleApplication{
 			
 			for (Geometry geom : shapesCombined) {
 				obj.attachChild(geom);
+				
+			}
+			if (!isPrintAllowed()){
+				notifyIllegalPrint();
+			}
+			if (isPrintWarned()){
+				notifyWarnPrint();
 			}
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());

@@ -73,6 +73,8 @@ public class JobExecPanel extends JPanel{
 	MachineSimDisplay app;
 	private JSlider sliderLayer;
 	private boolean isGoodFile;
+	private boolean isWarn = false;
+	private boolean isIllegal = false;
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 		      public void run() {
@@ -150,6 +152,18 @@ public class JobExecPanel extends JPanel{
 	private JButton getJButtonRunJob() {
 		if (jButtonRunJob == null) {
 			jButtonRunJob = new JButton();
+			jButtonRunJob.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					if (isIllegal){
+						showDangerDialog();
+						
+					}
+					if (isWarn){
+						showWarningDialog();
+					}
+				}
+			});
 			jButtonRunJob.setText("Run Job");
 			jButtonRunJob.setEnabled(false);
 			jButtonRunJob.addActionListener(new ActionListener() {
@@ -176,6 +190,8 @@ public class JobExecPanel extends JPanel{
 	}
 	private void loadGcodeFile(){
 		try {
+			isIllegal = false;
+			isWarn = false;
 			app.loadingGCode();
 			gCodeStream = new FileInputStream(gCodes);
 			codeOps = new GCodeLoader();
@@ -354,7 +370,27 @@ public class JobExecPanel extends JPanel{
 		
 		
 	}
-	
+	public void doNotPrint(){
+		isIllegal = true;
+		getJButtonRunJob().setEnabled(false);
+		showDangerDialog();
+		getJButtonRunJob().setToolTipText("This G-Code is dangerous and cannot be printed!  "
+  				+ "Dangerous G-Codes will be shown in red in visualizer panel.  \n"
+  				+ "Possible causes: \n"
+  				+ "- Print is ouside build volume");
+		
+	}
+	public void warnPrint(){
+		isWarn = true;
+		showWarningDialog();
+		getJButtonRunJob().setToolTipText("This G-Code may have some issues, you can still continue with the print,"
+  				+ "but you should probably adjust your slicing settings and try again. "
+  				+ "Troubled G-Codes will be shown in orange in visualizer panel.  \n"
+  				+ "Possible causes: \n"
+  				+ "- Extrusion is too thin \n"
+  				+ "- Layers are too thick");
+		
+	}
 		private class Updater extends Thread{
 			
 			public void run() {
@@ -364,6 +400,7 @@ public class JobExecPanel extends JPanel{
 						
 						getGrfHotendTemp().addEvent(getHotEndSetpoint(), getHotendTemp());
 						getGrfBedTemp().addEvent(getBedSetpoint(), getBedTemp());
+						
 					} catch (InterruptedException e) {
 					}
 						//graphVals();
@@ -373,7 +410,35 @@ public class JobExecPanel extends JPanel{
 		}
 
 		
-		
+		public void showDangerDialog(){
+			java.awt.EventQueue.invokeLater(new Runnable() {
+			      public void run() {
+			    	  JOptionPane.showMessageDialog(null,
+			  				"This G-Code is dangerous and cannot be printed! \n"
+			  				+ "Dangerous G-Codes will be shown in red in visualizer panel.\n"
+			  				+ "Possible causes: \n"
+			  				+ "- Print is ouside build volume",
+			  				"Dangerous G-Code",
+			  				JOptionPane.ERROR_MESSAGE);
+			      }
+			    });
+		}
+		public void showWarningDialog(){
+			java.awt.EventQueue.invokeLater(new Runnable() {
+			      public void run() {
+			    	  JOptionPane.showMessageDialog(null,
+			  				"This G-Code may have some issues.\n"
+			  				+ "You can still continue with the print, \n"
+			  				+ "but you should probably adjust your slicing settings and try again. \n"
+			  				+ "Troubled G-Codes will be shown in orange in visualizer panel.  \n"
+			  				+ "Possible causes: \n"
+			  				+ "- Extrusion is too thin \n"
+			  				+ "- Layers are too thick",
+			  				"Potential Problems",
+			  				JOptionPane.WARNING_MESSAGE);
+			      }
+			    });
+		}
 	private int getHotendTemp(){
 	
 		return delt.GetPIDPosition(channelHotEnd);
@@ -396,6 +461,21 @@ public class JobExecPanel extends JPanel{
 			panel.setLayout(new BorderLayout(0, 0));
 			
 			app = new MachineSimDisplay(panel);
+			app.addListener(new PrintTestListener() {
+
+				@Override
+				public void printIsIllegal() {
+					doNotPrint();
+					
+				}
+
+				@Override
+				public void printIsWarn() {
+					warnPrint();
+					
+				}
+				
+			});
 			panel.add(getSliderLayer(), BorderLayout.EAST);
 			app.start();
 			AppSettings settings = new AppSettings(true);
