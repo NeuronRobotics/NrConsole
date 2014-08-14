@@ -99,6 +99,11 @@ public class GCodeLoader {
 				
 			}
 		});
+		interp.addGHandler(28, new CodeHandler() {
+			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
+				
+			}
+		});
 		interp.setGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
 				double x =0.0;
