@@ -8,8 +8,15 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import jme3test.games.CubeField;
+import jme3tools.optimize.GeometryBatchFactory;
+
 import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
+import com.jme3.bounding.BoundingBox;
+import com.jme3.bounding.BoundingVolume;
+import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.JoyAxisEvent;
@@ -28,9 +35,12 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.shape.Cylinder;
 import com.jme3.scene.shape.Line;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
@@ -42,6 +52,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	JmeCanvasContext ctx;
 	JPanel panel;
 	private ArrayList<Geometry> shapes = new ArrayList<Geometry>();
+	private ArrayList<Geometry> shapesCombined = new ArrayList<Geometry>();
 	private boolean hasChanged = false;
 	GCodes codes;
 	private ChaseCamera chaseCam;
@@ -49,33 +60,144 @@ public class MachineSimDisplay extends SimpleApplication{
 	Matrix3f rotateUp;
 	private int layersToShow;
 	private int lastShownIndex;
-	public MachineSimDisplay(JPanel _panel){
-		
+	private Material matGood;
+	private Material matBad;
+	private Material matLine;
+	private boolean loading= false;
+	private BitmapText loadingText = null;
+	private Vector3f scaleRate = new Vector3f(.5f,.5f,.5f);
+	private Vector3f printVolume = new Vector3f(200,200,200);
+	private Mesh pVol;
+	
+	private BoundingBox pbb;
+	public MachineSimDisplay(JPanel _panel){		
 		panel = _panel;
 	}
+	
+	public void configure(float _printX, float _printY, float _printZ){
+		printVolume.set(_printX, _printY, _printZ);
+	}
+	
+	
+	public void loadingGCode(){
+		loading = true;
+	}
+	
+	
+	private Mesh getPrintVol(){
+		if (pVol == null){
+		
+		if (printVolume.getY()==0){//It's a cylinder
+			pVol = new Cylinder(100,100,printVolume.getX(),printVolume.getZ(), true, false);
+		}
+		else{//It's a cube
+			Box b = new Box();
+			Vector3f printCenter = new Vector3f(printVolume.getX()/2,printVolume.getY()/2,0);//TODO: This should be made a member variable for adjustable print centers
+			b.updateGeometry(printCenter, printVolume.getX()/2, printVolume.getY()/2, printVolume.getZ()/2);
+			pVol = b;
+		}
+		}
+		
+		return pVol;
+		
+	}
+	private Mesh getPrintBase(){
+		Mesh base;
+		
+		if (printVolume.getY()==0){//It's a cylinder
+			base = new Cylinder(100,100,printVolume.getX(),0,true,false);
+		}
+		else{//It's a cube
+			Box b = new Box();
+			Vector3f printCenter = new Vector3f(printVolume.getX()/2,printVolume.getY()/2,0);//TODO: This should be made a member variable for adjustable print centers
+			b.updateGeometry(printCenter, printVolume.getX()/2, printVolume.getY()/2, 0);
+			base = b;
+		}
+		
+		
+		return base;
+		
+	}
+	private BoundingBox getVolBB(){
+		if (pbb == null){
+			pbb = new BoundingBox((BoundingBox) getPrintVol().getBound());
+		}
+		
+		
+		return pbb;
+	}
+	
+	
+	
+	private Material getMatGood(){
+		if (matGood == null){
+			matGood = new Material(assetManager,  // Create new material and...
+	        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+			matGood.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	matGood.setColor("Ambient", ColorRGBA.Green);   // ... color of this object
+        	matGood.setColor("Diffuse", ColorRGBA.Green);   // ... color of light being reflected
+		}
+		return matGood;
+		
+	}
+	private Material getMatProblem(){
+		if (matBad == null){
+			matBad = new Material(assetManager,  // Create new material and...
+	        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+			matBad.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	matBad.setColor("Ambient", ColorRGBA.Orange);   // ... color of this object
+        	matBad.setColor("Diffuse", ColorRGBA.Orange);   // ... color of light being reflected
+		}
+		return matBad;
+	}
+	private Material getMatLine(){
+		if (matLine == null){
+			matLine = new Material(assetManager,
+			          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material        \
+	        
+		       matLine.setColor("Color", ColorRGBA.Blue); 
+		}
+		return matLine;
+	}
+	private Material getMatFail(){
+		if (matBad == null){
+			matBad = new Material(assetManager,  // Create new material and...
+	        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+			matBad.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
+        	matBad.setColor("Ambient", ColorRGBA.Red);   // ... color of this object
+        	matBad.setColor("Diffuse", ColorRGBA.Red);   // ... color of light being reflected
+		}
+		return matBad;
+	}
+	
 	public int getLayersToShow(){
 		return layersToShow;
 	}
 	public void setLayersToShow(int numLayers){
 		
 		layersToShow= numLayers;
-		updateDisplay();
+		for (int i = 0; i < shapes.size(); i++) {
+			Geometry shape = shapes.get(i);
+			
+			if (codes.getLayer(codes.get(i)) > layersToShow){
+				shape.setCullHint(CullHint.Always);
+			}
+			else{
+				shape.setCullHint(CullHint.Inherit);
+			}
+		}
+		shapesCombined = (ArrayList<Geometry>) GeometryBatchFactory.makeBatches(shapes);
+		
+		System.out.println("Items after Combination: " + shapesCombined.size());
+		
 		hasChanged = true;
 	}
-	public void updateDisplay(){
-		for (GCodePosition code : codes) {
-			
-			if (codes.getLayer(code) > layersToShow){
-				lastShownIndex = codes.indexOf(code);
-				return;
-			}
-			lastShownIndex = shapes.size();
-			
-		}
-		
-	}
+	
+	
 	public int loadGCode(GCodes _codes){
+		
 		shapes.clear();
+		
 		codes = _codes;
 		
 		for (GCodePosition code : _codes) {
@@ -87,9 +209,12 @@ public class MachineSimDisplay extends SimpleApplication{
 			}
 			
 		}
+		
 		System.out.println("Num of Codes: " + _codes.size());
 		System.out.println("Num of Shapes: " + shapes.size());
 		lastShownIndex = shapes.size();
+		shapesCombined = (ArrayList<Geometry>) GeometryBatchFactory.makeBatches(shapes);
+		System.out.println("Items after Combination: " + shapesCombined.size());
 		hasChanged = true;
 		return codes.numLayers();
 	}
@@ -143,28 +268,26 @@ public class MachineSimDisplay extends SimpleApplication{
         geom.setLocalRotation(direction);
         geom.setLocalTranslation(newCenter);
         
-        Material mat = new Material(assetManager,  // Create new material and...
-        	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+        
         	
         	            
         
         if (codes.isGoodExtrusion(_code)){
-        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-        	mat.setColor("Ambient", ColorRGBA.Green);   // ... color of this object
-        	mat.setColor("Diffuse", ColorRGBA.Green);   // ... color of light being reflected
+        	geom.setMaterial(getMatGood());
         }
         else{
-        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-        	mat.setColor("Ambient", ColorRGBA.Red);   // ... color of this object
-        	mat.setColor("Diffuse", ColorRGBA.Red);   // ... color of light being reflected
+        	geom.setMaterial(getMatProblem());
         }
         if ((extentX > 100) || (extentY > 1) || (extentZ > 1)){
 		//	System.out.println("The Extents: (" + x2 + ","+ y2 + "," + z2 + ")");
-        	mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-        	mat.setColor("Ambient", ColorRGBA.Yellow);   // ... color of this object
-        	mat.setColor("Diffuse", ColorRGBA.Yellow);   // ... color of light being reflected
+        	geom.setMaterial(getMatProblem());
 		}
-        geom.setMaterial(mat);                   // set the cube's material
+        //TODO: Need to add some way to check if the GCodes are contained in the build area
+        
+        
+        	  
+        	  // set the cube's material
+        
         
 			shapes.add(geom);
 		
@@ -196,17 +319,14 @@ public class MachineSimDisplay extends SimpleApplication{
         
         
         
-        Material mat = new Material(assetManager,
-          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material        \
         
-       mat.setColor("Color", ColorRGBA.Blue);
        
        /* if ((extentX > 100) || (extentY > 1) || (extentZ > 1)){
 			System.out.println("The Extents: (" + x2 + ","+ y2 + "," + z2 + ")");
 			mat.setColor("Color", ColorRGBA.Green);
 		}
 		*/
-        geom.setMaterial(mat);                   // set the cube's material
+        geom.setMaterial(getMatLine());                   // set the cube's material
         try {
 			shapes.set(codes.indexOf(_code), geom);
 		} catch (Exception e) {
@@ -240,7 +360,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		ctx = (JmeCanvasContext) getContext();
 		ctx.setSystemListener(this);
 		panel.add(ctx.getCanvas());
-		//SwingUtilities.invokeLater(new SwingApplicationStarter ());
+		
     }
 	
 	@Override
@@ -249,91 +369,188 @@ public class MachineSimDisplay extends SimpleApplication{
 		    
         flyCam.setEnabled(false);
         
-       
+       BoundingBox bb = getVolBB();
         
         
-       
         chaseCam = new ChaseCamera(getCamera(),rootNode, getInputManager());
-        chaseCam.setDefaultDistance(200);
+        chaseCam.setHideCursorOnRotate(true);
+        chaseCam.setDefaultDistance(353);
         chaseCam.setMaxDistance(100000);
         chaseCam.setEnabled(true);
-        Vector3f viewOff = new Vector3f(100,100,0);
+        
+        Vector3f viewOff = new Vector3f(bb.getCenter().getX(),0,bb.getCenter().getY()*-1);
+        
         chaseCam.setLookAtOffset(viewOff);
-        chaseCam.setMaxVerticalRotation((float) Math.PI);
-        chaseCam.setMinVerticalRotation(((float) Math.PI)*-1);
+        chaseCam.setMaxVerticalRotation((float) (Math.PI/2));
+        chaseCam.setMinVerticalRotation(0);
         chaseCam.setInvertVerticalAxis(true);
        
-        chaseCam.setDefaultHorizontalRotation((float) ((Math.PI/2)));
-        chaseCam.setDefaultVerticalRotation((float) (-1*(Math.PI/4)));
+        chaseCam.setDefaultHorizontalRotation(2);
+        chaseCam.setDefaultVerticalRotation(0.824f);
         //chaseCam.setUpVector(new Vector3f(0,0,-1));
         
-       // chaseCam.setDragToRotate(true);
+        chaseCam.setDragToRotate(true);
         setPauseOnLostFocus(false);
-        
-        /*
-        DirectionalLight sun = new DirectionalLight();
-        sun.setColor(ColorRGBA.White);
-        sun.setDirection(new Vector3f(0,0,-1f).normalizeLocal());
-        rootNode.addLight(sun);
-        */
-       
+              
+              Vector3f max = bb.getMax(null);
+              System.out.println(max.toString());
+              Vector3f min = bb.getMin(null);
+              System.out.println(min.toString());
         PointLight lamp_light = new PointLight();
         lamp_light.setColor(ColorRGBA.White);
         lamp_light.setRadius(700f);
-        lamp_light.setPosition(new Vector3f(0,0,200));
+        lamp_light.setPosition(new Vector3f(min.getX(),max.getZ(),min.getY()));
         rootNode.addLight(lamp_light);
         
         PointLight lamp_light1 = new PointLight();
         lamp_light1.setColor(ColorRGBA.White);
         lamp_light1.setRadius(700f);
-        lamp_light1.setPosition(new Vector3f(0,200,200));
+        lamp_light1.setPosition(new Vector3f(max.getX(), max.getZ(),min.getY()));
         rootNode.addLight(lamp_light1);
         
         PointLight lamp_light2 = new PointLight();
         lamp_light2.setColor(ColorRGBA.White);
         lamp_light2.setRadius(700f);
-        lamp_light2.setPosition(new Vector3f(200,200,200));
+        lamp_light2.setPosition(new Vector3f(min.getX(),max.getZ(),max.getY()));
         rootNode.addLight(lamp_light2);
         
         PointLight lamp_light3 = new PointLight();
         lamp_light3.setColor(ColorRGBA.White);
         lamp_light3.setRadius(700f);
-        lamp_light3.setPosition(new Vector3f(200,0,200));
+        lamp_light3.setPosition(new Vector3f(max.getX(),max.getZ(),max.getY()));
+        
         rootNode.addLight(lamp_light3);
         
         obj = new Node();
-        Vector3f init = new Vector3f(0,1,0);
-        Vector3f end = new Vector3f(0,0,1);
-        rotateUp = new Matrix3f();
-        rotateUp.fromStartEndVectors(init, end);
-        //obj.setLocalRotation(rotateUp);
+        
         rootNode.attachChild(obj);
-        //getFlyByCamera().setDragToRotate(true);
-        Quad base = new Quad(200, 200);
-        Geometry geom = new Geometry("Base", base);
+        
+        
+        
+        //Quad base = new Quad(200, 200);
+        
+        Geometry geom = new Geometry("Base", getPrintBase());
         //geom.setLocalTranslation(new Vector3f(-250,-250,0));
         Material mat = new Material(assetManager,  // Create new material and...
         	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
+        		
         mat.setBoolean("UseMaterialColors",true);  // Set some parameters, e.g. blue.
-    	mat.setColor("Ambient", ColorRGBA.Gray);   // ... color of this object
-    	mat.setColor("Diffuse", ColorRGBA.Gray);   // ... color of light being reflected
+    	mat.setColor("Ambient", ColorRGBA.DarkGray);   // ... color of this object
+    	mat.setColor("Diffuse", ColorRGBA.DarkGray);   // ... color of light being reflected
+        		
+     
     	geom.setMaterial(mat);
     	rootNode.attachChild(geom);
+    	
+        Vector3f init = new Vector3f(0,1,0);
+        Vector3f end = new Vector3f(0,0,-1);
+        rotateUp = new Matrix3f();
+        rotateUp.fromStartEndVectors(init, end);
+        rootNode.setLocalRotation(rotateUp);
+       
+        
+       
+        loadAxes(0,0,0);
+        
+	}
+	public void loadAxes(int xOff, int yOff, int zOff){
+		Vector3f zero = new Vector3f(xOff,yOff,zOff);
+		Vector3f xV = new Vector3f(25 + xOff,yOff,zOff);
+		Vector3f yV = new Vector3f(xOff,25 + yOff,zOff);
+		Vector3f zV = new Vector3f(xOff,yOff,25 + zOff);
+		Line x = new Line(zero, xV);
+		Line y = new Line(zero, yV);
+		Line z = new Line(zero, zV);
+		Geometry geomX = new Geometry("X Axis", x);
+		Geometry geomY = new Geometry("Y Axis", y);
+		Geometry geomZ = new Geometry("Z Axis", z);
+		geomX.setMaterial(getUnshadedColor(ColorRGBA.Green));
+		geomY.setMaterial(getUnshadedColor(ColorRGBA.Red));
+		geomZ.setMaterial(getUnshadedColor(ColorRGBA.Blue));
+		
+		rootNode.attachChild(geomX);
+		rootNode.attachChild(geomY);
+		rootNode.attachChild(geomZ);
+	}
+	
+	public Material getUnshadedColor(ColorRGBA _color){
+		Material mat = new Material(assetManager,
+		          "Common/MatDefs/Misc/Unshaded.j3md");
+		mat.setColor("Color", _color);
+		return mat;
+	}
+	
+	private float scaleFactor = 1.0f;
+	
+	public BitmapText getLoadingText(float tpf){
+		if (loadingText == null){
+			guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+	        loadingText = new BitmapText(guiFont, false);
+	        
+	        loadingText.setSize(guiFont.getCharSet().getRenderedSize());
+	        loadingText.setText("Loading...");
+	        
+	        float offsetX = (panel.getWidth()/2) - ((loadingText.getLineWidth()*loadingText.getLocalScale().getX())/2);
+			float offsetY = (panel.getHeight()/2) + ((loadingText.getHeight()*loadingText.getLocalScale().getX())/2);
+			
+			loadingText.setLocalTranslation(offsetX, offsetY, 0);
+	        loadingText.setName("Loading Text");
+		}
+		else{
+			if (loadingText.getLocalScale().getX() > 5.0f){
+				scaleFactor = -2.0f;
+				
+			}
+			if (loadingText.getLocalScale().getX() < 1.5f){
+				scaleFactor = 2.0f;
+				
+			}
+			float scaleInc = scaleFactor * tpf;
+			scaleInc += loadingText.getLocalScale().getX();
+			
+			loadingText.setLocalScale(scaleInc);
+			
+			
+			float offsetX = (panel.getWidth()/2) - ((loadingText.getLineWidth()*loadingText.getLocalScale().getX())/2);
+			float offsetY = (panel.getHeight()/2) + ((loadingText.getHeight()*loadingText.getLocalScale().getX())/2);
+			
+			loadingText.setLocalTranslation(offsetX, offsetY, 0);
+			
+		}
+			
+		
+		return loadingText;
 	}
 	
 	@Override
 	 public void simpleUpdate(float tpf){
+		if (loading == true  && hasChanged == false){
+			//Do something to let the user know things are happening			
+	        guiNode.attachChild(getLoadingText(tpf));
+		}
+		else{
+			
+			guiNode.detachChildNamed("Loading Text");
+		}
+		
 		if (hasChanged == true){
+			loading =  false;
 			hasChanged = false;
 			System.out.println("Number of lines: " + shapes.size());
 			
+						
+			
 			obj.detachAllChildren();
-			for (int i = 0; i < lastShownIndex; i++) {				
-				obj.attachChild(shapes.get(i));
-			} 
+			
+			for (Geometry geom : shapesCombined) {
+				obj.attachChild(geom);
+			}
+			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
 		}
-		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + "Horizontal: " + chaseCam.getHorizontalRotation());
+		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + 
+			//	"Horizontal: " + chaseCam.getHorizontalRotation()+
+				//"Zoom: " + chaseCam.getDistanceToTarget());
 	 }
 	
 	

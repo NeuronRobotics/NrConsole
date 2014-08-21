@@ -9,13 +9,28 @@ import java.util.ListIterator;
 public class GCodes extends ArrayList<GCodePosition>{
 double filaDia = 3;
 double nozzleDia = .5;	
-	
+int layers = 1;
+
 public double getFilaDia() {
 	return filaDia;
 }
-public boolean add(double _x, double _y, double _z, double _e){
-	return add(new GCodePosition(_x, _y, _z, _e));
+public boolean add(double _x, double _y, double _z, double _e, int _layer){
+	if (_layer > layers){
+		layers = _layer;
+	}
+	return add(new GCodePosition(_x, _y, _z, _e, _layer));
 }
+
+public boolean add(double _x, double _y, double _z, double _e){
+	if (size() >  1){
+	if (get(size()-1).getZ() != _z){
+		layers++;
+	}
+	}
+	return add(new GCodePosition(_x, _y, _z, _e, layers));
+}
+
+
 
 public void setFilaDia(double _filaDia) {
 	filaDia = _filaDia;
@@ -50,21 +65,18 @@ public boolean isRapidMove(GCodePosition _pos1, GCodePosition _pos2){
 }
 
 public double getLayerHeight(int _layer){
-	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
-	int layers = 0;
+	double height = 0;
+	double prevHeight = 0;
 	for (GCodePosition code : this) {
-		if (code.getZ() != -1){
-			if (code.getZ() != prevZ){
-				layers++;
-				if (layers == _layer){
-					return (code.getZ() - prevZ);
-				}
-				prevZ = code.getZ();
-				
-				}
-			}
+		if (code.getLayer() < _layer){
+			prevHeight = code.getZ();
 		}
-		return 0;
+		else{
+			return code.getZ() - prevHeight;
+		}
+			
+	}
+		return height;
 }
 public GCodePosition getPrevCode(GCodePosition _code){
 	GCodePosition prevCode;
@@ -78,48 +90,13 @@ public GCodePosition getPrevCode(GCodePosition _code){
 }
 
 public double getLayerHeight(GCodePosition _code){
-	
-	
-	int inCode = indexOf(_code);
-	double currZ = _code.getZ();
-	double layerHeight = 0;
-	while(layerHeight == 0 && inCode > -1){
-		double prevZ = get(inCode).getZ();
-		layerHeight = currZ - prevZ;
-		if (layerHeight < 0){		//** Really Hack** This is for handling slicers which do not
-			layerHeight = currZ;	//set the z height to zero before beginning the first layer
-		}
-		//System.out.println("Current Z: " + currZ + " Previous Z: " + prevZ + " inCode: " + inCode);
-		inCode--;
-	}
-	
-		return layerHeight;
+	return getLayerHeight(_code.getLayer());
 }
 public int numLayers(){
-	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
-	int layers = 0;
-	for (GCodePosition code : this) {
-		if (code.getZ() != -1){
-			if (code.getZ() != prevZ){
-				prevZ = code.getZ();
-				layers++;
-				}
-			}
-		}
-		return layers;
+	return layers;
 	}
 public int getLayer(GCodePosition _code){
-	double prevZ = -1; //Initialize this to an impossible layer height to ensure counting of the first layer
-	int layers = 0;
-	for (int i = 1; i < indexOf(_code); i++) {
-		if (get(i).getZ() != -1){
-			if (get(i).getZ() != prevZ){
-				prevZ = get(i).getZ();
-				layers++;
-				}
-			}
-		}
-		return layers;
+	return _code.getLayer();
 	}
 	
 

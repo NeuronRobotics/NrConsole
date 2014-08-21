@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -24,12 +25,14 @@ import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.GCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -69,6 +72,7 @@ public class JobExecPanel extends JPanel{
 	private JPanel panel_2;
 	MachineSimDisplay app;
 	private JSlider sliderLayer;
+	private boolean isGoodFile;
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 		      public void run() {
@@ -172,26 +176,32 @@ public class JobExecPanel extends JPanel{
 	}
 	private void loadGcodeFile(){
 		try {
+			app.loadingGCode();
 			gCodeStream = new FileInputStream(gCodes);
 			codeOps = new GCodeLoader();
-			try {
-				System.out.println(gCodeStream.available());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			
+			isGoodFile = codeOps.loadCodes(gCodeStream);
+			if (!isGoodFile){
+				JOptionPane.showMessageDialog(null,
+						"The selected G-Code File is broken and cannot be loaded or printed",
+						"Error Loading File",
+						JOptionPane.ERROR_MESSAGE);
+				
 			}
-			codeOps.loadCodes(gCodeStream);
-			codeOps.getCodes().printOutput();
+			//codeOps.getCodes().printOutput();
+			
 			int numLayers = app.loadGCode(codeOps.getCodes());
 			sliderLayer.setMaximum(numLayers);
 			sliderLayer.setValue(numLayers);
 			
 		} catch (FileNotFoundException e) {
+			
 			e.printStackTrace();
 			return;
 			
 		}
-		getJButtonRunJob().setEnabled(true);
+		
+		getJButtonRunJob().setEnabled(isGoodFile);
 		
 	}
 	
@@ -310,7 +320,8 @@ public class JobExecPanel extends JPanel{
 
 	private void jTextField4ActionActionPerformed(ActionEvent event) {
 		//set temp
-	}
+		
+		}
 
 	private void jTextField3ActionActionPerformed(ActionEvent event) {
 		//set extrude
@@ -382,6 +393,7 @@ public class JobExecPanel extends JPanel{
 	}
 	private int getBedTemp(){
 		return delt.GetPIDPosition(2);
+		
 	}
 	private int getBedSetpoint(){
 		return delt.getPIDChannel(2).getCachedTargetValue();
@@ -439,6 +451,9 @@ public class JobExecPanel extends JPanel{
 	private JSlider getSliderLayer() {
 		if (sliderLayer == null) {
 			sliderLayer = new JSlider();
+			sliderLayer.setValue(0);
+			sliderLayer.setMaximum(0);
+			sliderLayer.setMajorTickSpacing(1);
 			sliderLayer.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseReleased(MouseEvent arg0) {
