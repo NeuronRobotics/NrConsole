@@ -330,7 +330,16 @@ public class JobExecPanel extends JPanel{
 		
 	}
 	private void jButtonRunJobActionActionPerformed(ActionEvent event){
-		
+		new Thread(){
+			public void run(){
+				try {
+					printer.print(new FileInputStream(gCodes));
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}.start();
 	}
 	
 	private void jButtonOpenGCodeActionActionPerformed(ActionEvent event) {

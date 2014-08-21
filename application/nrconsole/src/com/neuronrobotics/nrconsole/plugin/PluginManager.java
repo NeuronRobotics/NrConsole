@@ -195,14 +195,15 @@ public class PluginManager {
 		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 		// HACK this should load using OSGI
 		// Once instantiated they add themselves to the static list of plugins
+		new NRConsoleJobExecPlugin(this);
 		new CartesianController(this);
 		new NRConsoleDyIOPlugin(this);
 		new NRConsolePIDPlugin(this);
 		new NRConsoleBowlerCameraPlugin(this);
 		new NRConsoleBootloaderPlugin(this);
 		new NRConsoleBowlerRPCDisplayPlugin(this);
-		new NRConsoleJobExecPlugin(this);
-		new NRConsoleBowlerConfigPlugin(this);
+		
+		//new NRConsoleBowlerConfigPlugin(this);
 		//System.out.println("Updating plugins:"+plugins);
 		
 		//END HACK
