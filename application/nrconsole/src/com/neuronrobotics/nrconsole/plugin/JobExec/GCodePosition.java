@@ -17,20 +17,6 @@ public GCodePosition(double _x, double _y, double _z, double _e, int _layer){
 	setLayer(_layer);
 }
 
-public GCodePosition(double _x, double _y, double _e){
-	setX(_x);
-	setY(_y);
-	setE(_e);
-	
-}
-public GCodePosition(double _x, double _y){
-	setX(_x);
-	setY(_y);
-	
-	
-}
-
-
 /**
  * @return the x
  */
