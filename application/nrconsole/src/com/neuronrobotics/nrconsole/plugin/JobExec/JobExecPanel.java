@@ -192,15 +192,27 @@ public class JobExecPanel extends JPanel{
 		}
 		return jButtonOpenGCode;
 	}
+	
+	public String fileName = "None";
+	
+	public void updatePrintInfo(){
+		getTfLayerShown().setText("(File: " + fileName + 
+				") (# Layers: " + sliderLayer.getMaximum() + 
+				") (# Layers Shown: " + sliderLayer.getValue() + ")");
+	}
+	
 	private void loadGcodeFile(){
 		try {
 			isIllegal = false;
 			isWarn = false;
+			fileName = gCodes.getName();
+			updatePrintInfo();
 			app.loadingGCode();
 			gCodeStream = new FileInputStream(gCodes);
 			codeOps = new GCodeLoader();
 			
 			isGoodFile = codeOps.loadCodes(gCodeStream);
+			
 			if (!isGoodFile){
 				JOptionPane.showMessageDialog(null,
 						"The selected G-Code File is broken and cannot be loaded or printed",
@@ -549,7 +561,7 @@ public class JobExecPanel extends JPanel{
 					if (!sliderLayer.getValueIsAdjusting()){
 					app.setLayersToShow(sliderLayer.getValue());	
 					}
-					getTfLayerShown().setText("(# Layers: " + sliderLayer.getMaximum() + ") (# Layers Shown: " + sliderLayer.getValue() + ")");
+					updatePrintInfo();
 				}
 			});
 			sliderLayer.setSnapToTicks(true);
