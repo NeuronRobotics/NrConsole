@@ -82,8 +82,8 @@ public class MachineSimDisplay extends SimpleApplication{
 		printObj = new PrintObject(this);
 	}
 	
-	public void configure(float _printX, float _printY, float _printZ){
-		printObj.configure(_printX, _printY, _printZ);
+	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
+		printObj.configure(_printVolume, _printOrigin);
 		
 	}
 	public void configureRect(float _printX, float _printY, float _printZ){

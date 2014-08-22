@@ -22,6 +22,7 @@ public class PrintObject{
 
 
 	private Vector3f printVolume = new Vector3f(200,0,200);
+	private Vector3f printOrigin = new Vector3f(0,0,0);
 	private Mesh pVol;
 	private BoundingBox pbb;
 	
@@ -35,8 +36,9 @@ public class PrintObject{
 		msd = _msd;
 	}
 	
-	public void configure(float _printX, float _printY, float _printZ){
-		printVolume.set(_printX, _printY, _printZ);
+	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
+		printVolume = _printVolume;
+		printOrigin = _printOrigin;
 		
 	}
 	public void configureRect(float _printX, float _printY, float _printZ){
@@ -45,7 +47,9 @@ public class PrintObject{
 	public void configureCylinder(float _printR, float _printZ){
 		printVolume.set(_printR, 0, _printZ);
 	}
-	
+	public void configureOrigin(float _originX, float _originY, float _originZ){
+		printOrigin.set(_originX, _originY, _originZ);
+	}
 	
 	
 	public Mesh getPrintVol(){
@@ -56,8 +60,8 @@ public class PrintObject{
 		}
 		else{//It's a cube
 			Box b = new Box();
-			Vector3f printCenter = new Vector3f(printVolume.getX()/2,printVolume.getY()/2,0);//TODO: This should be made a member variable for adjustable print centers
-			b.updateGeometry(printCenter, printVolume.getX()/2, printVolume.getY()/2, printVolume.getZ()/2);
+			printOrigin.set(printVolume.getX()/2,printVolume.getY()/2,0);
+			b.updateGeometry(printOrigin, printVolume.getX()/2, printVolume.getY()/2, printVolume.getZ()/2);
 			pVol = b;
 		}
 		}
@@ -81,8 +85,8 @@ public class PrintObject{
 		}
 		else{//It's a cube
 			Box b = new Box();
-			Vector3f printCenter = new Vector3f(printVolume.getX()/2,printVolume.getY()/2,0);//TODO: This should be made a member variable for adjustable print centers
-			b.updateGeometry(printCenter, printVolume.getX()/2, printVolume.getY()/2, 0);
+			printOrigin.set(printVolume.getX()/2,printVolume.getY()/2,0);
+			b.updateGeometry(printOrigin, printVolume.getX()/2, printVolume.getY()/2, 0);
 			base = b;
 		}
 		
