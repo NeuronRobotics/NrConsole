@@ -106,61 +106,17 @@ public class GCodeLoader {
 		});
 		interp.setGHandler(0, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				double x =0.0;
-				double y =0.0;
-				double z =0.0;
-				double e =0.0;
-				try {
-					x = next.getWord('X');
-				} catch (Exception e1) {
-					
-				}
-				try {
-					y = next.getWord('Y');
-				} catch (Exception e2) {
-					
-				}
-				try {
-					z = next.getWord('Z');
-				} catch (Exception e3) {
-					
-				}
-				try {
-					e = next.getWord('E');
-				} catch (Exception e4) {
-					
-				}
-				codes.add(x,y,z,e+ extOffset);
+				
+				codes.add(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),next.getWord('E')+ extOffset);
+				
 				
 			}
 		});
 		interp.setGHandler(1, new CodeHandler() {
 			public void execute(GCodeLineData prev, GCodeLineData next) throws Exception {
-				double x =0.0;
-				double y =0.0;
-				double z =0.0;
-				double e =0.0;
-				try {
-					x = next.getWord('X');
-				} catch (Exception e1) {
-					
-				}
-				try {
-					y = next.getWord('Y');
-				} catch (Exception e2) {
-					
-				}
-				try {
-					z = next.getWord('Z');
-				} catch (Exception e3) {
-					
-				}
-				try {
-					e = next.getWord('E');
-				} catch (Exception e4) {
-					
-				}
-				codes.add(x,y,z,e+ extOffset);
+			
+				
+				codes.add(next.getWord('X'),next.getWord('Y'),next.getWord('Z'),next.getWord('E')+ extOffset);
 				}			
 		});
 		
