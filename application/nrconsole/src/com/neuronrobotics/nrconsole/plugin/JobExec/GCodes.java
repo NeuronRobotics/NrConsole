@@ -32,6 +32,7 @@ public boolean add(double _x, double _y, double _z, double _e){
 
 
 
+
 public void setFilaDia(double _filaDia) {
 	filaDia = _filaDia;
 }
@@ -225,7 +226,7 @@ public boolean isGoodExtrusion(GCodePosition _code){
 	boolean isOK = true;
 	
 	if (getMoveExtLength(_code) > 0){
-		if (getMoveVolExtWidth(_code) <= nozzleDia){
+		if (getMoveVolExtWidth(_code) <= nozzleDia*.75){
 			isOK = false;
 		}
 		if (getLayerHeight(_code) >= nozzleDia){
