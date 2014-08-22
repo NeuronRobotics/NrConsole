@@ -6,15 +6,19 @@ public class GCodePosition {
 	private double z = -1;
 	private double e = -1;
 	private int layer;
+	
+	private GCodePosition prevCode = null;
 public GCodePosition(){
 	
 }
-public GCodePosition(double _x, double _y, double _z, double _e, int _layer){
+public GCodePosition(GCodePosition _prevCode, double _x, double _y, double _z, double _e, int _layer){
+	setPrevCode(_prevCode);
 	setX(_x);
 	setY(_y);
 	setZ(_z);
 	setE(_e);
 	setLayer(_layer);
+	
 }
 
 /**
@@ -70,5 +74,12 @@ public int getLayer() {
 }
 public void setLayer(int layer) {
 	this.layer = layer;
+}
+
+public GCodePosition getPrevCode() {
+	return prevCode;
+}
+public void setPrevCode(GCodePosition prevCode) {
+	this.prevCode = prevCode;
 }
 }
