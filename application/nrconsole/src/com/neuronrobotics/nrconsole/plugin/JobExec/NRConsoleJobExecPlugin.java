@@ -21,7 +21,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	private BowlerBoardDevice delt = new BowlerBoardDevice();
 	private NRPrinter printer=null;
 	private Dimension minSize = new Dimension(693, 476);
-	private PluginManager manager;
+
 	public NRConsoleJobExecPlugin(PluginManager pm) {
 		super(myNames, pm);
 		//getTabPane();
