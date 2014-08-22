@@ -257,13 +257,13 @@ public class MachineSimDisplay extends SimpleApplication{
         PointLight lamp_light = new PointLight();
         lamp_light.setColor(ColorRGBA.White);
         lamp_light.setRadius(700f);
-        lamp_light.setPosition(new Vector3f(min.getX(),max.getZ(),min.getY()));
+        lamp_light.setPosition(new Vector3f(min.getX(),max.getZ(),min.getY()*-1));
         rootNode.addLight(lamp_light);
         
         PointLight lamp_light1 = new PointLight();
         lamp_light1.setColor(ColorRGBA.White);
         lamp_light1.setRadius(700f);
-        lamp_light1.setPosition(new Vector3f(max.getX(), max.getZ(),min.getY()));
+        lamp_light1.setPosition(new Vector3f(max.getX(), max.getZ(),min.getY()*-1));
         rootNode.addLight(lamp_light1);
         
         PointLight lamp_light2 = new PointLight();
