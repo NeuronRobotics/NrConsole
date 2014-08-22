@@ -40,6 +40,8 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import javax.swing.JToolBar;
+import java.awt.FlowLayout;
 
 
 public class JobExecPanel extends JPanel{
@@ -86,6 +88,9 @@ public class JobExecPanel extends JPanel{
 	private JCheckBox chckbxShowTroubledLines;
 	private JCheckBox chckbxShowDangerousLines;
 	private JCheckBox chckbxShowNonextrudeLines;
+	private JTextField tfLayerShown;
+	private JPanel panel_5;
+	private JCheckBox chckbxShowAxes;
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 		      public void run() {
@@ -489,6 +494,7 @@ public class JobExecPanel extends JPanel{
 				
 			});
 			panel.add(getSliderLayer(), BorderLayout.EAST);
+			panel.add(getPanel_5_1(), BorderLayout.SOUTH);
 			app.start();
 			AppSettings settings = new AppSettings(true);
 			
@@ -537,20 +543,16 @@ public class JobExecPanel extends JPanel{
 			sliderLayer.setValue(0);
 			sliderLayer.setMaximum(0);
 			sliderLayer.setMajorTickSpacing(1);
-			sliderLayer.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseReleased(MouseEvent arg0) {
-					app.setLayersToShow(sliderLayer.getValue());
-					System.out.println("Mouse");
-				}
-			});
+			
 			sliderLayer.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
-					System.out.println("State");
+					if (!sliderLayer.getValueIsAdjusting()){
+					app.setLayersToShow(sliderLayer.getValue());	
+					}
+					getTfLayerShown().setText("(# Layers: " + sliderLayer.getMaximum() + ") (# Layers Shown: " + sliderLayer.getValue() + ")");
 				}
 			});
 			sliderLayer.setSnapToTicks(true);
-			sliderLayer.setPaintTicks(true);
 			sliderLayer.setOrientation(SwingConstants.VERTICAL);
 		}
 		return sliderLayer;
@@ -633,5 +635,35 @@ public class JobExecPanel extends JPanel{
 			chckbxShowNonextrudeLines.setSelected(true);
 		}
 		return chckbxShowNonextrudeLines;
+	}
+	private JTextField getTfLayerShown() {
+		if (tfLayerShown == null) {
+			tfLayerShown = new JTextField();
+			tfLayerShown.setHorizontalAlignment(SwingConstants.RIGHT);
+			tfLayerShown.setEditable(false);
+			tfLayerShown.setColumns(10);
+		}
+		return tfLayerShown;
+	}
+	private JPanel getPanel_5_1() {
+		if (panel_5 == null) {
+			panel_5 = new JPanel();
+			panel_5.setLayout(new BorderLayout(0, 0));
+			panel_5.add(getTfLayerShown());
+			panel_5.add(getChckbxShowAxes(), BorderLayout.WEST);
+		}
+		return panel_5;
+	}
+	private JCheckBox getChckbxShowAxes() {
+		if (chckbxShowAxes == null) {
+			chckbxShowAxes = new JCheckBox("Show Axes");
+			chckbxShowAxes.addItemListener(new ItemListener() {
+				public void itemStateChanged(ItemEvent arg0) {
+					app.setShowAxes(chckbxShowAxes.isSelected());
+				}
+			});
+			chckbxShowAxes.setSelected(true);
+		}
+		return chckbxShowAxes;
 	}
 }

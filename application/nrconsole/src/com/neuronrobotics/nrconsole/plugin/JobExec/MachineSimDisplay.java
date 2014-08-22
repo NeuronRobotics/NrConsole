@@ -75,6 +75,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	private boolean showTroubled = true;
 	private boolean showDangerous = true;
 	private boolean showNonExtrude = true;
+	private boolean showAxes = true;
 	private PrintObject printObj;
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	public MachineSimDisplay(JPanel _panel){		
@@ -424,6 +425,16 @@ public class MachineSimDisplay extends SimpleApplication{
 				if (geom.getMaterial() == getMatLine() && isShowNonExtrude()){
 					obj.attachChild(geom);
 				}
+				if (isShowAxes()){
+					rootNode.getChild("X Axis").setCullHint(CullHint.Never);
+					rootNode.getChild("Y Axis").setCullHint(CullHint.Never);
+					rootNode.getChild("Z Axis").setCullHint(CullHint.Never);
+				}
+				else{
+					rootNode.getChild("X Axis").setCullHint(CullHint.Always);
+					rootNode.getChild("Y Axis").setCullHint(CullHint.Always);
+					rootNode.getChild("Z Axis").setCullHint(CullHint.Always);
+				}
 			}
 			if (loading == true){// Only run these bits if this is the first time we are loading this file
 				if (!isPrintAllowed()){
@@ -479,6 +490,15 @@ public class MachineSimDisplay extends SimpleApplication{
 
 	public void setShowNonExtrude(boolean showNonExtrude) {
 		this.showNonExtrude = showNonExtrude;
+		hasChanged = true;
+	}
+
+	public boolean isShowAxes() {
+		return showAxes;
+	}
+
+	public void setShowAxes(boolean showAxes) {
+		this.showAxes = showAxes;
 		hasChanged = true;
 	}
 	
