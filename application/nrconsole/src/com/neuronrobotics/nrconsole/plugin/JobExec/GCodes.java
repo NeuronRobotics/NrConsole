@@ -14,20 +14,25 @@ int layers = 1;
 public double getFilaDia() {
 	return filaDia;
 }
-public boolean add(double _x, double _y, double _z, double _e, int _layer){
+/*public boolean add(double _x, double _y, double _z, double _e, int _layer){
 	if (_layer > layers){
 		layers = _layer;
 	}
 	return add(new GCodePosition(_x, _y, _z, _e, _layer));
 }
-
+*/
 public boolean add(double _x, double _y, double _z, double _e){
+	
 	if (size() >  1){
+		
 	if (get(size()-1).getZ() != _z){
 		layers++;
+		
 	}
+	
+	return add(new GCodePosition(get(size()-1), _x, _y, _z, _e, layers));
 	}
-	return add(new GCodePosition(_x, _y, _z, _e, layers));
+	return add(new GCodePosition(null, _x, _y, _z, _e, layers));
 }
 
 
@@ -47,7 +52,7 @@ public void printOutput(){
 }
 
 public boolean isRapidMove(int _position1, int _position2){
-	if (get(_position1).getE() == get(_position2).getE()){
+	if (get(_position1).getE() >= get(_position2).getE()){
 		return true;
 	}
 	else
@@ -56,7 +61,7 @@ public boolean isRapidMove(int _position1, int _position2){
 	}
 }
 public boolean isRapidMove(GCodePosition _pos1, GCodePosition _pos2){
-	if (_pos1.getE() == _pos2.getE()){
+	if (_pos1.getE() >= _pos2.getE()){
 		return true;
 	}
 	else
@@ -64,34 +69,41 @@ public boolean isRapidMove(GCodePosition _pos1, GCodePosition _pos2){
 		return false;
 	}
 }
+public boolean isRapidMove(GCodePosition _code){
+	GCodePosition prevCode = getPrevCode(_code);
+	if (prevCode != null){
+		//System.out.println("boop");
+		return isRapidMove(prevCode, _code);
+		
+	}
+	
+	return true;
+}
+
 
 public double getLayerHeight(int _layer){
 	double height = 0;
 	double prevHeight = 0;
 	for (GCodePosition code : this) {
-		if (code.getLayer() < _layer){
-			prevHeight = code.getZ();
+		if (isRapidMove(code) == false){
+			if ((code.getLayer() < _layer)){
+				prevHeight = code.getZ();
+			}
+			else{
+				
+				return code.getZ() - prevHeight;
+			}
 		}
-		else{
-			return code.getZ() - prevHeight;
-		}
-			
 	}
 		return height;
 }
 public GCodePosition getPrevCode(GCodePosition _code){
-	GCodePosition prevCode;
-	if (indexOf(_code) > 0){
-		prevCode = get(indexOf(_code) - 1);
-		return prevCode;
-	}
-	else{
-		return null;
-	}
+	return _code.getPrevCode();
 }
 
 public double getLayerHeight(GCodePosition _code){
 	return getLayerHeight(_code.getLayer());
+	//return _code.getLayerHeight();
 }
 public int numLayers(){
 	return layers;
