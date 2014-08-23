@@ -221,7 +221,7 @@ public class JobExecPanel extends JPanel{
 				
 			}
 			//codeOps.getCodes().printOutput();
-			
+			getJButtonRunJob().setEnabled(isGoodFile);
 			int numLayers = app.loadGCode(codeOps.getCodes());
 			sliderLayer.setMaximum(numLayers);
 			sliderLayer.setValue(numLayers);
@@ -232,9 +232,7 @@ public class JobExecPanel extends JPanel{
 			return;
 			
 		}
-		
-		getJButtonRunJob().setEnabled(isGoodFile);
-		
+
 	}
 	
 
@@ -394,7 +392,11 @@ public class JobExecPanel extends JPanel{
 		gCodes = FileSelectionFactory.GetFile(null, new GCodeFilter());
 		
 		if (gCodes != null && gCodes.isFile() && gCodes.canRead()){
-			loadGcodeFile();
+			try{
+				loadGcodeFile();
+			}catch(Exception e){
+				//e.printStackTrace();
+			}
 		}
 		
 		
