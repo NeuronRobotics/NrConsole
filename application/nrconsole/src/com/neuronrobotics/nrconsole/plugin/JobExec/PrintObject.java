@@ -122,7 +122,7 @@ public class PrintObject{
 			extentX = extentX/2;
 			float extentY = (float) ((codes.getMoveVolExtWidth(_code))/2);
 			float extentZ = (float) ((codes.getLayerHeight(_code))/2);
-			if (!Float.isFinite(extentX) || !Float.isFinite(extentY) || !Float.isFinite(extentZ)){
+			if (Float.isInfinite(extentX) || Float.isInfinite(extentY) || Float.isInfinite(extentZ)){
 				return null;
 			}
 			
