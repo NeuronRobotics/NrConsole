@@ -22,7 +22,7 @@ import com.jme3.system.AppSettings;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
-import com.neuronrobotics.replicator.driver.GCodeParser;
+import com.neuronrobotics.replicator.driver.ServoStockGCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 
@@ -367,7 +367,7 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void jTextField0ActionActionPerformed(ActionEvent event) {
-		GCodeParser operator = new GCodeParser(printer);
+		ServoStockGCodeParser operator = new ServoStockGCodeParser(printer);
 		
 	}
 	private void jButtonRunJobActionActionPerformed(ActionEvent event){
