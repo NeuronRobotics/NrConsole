@@ -367,7 +367,7 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void jTextField0ActionActionPerformed(ActionEvent event) {
-		ServoStockGCodeParser operator = new ServoStockGCodeParser(printer);
+		//ServoStockGCodeParser operator = new ServoStockGCodeParser(printer);
 		
 	}
 	private void jButtonRunJobActionActionPerformed(ActionEvent event){
@@ -377,7 +377,7 @@ public class JobExecPanel extends JPanel{
 				jButtonRunJob.setEnabled(false);
 				try {
 					printer.print(new FileInputStream(gCodes));
-				} catch (FileNotFoundException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
