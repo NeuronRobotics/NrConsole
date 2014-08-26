@@ -1,6 +1,7 @@
 /bin
 /target
 /build
-/RobotLog_2014-04-23_1398285140615.txt
-/liblwjgl64.so
-/libopenal64.so
+/RobotLog_*.txt
+/*.so
+/*.dll
+
