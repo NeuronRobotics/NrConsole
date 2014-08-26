@@ -381,6 +381,7 @@ public class JobExecPanel extends JPanel{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				printer.cancelPrint();
 				jButtonRunJob.setEnabled(true);
 				jButtonOpenGCode.setEnabled(true);
 			}
