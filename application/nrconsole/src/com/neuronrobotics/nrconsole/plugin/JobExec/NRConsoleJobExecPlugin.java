@@ -10,6 +10,7 @@ import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.replicator.driver.Slic3r;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
@@ -45,6 +46,8 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		delt.setConnection(connection);
 		delt.connect();
+		//TODO load this from a configuration file, or extract from within jar.
+		Slic3r.setExecutableLocation("/home/hephaestus/bin/Slic3r/bin/slic3r");
 		printer = new NRPrinter(delt);
 		if (delt.isAvailable()){
 			gui.setDevices(delt, printer);
