@@ -47,7 +47,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		delt.setConnection(connection);
 		delt.connect();
 		//TODO load this from a configuration file, or extract from within jar.
-		Slic3r.setExecutableLocation("/home/hephaestus/bin/Slic3r/bin/slic3r");
+		Slic3r.setExecutableLocation("/usr/local/Slic3r/bin/slic3r");
 		printer = new NRPrinter(delt);
 		if (delt.isAvailable()){
 			gui.setDevices(delt, printer);

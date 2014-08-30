@@ -22,6 +22,7 @@ public class NRConsole implements ActionListener {
 	private MenuBar nrcMenubar = new MenuBar(manager);
 	private showManager shower = new showManager ();
 	private static NRConsole self;
+	
 	public static void main(String [] args) {
 		try {
 			if(args.length != 0)
