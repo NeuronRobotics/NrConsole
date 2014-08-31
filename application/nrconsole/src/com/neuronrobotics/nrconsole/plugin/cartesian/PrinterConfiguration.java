@@ -38,19 +38,21 @@ public class PrinterConfiguration extends JPanel {
 	
 	public PrinterConfiguration(){
 		setLayout(new MigLayout());
-		add(new JLabel("kP"));add(kp,"wrap");
-		add(new JLabel("kI"));add(ki,"wrap");
-		add(new JLabel("kD"));add(kd,"wrap");
-		add(new JLabel("VkP"));add(vkp,"wrap");
-		add(new JLabel("VkD"));add(vkd,"wrap");
-		add(new JLabel("Resolution (mm)"));add(mmPos,"wrap");
-		add(new JLabel("Maximum Velocity (mm/s)"));add(maxVel,"wrap");
-		add(new JLabel("Base Radius(mm)"));add(baseRad,"wrap");
-		add(new JLabel("End Effector Radius(mm)"));add(EErad,"wrap");
-		add(new JLabel("Maximum Z(mm)"));add(maxz,"wrap");
-		add(new JLabel("Minimum Z(mm)"));add(minz,"wrap");
-		add(new JLabel("Rod Length(mm)"));add(rodlen,"wrap");
-		add(update,"wrap");
+		JPanel controls = new JPanel(new MigLayout());
+		controls.add(new JLabel("kP"));controls.add(kp,"wrap");
+		controls.add(new JLabel("kI"));controls.add(ki,"wrap");
+		controls.add(new JLabel("kD"));controls.add(kd,"wrap");
+		controls.add(new JLabel("VkP"));controls.add(vkp,"wrap");
+		controls.add(new JLabel("VkD"));controls.add(vkd,"wrap");
+		controls.add(new JLabel("Resolution (mm)"));controls.add(mmPos,"wrap");
+		controls.add(new JLabel("Maximum Velocity (mm/s)"));controls.add(maxVel,"wrap");
+		controls.add(new JLabel("Base Radius(mm)"));controls.add(baseRad,"wrap");
+		controls.add(new JLabel("End Effector Radius(mm)"));controls.add(EErad,"wrap");
+		controls.add(new JLabel("Maximum Z(mm)"));controls.add(maxz,"wrap");
+		controls.add(new JLabel("Minimum Z(mm)"));controls.add(minz,"wrap");
+		controls.add(new JLabel("Rod Length(mm)"));controls.add(rodlen,"wrap");
+		controls.add(update,"wrap");
+		add(controls,"wrap");
 		add(gui,"wrap");
 		
 		update.addActionListener(new ActionListener() {
@@ -82,7 +84,7 @@ public class PrinterConfiguration extends JPanel {
 		ki.setText(new Double(state.getkI()).toString());
 		kd.setText(new Double(state.getkD()).toString());
 		vkp.setText(new Double(state.getvKP()).toString());
-		vkd.setText(new Double(state.getvKP()).toString());
+		vkd.setText(new Double(state.getvKD()).toString());
 		mmPos.setText(new Double(state.getMmPositionResolution()).toString());
 		maxVel.setText(new Double(state.getMaximumMMperSec()).toString());
 		baseRad.setText(new Double(state.getBaseRadius()).toString());
