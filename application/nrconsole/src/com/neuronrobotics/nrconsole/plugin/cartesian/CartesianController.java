@@ -16,7 +16,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 public class CartesianController extends AbstractNRConsoleTabedPanelPlugin{
 	public static final String[] myNames ={"bcs.cartesian.*"};
 	
-	private SampleGuiNR gui = new SampleGuiNR();
+	private PrinterConfiguration gui = new PrinterConfiguration();
 	private BowlerBoardDevice delt = new BowlerBoardDevice();
 	private NRPrinter printer=null;
 	
