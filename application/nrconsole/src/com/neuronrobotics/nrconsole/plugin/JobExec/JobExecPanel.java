@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,10 +22,13 @@ import net.miginfocom.swing.MigLayout;
 import com.jme3.system.AppSettings;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
+import com.neuronrobotics.nrconsole.util.StlFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.ServoStockGCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+
+
 
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
@@ -35,12 +39,16 @@ import javax.swing.event.ChangeEvent;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JCheckBox;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+
 import javax.swing.JToolBar;
+
 import java.awt.FlowLayout;
 
 
@@ -390,8 +398,13 @@ public class JobExecPanel extends JPanel{
 	
 	private void jButtonOpenGCodeActionActionPerformed(ActionEvent event) {
 		
-		gCodes = FileSelectionFactory.GetFile(null, new GCodeFilter());
-		
+		File rawObject = FileSelectionFactory.GetFile(null, new GCodeFilter(), new StlFilter());
+		String gCodePath = rawObject.getAbsolutePath();
+		gCodePath = gCodePath.replaceAll(".stl", ".gcode");
+		gCodes = new File(gCodePath);
+		if (new StlFilter().accept(rawObject)){
+			printer.slice(rawObject, gCodes);
+		}
 		if (gCodes != null && gCodes.isFile() && gCodes.canRead()){
 			try{
 				loadGcodeFile();
