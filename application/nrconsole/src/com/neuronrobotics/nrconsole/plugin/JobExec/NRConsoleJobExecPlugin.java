@@ -1,6 +1,7 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
 import java.awt.Dimension;
+import java.io.File;
 
 import javax.swing.JPanel;
 
@@ -8,6 +9,8 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
+import com.neuronrobotics.nrconsole.util.Slic3rFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.replicator.driver.Slic3r;
@@ -47,7 +50,12 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		delt.setConnection(connection);
 		delt.connect();
 		//TODO load this from a configuration file, or extract from within jar.
-		Slic3r.setExecutableLocation("/usr/local/Slic3r/bin/slic3r");
+		//Slic3r.setExecutableLocation("/usr/local/Slic3r/bin/slic3r");
+		String path = "/usr/local/Slic3r/bin/slic3r";
+		if (new File(path).exists() == false){
+			 path = FileSelectionFactory.GetFile(null, new Slic3rFilter()).getPath();
+		}
+		Slic3r.setExecutableLocation(path);
 		printer = new NRPrinter(delt);
 		if (delt.isAvailable()){
 			gui.setDevices(delt, printer);
@@ -57,6 +65,8 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		
 	}
 
+	
+	
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
 		
