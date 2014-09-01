@@ -1,7 +1,14 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
 import java.awt.Dimension;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.prefs.Preferences;
 
 import javax.swing.JPanel;
 
@@ -10,6 +17,7 @@ import net.miginfocom.swing.MigLayout;
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
+import com.neuronrobotics.nrconsole.util.PrefsLoader;
 import com.neuronrobotics.nrconsole.util.Slic3rFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
@@ -19,6 +27,8 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	public static final String[] myNames ={"bcs.cartesian.*"};
+	
+	
 	
 	private JobExecPanel gui = new JobExecPanel();
 	private JPanel holder;
@@ -51,9 +61,11 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		delt.connect();
 		//TODO load this from a configuration file, or extract from within jar.
 		//Slic3r.setExecutableLocation("/usr/local/Slic3r/bin/slic3r");
-		String path = "/usr/local/Slic3r/bin/slic3r";
+		PrefsLoader prefs = new PrefsLoader();
+		String path = prefs.getSlic3rLocation();
 		if (new File(path).exists() == false){
 			 path = FileSelectionFactory.GetFile(null, new Slic3rFilter()).getPath();
+			 prefs.setSlic3rLocation(path);
 		}
 		Slic3r.setExecutableLocation(path);
 		printer = new NRPrinter(delt);
