@@ -135,13 +135,14 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void initComponents() {
-		setLayout(new MigLayout("", "[157px,grow]", "[grow][][grow][grow][][]"));
+		setLayout(new MigLayout("", "[157px,grow]", "[grow][grow][][grow][grow][][]"));
 		add(getPanel_3(), "cell 0 0,grow");
-		add(getSplitPane(), "cell 0 2,grow");
+		add(getPanel_6(), "cell 0 1,grow");
+		add(getSplitPane(), "cell 0 3,grow");
 		
 		setMinimumSize(new Dimension(693, 476));
-		add(getPanel_4(), "cell 0 3,grow");
-		add(getBtnEmergencyStop(), "cell 0 4,growx");
+		add(getPanel_4(), "cell 0 4,grow");
+		add(getBtnEmergencyStop(), "cell 0 5,growx");
 		
 	}
 
@@ -211,6 +212,8 @@ public class JobExecPanel extends JPanel{
 	
 	public String fileName = "None";
 	private JButton btnEmergencyStop;
+	private JPanel panel_6;
+	private JButton btnHomePrinter;
 	
 	public void updatePrintInfo(){
 		getTfLayerShown().setText("(File: " + fileName + 
@@ -720,5 +723,24 @@ public class JobExecPanel extends JPanel{
 			btnEmergencyStop.setFont(new Font("Tahoma", Font.PLAIN, 40));
 		}
 		return btnEmergencyStop;
+	}
+	private JPanel getPanel_6() {
+		if (panel_6 == null) {
+			panel_6 = new JPanel();
+			panel_6.setLayout(new MigLayout("", "[]", "[][]"));
+			panel_6.add(getBtnHomePrinter(), "cell 0 0");
+		}
+		return panel_6;
+	}
+	private JButton getBtnHomePrinter() {
+		if (btnHomePrinter == null) {
+			btnHomePrinter = new JButton("Home Printer");
+			btnHomePrinter.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					printer.homeAllLinks();
+				}
+			});
+		}
+		return btnHomePrinter;
 	}
 }
