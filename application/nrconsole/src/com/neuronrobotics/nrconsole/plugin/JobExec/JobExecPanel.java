@@ -719,7 +719,7 @@ public class JobExecPanel extends JPanel{
 				}
 			});
 			btnEmergencyStop.setBackground(Color.RED);
-			btnEmergencyStop.setForeground(Color.RED);
+			btnEmergencyStop.setForeground(Color.BLACK);
 			btnEmergencyStop.setFont(new Font("Tahoma", Font.PLAIN, 40));
 		}
 		return btnEmergencyStop;
