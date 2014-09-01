@@ -24,12 +24,17 @@ import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
 import com.neuronrobotics.nrconsole.util.StlFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
+import com.neuronrobotics.replicator.driver.PrinterStatus;
+import com.neuronrobotics.replicator.driver.PrinterStatusListener;
 import com.neuronrobotics.replicator.driver.ServoStockGCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.replicator.driver.SliceStatusData;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 
 
 
+
+//import com.sun.deploy.uitoolkit.impl.fx.Utils;
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
 import javax.swing.JSlider;
@@ -50,6 +55,8 @@ import java.awt.event.ItemEvent;
 import javax.swing.JToolBar;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Color;
 
 
 public class JobExecPanel extends JPanel{
@@ -128,12 +135,13 @@ public class JobExecPanel extends JPanel{
 	}
 
 	private void initComponents() {
-		setLayout(new MigLayout("", "[157px,grow]", "[grow][][grow][grow][]"));
+		setLayout(new MigLayout("", "[157px,grow]", "[grow][][grow][grow][][]"));
 		add(getPanel_3(), "cell 0 0,grow");
 		add(getSplitPane(), "cell 0 2,grow");
 		
 		setMinimumSize(new Dimension(693, 476));
 		add(getPanel_4(), "cell 0 3,grow");
+		add(getBtnEmergencyStop(), "cell 0 4,growx");
 		
 	}
 
@@ -202,6 +210,7 @@ public class JobExecPanel extends JPanel{
 	}
 	
 	public String fileName = "None";
+	private JButton btnEmergencyStop;
 	
 	public void updatePrintInfo(){
 		getTfLayerShown().setText("(File: " + fileName + 
@@ -378,6 +387,10 @@ public class JobExecPanel extends JPanel{
 		//ServoStockGCodeParser operator = new ServoStockGCodeParser(printer);
 		
 	}
+	
+	
+	
+	
 	private void jButtonRunJobActionActionPerformed(ActionEvent event){
 		new Thread(){
 			public void run(){
@@ -412,7 +425,7 @@ public class JobExecPanel extends JPanel{
 				//e.printStackTrace();
 			}
 		}
-		
+	
 		
 	}
 	public void doNotPrint(){
@@ -533,8 +546,8 @@ public class JobExecPanel extends JPanel{
 			//Dimension dim = new Dimension(640, 480);
 			
 			//ctx.getCanvas().setPreferredSize(dim);     
-		      
 		     
+		   
 		     
 		     
 		}
@@ -693,5 +706,19 @@ public class JobExecPanel extends JPanel{
 			chckbxShowAxes.setSelected(true);
 		}
 		return chckbxShowAxes;
+	}
+	private JButton getBtnEmergencyStop() {
+		if (btnEmergencyStop == null) {
+			btnEmergencyStop = new JButton("Emergency Stop");
+			btnEmergencyStop.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					printer.emergencyStop();
+				}
+			});
+			btnEmergencyStop.setBackground(Color.RED);
+			btnEmergencyStop.setForeground(Color.RED);
+			btnEmergencyStop.setFont(new Font("Tahoma", Font.PLAIN, 40));
+		}
+		return btnEmergencyStop;
 	}
 }
