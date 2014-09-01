@@ -44,6 +44,7 @@ import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.VertexBuffer;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Cylinder;
+import com.jme3.scene.shape.Dome;
 import com.jme3.scene.shape.Line;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
@@ -69,8 +70,8 @@ public class MachineSimDisplay extends SimpleApplication{
 	private boolean loading= false;
 	private BitmapText loadingText = null;
 	private Vector3f scaleRate = new Vector3f(.5f,.5f,.5f);
-	
-	
+	private boolean printHeadVisible;
+	private Geometry printHead;
 	private boolean showGood = true;
 	private boolean showTroubled = true;
 	private boolean showDangerous = true;
@@ -78,6 +79,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	private boolean showAxes = true;
 	private PrintObject printObj;
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
+	private Material matHead;
 	public MachineSimDisplay(JPanel _panel){		
 		panel = _panel;
 		printObj = new PrintObject(this);
@@ -163,6 +165,16 @@ public class MachineSimDisplay extends SimpleApplication{
 		return matFail;
 	}
 	
+	
+	public Material getMatHead(){
+		if (matHead == null){
+			matHead = new Material(assetManager,
+			          "Common/MatDefs/Misc/Unshaded.j3md");  // create a simple material        \
+	        
+		       matHead.setColor("Color", ColorRGBA.White); 
+		}
+		return matHead;
+	}
 	public int getLayersToShow(){
 		return layersToShow;
 	}
@@ -444,7 +456,12 @@ public class MachineSimDisplay extends SimpleApplication{
 					notifyWarnPrint();
 				}
 			}
-			
+			if (printHeadVisible){
+				rootNode.attachChild(getPrintHead());
+			}
+			else{
+				rootNode.detachChild(getPrintHead());
+			}
 			
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
@@ -502,5 +519,35 @@ public class MachineSimDisplay extends SimpleApplication{
 		hasChanged = true;
 	}
 	
+	
+	
+	
+	
+	public Geometry getPrintHead(){
+		if (printHead == null){
+			printHead = new Geometry("Print Head", new Dome(Vector3f.ZERO, 2, 32, 20,false));
+			printHead.setMaterial(getMatHead());
+		}
+		return printHead;
+	}
+	
+	
+	public void setPrintHeadLocation(float x, float y, float z){
+		getPrintHead().setLocalTranslation(x, y, z);
+	}
+
+	/**
+	 * @return the printHeadVisible
+	 */
+	public boolean isPrintHeadVisible() {
+		return printHeadVisible;
+	}
+
+	/**
+	 * @param _printHeadVisible the printHeadVisible to set
+	 */
+	public void setPrintHeadVisible(boolean _printHeadVisible) {
+		printHeadVisible = _printHeadVisible;
+	}
 	
 }
