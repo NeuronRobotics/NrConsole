@@ -248,6 +248,11 @@ public class PluginManager {
 		return height;
 	}
 
+	/**
+	 * Find the PID plugin and start it
+	 * Searched through the available plugins to find it
+	 * Start the plugin using a virtual device 
+	 */
 	public void connectVirtualPID() {
 		for(int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin pl= plugins.get(i);

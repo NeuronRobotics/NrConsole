@@ -15,15 +15,11 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
-import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
-import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.kinematics.NRConsoleKinematicsLabPlugin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
-import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class MenuBar extends JMenuBar implements IConnectionEventListener {
@@ -33,21 +29,30 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	
 	private JMenuItem disconnectMenuItem = new JMenuItem("Disconnect");
 	private JMenuItem connectionMenuItem = new JMenuItem("Set Connection");
-	private JMenuItem virtualPid = new JMenuItem("Virtual PID");
+	private JMenuItem virtualPidMenuItem = new JMenuItem("Virtual PID");
 	private JMenuItem aboutMenuItem = new JMenuItem("About NRConsole");
-	private JMenuItem kinematicsLab = new JMenuItem("Kinematics Lab");
+	private JMenuItem kinematicsLabMenuItem = new JMenuItem("Kinematics Lab");
+	
 	private PluginManager manager;
+	
 	private boolean ready=false;
+	
 	JMenu fileMenu;
 	JMenu aboutMenu;
 	JMenu connectionMenu;
 	JMenu advanced;
+	
 	private JFrame aboutFrame;
-	private JPanel about = new JPanel(new MigLayout());
+	private JPanel aboutPanel; 
+	
 	public MenuBar(PluginManager console) {
-		this.manager = console;
+			
+		this.manager = console;//Add the PluginManager
 		
-		initMenus();
+		aboutPanel = new JPanel(new MigLayout()); //Create the about panel
+		
+		initJMenuItems();//Initialize the JMenuItems
+		
 		
 		fileMenu = new JMenu("File");
 		fileMenu.add(quitMenuItem);
@@ -56,21 +61,22 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		connectionMenu= new JMenu("Connection");
 		connectionMenu.add(connectionMenuItem);
 		connectionMenu.add(disconnectMenuItem);
-		connectionMenu.add(virtualPid);
+		connectionMenu.add(virtualPidMenuItem);
 		
 		aboutMenu = new JMenu("About");
 		aboutMenu.add(aboutMenuItem);
 		
 		advanced = new JMenu("Advanced");
-		advanced.add(kinematicsLab);
+		advanced.add(kinematicsLabMenuItem);
 		
 	    add(fileMenu);
 	    add(connectionMenu);
 	    add(aboutMenu);
 	    //add(advanced);
-	    about.add(new JLabel(NRConsoleWindow.getConsoleVersion()),"wrap");
+	    aboutPanel.add(new JLabel(NRConsoleWindow.getConsoleVersion()),"wrap");
 	    //about.add(new JLabel("Build date: "+SDKBuildInfo.getBuildDate()),"wrap");
 	}
+	
 	public void setMenues(ArrayList<JMenu> menues){
 		removeAll();
 		add(fileMenu);
@@ -85,6 +91,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	    }
 	}
 
+	
 	public void addActionListener(ActionListener l) {
 		quitMenuItem.addActionListener(l);
 		disconnectMenuItem.addActionListener(l);
@@ -92,10 +99,26 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		aboutMenuItem.addActionListener(l);	
 	}
 	
-	private void initMenus() {
+	/**
+	 * Set up the JMenuItems
+	 * 		"quitMenuItem","aboutMenuItem","disconnectMenuItem",
+	 *  	"virtualPidMenuItem", "connectionMenuItem",
+	 * 		 "kinematicsLabMenuItem"
+	 *  ...by creating and adding the appropriate action listeners and setting mnemonics
+	 *  (note that kinematicsLabMenuItem, virtualPidMenuItem, and aboutMenuItem do NOT have mnemonics).
+	 *  
+	 *  Also disables the disconnectMenuItem by default.
+	 *  
+	 *  Requires:
+	 *  	-> that the "aboutPanel" JPanel be instantiated.
+	 *  	-> the PluginManager "manager" be instantiated/set.
+	 *  
+	 */
+	private void initJMenuItems() {
 		
-		quitMenuItem.setMnemonic(KeyEvent.VK_Q);
-		quitMenuItem.addActionListener(new ActionListener() {
+		//Set up quitMenuItem
+		quitMenuItem.setMnemonic(KeyEvent.VK_Q);//Set the mnemonic to the "q" key (in standard US keyboard layout)
+		quitMenuItem.addActionListener(new ActionListener() { 
 			
 			public void actionPerformed(ActionEvent e) {
 				disconnect();
@@ -103,14 +126,19 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			}
 		});
 		
+		//Set up aboutMenuItem
 		aboutMenuItem.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
+				//Try to open the specified URL 
+				//(using the Desktop variable of the GettingStartedPanel)
+				//If it fails, will generate, pack and show the aboutFrame containing the aboutPanel.
+				//TODO: give some sort of error message or something in the empty aboutFrame.
 				try {
 					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Intro");
 				} catch (Exception e1) {
-					aboutFrame = new JFrame(about.getName());
-					aboutFrame.add(about);
+					aboutFrame = new JFrame(aboutPanel.getName());
+					aboutFrame.add(aboutPanel);
 					aboutFrame.setLocationRelativeTo(null); 
 					aboutFrame.pack();
 					aboutFrame.setVisible(true);
@@ -118,15 +146,20 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			}
 		});
 		
-		disconnectMenuItem.setMnemonic(KeyEvent.VK_D);
-		disconnectMenuItem.setEnabled(false);
+		//Set up disconnectMenuItem
+		disconnectMenuItem.setMnemonic(KeyEvent.VK_D);//Set the mnemonic to the "d" key (in standard US keyboard layout)
+		disconnectMenuItem.setEnabled(false);//Set the disconnectMenuItem to be disabled (grayed out) by default
 		disconnectMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				disconnect();	
 			}
 		});
-		virtualPid.addActionListener(new ActionListener() {
+		
+		//Set up virtualPidMenuItem
+		virtualPidMenuItem.addActionListener(new ActionListener() {
 			
+			//On activation, will use the PluginManager "manager" to "connect" to a virtual PID device.
+			//Will also signal that a plugin has been updated and set the "ready" variable to true
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				disconnect();
@@ -136,16 +169,19 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			}
 		});
 		
-		//connectionMenuItem.setAction(new ConnectionAction());
-		connectionMenuItem.setMnemonic(KeyEvent.VK_C);
+		//Set up connectionMenuItem
+		connectionMenuItem.setMnemonic(KeyEvent.VK_C);//Set the mnemonic to the "c" key (in standard US keyboard layout)
 		connectionMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				connect();
 			}
 		});
 		
-		kinematicsLab.addActionListener(new ActionListener() {
+		//Set up kinematicsLabMenuItem
+		kinematicsLabMenuItem.addActionListener(new ActionListener() {
 			
+			//On activation, will create a new NRConsoleKinematicsLabPlugin and notify the PluginManager "manager"
+			//that a plugin has been updated
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -154,6 +190,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			}
 		});
 		
+		//All JMenuItems set up. We are done.
 	}
 	
 	public void connect(){
