@@ -196,7 +196,7 @@ public class PluginManager {
 		// HACK this should load using OSGI
 		// Once instantiated they add themselves to the static list of plugins
 		new NRConsoleJobExecPlugin(this);
-		//new CartesianController(this);
+		new CartesianController(this);
 		new NRConsoleDyIOPlugin(this);
 		new NRConsolePIDPlugin(this);
 		new NRConsoleBowlerCameraPlugin(this);
