@@ -408,9 +408,6 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				printer.cancelPrint();
-				jButtonRunJob.setEnabled(true);
-				jButtonOpenGCode.setEnabled(true);
 			}
 		}.start();
 	}
@@ -792,13 +789,15 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	@Override
 	public void sliceStatus(SliceStatusData ssd) {
 		// TODO Auto-generated method stub
-		Log.warning(ssd.toString());
+		
 		switch (ssd.getCurrentSlicerState()) {
 		case ERROR:
 			break;
 		case SLICING:
+			Log.warning(ssd.toString());
 			break;
 		case SUCCESS:
+			Log.warning(ssd.toString());
 			// Once the slicing is done, load the gcode file from the slice
 			if (gCodes != null && gCodes.isFile() && gCodes.canRead()) {
 				try {
@@ -830,11 +829,15 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			break;
 		case PRINTING:
 			// The live plot should update here
+			
 			break;
 		case READY:
 			break;
 		case SUCCESS:
 			// Print complete status
+			printer.cancelPrint();
+			jButtonRunJob.setEnabled(true);
+			jButtonOpenGCode.setEnabled(true);
 			break;
 		case WARNING_DONE:
 			break;
