@@ -821,20 +821,21 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	@Override
 	public void printStatus(PrinterStatus psl) {
 		// TODO Auto-generated method stub
-		Log.warning(psl.toString());
+		
 		switch (psl.getDriverState()) {
 		case ERROR:
 			break;
 		case NOT_READY:
 			break;
 		case PRINTING:
-			// The live plot should update here
-			
+			// This is the currently loaded gcode
+			Log.warning(psl.toString());
 			break;
 		case READY:
 			break;
 		case SUCCESS:
 			// Print complete status
+			Log.warning(psl.toString());
 			printer.cancelPrint();
 			jButtonRunJob.setEnabled(true);
 			jButtonOpenGCode.setEnabled(true);
@@ -842,6 +843,10 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		case WARNING_DONE:
 			break;
 		case WARNING_PRINTING:
+			break;
+		case MOVING:
+			// This is the live plot data
+			Log.warning(psl.toString());
 			break;
 		default:
 			break;
