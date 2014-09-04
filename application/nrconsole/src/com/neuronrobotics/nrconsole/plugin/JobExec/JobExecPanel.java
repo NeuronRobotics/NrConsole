@@ -829,7 +829,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			break;
 		case PRINTING:
 			// This is the currently loaded gcode
-			Log.warning(psl.toString());
+			//Log.warning(psl.toString());
 			break;
 		case READY:
 			break;
@@ -843,10 +843,12 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		case WARNING_DONE:
 			break;
 		case WARNING_PRINTING:
+			// Warn about unhandled gcodes
+			Log.warning(psl.toString());
 			break;
 		case MOVING:
 			// This is the live plot data
-			Log.warning(psl.toString());
+			//Log.warning(psl.toString());
 			break;
 		default:
 			break;
