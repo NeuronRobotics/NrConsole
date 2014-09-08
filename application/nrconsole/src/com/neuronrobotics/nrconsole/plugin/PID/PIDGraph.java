@@ -15,6 +15,7 @@ import net.miginfocom.swing.MigLayout;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYDataItem;
 import org.jfree.data.xy.XYSeries;
@@ -51,7 +52,13 @@ public class PIDGraph extends JPanel  {
 				true, 
 				false, 
 				false);
+		
 		ChartPanel cp = new ChartPanel(chart);
+		
+		// set the graph to zoom around the values and not include zero
+		NumberAxis rangeAxis = (NumberAxis) chart.getXYPlot().getRangeAxis();
+		rangeAxis.setAutoRangeIncludesZero(false);
+		
 		JPanel buttons = new JPanel();
 		buttons.add(save);
 		buttons.add(clear);

@@ -33,7 +33,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	private JobExecPanel gui = new JobExecPanel();
 	private JPanel holder;
 	private BowlerBoardDevice delt = new BowlerBoardDevice();
-	private NRPrinter printer=null;
+	private static NRPrinter printer=null;
 	private Dimension minSize = new Dimension(693, 476);
 
 	public NRConsoleJobExecPlugin(PluginManager pm) {
@@ -68,9 +68,11 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 			 prefs.setSlic3rLocation(path);
 		}
 		Slic3r.setExecutableLocation(path);
-		printer = new NRPrinter(delt);
+		if(NRConsoleJobExecPlugin.getPrinter() == null)
+			NRConsoleJobExecPlugin.setPrinter(new NRPrinter(delt));
+		
 		if (delt.isAvailable()){
-			gui.setDevices(delt, printer);
+			gui.setDevices(delt, getPrinter());
 		}
 		//printer.
 		return delt.isAvailable();
@@ -83,6 +85,14 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 	public Dimension getMinimumWimdowDimentions() {
 		
 		return minSize;
+	}
+
+	public static NRPrinter getPrinter() {
+		return printer;
+	}
+
+	public static void setPrinter(NRPrinter printer) {
+		NRConsoleJobExecPlugin.printer = printer;
 	}
 
 }

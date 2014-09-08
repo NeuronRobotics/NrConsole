@@ -8,6 +8,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.plugin.JobExec.NRConsoleJobExecPlugin;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
@@ -40,7 +41,9 @@ public class NRConsoleBowlerConfigPlugin extends AbstractNRConsoleTabedPanelPlug
 		delt.setConnection(connection);
 		delt.connect();
 		if (delt.isAvailable()){
-		printer = new NRPrinter(delt);		
+			if(NRConsoleJobExecPlugin.getPrinter() == null)
+				NRConsoleJobExecPlugin.setPrinter(new NRPrinter(delt));
+			printer = NRConsoleJobExecPlugin.getPrinter();	
 		gui.setDevices(delt, printer);
 		}
 		//gui.setKinematicsModel(printer);
