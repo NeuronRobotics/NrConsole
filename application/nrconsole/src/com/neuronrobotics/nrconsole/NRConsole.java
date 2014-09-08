@@ -15,14 +15,29 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 @SuppressWarnings("unused")
+
+/**
+ * 
+ * @author technocopia05
+ *
+ */
 public class NRConsole implements ActionListener {
+	
 	private NRConsoleWindow nrcFrame = null;
 
-	private PluginManager manager=new PluginManager();
-	private MenuBar nrcMenubar = new MenuBar(manager);
-	private showManager shower = new showManager ();
-	private static NRConsole self;
+	private PluginManager manager=new PluginManager();//This is the class that manages the plugins and their associated tabs in the gui
+	private MenuBar nrcMenubar = new MenuBar(manager);//This is the menu bar for the main gui window
+	private showManager shower = new showManager ();//This is some kludgey bullshit to manage the paint and update of the gui. //TODO take this out
+	private static NRConsole self; //Used to reference this class within this class to get around the "static" qualifier. //TODO take this out
 	
+	/**
+	 * Main function for GUI.
+	 * Creates a new GUI with the NRConsole constructor,
+	 * giving it a boolean that indicates if any command
+	 * line arguments are present (false if any command line
+	 * arguments are present).
+	 * @param args
+	 */
 	public static void main(String [] args) {
 		try {
 			if(args.length != 0)
@@ -35,6 +50,8 @@ public class NRConsole implements ActionListener {
 		}
 	}
 	
+	/** Currently unused
+	 */
 	public static void disconnect() {
 		self.nrcMenubar.disconnect();
 	}
@@ -55,16 +72,7 @@ public class NRConsole implements ActionListener {
 			Log.enableDebugPrint();
 		}
 		
-//		while(!nrcFrame.isShowing()){
-//			ThreadUtil.wait(100);
-//		}
-//		
-//		while(nrcFrame.isShowing()){
-//			ThreadUtil.wait(500);
-//		}
-//		manager.disconnect();
-//		System.out.println("Exit clean");
-//		System.exit(0);
+
 		nrcFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent winEvt) {
@@ -78,9 +86,16 @@ public class NRConsole implements ActionListener {
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals("set-connection")) {
-			//System.out.println("Do something with the aciton command.");
+			//System.out.println("Do something with the action command.");
 		}
 	}
+	
+	/**
+	 * This private class is some kludgey bullshit
+	 * TODO: take this out
+	 * @author technocopia05
+	 *
+	 */
 	private class showManager extends Thread implements IPluginUpdateListener{
 		public void run(){
 			try{
