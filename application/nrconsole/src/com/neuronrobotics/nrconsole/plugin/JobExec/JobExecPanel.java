@@ -839,7 +839,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		if (list == null) {
 			list = new JList();
 			list.setModel(new AbstractListModel() {
-				String[] values = new String[] {"^^Click \"Open 3D File\"", "to load a file."};
+				String[] values = new String[] {"Click \"Open 3D File\"", "to load a file."};
 				public int getSize() {
 					return values.length;
 				}
