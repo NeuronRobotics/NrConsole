@@ -9,6 +9,7 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -35,6 +36,9 @@ import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
+
+
+
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
@@ -58,11 +62,15 @@ import javax.swing.JToolBar;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Color;
+
 import javax.swing.JInternalFrame;
 import javax.swing.JTextPane;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.JList;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
@@ -112,11 +120,12 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JPanel panel_7;
 	private JPanel panel_8;
 	private JLabel lblPrintQueue;
-	private JTextPane textPaneQueue;
 	private JLabel lblPrintLog;
 	private JTextPane textPaneLog;
 	private JProgressBar progressBar;
-
+	private JList list;
+	private ArrayList<File> files = new ArrayList<File>();
+	private ArrayList<String> fileNames = new ArrayList<String>();
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -210,6 +219,8 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	private void loadGcodeFile() {
 		try {
+			
+			
 			isIllegal = false;
 			isWarn = false;
 			fileName = gCodes.getName();
@@ -232,6 +243,11 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			getJButtonRunJob().setEnabled(isGoodFile);
 			getJButtonOpenGCode().setEnabled(true);
 			int numLayers = app.loadGCode(codeOps.getCodes());
+			files.add(gCodes);
+			for (File f : files) {
+				fileNames.add(f.getName());
+			}
+			getList().setListData((String[]) fileNames.toArray(null));
 			sliderLayer.setMaximum(numLayers);
 			sliderLayer.setValue(numLayers);
 
@@ -687,7 +703,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			panel_8 = new JPanel();
 			panel_8.setLayout(new BorderLayout(0, 0));
 			panel_8.add(getLblPrintQueue(), BorderLayout.NORTH);
-			panel_8.add(getTextPaneQueue(), BorderLayout.CENTER);
+			panel_8.add(getList(), BorderLayout.CENTER);
 		}
 		return panel_8;
 	}
@@ -696,12 +712,6 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			lblPrintQueue = new JLabel("Print Queue:");
 		}
 		return lblPrintQueue;
-	}
-	private JTextPane getTextPaneQueue() {
-		if (textPaneQueue == null) {
-			textPaneQueue = new JTextPane();
-		}
-		return textPaneQueue;
 	}
 	private JLabel getLblPrintLog() {
 		if (lblPrintLog == null) {
@@ -823,5 +833,16 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		getBtnPausePrint().setText("Pause Job");
 		getBtnPausePrint().setEnabled(false);
 		getJButtonRunJob().setText("Run Job");
+	}
+	private JList<String> getList() {
+		if (list == null) {
+			list = new JList();
+			list.addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent arg0) {
+					
+				}
+			});
+		}
+		return list;
 	}
 }
