@@ -58,6 +58,11 @@ import javax.swing.JToolBar;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Color;
+import javax.swing.JInternalFrame;
+import javax.swing.JTextPane;
+import javax.swing.JProgressBar;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
@@ -65,26 +70,14 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 12345L;
+	private final String tempString = "Hot End Temp: ";
 	private BowlerBoardDevice delt;
 	private NRPrinter printer;
 	File gCodes = null;
 	FileInputStream gCodeStream;
 	double currpos = 0;
-	private JLabel jLabel0;
-	private JLabel jLabel1;
-	private JLabel jLabel2;
-	private JLabel jLabel3;
-	private JLabel jLabel4;
-	private JTextField jTextField0;
-	private JTextField jTextField1;
-	private JTextField jTextField2;
-	private JTextField jTextField3;
-	private JTextField jTextField4;
-	private JButton jButton0;
 	private JButton jButtonOpenGCode;
 	private JButton jButtonRunJob;
-	private TempGraphs grfHotendTemp;
-	private TempGraphs grfBedTemp;
 	private int channelHotEnd = -1;
 	private int channelBed = -1;
 	private GCodeLoader codeOps;
@@ -106,6 +99,23 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JTextField tfLayerShown;
 	private JPanel panel_5;
 	private JCheckBox chckbxShowAxes;
+	private boolean isPaused;
+	long lastUpdate = 0;
+	private JSpinner spinnerTemp;
+	private JLabel lblTempSetpoint;
+	private JButton btnPausePrint;
+	public String fileName = "None";
+	private JButton btnEmergencyStop;
+	private JPanel panel_6;
+	private JButton btnHomePrinter;
+	private JSplitPane splitPane_1;
+	private JPanel panel_7;
+	private JPanel panel_8;
+	private JLabel lblPrintQueue;
+	private JTextPane textPaneQueue;
+	private JLabel lblPrintLog;
+	private JTextPane textPaneLog;
+	private JProgressBar progressBar;
 
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -131,47 +141,21 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 				channelBed = link.getHardwareIndex();
 			}
 		}
-		Updater up = new Updater();
-		up.start();
 		printer.addPrinterStatusListener(this);
 	}
 
 	private void initComponents() {
 		getPanel_1();// initialize the 3d engine
-		setLayout(new MigLayout("", "[157px,grow]",
-				"[grow][grow][][grow][grow][][]"));
-		add(getPanel_3(), "cell 0 0,grow");
-		add(getPanel_6(), "cell 0 1,grow");
-		add(getSplitPane(), "cell 0 3,grow");
+		setLayout(new MigLayout("", "[][157px,grow]", "[grow][center][grow][grow][]"));
+		add(getPanel_3(), "cell 1 0,growx");
+		add(getPanel_6(), "cell 1 1,grow");
+		add(getProgressBar(), "cell 0 0 1 5,growy");
+		add(getSplitPane(), "cell 1 2,grow");
 
 		setMinimumSize(new Dimension(693, 476));
-		add(getPanel_4(), "cell 0 4,grow");
-		add(getBtnEmergencyStop(), "cell 0 5,growx");
+		add(getPanel_4(), "cell 1 3,grow");
+		add(getBtnEmergencyStop(), "cell 1 4,growx");
 
-	}
-
-	private JButton getJButton0() {
-		if (jButton0 == null) {
-			jButton0 = new JButton();
-			jButton0.setText("Update Robot");
-		}
-		return jButton0;
-	}
-
-	private TempGraphs getGrfHotendTemp() {
-		if (grfHotendTemp == null) {
-			grfHotendTemp = new TempGraphs(0, "Hotend Temp");
-
-		}
-		return grfHotendTemp;
-	}
-
-	private TempGraphs getGrfBedTemp() {
-		if (grfBedTemp == null) {
-			grfBedTemp = new TempGraphs(1, "Bed Temp");
-
-		}
-		return grfBedTemp;
 	}
 
 	private JButton getJButtonRunJob() {
@@ -194,7 +178,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			jButtonRunJob.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
-					jButtonRunJobActionActionPerformed(event);
+					startPrint();
 				}
 			});
 		}
@@ -215,10 +199,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		return jButtonOpenGCode;
 	}
 
-	public String fileName = "None";
-	private JButton btnEmergencyStop;
-	private JPanel panel_6;
-	private JButton btnHomePrinter;
+
 
 	public void updatePrintInfo() {
 		getTfLayerShown().setText(
@@ -261,155 +242,6 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 		}
 
-	}
-
-	private JTextField getJTextField4() {
-		if (jTextField4 == null) {
-			jTextField4 = new JTextField();
-			jTextField4.setText("0");
-			jTextField4.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent event) {
-					jTextField4ActionActionPerformed(event);
-				}
-			});
-		}
-		return jTextField4;
-	}
-
-	private JTextField getJTextField3() {
-		if (jTextField3 == null) {
-			jTextField3 = new JTextField();
-			jTextField3.setText("0");
-			jTextField3.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent event) {
-					jTextField3ActionActionPerformed(event);
-				}
-			});
-		}
-		return jTextField3;
-	}
-
-	private JTextField getJTextField2() {
-		if (jTextField2 == null) {
-			jTextField2 = new JTextField();
-			jTextField2.setText("0");
-			jTextField2.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent event) {
-					jTextField2ActionActionPerformed(event);
-				}
-			});
-		}
-		return jTextField2;
-	}
-
-	private JTextField getJTextField1() {
-		if (jTextField1 == null) {
-			jTextField1 = new JTextField();
-			jTextField1.setText("0");
-			jTextField1.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent event) {
-					jTextField1ActionActionPerformed(event);
-				}
-			});
-		}
-		return jTextField1;
-	}
-
-	private JTextField getJTextField0() {
-		if (jTextField0 == null) {
-			jTextField0 = new JTextField();
-			jTextField0.setText("0");
-			jTextField0.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent event) {
-					jTextField0ActionActionPerformed(event);
-				}
-			});
-		}
-		return jTextField0;
-	}
-
-	private JLabel getJLabel4() {
-		if (jLabel4 == null) {
-			jLabel4 = new JLabel();
-			jLabel4.setText("Temp");
-		}
-		return jLabel4;
-	}
-
-	private JLabel getJLabel3() {
-		if (jLabel3 == null) {
-			jLabel3 = new JLabel();
-			jLabel3.setText("Extrude");
-		}
-		return jLabel3;
-	}
-
-	private JLabel getJLabel2() {
-		if (jLabel2 == null) {
-			jLabel2 = new JLabel();
-			jLabel2.setText("Z");
-		}
-		return jLabel2;
-	}
-
-	private JLabel getJLabel1() {
-		if (jLabel1 == null) {
-			jLabel1 = new JLabel();
-			jLabel1.setText("Y");
-		}
-		return jLabel1;
-	}
-
-	private JLabel getJLabel0() {
-		if (jLabel0 == null) {
-			jLabel0 = new JLabel();
-			jLabel0.setText("X");
-		}
-		return jLabel0;
-	}
-
-	private void jTextField4ActionActionPerformed(ActionEvent event) {
-		// set temp
-
-	}
-
-	private void jTextField3ActionActionPerformed(ActionEvent event) {
-		// set extrude
-
-	}
-
-	private void jTextField2ActionActionPerformed(ActionEvent event) {
-		// set z
-	}
-
-	private void jTextField1ActionActionPerformed(ActionEvent event) {
-		// set y
-	}
-
-	private void jTextField0ActionActionPerformed(ActionEvent event) {
-		// ServoStockGCodeParser operator = new ServoStockGCodeParser(printer);
-
-	}
-
-	private void jButtonRunJobActionActionPerformed(ActionEvent event) {
-		new Thread() {
-			public void run() {
-				jButtonOpenGCode.setEnabled(false);
-				jButtonRunJob.setEnabled(false);
-				try {
-					printer.cancelPrint();
-					printer.print(new FileInputStream(gCodes));
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}.start();
 	}
 
 	private void jButtonOpenGCodeActionActionPerformed(ActionEvent event) {
@@ -468,24 +300,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	}
 
-	private class Updater extends Thread {
-
-		public void run() {
-			while (true) {
-				try {
-					Thread.sleep(500);
-
-					getGrfHotendTemp().addEvent(getHotEndSetpoint(),
-							getHotendTemp());
-					getGrfBedTemp().addEvent(getBedSetpoint(), getBedTemp());
-
-				} catch (InterruptedException e) {
-				}
-				// graphVals();
-
-			}
-		}
-	}
+	
 
 	public void showDangerDialog() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -519,25 +334,6 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 								JOptionPane.WARNING_MESSAGE);
 			}
 		});
-	}
-
-	private int getHotendTemp() {
-
-		return delt.GetPIDPosition(channelHotEnd);
-
-	}
-
-	private int getHotEndSetpoint() {
-		return delt.getPIDChannel(channelHotEnd).getCachedTargetValue();
-	}
-
-	private int getBedTemp() {
-		return delt.GetPIDPosition(2);
-
-	}
-
-	private int getBedSetpoint() {
-		return delt.getPIDChannel(2).getCachedTargetValue();
 	}
 
 	private JPanel getPanel_1() {
@@ -591,9 +387,8 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JPanel getPanel_1_1() {
 		if (panel_1 == null) {
 			panel_1 = new JPanel();
-			panel_1.setLayout(new MigLayout("", "[grow]", "[grow][grow][]"));
-			panel_1.add(getGrfHotendTemp(), "cell 0 0,grow");
-			panel_1.add(getGrfBedTemp(), "cell 0 1,grow");
+			panel_1.setLayout(new MigLayout("", "[grow][grow]", "[grow]"));
+			panel_1.add(getSplitPane_1(), "cell 0 0,grow");
 		}
 		return panel_1;
 	}
@@ -616,10 +411,12 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 			sliderLayer.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
-					if (!sliderLayer.getValueIsAdjusting()) {
+					if ((lastUpdate + 100) > System.currentTimeMillis()){
+						lastUpdate = System.currentTimeMillis();
 						app.setLayersToShow(sliderLayer.getValue());
+						updatePrintInfo();
 					}
-					updatePrintInfo();
+					
 				}
 			});
 			sliderLayer.setSnapToTicks(true);
@@ -631,12 +428,10 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JPanel getPanel_3() {
 		if (panel_3 == null) {
 			panel_3 = new JPanel();
-			panel_3.setLayout(new MigLayout(
-					"",
-					"[][][9.00,center][grow][10.00][grow][10.00][grow][][grow][][grow][]",
-					"[center][]"));
+			panel_3.setLayout(new MigLayout("", "[][][][9.00,center][grow][10.00][grow][10.00][grow][][grow][][grow][]", "[center]"));
 			panel_3.add(getJButtonOpenGCode(), "cell 0 0,grow");
 			panel_3.add(getJButtonRunJob(), "cell 1 0,grow");
+			panel_3.add(getBtnPausePrint(), "cell 2 0");
 			// panel_3.add(getJLabel0(), "cell 2 0,alignx right");
 			// panel_3.add(getJTextField0(), "cell 3 0,growx");
 			// panel_3.add(getJLabel1(), "cell 4 0,alignx right,growy");
@@ -655,7 +450,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JPanel getPanel_4() {
 		if (panel_4 == null) {
 			panel_4 = new JPanel();
-			panel_4.setLayout(new MigLayout("", "[][][][][]", "[][]"));
+			panel_4.setLayout(new MigLayout("", "[][][][][]", "[]"));
 			panel_4.add(getChckbxShowGoodLines(), "cell 0 0");
 			panel_4.add(getChckbxShowTroubledLines(), "cell 1 0");
 			panel_4.add(getChckbxShowDangerousLines(), "cell 2 0");
@@ -768,8 +563,10 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JPanel getPanel_6() {
 		if (panel_6 == null) {
 			panel_6 = new JPanel();
-			panel_6.setLayout(new MigLayout("", "[]", "[][]"));
-			panel_6.add(getBtnHomePrinter(), "cell 0 0");
+			panel_6.setLayout(new MigLayout("", "[][][][grow][]", "[]"));
+			panel_6.add(getBtnHomePrinter(), "cell 0 0,growy");
+			panel_6.add(getLblTempSetpoint(), "cell 1 0");
+			panel_6.add(getSpinnerTemp(), "cell 2 0");
 		}
 		return panel_6;
 	}
@@ -836,9 +633,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		case SUCCESS:
 			// Print complete status
 			Log.warning(psl.toString());
-			printer.cancelPrint();
-			jButtonRunJob.setEnabled(true);
-			jButtonOpenGCode.setEnabled(true);
+			printComplete();
 			break;
 		case WARNING_DONE:
 			break;
@@ -847,12 +642,183 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			Log.warning(psl.toString());
 			break;
 		case MOVING:
-			// This is the live plot data
+			getProgressBar().setValue((int) psl.getTempreture());
+			//TODO: need to get temperature setpoint   getSpinnerTemp().setValue((int) printer.)
+			
+			//If the temperature is close to the setpoint, make the color of the bar green to indicate good temperature at a glance
+			if (Math.abs(getProgressBar().getValue() - (int) getSpinnerTemp().getValue())< 3){
+				getProgressBar().setForeground(Color.GREEN);
+			}
+			else{
+				getProgressBar().setForeground(Color.ORANGE);
+			}
+			
 			//Log.warning(psl.toString());
 			break;
 		default:
 			break;
 
 		}
+	}
+	
+	private JSplitPane getSplitPane_1() {
+		if (splitPane_1 == null) {
+			splitPane_1 = new JSplitPane();
+			splitPane_1.setOrientation(JSplitPane.VERTICAL_SPLIT);
+			splitPane_1.setRightComponent(getPanel_7());
+			splitPane_1.setLeftComponent(getPanel_8());
+		}
+		return splitPane_1;
+	}
+	private JPanel getPanel_7() {
+		if (panel_7 == null) {
+			panel_7 = new JPanel();
+			panel_7.setLayout(new BorderLayout(0, 0));
+			panel_7.add(getLblPrintLog(), BorderLayout.NORTH);
+			panel_7.add(getTextPaneLog(), BorderLayout.CENTER);
+		}
+		return panel_7;
+	}
+	private JPanel getPanel_8() {
+		if (panel_8 == null) {
+			panel_8 = new JPanel();
+			panel_8.setLayout(new BorderLayout(0, 0));
+			panel_8.add(getLblPrintQueue(), BorderLayout.NORTH);
+			panel_8.add(getTextPaneQueue(), BorderLayout.CENTER);
+		}
+		return panel_8;
+	}
+	private JLabel getLblPrintQueue() {
+		if (lblPrintQueue == null) {
+			lblPrintQueue = new JLabel("Print Queue:");
+		}
+		return lblPrintQueue;
+	}
+	private JTextPane getTextPaneQueue() {
+		if (textPaneQueue == null) {
+			textPaneQueue = new JTextPane();
+		}
+		return textPaneQueue;
+	}
+	private JLabel getLblPrintLog() {
+		if (lblPrintLog == null) {
+			lblPrintLog = new JLabel("Print Log:");
+		}
+		return lblPrintLog;
+	}
+	private JTextPane getTextPaneLog() {
+		if (textPaneLog == null) {
+			textPaneLog = new JTextPane();
+		}
+		return textPaneLog;
+	}
+	private JProgressBar getProgressBar() {
+		if (progressBar == null) {
+			progressBar = new JProgressBar();
+			progressBar.setFont(new Font("Tahoma", Font.PLAIN, 16));			
+			progressBar.setMaximum(300);
+			progressBar.setStringPainted(true);
+			progressBar.setOrientation(SwingConstants.VERTICAL);
+			progressBar.setValue(25);
+			progressBar.setString("Hot End Temp: ");
+			progressBar.setForeground(Color.ORANGE);
+		}
+		return progressBar;
+	}
+	private JSpinner getSpinnerTemp() {
+		if (spinnerTemp == null) {
+			spinnerTemp = new JSpinner();
+			spinnerTemp.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent arg0) {
+					//TODO: if this value is manually changed by the user (not automatically changed) the print temperature should be changed
+				}
+			});
+			spinnerTemp.setModel(new SpinnerNumberModel(0, 0, 275, 1));
+		}
+		return spinnerTemp;
+	}
+	private JLabel getLblTempSetpoint() {
+		if (lblTempSetpoint == null) {
+			lblTempSetpoint = new JLabel("Temp Setpoint:");
+		}
+		return lblTempSetpoint;
+	}
+	private JButton getBtnPausePrint() {
+		if (btnPausePrint == null) {
+			btnPausePrint = new JButton("Pause Print");
+			btnPausePrint.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					flipPauseState();
+				}
+			});
+		}
+		return btnPausePrint;
+	}
+	
+	
+	private void flipPauseState(){
+		if (isPaused){
+			resumePrint();
+		}
+		else{
+			pausePrint();
+		}
+	}
+	
+	/**
+	 * This starts the current print job and configures the GUI
+	 */
+	private void startPrint(){
+		
+		new Thread() {
+			public void run() {
+				jButtonOpenGCode.setEnabled(false);
+				//jButtonRunJob.setEnabled(false);
+				isPaused = false;
+				getBtnPausePrint().setText("Pause Job");
+				getBtnPausePrint().setEnabled(true);
+				getJButtonRunJob().setText("Cancel Job");
+				try {
+					printer.cancelPrint();
+					printer.print(new FileInputStream(gCodes));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}.start();
+		
+		
+		}
+	
+	/**
+	 * This method pauses a print and configures the GUI
+	 */
+	private void pausePrint(){
+		//TODO: Need to be able to get the paused state of the printer
+		isPaused = true;
+		getBtnPausePrint().setText("Resume Job");
+		printer.setPausePrintState(true);
+		
+	}
+	
+	
+	/**
+	 * This method resumes a paused print and configures the GUI
+	 */
+	private void resumePrint(){
+		//TODO: Need to be able to get the paused state of the printer
+		isPaused = false;
+		getBtnPausePrint().setText("Pause Job");
+		printer.setPausePrintState(false);
+	}
+	/**
+	 * This method is called at the completion of a print job, it cleans up and resets the GUI for the next print
+	 */
+	private void printComplete(){
+		isPaused = false;
+		getBtnPausePrint().setText("Pause Job");
+		getBtnPausePrint().setEnabled(false);
+		getJButtonRunJob().setText("Run Job");
 	}
 }
