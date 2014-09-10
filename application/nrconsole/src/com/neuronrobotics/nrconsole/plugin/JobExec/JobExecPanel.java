@@ -273,11 +273,13 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 					return;
 				}
 				String gCodePath = rawObject.getAbsolutePath();
-				gCodePath = gCodePath.replaceAll(".stl", ".gcode");
+				//gCodePath = gCodePath.replaceAll(".stl", ".gcode");
+				gCodePath = gCodePath + ".gcode";
 				gCodes = new File(gCodePath);
 				// Only if it is a .stl file should we slice it
 				if (new StlFilter().accept(rawObject)) {
 					printer.slice(rawObject, gCodes);
+					
 				}
 				// If this is a gcode file, load in the codes
 				if (new GCodeFilter().accept(rawObject)) {
@@ -615,6 +617,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			break;
 		case SUCCESS:
 			Log.warning(ssd.toString());
+			System.out.println(gCodes.getAbsolutePath());
 			// Once the slicing is done, load the gcode file from the slice
 			if (gCodes != null && gCodes.isFile() && gCodes.canRead()) {
 				try {
