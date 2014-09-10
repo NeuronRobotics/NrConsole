@@ -71,6 +71,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.AbstractListModel;
 
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
@@ -837,6 +838,15 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JList<String> getList() {
 		if (list == null) {
 			list = new JList();
+			list.setModel(new AbstractListModel() {
+				String[] values = new String[] {"^^Click \"Open 3D File\"", "to load a file."};
+				public int getSize() {
+					return values.length;
+				}
+				public Object getElementAt(int index) {
+					return values[index];
+				}
+			});
 			list.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					
