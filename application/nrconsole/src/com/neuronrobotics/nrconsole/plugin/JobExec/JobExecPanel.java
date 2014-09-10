@@ -245,10 +245,14 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			getJButtonOpenGCode().setEnabled(true);
 			int numLayers = app.loadGCode(codeOps.getCodes());
 			files.add(gCodes);
-			for (File f : files) {
-				fileNames.add(f.getName());
+			String [] names = new String[files.size()];
+			for (int i = 0; i < names.length; i++) {
+				names[i] = files.get(i).getName();
 			}
-			getList().setListData((String[]) fileNames.toArray(null));
+			getList().setListData(names);
+			if (files.size() > 0){
+				getList().setSelectedIndex(0);
+			}
 			sliderLayer.setMaximum(numLayers);
 			sliderLayer.setValue(numLayers);
 
