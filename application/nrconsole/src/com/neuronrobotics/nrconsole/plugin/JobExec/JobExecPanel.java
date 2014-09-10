@@ -213,8 +213,8 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	public void updatePrintInfo() {
 		getTfLayerShown().setText(
 				"(File: " + fileName + ") (# Layers: "
-						+ sliderLayer.getMaximum() + ") (# Layers Shown: "
-						+ sliderLayer.getValue() + ")");
+						+ getSliderLayer().getMaximum() + ") (# Layers Shown: "
+						+ getSliderLayer().getValue() + ")");
 	}
 
 	private void loadGcodeFile() {
@@ -785,7 +785,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		
 		new Thread() {
 			public void run() {
-				jButtonOpenGCode.setEnabled(false);
+				getJButtonOpenGCode().setEnabled(false);
 				//jButtonRunJob.setEnabled(false);
 				isPaused = false;
 				getBtnPausePrint().setText("Pause Job");
