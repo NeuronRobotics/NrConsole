@@ -341,8 +341,11 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			panel = new JPanel();
 			panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 			panel.setLayout(new BorderLayout(0, 0));
-
+panel.setToolTipText("Left Click + Drag to Rotate \n"
+		+ "Right Click + Drag to Strafe \n"
+		+ "Scroll for Zoom");
 			app = new MachineSimDisplay(panel);
+			
 			app.addListener(new PrintTestListener() {
 
 				@Override
