@@ -244,15 +244,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			getJButtonRunJob().setEnabled(isGoodFile);
 			getJButtonOpenGCode().setEnabled(true);
 			int numLayers = app.loadGCode(codeOps.getCodes());
-			files.add(gCodes);
-			String [] names = new String[files.size()];
-			for (int i = 0; i < names.length; i++) {
-				names[i] = files.get(i).getName();
-			}
-			getList().setListData(names);
-			if (files.size() > 0){
-				getList().setSelectedIndex(0);
-			}
+			
 			sliderLayer.setMaximum(numLayers);
 			sliderLayer.setValue(numLayers);
 
@@ -278,7 +270,10 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 				}
 				String gCodePath = rawObject.getAbsolutePath();
 				//gCodePath = gCodePath.replaceAll(".stl", ".gcode");
-				gCodePath = gCodePath + ".gcode";
+				if (!gCodePath.endsWith(".gcode")){
+					gCodePath = gCodePath + ".gcode";
+				}
+				
 				gCodes = new File(gCodePath);
 				// Only if it is a .stl file should we slice it
 				if (new StlFilter().accept(rawObject)) {
@@ -287,7 +282,17 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 				}
 				// If this is a gcode file, load in the codes
 				if (new GCodeFilter().accept(rawObject)) {
+					
 					loadGcodeFile();
+					files.add(gCodes);
+					String [] names = new String[files.size()];
+					for (int i = 0; i < names.length; i++) {
+						names[i] = files.get(i).getName();
+					}
+					getList().setListData(names);
+					if (names.length > 0){
+						getList().setSelectedIndex(0);
+					}
 				}
 
 			}
@@ -625,7 +630,17 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			// Once the slicing is done, load the gcode file from the slice
 			if (gCodes != null && gCodes.isFile() && gCodes.canRead()) {
 				try {
+					
 					loadGcodeFile();
+					files.add(gCodes);
+					String [] names = new String[files.size()];
+					for (int i = 0; i < names.length; i++) {
+						names[i] = files.get(i).getName();
+					}
+					getList().setListData(names);
+					if (names.length > 0){
+						getList().setSelectedIndex(0);
+					}
 					return;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -856,6 +871,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			});
 			list.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
+					if (arg0.getValueIsAdjusting() == false){
+						gCodes = files.get(list.getSelectedIndex());
+						loadGcodeFile();
+					}
 					
 				}
 			});
