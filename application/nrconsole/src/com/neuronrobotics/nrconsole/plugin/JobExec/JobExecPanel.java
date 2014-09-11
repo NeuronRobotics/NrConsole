@@ -5,10 +5,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -26,12 +24,9 @@ import com.neuronrobotics.nrconsole.util.GCodeFilter;
 import com.neuronrobotics.nrconsole.util.StlFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.PrinterStatus;
-import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.replicator.driver.PrinterStatusListener;
-import com.neuronrobotics.replicator.driver.ServoStockGCodeParser;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.replicator.driver.SliceStatusData;
-import com.neuronrobotics.replicator.driver.SliceStatusData.SlicerState;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -53,18 +48,12 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JCheckBox;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-import javax.swing.JToolBar;
-
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Color;
 
-import javax.swing.JInternalFrame;
 import javax.swing.JTextPane;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
@@ -73,8 +62,6 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.AbstractListModel;
-
-import org.lwjgl.input.Mouse;
 
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
