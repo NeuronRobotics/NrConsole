@@ -39,6 +39,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
+
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
@@ -72,6 +73,8 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.AbstractListModel;
+
+import org.lwjgl.input.Mouse;
 
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
@@ -607,7 +610,9 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			btnHomePrinter = new JButton("Home Printer");
 			btnHomePrinter.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					printer.homeAllLinks();
+					//printer.homeAllLinks();
+					loadSetpoint(25);
+					
 				}
 			});
 		}
@@ -761,12 +766,28 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		}
 		return progressBar;
 	}
+	private boolean isInternalUpdate = false;
+	
+	
+	/**
+	 * Use this method to set the setpoint without causing infinity forever updates.
+	 * @param _setpoint
+	 */
+	private void loadSetpoint(int _setpoint){
+		isInternalUpdate = true;
+		getSpinnerTemp().setValue(_setpoint);
+		isInternalUpdate =false;
+	}
+	
 	private JSpinner getSpinnerTemp() {
 		if (spinnerTemp == null) {
 			spinnerTemp = new JSpinner();
 			spinnerTemp.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
 					//TODO: if this value is manually changed by the user (not automatically changed) the print temperature should be changed
+					if (!isInternalUpdate){
+						printer.setTempreture((double) spinnerTemp.getValue());
+					}		
 				}
 			});
 			spinnerTemp.setModel(new SpinnerNumberModel(0, 0, 275, 1));
