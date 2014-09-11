@@ -156,7 +156,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	private void initComponents() {
 		getPanel_1();// initialize the 3d engine
-		setLayout(new MigLayout("", "[][157px,grow]", "[grow][center][grow][grow][]"));
+		setLayout(new MigLayout("", "[][157px,grow]", "[][center][grow][grow][]"));
 		add(getPanel_3(), "cell 1 0,growx");
 		add(getPanel_6(), "cell 1 1,grow");
 		add(getProgressBar(), "cell 0 0 1 5,growy");
@@ -413,7 +413,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JPanel getPanel_1_1() {
 		if (panel_1 == null) {
 			panel_1 = new JPanel();
-			panel_1.setLayout(new MigLayout("", "[grow][grow]", "[grow]"));
+			panel_1.setLayout(new MigLayout("", "[grow]", "[grow]"));
 			panel_1.add(getSplitPane_1(), "cell 0 0,grow");
 		}
 		return panel_1;
