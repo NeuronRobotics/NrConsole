@@ -35,6 +35,8 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 
 
+
+
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
@@ -42,6 +44,8 @@ import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -50,7 +54,6 @@ import javax.swing.JCheckBox;
 
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
-
 import java.awt.Font;
 import java.awt.Color;
 
@@ -62,6 +65,10 @@ import javax.swing.JList;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.AbstractListModel;
+import javax.swing.JScrollPane;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
 
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
@@ -609,7 +616,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	@Override
 	public void sliceStatus(SliceStatusData ssd) {
 		// TODO Auto-generated method stub
-		
+		textPaneLog.setText(textPaneLog.getText() + "\n" + ssd.toString());
 		switch (ssd.getCurrentSlicerState()) {
 		case ERROR:
 			break;
@@ -652,7 +659,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	@Override
 	public void printStatus(PrinterStatus psl) {
 		// TODO Auto-generated method stub
-		
+		textPaneLog.setText(textPaneLog.getText() + "\n" + psl.toString());
 		switch (psl.getDriverState()) {
 		case ERROR:
 			break;
@@ -709,7 +716,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			panel_7 = new JPanel();
 			panel_7.setLayout(new BorderLayout(0, 0));
 			panel_7.add(getLblPrintLog(), BorderLayout.NORTH);
-			panel_7.add(getTextPaneLog(), BorderLayout.CENTER);
+			panel_7.add(getScrollPane(), BorderLayout.CENTER);
 		}
 		return panel_7;
 	}
@@ -736,7 +743,9 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	}
 	private JTextPane getTextPaneLog() {
 		if (textPaneLog == null) {
-			textPaneLog = new JTextPane();
+			textPaneLog = new JTextPane();			
+			textPaneLog.setAutoscrolls(true);
+			
 		}
 		return textPaneLog;
 	}
@@ -754,6 +763,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		return progressBar;
 	}
 	private boolean isInternalUpdate = false;
+	private JScrollPane scrollPane;
 	
 	
 	/**
@@ -888,5 +898,12 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			});
 		}
 		return list;
+	}
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setViewportView(getTextPaneLog());
+		}
+		return scrollPane;
 	}
 }
