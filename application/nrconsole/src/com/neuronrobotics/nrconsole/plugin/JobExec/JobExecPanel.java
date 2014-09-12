@@ -782,7 +782,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 				public void stateChanged(ChangeEvent arg0) {
 					//TODO: if this value is manually changed by the user (not automatically changed) the print temperature should be changed
 					if (!isInternalUpdate){
-						printer.setTempreture((double) spinnerTemp.getValue());
+						printer.setExtrusionTempreture((double) spinnerTemp.getValue());
 					}		
 				}
 			});
