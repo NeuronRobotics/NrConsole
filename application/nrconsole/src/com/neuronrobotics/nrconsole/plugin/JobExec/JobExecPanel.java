@@ -602,7 +602,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			btnHomePrinter = new JButton("Home Printer");
 			btnHomePrinter.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					//printer.homeAllLinks();
+					printer.homeAllLinks();
 					loadSetpoint(25);
 					
 				}

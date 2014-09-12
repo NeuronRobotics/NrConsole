@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -33,6 +34,8 @@ public class PrinterConfiguration extends JPanel {
 	private JTextField maxz = new JTextField(10);
 	private JTextField minz = new JTextField(10);
 	private JTextField rodlen = new JTextField(10);
+	private JCheckBox hardPos = new JCheckBox("Use Hard Positioning");
+	
 	private JButton update=new JButton("Update");
 	private NRPrinter printer;
 	
@@ -51,6 +54,8 @@ public class PrinterConfiguration extends JPanel {
 		controls.add(new JLabel("Maximum Z(mm)"));controls.add(maxz,"wrap");
 		controls.add(new JLabel("Minimum Z(mm)"));controls.add(minz,"wrap");
 		controls.add(new JLabel("Rod Length(mm)"));controls.add(rodlen,"wrap");
+		controls.add(hardPos,"wrap");
+		
 		controls.add(update,"wrap");
 		add(controls,"wrap");
 		add(gui,"wrap");
@@ -71,6 +76,7 @@ public class PrinterConfiguration extends JPanel {
 				state.setMaxZ(Double.parseDouble(maxz.getText()));
 				state.setMinZ(Double.parseDouble(minz.getText()));
 				state.setRodLength(Double.parseDouble(rodlen.getText()));
+				state.setUseHardPositioning(hardPos.isSelected());
 				printer.setStateBasedControllerConfiguration(state);
 			}
 		});
@@ -92,6 +98,7 @@ public class PrinterConfiguration extends JPanel {
 		maxz.setText(new Double(state.getMaxZ()).toString());
 		minz.setText(new Double(state.getMinZ()).toString());
 		rodlen.setText(new Double(state.getRodLength()).toString());
+		hardPos.setSelected(state.isUseHardPositioning());
 		
 	}
 }
