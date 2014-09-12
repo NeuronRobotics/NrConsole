@@ -24,6 +24,7 @@ import com.neuronrobotics.nrconsole.util.GCodeFilter;
 import com.neuronrobotics.nrconsole.util.StlFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.PrinterStatus;
+import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.replicator.driver.PrinterStatusListener;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.replicator.driver.SliceStatusData;
@@ -76,8 +77,6 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 12345L;
-	private final String tempString = "Hot End Temp: ";
-	private BowlerBoardDevice delt;
 	private NRPrinter printer;
 	File gCodes = null;
 	FileInputStream gCodeStream;
@@ -121,7 +120,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JLabel lblPrintLog;
 	private JTextPane textPaneLog;
 	private JProgressBar progressBar;
-	private JList list;
+	private JList<String> list;
 	private ArrayList<File> files = new ArrayList<File>();
 	private ArrayList<String> fileNames = new ArrayList<String>();
 	public JobExecPanel() {
@@ -134,7 +133,6 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	}
 
 	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
-		this.delt = delt;
 		this.printer = printer;
 
 		for (LinkConfiguration link : printer.getLinkConfigurations()) {
@@ -389,7 +387,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			panel.add(getSliderLayer(), BorderLayout.EAST);
 			panel.add(getPanel_5_1(), BorderLayout.SOUTH);
 			app.start();
-			AppSettings settings = new AppSettings(true);
+			new AppSettings(true);
 
 			// settings.setWidth(640);
 			// settings.setHeight(480);
@@ -658,8 +656,9 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 
 	@Override
 	public void printStatus(PrinterStatus psl) {
-		// TODO Auto-generated method stub
-		textPaneLog.setText(textPaneLog.getText() + "\n" + psl.toString());
+		// Ignore the moving packets, too much junk data
+		if(psl.getDriverState() != PrinterState.MOVING)
+			textPaneLog.setText(textPaneLog.getText() + "\n" + psl.toString());
 		switch (psl.getDriverState()) {
 		case ERROR:
 			break;
