@@ -3,6 +3,8 @@ G90
 G21
 G92 E0
 
+M109 S200 ; wait for temperature to be reached
+
 F1800
 G1 X30 Y0 Z100
 
