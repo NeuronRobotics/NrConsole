@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import net.miginfocom.swing.MigLayout;
@@ -9,6 +10,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JFormattedTextField;
+import javax.swing.text.MaskFormatter;
 
 public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 	private JLabel lblNozzleDiameter;
@@ -33,7 +35,7 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 	private JLabel lblTopSolidInfill;
 	private JLabel lblSupportMaterialInterface;
 	private JLabel lblFirstLayerSpeed;
-	private JFormattedTextField formattedTextField;
+	private JFormattedTextField tfNozzleDia;
 	private JLabel lblX;
 	private JFormattedTextField tfPrintCenterX;
 	private JLabel lblY;
@@ -92,7 +94,7 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblNozzleDiameter())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getFormattedTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfNozzleDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblPrintCenter())
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -188,7 +190,7 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblNozzleDiameter())
-						.addComponent(getFormattedTextField(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfNozzleDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblPrintCenter())
@@ -417,23 +419,11 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 		}
 		return lblFirstLayerSpeed;
 	}
-	private JFormattedTextField getFormattedTextField() {
-		if (formattedTextField == null) {
-			formattedTextField = new JFormattedTextField();
-		}
-		return formattedTextField;
-	}
 	private JLabel getLblX() {
 		if (lblX == null) {
 			lblX = new JLabel("X:");
 		}
 		return lblX;
-	}
-	private JFormattedTextField getTfPrintCenterX() {
-		if (tfPrintCenterX == null) {
-			tfPrintCenterX = new JFormattedTextField();
-		}
-		return tfPrintCenterX;
 	}
 	private JLabel getLblY() {
 		if (lblY == null) {
@@ -441,123 +431,251 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 		}
 		return lblY;
 	}
+	
+	
+	
+	
+	private JFormattedTextField getTfNozzleDia() {
+		if (tfNozzleDia == null) {
+			try {
+				tfNozzleDia = new JFormattedTextField(new MaskFormatter("##.## mm"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return tfNozzleDia;
+	}
+	
+	private JFormattedTextField getTfPrintCenterX() {
+		if (tfPrintCenterX == null) {
+			try {
+				tfPrintCenterX = new JFormattedTextField(new MaskFormatter("### mm"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return tfPrintCenterX;
+	}
+	
 	private JFormattedTextField getTfPrintCenterY() {
 		if (tfPrintCenterY == null) {
-			tfPrintCenterY = new JFormattedTextField();
+			try {
+				tfPrintCenterY = new JFormattedTextField(new MaskFormatter("### mm"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfPrintCenterY;
 	}
 	private JFormattedTextField getTfFilaDia() {
 		if (tfFilaDia == null) {
-			tfFilaDia = new JFormattedTextField();
+			try {
+				tfFilaDia = new JFormattedTextField(new MaskFormatter("##.### mm"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfFilaDia;
 	}
 	private JFormattedTextField getTfExtrusionMult() {
 		if (tfExtrusionMult == null) {
-			tfExtrusionMult = new JFormattedTextField();
+			try {
+				tfExtrusionMult = new JFormattedTextField(new MaskFormatter("##.####"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfExtrusionMult;
 	}
 	private JFormattedTextField getTfPTemp() {
 		if (tfPTemp == null) {
-			tfPTemp = new JFormattedTextField();
+			try {
+				tfPTemp = new JFormattedTextField(new MaskFormatter("### C"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfPTemp;
 	}
 	private JFormattedTextField getTfBTemp() {
 		if (tfBTemp == null) {
-			tfBTemp = new JFormattedTextField();
+			try {
+				tfBTemp = new JFormattedTextField(new MaskFormatter("### C"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfBTemp;
 	}
 	private JFormattedTextField getTfLayerHeight() {
 		if (tfLayerHeight == null) {
-			tfLayerHeight = new JFormattedTextField();
+			try {
+				tfLayerHeight = new JFormattedTextField(new MaskFormatter("##.### mm"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfLayerHeight;
 	}
 	private JFormattedTextField getTfWallThickness() {
 		if (tfWallThickness == null) {
-			tfWallThickness = new JFormattedTextField();
+			try {
+				tfWallThickness = new JFormattedTextField(new MaskFormatter("##.### mm"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfWallThickness;
 	}
 	private JFormattedTextField getTfRetractLength() {
 		if (tfRetractLength == null) {
-			tfRetractLength = new JFormattedTextField();
+			try {
+				tfRetractLength = new JFormattedTextField(new MaskFormatter("##.## mm"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfRetractLength;
 	}
 	private JFormattedTextField getTfTravelSpeed() {
 		if (tfTravelSpeed == null) {
-			tfTravelSpeed = new JFormattedTextField();
+			try {
+				tfTravelSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfTravelSpeed;
 	}
 	private JFormattedTextField getTfPerimeterSpeed() {
 		if (tfPerimeterSpeed == null) {
-			tfPerimeterSpeed = new JFormattedTextField();
+			try {
+				tfPerimeterSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfPerimeterSpeed;
 	}
 	private JFormattedTextField getTfBridgeSpeed() {
 		if (tfBridgeSpeed == null) {
-			tfBridgeSpeed = new JFormattedTextField();
+			try {
+				tfBridgeSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfBridgeSpeed;
 	}
 	private JFormattedTextField getTfGapFillSpeed() {
 		if (tfGapFillSpeed == null) {
-			tfGapFillSpeed = new JFormattedTextField();
+			try {
+				tfGapFillSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfGapFillSpeed;
 	}
 	private JFormattedTextField getTfInfillSpeed() {
 		if (tfInfillSpeed == null) {
-			tfInfillSpeed = new JFormattedTextField();
+			try {
+				tfInfillSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfInfillSpeed;
 	}
 	private JFormattedTextField getTfSupportMaterialSpeed() {
 		if (tfSupportMaterialSpeed == null) {
-			tfSupportMaterialSpeed = new JFormattedTextField();
+			try {
+				tfSupportMaterialSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfSupportMaterialSpeed;
 	}
 	private JFormattedTextField getTfSmallPerimeterSpeedPercent() {
 		if (tfSmallPerimeterSpeedPercent == null) {
-			tfSmallPerimeterSpeedPercent = new JFormattedTextField();
+			try {
+				tfSmallPerimeterSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfSmallPerimeterSpeedPercent;
 	}
 	private JFormattedTextField getTfExternalPerimeterSpeedPercent() {
 		if (tfExternalPerimeterSpeedPercent == null) {
-			tfExternalPerimeterSpeedPercent = new JFormattedTextField();
+			try {
+				tfExternalPerimeterSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfExternalPerimeterSpeedPercent;
 	}
 	private JFormattedTextField getTfSolidInfillSpeedPercent() {
 		if (tfSolidInfillSpeedPercent == null) {
-			tfSolidInfillSpeedPercent = new JFormattedTextField();
+			try {
+				tfSolidInfillSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfSolidInfillSpeedPercent;
 	}
 	private JFormattedTextField getTfTopSolidInfillSpeedPercent() {
 		if (tfTopSolidInfillSpeedPercent == null) {
-			tfTopSolidInfillSpeedPercent = new JFormattedTextField();
+			try {
+				tfTopSolidInfillSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfTopSolidInfillSpeedPercent;
 	}
 	private JFormattedTextField getTfSupportMaterialInterSpeedPercent() {
 		if (tfSupportMaterialInterSpeedPercent == null) {
-			tfSupportMaterialInterSpeedPercent = new JFormattedTextField();
+			try {
+				tfSupportMaterialInterSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfSupportMaterialInterSpeedPercent;
 	}
 	private JFormattedTextField getTfFirstLayerSpeedPercent() {
 		if (tfFirstLayerSpeedPercent == null) {
-			tfFirstLayerSpeedPercent = new JFormattedTextField();
+			try {
+				tfFirstLayerSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return tfFirstLayerSpeedPercent;
 	}
