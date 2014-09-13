@@ -1,13 +1,29 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.neuronrobotics.nrconsole.plugin.JobExec.PrintTestListener;
+
 public abstract class SettingsPanel extends JPanel {
 private ArrayList<MachineSetting> settings;
-	
+private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeListener>();
+
+
+
 	public abstract String getPanelName();
+	
+	public abstract void initComponents();
+	public void addListener(SettingsChangeListener toAdd) {
+        listeners.add(toAdd);
+    }
+	private void notifySettingsChanged(){
+		for (SettingsChangeListener ptl : listeners) {
+			ptl.settingsChanged();
+		}
+	}
 	
 	public ArrayList<MachineSetting> getValues(){
 		return settings;
@@ -15,7 +31,7 @@ private ArrayList<MachineSetting> settings;
 	
 	public void setValues(ArrayList<MachineSetting> values) {
 		settings = values;
-		
+		notifySettingsChanged();
 	}
 	
 	public boolean settingExists(String _name){
