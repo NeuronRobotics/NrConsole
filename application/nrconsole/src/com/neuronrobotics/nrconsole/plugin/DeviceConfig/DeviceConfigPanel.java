@@ -86,32 +86,27 @@ public class DeviceConfigPanel extends JPanel {
 	File gCodes = null;
 	FileInputStream gCodeStream;
 	double currpos = 0;
-	private int channelHotEnd = -1;
-	private int channelBed = -1;
+	
 
-
-	private boolean isWarn = false;
-	private boolean isIllegal = false;
-	private boolean isPaused;
+	
 	long lastUpdate = 0;
 	public String fileName = "None";
-	private ArrayList<File> files = new ArrayList<File>();
-	private ArrayList<String> fileNames = new ArrayList<String>();
+
 	private JPanel pnlAction;
 	private JButton btnReloadConfigs;
 	private JButton btnWriteConfigs;
 	private JTabbedPane tabPnlSettings;
 	private JScrollPane pnlSlic3rSetts;
-	private JPanel pnlViewSetts;
-	private JRadioButton rdbtnShowAllSettings;
-	private JPanel pnlSlic3rSetts_1;
+	
+	private Slic3rMasterPanel slic3rSettingsPanel = new Slic3rMasterPanel();
+	
+	
 	public DeviceConfigPanel() {
-		setLayout(new MigLayout("", "[grow]", "[][grow]"));
-		add(getPnlAction(), "cell 0 0,grow");
-		add(getTabPnlSettings(), "cell 0 1,grow");
+		
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				initComponents();
+				updateSettings();
 			}
 		});
 
@@ -120,24 +115,49 @@ public class DeviceConfigPanel extends JPanel {
 	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
 		this.printer = printer;
 
-		for (LinkConfiguration link : printer.getLinkConfigurations()) {
-			if (link.getName().toLowerCase().contains("hotend")) {
-				channelHotEnd = link.getHardwareIndex();
-			}
-			if (link.getName().toLowerCase().contains("heat")) {
-				channelHotEnd = link.getHardwareIndex();
-			}
-			if (link.getName().toLowerCase().contains("bed")) {
-				channelBed = link.getHardwareIndex();
-			}
-		}
+		
 		
 	}
 
+	
 	private void initComponents() {
-
+		setLayout(new MigLayout("", "[grow]", "[][grow]"));
+		add(getPnlAction(), "cell 0 0,grow");
+		add(getTabPnlSettings(), "cell 0 1,grow");
 	}
 
+	
+	private void updateSettings(){
+		
+			slic3rSettingsPanel.setValue(0, new MachineSetting<Double>("NozzleDia" ,printer.getSlicer().getPacketArguments()[0]));
+			slic3rSettingsPanel.setValue(1, new MachineSetting<Double>("PCenterX" ,printer.getSlicer().getPacketArguments()[1]));
+			slic3rSettingsPanel.setValue(2, new MachineSetting<Double>("PCenterY" ,printer.getSlicer().getPacketArguments()[2]));
+			slic3rSettingsPanel.setValue(3, new MachineSetting<Double>("FilaDia" ,printer.getSlicer().getPacketArguments()[3]));
+			slic3rSettingsPanel.setValue(4, new MachineSetting<Double>("ExtMult" ,printer.getSlicer().getPacketArguments()[4]));
+			slic3rSettingsPanel.setValue(5, new MachineSetting<Double>("PTemp" ,printer.getSlicer().getPacketArguments()[5]));
+			slic3rSettingsPanel.setValue(6, new MachineSetting<Double>("BTemp" ,printer.getSlicer().getPacketArguments()[6]));
+			slic3rSettingsPanel.setValue(7, new MachineSetting<Double>("LayerHeight" ,printer.getSlicer().getPacketArguments()[7]));
+			slic3rSettingsPanel.setValue(8, new MachineSetting<Double>("WallThickness" ,printer.getSlicer().getPacketArguments()[8]));
+			slic3rSettingsPanel.setValue(9, new MachineSetting<Double>("UseSupport" ,printer.getSlicer().getPacketArguments()[9]));
+			slic3rSettingsPanel.setValue(10, new MachineSetting<Double>("RetractLength" ,printer.getSlicer().getPacketArguments()[10]));
+			slic3rSettingsPanel.setValue(11, new MachineSetting<Double>("TravelSpd" ,printer.getSlicer().getPacketArguments()[11]));
+			slic3rSettingsPanel.setValue(12, new MachineSetting<Double>("PeriSpd" ,printer.getSlicer().getPacketArguments()[12]));
+			slic3rSettingsPanel.setValue(13, new MachineSetting<Double>("BridgeSpd" ,printer.getSlicer().getPacketArguments()[13]));
+			slic3rSettingsPanel.setValue(14, new MachineSetting<Double>("GapFillSpd" ,printer.getSlicer().getPacketArguments()[14]));
+			slic3rSettingsPanel.setValue(15, new MachineSetting<Double>("InfillSpd" ,printer.getSlicer().getPacketArguments()[15]));
+			slic3rSettingsPanel.setValue(16, new MachineSetting<Double>("SmPeriSpdPcnt" ,printer.getSlicer().getPacketArguments()[16]));
+			slic3rSettingsPanel.setValue(17, new MachineSetting<Double>("SmPeriSpdPcnt" ,printer.getSlicer().getPacketArguments()[17]));
+			slic3rSettingsPanel.setValue(18, new MachineSetting<Double>("ExtPeriSpdPcnt" ,printer.getSlicer().getPacketArguments()[18]));
+			slic3rSettingsPanel.setValue(19, new MachineSetting<Double>("SolidInfillSpdPcnt" ,printer.getSlicer().getPacketArguments()[19]));
+			slic3rSettingsPanel.setValue(20, new MachineSetting<Double>("TopSolidInfillSpdPcnt" ,printer.getSlicer().getPacketArguments()[20]));
+			slic3rSettingsPanel.setValue(21, new MachineSetting<Double>("SupportMatIntSpdPcnt" ,printer.getSlicer().getPacketArguments()[21]));
+			slic3rSettingsPanel.setValue(22, new MachineSetting<Double>("FirstLayerSpdPcnt" ,printer.getSlicer().getPacketArguments()[22]));
+		
+		
+	}
+	
+	
+	
 	private JPanel getPnlAction() {
 		if (pnlAction == null) {
 			pnlAction = new JPanel();
@@ -150,6 +170,11 @@ public class DeviceConfigPanel extends JPanel {
 	private JButton getBtnReloadConfigs() {
 		if (btnReloadConfigs == null) {
 			btnReloadConfigs = new JButton("Reload Configs");
+			btnReloadConfigs.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					updateSettings();
+				}
+			});
 		}
 		return btnReloadConfigs;
 	}
@@ -162,38 +187,15 @@ public class DeviceConfigPanel extends JPanel {
 	private JTabbedPane getTabPnlSettings() {
 		if (tabPnlSettings == null) {
 			tabPnlSettings = new JTabbedPane(JTabbedPane.TOP);
-			tabPnlSettings.addTab("Slic3r Settings", null, getPnlSlic3rSetts(), null);
+			
+			tabPnlSettings.addTab(slic3rSettingsPanel.getPanelName(), null, slic3rSettingsPanel, null);
+			
+			
 		}
 		return tabPnlSettings;
 	}
-	private JScrollPane getPnlSlic3rSetts() {
-		if (pnlSlic3rSetts == null) {
-			pnlSlic3rSetts = new JScrollPane();
-			pnlSlic3rSetts.setColumnHeaderView(getPnlViewSetts());
-			pnlSlic3rSetts.setViewportView(getPnlSlic3rSetts_1());
-		}
-		return pnlSlic3rSetts;
-	}
-	private JPanel getPnlViewSetts() {
-		if (pnlViewSetts == null) {
-			pnlViewSetts = new JPanel();
-			pnlViewSetts.add(getRdbtnShowAllSettings());
-		}
-		return pnlViewSetts;
-	}
-	private JRadioButton getRdbtnShowAllSettings() {
-		if (rdbtnShowAllSettings == null) {
-			rdbtnShowAllSettings = new JRadioButton("Show All Settings");
-		}
-		return rdbtnShowAllSettings;
-	}
-	private JPanel getPnlSlic3rSetts_1() {
-		if (pnlSlic3rSetts_1 == null) {
-			pnlSlic3rSetts_1 = new JPanel();
-			pnlSlic3rSetts_1.setLayout(new MigLayout("", "[grow]", "[grow]"));
-		}
-		return pnlSlic3rSetts_1;
-	}
+	
+	
 }
 
 	

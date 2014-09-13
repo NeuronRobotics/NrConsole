@@ -49,7 +49,7 @@ public class NRConsoleDeviceConfigPlugin extends AbstractNRConsoleTabedPanelPlug
 		// TODO Auto-generated method stub
 		if(gui!= null){
 			//gui = new JPanel(new MigLayout());
-			gui.setName("Job Executor");
+			gui.setName("Device Settings");
 			
 		}
 		return gui;

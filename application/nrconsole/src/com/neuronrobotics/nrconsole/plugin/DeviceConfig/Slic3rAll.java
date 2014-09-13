@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -59,10 +60,32 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 	private JFormattedTextField tfTopSolidInfillSpeedPercent;
 	private JFormattedTextField tfSupportMaterialInterSpeedPercent;
 	private JFormattedTextField tfFirstLayerSpeedPercent;
+	private JLabel lblMm;
+	private JLabel lblMm_1;
+	private JLabel lblMm_2;
+	private JLabel lblMm_3;
+	private JLabel lblc;
+	private JLabel lblc_1;
+	private JLabel lblMm_4;
+	private JLabel lblMm_5;
+	private JLabel lblMm_6;
+	private JLabel lblMms;
+	private JLabel lblMms_1;
+	private JLabel lblMms_2;
+	private JLabel lblMms_3;
+	private JLabel lblMms_4;
+	private JLabel lblMms_5;
+	private JLabel label;
+	private JLabel label_1;
+	private JLabel label_2;
+	private JLabel label_3;
+	private JLabel label_4;
+	private JLabel label_5;
 	public Slic3rAll() {		
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				initComponents();
+				
 			}
 		});
 
@@ -77,7 +100,32 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 
 	@Override
 	public void settingsChanged() {
-		// TODO Auto-generated method stub
+		System.out.println("blah");
+		if (numSettings() > 22){
+		tfNozzleDia.setValue(getSetting(0).getValue());
+		tfPrintCenterX.setValue(getSetting(1).getValue());
+		tfPrintCenterY.setValue(getSetting(2).getValue());
+		tfFilaDia.setValue(getSetting(3).getValue());
+		tfExtrusionMult.setValue(getSetting(4).getValue());
+		tfPTemp.setValue(getSetting(5).getValue());
+		tfBTemp.setValue(getSetting(6).getValue());
+		tfLayerHeight.setValue(getSetting(7).getValue());
+		tfWallThickness.setValue(getSetting(8).getValue());
+		//TODO Use Support Material?
+		tfRetractLength.setValue(getSetting(10).getValue());
+		tfTravelSpeed.setValue(getSetting(11).getValue());
+		tfPerimeterSpeed.setValue(getSetting(12).getValue());
+		tfBridgeSpeed.setValue(getSetting(13).getValue());
+		tfGapFillSpeed.setValue(getSetting(14).getValue());
+		tfInfillSpeed.setValue(getSetting(15).getValue());
+		tfSupportMaterialSpeed.setValue(getSetting(16).getValue());
+		tfSmallPerimeterSpeedPercent.setValue(getSetting(17).getValue());
+		tfExternalPerimeterSpeedPercent.setValue(getSetting(18).getValue());
+		tfSolidInfillSpeedPercent.setValue(getSetting(19).getValue());
+		tfTopSolidInfillSpeedPercent.setValue(getSetting(20).getValue());
+		tfSupportMaterialInterSpeedPercent.setValue(getSetting(21).getValue());
+		tfFirstLayerSpeedPercent.setValue(getSetting(22).getValue());
+		}
 		
 	}
 
@@ -94,7 +142,9 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblNozzleDiameter())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfNozzleDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfNozzleDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMm()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblPrintCenter())
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -102,13 +152,19 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(getTfPrintCenterX(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMm_1())
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(getLblY())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfPrintCenterY(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfPrintCenterY(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMm_2()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblFilamentDiameter())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfFilaDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfFilaDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMm_3()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblExtrusionMultiplier())
 							.addPreferredGap(ComponentPlacement.RELATED)
@@ -116,73 +172,109 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblPrintTemperature())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfPTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfPTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblc()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblBedTemperature())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfBTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfBTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblc_1()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblLayerHeight())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfLayerHeight(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfLayerHeight(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMm_4()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblWallThickness())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfWallThickness(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfWallThickness(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMm_5()))
 						.addComponent(getLblUseSupportMaterial())
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblRetractLength())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfRetractLength(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfRetractLength(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMm_6()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblTravelSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfTravelSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfTravelSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMms()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblPerimeterSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfPerimeterSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfPerimeterSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMms_1()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblInfillSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfInfillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfInfillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMms_4()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblSupportMaterialSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfSupportMaterialSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfSupportMaterialSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLblMms_5()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblSmallPerimeterSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfSmallPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfSmallPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLabel()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblExternalPerimeterSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfExternalPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfExternalPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLabel_1()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblSolidInfillSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLabel_2()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblTopSolidInfill())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfTopSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfTopSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLabel_3()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblSupportMaterialInterface())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfSupportMaterialInterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfSupportMaterialInterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLabel_4()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addComponent(getLblFirstLayerSpeed())
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(getTfFirstLayerSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addComponent(getTfFirstLayerSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(getLabel_5()))
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 								.addComponent(getLblBridgeSpeed())
 								.addComponent(getLblGapFillSpeed()))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(getTfGapFillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(getTfBridgeSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-					.addContainerGap(230, Short.MAX_VALUE))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(getTfGapFillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(getLblMms_3()))
+								.addGroup(groupLayout.createSequentialGroup()
+									.addComponent(getTfBridgeSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(getLblMms_2())))))
+					.addContainerGap(140, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -190,18 +282,22 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 					.addContainerGap()
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblNozzleDiameter())
-						.addComponent(getTfNozzleDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfNozzleDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMm()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblPrintCenter())
 						.addComponent(getLblX())
 						.addComponent(getTfPrintCenterX(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(getLblY())
-						.addComponent(getTfPrintCenterY(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfPrintCenterY(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMm_1())
+						.addComponent(getLblMm_2()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblFilamentDiameter())
-						.addComponent(getTfFilaDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfFilaDia(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMm_3()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblExtrusionMultiplier())
@@ -209,83 +305,108 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblPrintTemperature())
-						.addComponent(getTfPTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfPTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblc()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblBedTemperature())
-						.addComponent(getTfBTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfBTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblc_1()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblLayerHeight())
-						.addComponent(getTfLayerHeight(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfLayerHeight(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMm_4()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblWallThickness())
-						.addComponent(getTfWallThickness(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfWallThickness(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMm_5()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(getLblUseSupportMaterial())
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblRetractLength())
-						.addComponent(getTfRetractLength(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfRetractLength(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMm_6()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblTravelSpeed())
-						.addComponent(getTfTravelSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfTravelSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMms()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblPerimeterSpeed())
-						.addComponent(getTfPerimeterSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfPerimeterSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMms_1()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblBridgeSpeed())
-						.addComponent(getTfBridgeSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfBridgeSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMms_2()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblGapFillSpeed())
-						.addComponent(getTfGapFillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfGapFillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMms_3()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblInfillSpeed())
-						.addComponent(getTfInfillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfInfillSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMms_4()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblSupportMaterialSpeed())
-						.addComponent(getTfSupportMaterialSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfSupportMaterialSpeed(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLblMms_5()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblSmallPerimeterSpeed())
-						.addComponent(getTfSmallPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfSmallPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLabel()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblExternalPerimeterSpeed())
-						.addComponent(getTfExternalPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfExternalPerimeterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLabel_1()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblSolidInfillSpeed())
-						.addComponent(getTfSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLabel_2()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblTopSolidInfill())
-						.addComponent(getTfTopSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfTopSolidInfillSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLabel_3()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblSupportMaterialInterface())
-						.addComponent(getTfSupportMaterialInterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(getTfSupportMaterialInterSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLabel_4()))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(getLblFirstLayerSpeed())
-						.addComponent(getTfFirstLayerSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(getTfFirstLayerSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(getLabel_5()))
+					.addContainerGap(50, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
+		this.addListener(this);
 		
 	}
 
 	
 	
 	
-	
+	public NumberFormat getNumFormat(int numInts, int numDec){
+		NumberFormat x = NumberFormat.getNumberInstance();
+		x.setMaximumFractionDigits(numDec);
+		x.setMinimumFractionDigits(numDec);
+		x.setMaximumIntegerDigits(numInts);
+		x.setMinimumIntegerDigits(numInts);
+		return x;
+	}
 
 	private JLabel getLblNozzleDiameter() {
 		if (lblNozzleDiameter == null) {
@@ -436,247 +557,327 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 	
 	
 	private JFormattedTextField getTfNozzleDia() {
-		if (tfNozzleDia == null) {
-			try {
-				tfNozzleDia = new JFormattedTextField(new MaskFormatter("##.## mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		if (tfNozzleDia == null) {			
+			tfNozzleDia = new JFormattedTextField(getNumFormat(2,3));
+			tfNozzleDia.setColumns(5);
 		}
 		return tfNozzleDia;
 	}
 	
 	private JFormattedTextField getTfPrintCenterX() {
 		if (tfPrintCenterX == null) {
-			try {
-				tfPrintCenterX = new JFormattedTextField(new MaskFormatter("### mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+			tfPrintCenterX = new JFormattedTextField(getNumFormat(3,0));
+			tfPrintCenterX.setColumns(5);
+		
 		}
 		return tfPrintCenterX;
 	}
 	
 	private JFormattedTextField getTfPrintCenterY() {
 		if (tfPrintCenterY == null) {
-			try {
-				tfPrintCenterY = new JFormattedTextField(new MaskFormatter("### mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfPrintCenterY = new JFormattedTextField(getNumFormat(3,0));
+				tfPrintCenterY.setColumns(5);
+			
 		}
 		return tfPrintCenterY;
 	}
 	private JFormattedTextField getTfFilaDia() {
 		if (tfFilaDia == null) {
-			try {
-				tfFilaDia = new JFormattedTextField(new MaskFormatter("##.### mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfFilaDia = new JFormattedTextField(getNumFormat(2,2));
+				tfFilaDia.setColumns(5);
+		
 		}
 		return tfFilaDia;
 	}
 	private JFormattedTextField getTfExtrusionMult() {
 		if (tfExtrusionMult == null) {
-			try {
-				tfExtrusionMult = new JFormattedTextField(new MaskFormatter("##.####"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		
+				tfExtrusionMult = new JFormattedTextField(getNumFormat(2,4));
+				tfExtrusionMult.setColumns(5);
+		
 		}
 		return tfExtrusionMult;
 	}
 	private JFormattedTextField getTfPTemp() {
 		if (tfPTemp == null) {
-			try {
-				tfPTemp = new JFormattedTextField(new MaskFormatter("### C"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfPTemp = new JFormattedTextField(getNumFormat(3,0));
+				tfPTemp.setColumns(5);
+			
 		}
 		return tfPTemp;
 	}
 	private JFormattedTextField getTfBTemp() {
 		if (tfBTemp == null) {
-			try {
-				tfBTemp = new JFormattedTextField(new MaskFormatter("### C"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfBTemp = new JFormattedTextField(getNumFormat(3,0));
+				tfBTemp.setColumns(5);
+			
 		}
 		return tfBTemp;
 	}
 	private JFormattedTextField getTfLayerHeight() {
 		if (tfLayerHeight == null) {
-			try {
-				tfLayerHeight = new JFormattedTextField(new MaskFormatter("##.### mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfLayerHeight = new JFormattedTextField(getNumFormat(2,2));
+				tfLayerHeight.setColumns(5);
+		
 		}
 		return tfLayerHeight;
 	}
 	private JFormattedTextField getTfWallThickness() {
 		if (tfWallThickness == null) {
-			try {
-				tfWallThickness = new JFormattedTextField(new MaskFormatter("##.### mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfWallThickness = new JFormattedTextField(getNumFormat(2,2));
+				tfWallThickness.setColumns(5);
+			
 		}
 		return tfWallThickness;
 	}
 	private JFormattedTextField getTfRetractLength() {
 		if (tfRetractLength == null) {
-			try {
-				tfRetractLength = new JFormattedTextField(new MaskFormatter("##.## mm"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		
+				tfRetractLength = new JFormattedTextField(getNumFormat(3,0));
+				tfRetractLength.setColumns(5);
+		
 		}
 		return tfRetractLength;
 	}
 	private JFormattedTextField getTfTravelSpeed() {
 		if (tfTravelSpeed == null) {
-			try {
-				tfTravelSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfTravelSpeed = new JFormattedTextField(getNumFormat(3,0));
+				tfTravelSpeed.setColumns(5);
+		
 		}
 		return tfTravelSpeed;
 	}
 	private JFormattedTextField getTfPerimeterSpeed() {
 		if (tfPerimeterSpeed == null) {
-			try {
-				tfPerimeterSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfPerimeterSpeed = new JFormattedTextField(getNumFormat(3,0));
+				tfPerimeterSpeed.setColumns(5);
+		
 		}
 		return tfPerimeterSpeed;
 	}
 	private JFormattedTextField getTfBridgeSpeed() {
 		if (tfBridgeSpeed == null) {
-			try {
-				tfBridgeSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfBridgeSpeed = new JFormattedTextField(getNumFormat(3,0));
+				tfBridgeSpeed.setColumns(5);
+			
 		}
 		return tfBridgeSpeed;
 	}
 	private JFormattedTextField getTfGapFillSpeed() {
 		if (tfGapFillSpeed == null) {
-			try {
-				tfGapFillSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfGapFillSpeed = new JFormattedTextField(getNumFormat(3,0));
+				tfGapFillSpeed.setColumns(5);
+			
 		}
 		return tfGapFillSpeed;
 	}
 	private JFormattedTextField getTfInfillSpeed() {
 		if (tfInfillSpeed == null) {
-			try {
-				tfInfillSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfInfillSpeed = new JFormattedTextField(getNumFormat(3,0));
+				tfInfillSpeed.setColumns(5);
+			
 		}
 		return tfInfillSpeed;
 	}
 	private JFormattedTextField getTfSupportMaterialSpeed() {
 		if (tfSupportMaterialSpeed == null) {
-			try {
-				tfSupportMaterialSpeed = new JFormattedTextField(new MaskFormatter("### mm/s"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfSupportMaterialSpeed = new JFormattedTextField(getNumFormat(3,0));
+				tfSupportMaterialSpeed.setColumns(5);
+		
 		}
 		return tfSupportMaterialSpeed;
 	}
 	private JFormattedTextField getTfSmallPerimeterSpeedPercent() {
 		if (tfSmallPerimeterSpeedPercent == null) {
-			try {
-				tfSmallPerimeterSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfSmallPerimeterSpeedPercent = new JFormattedTextField(getNumFormat(3,0));
+				tfSmallPerimeterSpeedPercent.setColumns(5);
+			
 		}
 		return tfSmallPerimeterSpeedPercent;
 	}
 	private JFormattedTextField getTfExternalPerimeterSpeedPercent() {
 		if (tfExternalPerimeterSpeedPercent == null) {
-			try {
-				tfExternalPerimeterSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfExternalPerimeterSpeedPercent = new JFormattedTextField(getNumFormat(3,0));
+				tfExternalPerimeterSpeedPercent.setColumns(5);
+		
 		}
 		return tfExternalPerimeterSpeedPercent;
 	}
 	private JFormattedTextField getTfSolidInfillSpeedPercent() {
 		if (tfSolidInfillSpeedPercent == null) {
-			try {
-				tfSolidInfillSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfSolidInfillSpeedPercent = new JFormattedTextField(getNumFormat(3,0));
+				tfSolidInfillSpeedPercent.setColumns(5);
+		
 		}
 		return tfSolidInfillSpeedPercent;
 	}
 	private JFormattedTextField getTfTopSolidInfillSpeedPercent() {
 		if (tfTopSolidInfillSpeedPercent == null) {
-			try {
-				tfTopSolidInfillSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfTopSolidInfillSpeedPercent = new JFormattedTextField(getNumFormat(3,0));
+				tfTopSolidInfillSpeedPercent.setColumns(5);
+		
 		}
 		return tfTopSolidInfillSpeedPercent;
 	}
 	private JFormattedTextField getTfSupportMaterialInterSpeedPercent() {
 		if (tfSupportMaterialInterSpeedPercent == null) {
-			try {
-				tfSupportMaterialInterSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfSupportMaterialInterSpeedPercent = new JFormattedTextField(getNumFormat(3,0));
+				tfSupportMaterialInterSpeedPercent.setColumns(5);
+			
 		}
 		return tfSupportMaterialInterSpeedPercent;
 	}
 	private JFormattedTextField getTfFirstLayerSpeedPercent() {
 		if (tfFirstLayerSpeedPercent == null) {
-			try {
-				tfFirstLayerSpeedPercent = new JFormattedTextField(new MaskFormatter("###%"));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+				tfFirstLayerSpeedPercent = new JFormattedTextField(getNumFormat(3,0));
+				tfFirstLayerSpeedPercent.setColumns(5);
+	
 		}
 		return tfFirstLayerSpeedPercent;
+	}
+	private JLabel getLblMm() {
+		if (lblMm == null) {
+			lblMm = new JLabel("mm");
+		}
+		return lblMm;
+	}
+	private JLabel getLblMm_1() {
+		if (lblMm_1 == null) {
+			lblMm_1 = new JLabel("mm");
+		}
+		return lblMm_1;
+	}
+	private JLabel getLblMm_2() {
+		if (lblMm_2 == null) {
+			lblMm_2 = new JLabel("mm");
+		}
+		return lblMm_2;
+	}
+	private JLabel getLblMm_3() {
+		if (lblMm_3 == null) {
+			lblMm_3 = new JLabel("mm");
+		}
+		return lblMm_3;
+	}
+	private JLabel getLblc() {
+		if (lblc == null) {
+			lblc = new JLabel("\u00B0C");
+		}
+		return lblc;
+	}
+	private JLabel getLblc_1() {
+		if (lblc_1 == null) {
+			lblc_1 = new JLabel("\u00B0C");
+		}
+		return lblc_1;
+	}
+	private JLabel getLblMm_4() {
+		if (lblMm_4 == null) {
+			lblMm_4 = new JLabel("mm");
+		}
+		return lblMm_4;
+	}
+	private JLabel getLblMm_5() {
+		if (lblMm_5 == null) {
+			lblMm_5 = new JLabel("mm");
+		}
+		return lblMm_5;
+	}
+	private JLabel getLblMm_6() {
+		if (lblMm_6 == null) {
+			lblMm_6 = new JLabel("mm");
+		}
+		return lblMm_6;
+	}
+	private JLabel getLblMms() {
+		if (lblMms == null) {
+			lblMms = new JLabel("mm/s");
+		}
+		return lblMms;
+	}
+	private JLabel getLblMms_1() {
+		if (lblMms_1 == null) {
+			lblMms_1 = new JLabel("mm/s");
+		}
+		return lblMms_1;
+	}
+	private JLabel getLblMms_2() {
+		if (lblMms_2 == null) {
+			lblMms_2 = new JLabel("mm/s");
+		}
+		return lblMms_2;
+	}
+	private JLabel getLblMms_3() {
+		if (lblMms_3 == null) {
+			lblMms_3 = new JLabel("mm/s");
+		}
+		return lblMms_3;
+	}
+	private JLabel getLblMms_4() {
+		if (lblMms_4 == null) {
+			lblMms_4 = new JLabel("mm/s");
+		}
+		return lblMms_4;
+	}
+	private JLabel getLblMms_5() {
+		if (lblMms_5 == null) {
+			lblMms_5 = new JLabel("mm/s");
+		}
+		return lblMms_5;
+	}
+	private JLabel getLabel() {
+		if (label == null) {
+			label = new JLabel("%");
+		}
+		return label;
+	}
+	private JLabel getLabel_1() {
+		if (label_1 == null) {
+			label_1 = new JLabel("%");
+		}
+		return label_1;
+	}
+	private JLabel getLabel_2() {
+		if (label_2 == null) {
+			label_2 = new JLabel("%");
+		}
+		return label_2;
+	}
+	private JLabel getLabel_3() {
+		if (label_3 == null) {
+			label_3 = new JLabel("%");
+		}
+		return label_3;
+	}
+	private JLabel getLabel_4() {
+		if (label_4 == null) {
+			label_4 = new JLabel("%");
+		}
+		return label_4;
+	}
+	private JLabel getLabel_5() {
+		if (label_5 == null) {
+			label_5 = new JLabel("%");
+		}
+		return label_5;
 	}
 }
