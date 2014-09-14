@@ -74,7 +74,9 @@ public class NRConsoleDeviceConfigPlugin extends AbstractNRConsoleTabedPanelPlug
 		if (delt.isAvailable()){
 			gui.setDevices(delt, getPrinter());
 		}
-		//printer.
+		if (delt.isAvailable()){
+			gui.updateSettings();
+		}
 		return delt.isAvailable();
 		
 	}

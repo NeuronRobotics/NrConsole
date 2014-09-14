@@ -25,6 +25,7 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	PrefsLoader prefs = new PrefsLoader();
 	private Slic3rAll pnlAll = new Slic3rAll(this);
 	private Slic3rPrinter pnlPrinter = new Slic3rPrinter(this);
+	private Slic3rPrints pnlPrints = new Slic3rPrints(this);
 	private JRadioButton rdbtnShowOnlyPrinter;
 	private JRadioButton rdbtnShowOnlyPrint;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -46,20 +47,24 @@ public class Slic3rMasterPanel extends SettingsPanel {
 		if (rdbtnShowAllSettings.isSelected()){			
 			removeListeners();
 			addListener(pnlAll);
+			notifySettingsChanged();
 			return pnlAll;
 		}
 		else if (rdbtnShowOnlyPrinter.isSelected()){		
 			removeListeners();
 			addListener(pnlPrinter);
+			notifySettingsChanged();
 			return pnlPrinter;
 		}
 		else if(rdbtnShowOnlyPrint.isSelected()){			
 			removeListeners();
-			addListener(pnlAll);
-			return pnlAll;
+			addListener(pnlPrints);
+			notifySettingsChanged();
+			return pnlPrints;
 		}		
 		removeListeners();
 		addListener(pnlAll);
+		notifySettingsChanged();
 		return pnlAll;
 		
 		
@@ -114,7 +119,6 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	public void initComponents() {
 		setLayout(new MigLayout("", "[grow]", "[grow]"));
 		add(getScrollPane(), "cell 0 0,grow");
-		System.out.println("Initial Setting: " + prefs.getSlic3rRDBTNLast());
 		switch (prefs.getSlic3rRDBTNLast()) {
 		case 0:
 			getRdbtnShowAllSettings().setSelected(true);

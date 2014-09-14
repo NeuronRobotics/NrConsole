@@ -111,7 +111,7 @@ public class DeviceConfigPanel extends JPanel {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				initComponents();
-				updateSettings();
+				
 			}
 		});
 
@@ -132,7 +132,7 @@ public class DeviceConfigPanel extends JPanel {
 	}
 
 	
-	private void updateSettings(){
+	public void updateSettings(){
 			printer.reloadSlic3rSettings();
 		
 		
