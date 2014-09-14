@@ -58,16 +58,7 @@ public class NRConsoleDeviceConfigPlugin extends AbstractNRConsoleTabedPanelPlug
 	@Override
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		delt.setConnection(connection);
-		delt.connect();
-		//TODO load this from a configuration file, or extract from within jar.
-		//Slic3r.setExecutableLocation("/usr/local/Slic3r/bin/slic3r");
-		PrefsLoader prefs = new PrefsLoader();
-		String path = prefs.getSlic3rLocation();
-		if (new File(path).exists() == false){
-			 path = FileSelectionFactory.GetFile(null, new Slic3rFilter()).getPath();
-			 prefs.setSlic3rLocation(path);
-		}
-		Slic3r.setExecutableLocation(path);
+		delt.connect();		
 		if(NRConsoleDeviceConfigPlugin.getPrinter() == null)
 			NRConsoleDeviceConfigPlugin.setPrinter(new NRPrinter(delt));
 		
