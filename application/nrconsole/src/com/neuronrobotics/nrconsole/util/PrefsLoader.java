@@ -3,7 +3,8 @@ package com.neuronrobotics.nrconsole.util;
 import java.util.prefs.Preferences;
 
 public class PrefsLoader {
-	private static final String SLIC3R_LOCATION = "slic3r_path";	
+	private static final String SLIC3R_LOCATION = "slic3r_path";
+	private static final String SLIC3R_RDBTN_LAST = "slic3r_rdbtn_last";
 	static String path = "/usr/local/Slic3r/bin/slic3r";
 	Preferences prefs = Preferences.userNodeForPackage(this.getClass());
 	
@@ -15,6 +16,12 @@ public class PrefsLoader {
 		prefs.put(SLIC3R_LOCATION, _path);
 	}
 	
+	public int getSlic3rRDBTNLast(){
+		return prefs.getInt(SLIC3R_RDBTN_LAST, 0);
+	}
+	public void setSlic3rRDBTNLast(int _btn){
+		prefs.putInt(SLIC3R_RDBTN_LAST, _btn);
+	}
 	
 	
 }

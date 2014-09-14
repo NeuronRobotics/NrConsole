@@ -10,15 +10,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 
+import com.neuronrobotics.nrconsole.util.PrefsLoader;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Slic3rMasterPanel extends SettingsPanel {
 	private JScrollPane scrollPane;
 	private JPanel panel;
 	private JRadioButton rdbtnShowAllSettings;
 	private JPanel panel_1;
-
+	PrefsLoader prefs = new PrefsLoader();
 	private Slic3rAll pnlAll = new Slic3rAll(this);
 	private Slic3rPrinter pnlPrinter = new Slic3rPrinter(this);
 	private JRadioButton rdbtnShowOnlyPrinter;
@@ -31,7 +35,7 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	public Slic3rMasterPanel() {
 		
 		initComponents();
-		whichPanel();
+		
 
 	}
 	
@@ -39,22 +43,26 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	
 	
 	private SettingsPanel whichPanel(){
-		if (rdbtnShowAllSettings.isSelected()){
+		if (rdbtnShowAllSettings.isSelected()){			
 			removeListeners();
 			addListener(pnlAll);
 			return pnlAll;
 		}
-		else if (rdbtnShowOnlyPrinter.isSelected()){
+		else if (rdbtnShowOnlyPrinter.isSelected()){		
 			removeListeners();
 			addListener(pnlPrinter);
 			return pnlPrinter;
 		}
-		else{
+		else if(rdbtnShowOnlyPrint.isSelected()){			
 			removeListeners();
 			addListener(pnlAll);
 			return pnlAll;
-		}
-			
+		}		
+		removeListeners();
+		addListener(pnlAll);
+		return pnlAll;
+		
+		
 	}
 	private void changePanels(){
 		scrollPane.setViewportView(whichPanel());
@@ -65,7 +73,7 @@ public class Slic3rMasterPanel extends SettingsPanel {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
 			scrollPane.setColumnHeaderView(getPanel());
-			changePanels();
+			
 		}
 		return scrollPane;
 	}
@@ -81,11 +89,15 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	private JRadioButton getRdbtnShowAllSettings() {
 		if (rdbtnShowAllSettings == null) {
 			rdbtnShowAllSettings = new JRadioButton("Show All Settings");
-			rdbtnShowAllSettings.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent arg0) {
+			rdbtnShowAllSettings.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (rdbtnShowAllSettings.isSelected()){
+						prefs.setSlic3rRDBTNLast(0);
+					}
 					changePanels();
 				}
 			});
+			
 			buttonGroup.add(rdbtnShowAllSettings);
 		}
 		return rdbtnShowAllSettings;
@@ -102,29 +114,54 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	public void initComponents() {
 		setLayout(new MigLayout("", "[grow]", "[grow]"));
 		add(getScrollPane(), "cell 0 0,grow");
+		System.out.println("Initial Setting: " + prefs.getSlic3rRDBTNLast());
+		switch (prefs.getSlic3rRDBTNLast()) {
+		case 0:
+			getRdbtnShowAllSettings().setSelected(true);
+			break;
+		case 1:
+			getRdbtnShowOnlyPrinter().setSelected(true);
+			break;
+		case 2:
+			getRdbtnShowOnlyPrint().setSelected(true);
+			break;
+		default:
+			getRdbtnShowAllSettings().setSelected(true);
+			break;
+		}
+		changePanels();
 		
 	}
 	private JRadioButton getRdbtnShowOnlyPrinter() {
 		if (rdbtnShowOnlyPrinter == null) {
 			rdbtnShowOnlyPrinter = new JRadioButton("Show Only Printer Settings");
-			rdbtnShowOnlyPrinter.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent e) {
+			rdbtnShowOnlyPrinter.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (rdbtnShowOnlyPrinter.isSelected()){
+						prefs.setSlic3rRDBTNLast(1);
+					}
 					changePanels();
 				}
 			});
+			
 			buttonGroup.add(rdbtnShowOnlyPrinter);
+			
 		}
 		return rdbtnShowOnlyPrinter;
 	}
+	
 	private JRadioButton getRdbtnShowOnlyPrint() {
 		if (rdbtnShowOnlyPrint == null) {
 			rdbtnShowOnlyPrint = new JRadioButton("Show Only Print Job Settings");
-			rdbtnShowOnlyPrint.setEnabled(false);
-			rdbtnShowOnlyPrint.addItemListener(new ItemListener() {
-				public void itemStateChanged(ItemEvent e) {
+			rdbtnShowOnlyPrint.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (rdbtnShowOnlyPrint.isSelected()){
+						prefs.setSlic3rRDBTNLast(2);
+					}
 					changePanels();
 				}
 			});
+			
 			buttonGroup.add(rdbtnShowOnlyPrint);
 		}
 		return rdbtnShowOnlyPrint;
