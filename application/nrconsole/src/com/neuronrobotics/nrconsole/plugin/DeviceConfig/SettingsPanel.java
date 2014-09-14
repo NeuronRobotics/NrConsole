@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import com.neuronrobotics.nrconsole.plugin.JobExec.PrintTestListener;
 
 public abstract class SettingsPanel extends JPanel {
-private ArrayList<MachineSetting> settings;
+private ArrayList<MachineSetting> settings = new ArrayList<MachineSetting>();
 private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeListener>();
 
 
@@ -19,7 +19,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 	public void addListener(SettingsChangeListener toAdd) {
         listeners.add(toAdd);
     }
-	private void notifySettingsChanged(){
+	public void notifySettingsChanged(){
 		for (SettingsChangeListener ptl : listeners) {
 			ptl.settingsChanged();
 		}
@@ -51,6 +51,22 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 		}
 		return null;
 	}
+	public int numSettings(){
+		return settings.size();
+	}
+	
+	public MachineSetting getSetting(int index){
+		return settings.get(index);
+	}
+	public void setValue(int index, MachineSetting item){
+		if (settings.size() <= index){
+			settings.add(index, item);
+		}
+		else{
+			settings.set(index, item);
+		}
+		notifySettingsChanged();
+	}
 	
 	public Object getSetValue(String _name){
 		for (MachineSetting machineSetting : settings) {
@@ -59,6 +75,9 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 			}
 		}
 		return null;
+	}
+	public Object getSetValue(int index){		
+		return settings.get(index).getValue();
 	}
 	public int getIntValue(String _name){
 		for (MachineSetting machineSetting : settings) {
@@ -83,5 +102,8 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 			}
 		}
 		return -1;
+	}
+	public double getDoubleValue(int index){
+		return (double) settings.get(index).getValue();
 	}
 }

@@ -27,10 +27,14 @@ import com.neuronrobotics.replicator.driver.PrinterStatus;
 import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.replicator.driver.PrinterStatusListener;
 import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.replicator.driver.Slic3r;
 import com.neuronrobotics.replicator.driver.SliceStatusData;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.commands.bcs.io.GetValueCommand;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+
+
 
 
 
@@ -70,6 +74,7 @@ import javax.swing.JScrollPane;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+
 import javax.swing.JTabbedPane;
 import javax.swing.JRadioButton;
 import javax.swing.JFormattedTextField;
@@ -128,6 +133,8 @@ public class DeviceConfigPanel extends JPanel {
 
 	
 	private void updateSettings(){
+			printer.reloadSlic3rSettings();
+		
 		
 			slic3rSettingsPanel.setValue(0, new MachineSetting<Double>("NozzleDia" ,printer.getSlicer().getPacketArguments()[0]));
 			slic3rSettingsPanel.setValue(1, new MachineSetting<Double>("PCenterX" ,printer.getSlicer().getPacketArguments()[1]));
@@ -156,7 +163,40 @@ public class DeviceConfigPanel extends JPanel {
 		
 	}
 	
+	public void writeSettings(){
+		
 	
+		
+		double[] slic3rArgs = {
+				(double) slic3rSettingsPanel.getSetValue(0),
+				slic3rSettingsPanel.getDoubleValue(1),
+				slic3rSettingsPanel.getDoubleValue(2),
+				(double) slic3rSettingsPanel.getSetValue(3),
+				(double) slic3rSettingsPanel.getSetValue(4),
+				(double) slic3rSettingsPanel.getSetValue(5),
+				(double) slic3rSettingsPanel.getSetValue(6),
+				(double) slic3rSettingsPanel.getSetValue(7),
+				(double) slic3rSettingsPanel.getSetValue(8),
+				(double) slic3rSettingsPanel.getSetValue(9),
+				(double) slic3rSettingsPanel.getSetValue(10),
+				(double) slic3rSettingsPanel.getSetValue(11),
+				(double) slic3rSettingsPanel.getSetValue(12),
+				(double) slic3rSettingsPanel.getSetValue(13),
+				(double) slic3rSettingsPanel.getSetValue(14),
+				(double) slic3rSettingsPanel.getSetValue(15),
+				(double) slic3rSettingsPanel.getSetValue(16),
+				(double) slic3rSettingsPanel.getSetValue(17),
+				(double) slic3rSettingsPanel.getSetValue(18),
+				(double) slic3rSettingsPanel.getSetValue(19),
+				(double) slic3rSettingsPanel.getSetValue(20),
+				(double) slic3rSettingsPanel.getSetValue(21),
+				(double) slic3rSettingsPanel.getSetValue(22)
+		};
+		
+		
+		Slic3r newSettings = new Slic3r(slic3rArgs); 
+		printer.getDeltaDevice().setSlic3rConfiguration(newSettings);
+				}
 	
 	private JPanel getPnlAction() {
 		if (pnlAction == null) {
@@ -181,6 +221,11 @@ public class DeviceConfigPanel extends JPanel {
 	private JButton getBtnWriteConfigs() {
 		if (btnWriteConfigs == null) {
 			btnWriteConfigs = new JButton("Write Configs");
+			btnWriteConfigs.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					writeSettings();
+				}
+			});
 		}
 		return btnWriteConfigs;
 	}
