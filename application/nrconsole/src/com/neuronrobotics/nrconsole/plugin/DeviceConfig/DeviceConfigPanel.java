@@ -164,7 +164,7 @@ public class DeviceConfigPanel extends JPanel {
 	}
 	
 	public void writeSettings(){
-		
+		slic3rSettingsPanel.checkNewSettings();
 	
 		
 		double[] slic3rArgs = {

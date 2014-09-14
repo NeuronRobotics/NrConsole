@@ -102,7 +102,7 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 
 	@Override
 	public void settingsChanged() {
-		System.out.println("blah");
+		
 		if (master.numSettings() > 22){
 		tfNozzleDia.setValue(master.getSetting(0).getValue());
 		tfPrintCenterX.setValue(master.getSetting(1).getValue());
@@ -881,5 +881,34 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 			label_5 = new JLabel("%");
 		}
 		return label_5;
+	}
+
+
+	@Override
+	public void settingsRequest() {	
+		
+		master.setValue(0, new MachineSetting<Double>("NozzleDia" ,(Double) tfNozzleDia.getValue()));
+		master.setValue(1, new MachineSetting<Double>("PCenterX" ,(Double) tfPrintCenterX.getValue()));
+		master.setValue(2, new MachineSetting<Double>("PCenterY" ,(Double) tfPrintCenterY.getValue()));
+		master.setValue(3, new MachineSetting<Double>("FilaDia" ,(Double) tfFilaDia.getValue()));
+		master.setValue(4, new MachineSetting<Double>("ExtMult" ,(Double) tfExtrusionMult.getValue()));
+		master.setValue(5, new MachineSetting<Double>("PTemp" ,(Double) tfPTemp.getValue()));
+		master.setValue(6, new MachineSetting<Double>("BTemp" ,(Double) tfBTemp.getValue()));
+		master.setValue(7, new MachineSetting<Double>("LayerHeight" ,(Double) tfLayerHeight.getValue()));
+		master.setValue(8, new MachineSetting<Double>("WallThickness" ,(Double) tfWallThickness.getValue()));
+		//master.setValue(9, new MachineSetting<Double>("UseSupport" ,(Double) tfRetractLength.getValue()));
+		master.setValue(10, new MachineSetting<Double>("RetractLength" ,(Double) tfRetractLength.getValue()));
+		master.setValue(11, new MachineSetting<Double>("TravelSpd" ,(Double) tfTravelSpeed.getValue()));
+		master.setValue(12, new MachineSetting<Double>("PeriSpd" ,(Double) tfPerimeterSpeed.getValue()));
+		master.setValue(13, new MachineSetting<Double>("BridgeSpd" ,(Double) tfBridgeSpeed.getValue()));
+		master.setValue(14, new MachineSetting<Double>("GapFillSpd" ,(Double) tfGapFillSpeed.getValue()));
+		master.setValue(15, new MachineSetting<Double>("InfillSpd" ,(Double) tfInfillSpeed.getValue()));
+		master.setValue(16, new MachineSetting<Double>("SupportMatSpd" ,(Double) tfSupportMaterialSpeed.getValue()));
+		master.setValue(17, new MachineSetting<Double>("SmPeriSpdPcnt" ,(Double) tfSmallPerimeterSpeedPercent.getValue()));
+		master.setValue(18, new MachineSetting<Double>("ExtPeriSpdPcnt" ,(Double) tfExternalPerimeterSpeedPercent.getValue()));
+		master.setValue(19, new MachineSetting<Double>("SolidInfillSpdPcnt" ,(Double) tfSolidInfillSpeedPercent.getValue()));
+		master.setValue(20, new MachineSetting<Double>("TopSolidInfillSpdPcnt" ,(Double) tfTopSolidInfillSpeedPercent.getValue()));
+		master.setValue(21, new MachineSetting<Double>("SupportMatIntSpdPcnt" ,(Double) tfSupportMaterialInterSpeedPercent.getValue()));
+		master.setValue(22, new MachineSetting<Double>("FirstLayerSpdPcnt" ,(Double) tfFirstLayerSpeedPercent.getValue()));
 	}
 }

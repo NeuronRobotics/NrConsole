@@ -24,8 +24,18 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 			ptl.settingsChanged();
 		}
 	}
+	public void notifySettingsRequest(){
+		for (SettingsChangeListener ptl : listeners) {
+			ptl.settingsRequest();
+		}
+	}
+	
+	public void checkNewSettings(){
+		notifySettingsRequest();
+	}
 	
 	public ArrayList<MachineSetting> getValues(){
+		
 		return settings;
 	}
 	
@@ -44,6 +54,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 	}
 	
 	public MachineSetting getSetting(String _name){
+		
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
 				return machineSetting;
@@ -56,9 +67,11 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 	}
 	
 	public MachineSetting getSetting(int index){
+		
 		return settings.get(index);
 	}
 	public void setValue(int index, MachineSetting item){
+		
 		if (settings.size() <= index){
 			settings.add(index, item);
 		}
@@ -69,6 +82,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 	}
 	
 	public Object getSetValue(String _name){
+		
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
 				return machineSetting.getValue();
@@ -77,9 +91,11 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 		return null;
 	}
 	public Object getSetValue(int index){		
+		
 		return settings.get(index).getValue();
 	}
 	public int getIntValue(String _name){
+	
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
 				return (int) machineSetting.getValue();
@@ -88,6 +104,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 		return -1;
 	}
 	public boolean getBooleanValue(String _name){
+		
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
 				return (boolean) machineSetting.getValue();
@@ -96,6 +113,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 		return false;
 	}
 	public double getDoubleValue(String _name){
+	
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
 				return (double) machineSetting.getValue();
@@ -104,6 +122,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 		return -1;
 	}
 	public double getDoubleValue(int index){
+		
 		return (double) settings.get(index).getValue();
 	}
 }
