@@ -12,6 +12,7 @@ import javazoom.jl.decoder.Manager;
 import com.neuronrobotics.nrconsole.plugin.BowlerCam.NRConsoleBowlerCameraPlugin;
 import com.neuronrobotics.nrconsole.plugin.BowlerConfig.NRConsoleBowlerConfigPlugin;
 import com.neuronrobotics.nrconsole.plugin.BowlerRPCDisplay.NRConsoleBowlerRPCDisplayPlugin;
+import com.neuronrobotics.nrconsole.plugin.DeviceConfig.NRConsoleDeviceConfigPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.NRConsoleDyIOPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
@@ -196,6 +197,7 @@ public class PluginManager {
 		// HACK this should load using OSGI
 		// Once instantiated they add themselves to the static list of plugins
 		new NRConsoleJobExecPlugin(this);
+		new NRConsoleDeviceConfigPlugin(this);
 		new CartesianController(this);
 		new NRConsoleDyIOPlugin(this);
 		new NRConsolePIDPlugin(this);
