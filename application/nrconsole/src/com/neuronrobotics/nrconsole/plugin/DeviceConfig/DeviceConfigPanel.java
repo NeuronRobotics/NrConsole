@@ -104,7 +104,7 @@ public class DeviceConfigPanel extends JPanel {
 	private JScrollPane pnlSlic3rSetts;
 	
 	private Slic3rMasterPanel slic3rSettingsPanel = new Slic3rMasterPanel();
-	
+	private LocalSettingsPanel localSettingsPanel = new LocalSettingsPanel();
 	
 	public DeviceConfigPanel() {
 		
@@ -159,7 +159,7 @@ public class DeviceConfigPanel extends JPanel {
 			slic3rSettingsPanel.setValue(20, new MachineSetting<Double>("TopSolidInfillSpdPcnt" ,printer.getSlicer().getPacketArguments()[20]));
 			slic3rSettingsPanel.setValue(21, new MachineSetting<Double>("SupportMatIntSpdPcnt" ,printer.getSlicer().getPacketArguments()[21]));
 			slic3rSettingsPanel.setValue(22, new MachineSetting<Double>("FirstLayerSpdPcnt" ,printer.getSlicer().getPacketArguments()[22]));
-		
+			localSettingsPanel.reloadAllSettings();
 		
 	}
 	
@@ -232,9 +232,19 @@ public class DeviceConfigPanel extends JPanel {
 	private JTabbedPane getTabPnlSettings() {
 		if (tabPnlSettings == null) {
 			tabPnlSettings = new JTabbedPane(JTabbedPane.TOP);
+			tabPnlSettings.addChangeListener(new ChangeListener() {
+				public void stateChanged(ChangeEvent arg0) {
+					try {
+						updateSettings();
+					} catch (Exception e) {
+						
+					}
+					
+				}
+			});
 			
 			tabPnlSettings.addTab(slic3rSettingsPanel.getPanelName(), null, slic3rSettingsPanel, null);
-			
+			tabPnlSettings.addTab(localSettingsPanel.getPanelName(), null, localSettingsPanel, null);
 			
 		}
 		return tabPnlSettings;
