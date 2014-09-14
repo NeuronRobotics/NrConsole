@@ -19,6 +19,9 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 	public void addListener(SettingsChangeListener toAdd) {
         listeners.add(toAdd);
     }
+	public void removeListeners() {
+        listeners.clear();
+    }
 	public void notifySettingsChanged(){
 		for (SettingsChangeListener ptl : listeners) {
 			ptl.settingsChanged();

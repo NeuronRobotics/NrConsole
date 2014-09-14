@@ -20,6 +20,7 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	private JPanel panel_1;
 
 	private Slic3rAll pnlAll = new Slic3rAll(this);
+	private Slic3rPrinter pnlPrinter = new Slic3rPrinter(this);
 	private JRadioButton rdbtnShowOnlyPrinter;
 	private JRadioButton rdbtnShowOnlyPrint;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -28,8 +29,9 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	 * Create the panel.
 	 */
 	public Slic3rMasterPanel() {
-		addListener(pnlAll);
+		
 		initComponents();
+		whichPanel();
 
 	}
 	
@@ -38,9 +40,18 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	
 	private SettingsPanel whichPanel(){
 		if (rdbtnShowAllSettings.isSelected()){
+			removeListeners();
+			addListener(pnlAll);
 			return pnlAll;
 		}
+		else if (rdbtnShowOnlyPrinter.isSelected()){
+			removeListeners();
+			addListener(pnlPrinter);
+			return pnlPrinter;
+		}
 		else{
+			removeListeners();
+			addListener(pnlAll);
 			return pnlAll;
 		}
 			
@@ -102,7 +113,6 @@ public class Slic3rMasterPanel extends SettingsPanel {
 				}
 			});
 			buttonGroup.add(rdbtnShowOnlyPrinter);
-			rdbtnShowOnlyPrinter.setEnabled(false);
 		}
 		return rdbtnShowOnlyPrinter;
 	}
