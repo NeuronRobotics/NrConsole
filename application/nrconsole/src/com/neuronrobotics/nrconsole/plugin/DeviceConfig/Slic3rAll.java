@@ -81,7 +81,9 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 	private JLabel label_3;
 	private JLabel label_4;
 	private JLabel label_5;
-	public Slic3rAll() {		
+	private Slic3rMasterPanel master;
+	public Slic3rAll(Slic3rMasterPanel _master) {	
+		master = _master;
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				initComponents();
@@ -101,30 +103,30 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 	@Override
 	public void settingsChanged() {
 		System.out.println("blah");
-		if (numSettings() > 22){
-		tfNozzleDia.setValue(getSetting(0).getValue());
-		tfPrintCenterX.setValue(getSetting(1).getValue());
-		tfPrintCenterY.setValue(getSetting(2).getValue());
-		tfFilaDia.setValue(getSetting(3).getValue());
-		tfExtrusionMult.setValue(getSetting(4).getValue());
-		tfPTemp.setValue(getSetting(5).getValue());
-		tfBTemp.setValue(getSetting(6).getValue());
-		tfLayerHeight.setValue(getSetting(7).getValue());
-		tfWallThickness.setValue(getSetting(8).getValue());
+		if (master.numSettings() > 22){
+		tfNozzleDia.setValue(master.getSetting(0).getValue());
+		tfPrintCenterX.setValue(master.getSetting(1).getValue());
+		tfPrintCenterY.setValue(master.getSetting(2).getValue());
+		tfFilaDia.setValue(master.getSetting(3).getValue());
+		tfExtrusionMult.setValue(master.getSetting(4).getValue());
+		tfPTemp.setValue(master.getSetting(5).getValue());
+		tfBTemp.setValue(master.getSetting(6).getValue());
+		tfLayerHeight.setValue(master.getSetting(7).getValue());
+		tfWallThickness.setValue(master.getSetting(8).getValue());
 		//TODO Use Support Material?
-		tfRetractLength.setValue(getSetting(10).getValue());
-		tfTravelSpeed.setValue(getSetting(11).getValue());
-		tfPerimeterSpeed.setValue(getSetting(12).getValue());
-		tfBridgeSpeed.setValue(getSetting(13).getValue());
-		tfGapFillSpeed.setValue(getSetting(14).getValue());
-		tfInfillSpeed.setValue(getSetting(15).getValue());
-		tfSupportMaterialSpeed.setValue(getSetting(16).getValue());
-		tfSmallPerimeterSpeedPercent.setValue(getSetting(17).getValue());
-		tfExternalPerimeterSpeedPercent.setValue(getSetting(18).getValue());
-		tfSolidInfillSpeedPercent.setValue(getSetting(19).getValue());
-		tfTopSolidInfillSpeedPercent.setValue(getSetting(20).getValue());
-		tfSupportMaterialInterSpeedPercent.setValue(getSetting(21).getValue());
-		tfFirstLayerSpeedPercent.setValue(getSetting(22).getValue());
+		tfRetractLength.setValue(master.getSetting(10).getValue());
+		tfTravelSpeed.setValue(master.getSetting(11).getValue());
+		tfPerimeterSpeed.setValue(master.getSetting(12).getValue());
+		tfBridgeSpeed.setValue(master.getSetting(13).getValue());
+		tfGapFillSpeed.setValue(master.getSetting(14).getValue());
+		tfInfillSpeed.setValue(master.getSetting(15).getValue());
+		tfSupportMaterialSpeed.setValue(master.getSetting(16).getValue());
+		tfSmallPerimeterSpeedPercent.setValue(master.getSetting(17).getValue());
+		tfExternalPerimeterSpeedPercent.setValue(master.getSetting(18).getValue());
+		tfSolidInfillSpeedPercent.setValue(master.getSetting(19).getValue());
+		tfTopSolidInfillSpeedPercent.setValue(master.getSetting(20).getValue());
+		tfSupportMaterialInterSpeedPercent.setValue(master.getSetting(21).getValue());
+		tfFirstLayerSpeedPercent.setValue(master.getSetting(22).getValue());
 		}
 		
 	}

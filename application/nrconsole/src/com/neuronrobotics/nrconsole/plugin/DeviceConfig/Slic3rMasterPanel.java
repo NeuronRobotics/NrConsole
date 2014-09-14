@@ -19,7 +19,7 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	private JRadioButton rdbtnShowAllSettings;
 	private JPanel panel_1;
 
-	private Slic3rAll pnlAll = new Slic3rAll();
+	private Slic3rAll pnlAll = new Slic3rAll(this);
 	private JRadioButton rdbtnShowOnlyPrinter;
 	private JRadioButton rdbtnShowOnlyPrint;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -28,24 +28,12 @@ public class Slic3rMasterPanel extends SettingsPanel {
 	 * Create the panel.
 	 */
 	public Slic3rMasterPanel() {
+		addListener(pnlAll);
 		initComponents();
 
 	}
-
-	@Override
-	public void setValue(int index, MachineSetting item){
-		System.out.println("got to override");
-		whichPanel().setValue(index, item);
-	}
 	
-	@Override
-	public double getDoubleValue(int index){
-		return whichPanel().getDoubleValue(index);
-	}
-	@Override
-	public Object getSetValue(int index){		
-		return whichPanel().getSetValue(index);
-	}
+	
 	
 	
 	private SettingsPanel whichPanel(){
@@ -92,12 +80,7 @@ public class Slic3rMasterPanel extends SettingsPanel {
 		return rdbtnShowAllSettings;
 	}
 	
-	@Override
-	public void notifySettingsChanged() {
-		whichPanel().notifySettingsChanged();
-	}
-	
-	
+		
 	@Override
 	public String getPanelName() {
 		
