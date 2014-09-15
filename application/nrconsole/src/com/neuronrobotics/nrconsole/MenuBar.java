@@ -194,8 +194,8 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		disconnect();//clear any active connection
 		try {
 			connectionMenu.setEnabled(false);//disable the connection menu to avoid two connections being set up at the same time
-			if(manager.connect(this)) {//Use the PluginManager "manager" to connect the connection to the plugins (returns true upon sucess). This takes a while.
-				ready = true;//Set ready to true to indicate a successfull connection protocol has compleated (device is connected, all plugins are successfully connected to device)
+			if(manager.connect(this)) {//Use the PluginManager "manager" to connect the connection to the plugins (returns true upon success). This takes a while.
+				ready = true;//Set ready to true to indicate a successful connection protocol has completed (device is connected, all plugins are successfully connected to device)
 				
 			}else {
 				disconnect();//clear any partial connection
