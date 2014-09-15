@@ -165,38 +165,32 @@ public class DeviceConfigPanel extends JPanel {
 	
 	public void writeSettings(){
 		slic3rSettingsPanel.checkNewSettings();
-	
 		
-		double[] slic3rArgs = {
-				(double) slic3rSettingsPanel.getSetValue(0),
-				slic3rSettingsPanel.getDoubleValue(1),
-				slic3rSettingsPanel.getDoubleValue(2),
-				(double) slic3rSettingsPanel.getSetValue(3),
-				(double) slic3rSettingsPanel.getSetValue(4),
-				(double) slic3rSettingsPanel.getSetValue(5),
-				(double) slic3rSettingsPanel.getSetValue(6),
-				(double) slic3rSettingsPanel.getSetValue(7),
-				(double) slic3rSettingsPanel.getSetValue(8),
-				(double) slic3rSettingsPanel.getSetValue(9),
-				(double) slic3rSettingsPanel.getSetValue(10),
-				(double) slic3rSettingsPanel.getSetValue(11),
-				(double) slic3rSettingsPanel.getSetValue(12),
-				(double) slic3rSettingsPanel.getSetValue(13),
-				(double) slic3rSettingsPanel.getSetValue(14),
-				(double) slic3rSettingsPanel.getSetValue(15),
-				(double) slic3rSettingsPanel.getSetValue(16),
-				(double) slic3rSettingsPanel.getSetValue(17),
-				(double) slic3rSettingsPanel.getSetValue(18),
-				(double) slic3rSettingsPanel.getSetValue(19),
-				(double) slic3rSettingsPanel.getSetValue(20),
-				(double) slic3rSettingsPanel.getSetValue(21),
-				(double) slic3rSettingsPanel.getSetValue(22)
-		};
-		
-		
-		Slic3r newSettings = new Slic3r(slic3rArgs); 
+		Slic3r newSettings = new Slic3r(
+				 slic3rSettingsPanel.getDoubleValue(0),
+				 new double[]{slic3rSettingsPanel.getDoubleValue(1),slic3rSettingsPanel.getDoubleValue(2)},
+				 slic3rSettingsPanel.getDoubleValue(3),
+				 slic3rSettingsPanel.getDoubleValue(4),
+				 slic3rSettingsPanel.getIntegerValue(5),
+				 slic3rSettingsPanel.getIntegerValue(6),
+				 slic3rSettingsPanel.getDoubleValue(7),
+				 slic3rSettingsPanel.getIntegerValue(8),
+				 slic3rSettingsPanel.getBooleanValue(9),
+				 slic3rSettingsPanel.getDoubleValue(10),
+				 slic3rSettingsPanel.getIntegerValue(11),
+				 slic3rSettingsPanel.getIntegerValue(12),
+				 slic3rSettingsPanel.getIntegerValue(13),
+				 slic3rSettingsPanel.getIntegerValue(14),
+				 slic3rSettingsPanel.getIntegerValue(15),
+				 slic3rSettingsPanel.getIntegerValue(16),
+				 slic3rSettingsPanel.getIntegerValue(17),
+				 slic3rSettingsPanel.getIntegerValue(18),
+				 slic3rSettingsPanel.getIntegerValue(19),
+				 slic3rSettingsPanel.getIntegerValue(20),
+				 slic3rSettingsPanel.getIntegerValue(21),
+				 slic3rSettingsPanel.getIntegerValue(22)); 
 		printer.getDeltaDevice().setSlic3rConfiguration(newSettings);
-				}
+	}
 	
 	private JPanel getPnlAction() {
 		if (pnlAction == null) {
