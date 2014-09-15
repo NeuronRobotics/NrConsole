@@ -136,29 +136,29 @@ public class DeviceConfigPanel extends JPanel {
 			printer.reloadSlic3rSettings();
 		
 		
-			slic3rSettingsPanel.setValue(0, new MachineSetting<Double>("NozzleDia" ,printer.getSlicer().getPacketArguments()[0]));
-			slic3rSettingsPanel.setValue(1, new MachineSetting<Double>("PCenterX" ,printer.getSlicer().getPacketArguments()[1]));
-			slic3rSettingsPanel.setValue(2, new MachineSetting<Double>("PCenterY" ,printer.getSlicer().getPacketArguments()[2]));
-			slic3rSettingsPanel.setValue(3, new MachineSetting<Double>("FilaDia" ,printer.getSlicer().getPacketArguments()[3]));
-			slic3rSettingsPanel.setValue(4, new MachineSetting<Double>("ExtMult" ,printer.getSlicer().getPacketArguments()[4]));
-			slic3rSettingsPanel.setValue(5, new MachineSetting<Double>("PTemp" ,printer.getSlicer().getPacketArguments()[5]));
-			slic3rSettingsPanel.setValue(6, new MachineSetting<Double>("BTemp" ,printer.getSlicer().getPacketArguments()[6]));
-			slic3rSettingsPanel.setValue(7, new MachineSetting<Double>("LayerHeight" ,printer.getSlicer().getPacketArguments()[7]));
-			slic3rSettingsPanel.setValue(8, new MachineSetting<Double>("WallThickness" ,printer.getSlicer().getPacketArguments()[8]));
-			slic3rSettingsPanel.setValue(9, new MachineSetting<Double>("UseSupport" ,printer.getSlicer().getPacketArguments()[9]));
-			slic3rSettingsPanel.setValue(10, new MachineSetting<Double>("RetractLength" ,printer.getSlicer().getPacketArguments()[10]));
-			slic3rSettingsPanel.setValue(11, new MachineSetting<Double>("TravelSpd" ,printer.getSlicer().getPacketArguments()[11]));
-			slic3rSettingsPanel.setValue(12, new MachineSetting<Double>("PeriSpd" ,printer.getSlicer().getPacketArguments()[12]));
-			slic3rSettingsPanel.setValue(13, new MachineSetting<Double>("BridgeSpd" ,printer.getSlicer().getPacketArguments()[13]));
-			slic3rSettingsPanel.setValue(14, new MachineSetting<Double>("GapFillSpd" ,printer.getSlicer().getPacketArguments()[14]));
-			slic3rSettingsPanel.setValue(15, new MachineSetting<Double>("InfillSpd" ,printer.getSlicer().getPacketArguments()[15]));
-			slic3rSettingsPanel.setValue(16, new MachineSetting<Double>("SmPeriSpdPcnt" ,printer.getSlicer().getPacketArguments()[16]));
-			slic3rSettingsPanel.setValue(17, new MachineSetting<Double>("SmPeriSpdPcnt" ,printer.getSlicer().getPacketArguments()[17]));
-			slic3rSettingsPanel.setValue(18, new MachineSetting<Double>("ExtPeriSpdPcnt" ,printer.getSlicer().getPacketArguments()[18]));
-			slic3rSettingsPanel.setValue(19, new MachineSetting<Double>("SolidInfillSpdPcnt" ,printer.getSlicer().getPacketArguments()[19]));
-			slic3rSettingsPanel.setValue(20, new MachineSetting<Double>("TopSolidInfillSpdPcnt" ,printer.getSlicer().getPacketArguments()[20]));
-			slic3rSettingsPanel.setValue(21, new MachineSetting<Double>("SupportMatIntSpdPcnt" ,printer.getSlicer().getPacketArguments()[21]));
-			slic3rSettingsPanel.setValue(22, new MachineSetting<Double>("FirstLayerSpdPcnt" ,printer.getSlicer().getPacketArguments()[22]));
+			slic3rSettingsPanel.setValue(0, new MachineSetting<Double>("NozzleDia" ,printer.getSlicer().getNozzle_diameter()));
+			slic3rSettingsPanel.setValue(1, new MachineSetting<Double>("PCenterX" ,printer.getSlicer().getPrintCenter()[0]));
+			slic3rSettingsPanel.setValue(2, new MachineSetting<Double>("PCenterY" ,printer.getSlicer().getPrintCenter()[1]));
+			slic3rSettingsPanel.setValue(3, new MachineSetting<Double>("FilaDia" ,printer.getSlicer().getFilimentDiameter()));
+			slic3rSettingsPanel.setValue(4, new MachineSetting<Double>("ExtMult" ,printer.getSlicer().getExtrusionMultiplier()));
+			slic3rSettingsPanel.setValue(5, new MachineSetting<Integer>("PTemp" , printer.getSlicer().getTempreture()));
+			slic3rSettingsPanel.setValue(6, new MachineSetting<Integer>("BTemp" , printer.getSlicer().getBedTempreture()));
+			slic3rSettingsPanel.setValue(7, new MachineSetting<Double>("LayerHeight" ,printer.getSlicer().getLayerHeight()));
+			slic3rSettingsPanel.setValue(8, new MachineSetting<Integer>("WallThickness" , printer.getSlicer().getWallThickness()));
+			slic3rSettingsPanel.setValue(9, new MachineSetting<Boolean>("UseSupport" ,printer.getSlicer().isUseSupportMaterial()));
+			slic3rSettingsPanel.setValue(10, new MachineSetting<Double>("RetractLength" ,printer.getSlicer().getRetractLength()));
+			slic3rSettingsPanel.setValue(11, new MachineSetting<Integer>("TravelSpd" ,printer.getSlicer().getTravilSpeed()));
+			slic3rSettingsPanel.setValue(12, new MachineSetting<Integer>("PeriSpd" ,printer.getSlicer().getPerimeterSpeed()));
+			slic3rSettingsPanel.setValue(13, new MachineSetting<Integer>("BridgeSpd" ,printer.getSlicer().getBridgeSpeed()));
+			slic3rSettingsPanel.setValue(14, new MachineSetting<Integer>("GapFillSpd" ,printer.getSlicer().getGapFillSpeed()));
+			slic3rSettingsPanel.setValue(15, new MachineSetting<Integer>("InfillSpd" ,printer.getSlicer().getInfillSpeed()));
+			slic3rSettingsPanel.setValue(16, new MachineSetting<Integer>("SupPeriSpdPcnt" ,printer.getSlicer().getSupportMaterialInterfaceSpeedPercent()));
+			slic3rSettingsPanel.setValue(17, new MachineSetting<Integer>("SmPeriSpdPcnt" ,printer.getSlicer().getSmallPerimeterSpeedPercent()));
+			slic3rSettingsPanel.setValue(18, new MachineSetting<Integer>("ExtPeriSpdPcnt" ,printer.getSlicer().getExternalPerimeterSpeedPercent()));
+			slic3rSettingsPanel.setValue(19, new MachineSetting<Integer>("SolidInfillSpdPcnt" ,printer.getSlicer().getSolidInfillSpeedPercent()));
+			slic3rSettingsPanel.setValue(20, new MachineSetting<Integer>("TopSolidInfillSpdPcnt" ,printer.getSlicer().getTopSolidInfillSpeedPercent()));
+			slic3rSettingsPanel.setValue(21, new MachineSetting<Integer>("SupportMatIntSpdPcnt" ,printer.getSlicer().getSupportMaterialSpeed()));
+			slic3rSettingsPanel.setValue(22, new MachineSetting<Integer>("FirstLayerSpdPcnt" ,printer.getSlicer().getFirstLayerSpeedPercent()));
 			localSettingsPanel.reloadAllSettings();
 		
 	}
