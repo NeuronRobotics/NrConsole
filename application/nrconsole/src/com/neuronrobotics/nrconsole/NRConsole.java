@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.lwjgl.openal.AL;
+
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.Log;
@@ -21,7 +23,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  * @author technocopia05
  *
  */
-public class NRConsole implements ActionListener {
+public class NRConsole {
 	
 	private NRConsoleWindow nrcFrame = null;
 
@@ -50,18 +52,11 @@ public class NRConsole implements ActionListener {
 		}
 	}
 	
-	/** Currently unused
-	 */
-	public static void disconnect() {
-		self.nrcMenubar.disconnect();
-	}
-	
 	public NRConsole(boolean debug) {
 		self = this;
 		nrcFrame = new NRConsoleWindow();
 		nrcFrame.setJMenuBar(nrcMenubar);
 		nrcMenubar.setMenues(null);
-		nrcMenubar.addActionListener(this);
 		
 		nrcFrame.setLocationRelativeTo(null);
 		nrcFrame.setVisible(true);
@@ -77,18 +72,13 @@ public class NRConsole implements ActionListener {
 			@Override
 			public void windowClosing(WindowEvent winEvt) {
 				manager.disconnect();
+				AL.destroy();//Used to clean up any audio streams before exit. Will throw an error if not used ("AL lib: (EE) alc_cleanup: 1 device not closed")
 				System.out.println("Exit clean");
 		        System.exit(0); 
 		    }
 		});
 	}
 	
-	
-	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("set-connection")) {
-			//System.out.println("Do something with the action command.");
-		}
-	}
 	
 	/**
 	 * This private class is some kludgey bullshit
@@ -108,22 +98,22 @@ public class NRConsole implements ActionListener {
 					
 					onPluginListUpdate(manager);
 					manager.addIPluginUpdateListener(this);
-					//nrcFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);  
+					 
 					while(nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
-					//System.out.println("Exiting Application");
+					
 				}else{
 					manager.removeIPluginUpdateListener(this);
 					nrcMenubar.setMenues(null);
 					nrcFrame.displayLogo(manager);
 					nrcFrame.invalidate();
 					nrcFrame.setVisible(true);
-					//System.out.println("Starting splash");
+					
 					while(!nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
-					//System.out.println("Exiting splash");
+					
 				}
 			}
 		}
