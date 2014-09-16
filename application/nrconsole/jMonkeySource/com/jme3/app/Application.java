@@ -599,14 +599,10 @@ public class Application implements SystemListener {
             return;
 
         timer.update();
-        try {
-        	if (inputEnabled){
-        		inputManager.update(timer.getTimePerFrame());
-        	}
-
-        	} catch (Exception e) {
-        			
-        	}
+        
+        if (inputEnabled){
+        	inputManager.update(timer.getTimePerFrame());
+        }
        
         if (audioRenderer != null){
             audioRenderer.update(timer.getTimePerFrame());
