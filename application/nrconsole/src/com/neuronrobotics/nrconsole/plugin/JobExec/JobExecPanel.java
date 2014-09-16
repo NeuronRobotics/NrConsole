@@ -8,16 +8,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
 import net.miginfocom.swing.MigLayout;
-
 import com.jme3.system.AppSettings;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
@@ -31,33 +28,18 @@ import com.neuronrobotics.replicator.driver.SliceStatusData;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-
-
-
-
-
-
-
-//import com.sun.deploy.uitoolkit.impl.fx.Utils;
-//import com.sun.deploy.uitoolkit.impl.fx.Utils;
 import javax.swing.JSplitPane;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JCheckBox;
-
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.Font;
 import java.awt.Color;
-
 import javax.swing.JTextPane;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
@@ -68,9 +50,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
-
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	/**
@@ -78,51 +57,75 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	 */
 	private static final long serialVersionUID = 12345L;
 	private NRPrinter printer;
+	
+	private GCodeLoader codeOps;
 	File gCodes = null;
 	FileInputStream gCodeStream;
+	
 	double currpos = 0;
-	private JButton jButtonOpenGCode;
-	private JButton jButtonRunJob;
+	
 	private int channelHotEnd = -1;
 	private int channelBed = -1;
-	private GCodeLoader codeOps;
-	private JPanel panel;
-	private JSplitPane splitPane;
-	private JPanel panel_1;
-	private JPanel panel_2;
 	MachineSimDisplay app;
-	private JSlider sliderLayer;
+	
 	private boolean isGoodFile;
 	private boolean isWarn = false;
 	private boolean isIllegal = false;
-	private JPanel panel_3;
-	private JPanel panel_4;
+	private boolean isPaused;
+	
+	long lastUpdate = 0;
+	
+	public String fileName = "None";
+	
+	private ArrayList<File> files = new ArrayList<File>();
+	
+	private ArrayList<String> fileNames = new ArrayList<String>();
+	
+	
+	private JProgressBar progressBar;
+
+	
+	private JPanel topButtonsPanel;//This is the JPanel containing btnOpen3DFile, btnRunJob, btnPausePrint. It is located at column 1, row 0 of the JobExecPanel.
+	private JButton btnOpen3DFile;//JButton used to open a gcode file. Set up using the "getBtnOpen3DFile", calls the "actionForBtnOpen3DFile" function when pressed.
+	private JButton btnRunJob;
+	private JButton btnPausePrint;
+	
+	private JPanel panel_6;//contains btnHomePrinter, lblTempSetpoint, spinnerTemp.
+	private JButton btnHomePrinter;
+	private JLabel lblTempSetpoint;
+	private JSpinner spinnerTemp;
+	
+
+	private JSplitPane splitPane;//Contains panel_1, panel_2
+	
+	private JPanel panel_1;//Contains splitPane_1
+	private JSplitPane splitPane_1;//Contains panel_7, panel_8
+	private JPanel panel_7;//contains lblPrintLog, scroll pane
+	private JLabel lblPrintLog;
+	private JScrollPane scrollPane;//contains textPaneLog
+	private JTextPane textPaneLog;
+	private JPanel panel_8;//Contains lblPrintQueue, list;
+	private JLabel lblPrintQueue;
+	private JList<String> list;
+	
+	
+	private JPanel panel_2;//Contains panel
+	private JPanel panel;//Contains 3d rendering, layersSlider, panel_5
+	private JSlider layersSlider;
+	private JPanel panel_5;//Contains chckbxShowAxes, tfLayerShown
+	private JCheckBox chckbxShowAxes;
+	private JTextField tfLayerShown;
+	
+	private JPanel panel_4;//Contains chckbxShowGoodLines, chckbxShowTroubledLines, chckbxShowDangerousLines, chckbxShowNonextrudeLines.
 	private JCheckBox chckbxShowGoodLines;
 	private JCheckBox chckbxShowTroubledLines;
 	private JCheckBox chckbxShowDangerousLines;
 	private JCheckBox chckbxShowNonextrudeLines;
-	private JTextField tfLayerShown;
-	private JPanel panel_5;
-	private JCheckBox chckbxShowAxes;
-	private boolean isPaused;
-	long lastUpdate = 0;
-	private JSpinner spinnerTemp;
-	private JLabel lblTempSetpoint;
-	private JButton btnPausePrint;
-	public String fileName = "None";
+	
+
 	private JButton btnEmergencyStop;
-	private JPanel panel_6;
-	private JButton btnHomePrinter;
-	private JSplitPane splitPane_1;
-	private JPanel panel_7;
-	private JPanel panel_8;
-	private JLabel lblPrintQueue;
-	private JLabel lblPrintLog;
-	private JTextPane textPaneLog;
-	private JProgressBar progressBar;
-	private JList<String> list;
-	private ArrayList<File> files = new ArrayList<File>();
-	private ArrayList<String> fileNames = new ArrayList<String>();
+
+	
 	public JobExecPanel() {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -149,10 +152,14 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		printer.addPrinterStatusListener(this);
 	}
 
+	/**
+	 * Initialize and add components and panels to this JobExecPanel.
+	 * Set layout of this JobExecPanel
+	 */
 	private void initComponents() {
 		getPanel_1();// initialize the 3d engine
 		setLayout(new MigLayout("", "[][157px,grow]", "[][center][grow][grow][]"));
-		add(getPanel_3(), "cell 1 0,growx");
+		add(getTopButtonsPanel(), "cell 1 0,growx");
 		add(getPanel_6(), "cell 1 1,grow");
 		add(getProgressBar(), "cell 0 0 1 5,growy");
 		add(getSplitPane(), "cell 1 2,grow");
@@ -163,10 +170,19 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	}
 
+	/**
+	 * Instantiate, set up, and return the "btnRunJob" JButton.
+	 * This button is located in the topButtonsPanel, and calls the method
+	 * "startPrint" when pressed.
+	 * 
+	 * @return btnRunJob The newly setup "btnRunJob" JButton
+	 */
 	private JButton getJButtonRunJob() {
-		if (jButtonRunJob == null) {
-			jButtonRunJob = new JButton();
-			jButtonRunJob.addMouseListener(new MouseAdapter() {
+		if (btnRunJob == null) {
+			btnRunJob = new JButton();
+			btnRunJob.setText("Run Job");
+			btnRunJob.setEnabled(false);
+			btnRunJob.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
 					if (isIllegal) {
@@ -178,30 +194,35 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 					}
 				}
 			});
-			jButtonRunJob.setText("Run Job");
-			jButtonRunJob.setEnabled(false);
-			jButtonRunJob.addActionListener(new ActionListener() {
+			btnRunJob.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
 					startPrint();
 				}
 			});
 		}
-		return jButtonRunJob;
+		return btnRunJob;
 	}
 
-	private JButton getJButtonOpenGCode() {
-		if (jButtonOpenGCode == null) {
-			jButtonOpenGCode = new JButton();
-			jButtonOpenGCode.setText("Open 3d File");
-			jButtonOpenGCode.addActionListener(new ActionListener() {
+	/**
+	 * Instantiates,  sets up, and returns the "btnOpen3DFile" JButton.
+	 * This button is located in the topButtonsPanel, and calls the method
+	 * "actionForBtnOpen3DFile" when pressed.
+	 * 
+	 * @return btnOpen3DFile The newly setup "btnOpen3DFile" JButton
+	 */
+	private JButton getBtnOpen3DFile() {
+		if (btnOpen3DFile == null) {
+			btnOpen3DFile = new JButton();
+			btnOpen3DFile.setText("Open 3d File");
+			btnOpen3DFile.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent event) {
-					jButtonOpenGCodeActionActionPerformed(event);
+					actionForBtnOpen3DFile(event);
 				}
 			});
 		}
-		return jButtonOpenGCode;
+		return btnOpen3DFile;
 	}
 
 
@@ -237,11 +258,11 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			}
 			// codeOps.getCodes().printOutput();
 			getJButtonRunJob().setEnabled(isGoodFile);
-			getJButtonOpenGCode().setEnabled(true);
+			getBtnOpen3DFile().setEnabled(true);
 			int numLayers = app.loadGCode(codeOps.getCodes());
 			
-			sliderLayer.setMaximum(numLayers);
-			sliderLayer.setValue(numLayers);
+			layersSlider.setMaximum(numLayers);
+			layersSlider.setValue(numLayers);
 
 		} catch (FileNotFoundException e) {
 
@@ -252,7 +273,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	}
 
-	private void jButtonOpenGCodeActionActionPerformed(ActionEvent event) {
+	private void actionForBtnOpen3DFile(ActionEvent event) {
 		new Thread() {
 			public void run() {
 				ThreadUtil.wait(100);
@@ -260,7 +281,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 						new StlFilter(), new GCodeFilter());
 				// No file selected
 				if (rawObject == null) {
-					getJButtonOpenGCode().setEnabled(true);
+					getBtnOpen3DFile().setEnabled(true);
 					return;
 				}
 				String gCodePath = rawObject.getAbsolutePath();
@@ -292,7 +313,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 			}
 		}.start();
-		getJButtonOpenGCode().setEnabled(false);
+		getBtnOpen3DFile().setEnabled(false);
 
 	}
 
@@ -429,48 +450,41 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	}
 
 	private JSlider getSliderLayer() {
-		if (sliderLayer == null) {
-			sliderLayer = new JSlider();
-			sliderLayer.setValue(0);
-			sliderLayer.setMaximum(0);
-			sliderLayer.setMajorTickSpacing(1);
+		if (layersSlider == null) {
+			layersSlider = new JSlider();
+			layersSlider.setValue(0);
+			layersSlider.setMaximum(0);
+			layersSlider.setMajorTickSpacing(1);
 
-			sliderLayer.addChangeListener(new ChangeListener() {
+			layersSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
 					if ((lastUpdate + 100) > System.currentTimeMillis()){
 						lastUpdate = System.currentTimeMillis();
-						app.setLayersToShow(sliderLayer.getValue());
+						app.setLayersToShow(layersSlider.getValue());
 						updatePrintInfo();
 					}
 					
 				}
 			});
-			sliderLayer.setSnapToTicks(true);
-			sliderLayer.setOrientation(SwingConstants.VERTICAL);
+			layersSlider.setSnapToTicks(true);
+			layersSlider.setOrientation(SwingConstants.VERTICAL);
 		}
-		return sliderLayer;
+		return layersSlider;
 	}
 
-	private JPanel getPanel_3() {
-		if (panel_3 == null) {
-			panel_3 = new JPanel();
-			panel_3.setLayout(new MigLayout("", "[][][][9.00,center][grow][10.00][grow][10.00][grow][][grow][][grow][]", "[center]"));
-			panel_3.add(getJButtonOpenGCode(), "cell 0 0,grow");
-			panel_3.add(getJButtonRunJob(), "cell 1 0,grow");
-			panel_3.add(getBtnPausePrint(), "cell 2 0");
-			// panel_3.add(getJLabel0(), "cell 2 0,alignx right");
-			// panel_3.add(getJTextField0(), "cell 3 0,growx");
-			// panel_3.add(getJLabel1(), "cell 4 0,alignx right,growy");
-			// panel_3.add(getJTextField1(), "cell 5 0,growx");
-			// panel_3.add(getJLabel2(), "cell 6 0,alignx right");
-			// panel_3.add(getJTextField2(), "cell 7 0,growx");
-			// panel_3.add(getJLabel3(), "cell 8 0");
-			// panel_3.add(getJTextField4(), "cell 9 0,growx");
-			// panel_3.add(getJLabel4(), "cell 10 0");
-			// panel_3.add(getJTextField3(), "cell 11 0,growx");
-			// panel_3.add(getJButton0(), "cell 12 0,growy");
+	/**
+	 * Instantiate, layout, and return the "topButtonsPanel" JPanel.
+	 * @return topButtonsPanel The newly setup/created "topButtonsPanel" JPanel
+	 */
+	private JPanel getTopButtonsPanel() {
+		if (topButtonsPanel == null) {
+			topButtonsPanel = new JPanel();
+			topButtonsPanel.setLayout(new MigLayout("", "[][][][9.00,center][grow][10.00][grow][10.00][grow][][grow][][grow][]", "[center]"));
+			topButtonsPanel.add(getBtnOpen3DFile(), "cell 0 0,grow");
+			topButtonsPanel.add(getJButtonRunJob(), "cell 1 0,grow");
+			topButtonsPanel.add(getBtnPausePrint(), "cell 2 0");
 		}
-		return panel_3;
+		return topButtonsPanel;
 	}
 
 	private JPanel getPanel_4() {
@@ -762,7 +776,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		return progressBar;
 	}
 	private boolean isInternalUpdate = false;
-	private JScrollPane scrollPane;
+	
 	
 	
 	/**
@@ -825,7 +839,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		
 		new Thread() {
 			public void run() {
-				getJButtonOpenGCode().setEnabled(false);
+				getBtnOpen3DFile().setEnabled(false);
 				//jButtonRunJob.setEnabled(false);
 				isPaused = false;
 				getBtnPausePrint().setText("Pause Job");
