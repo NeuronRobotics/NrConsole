@@ -634,20 +634,20 @@ public class Slic3rPrints extends SettingsPanel implements SettingsChangeListene
 		
 		
 		master.setValue(7, new MachineSetting<Double>("LayerHeight" ,(Double) tfLayerHeight.getValue()));
-		master.setValue(8, new MachineSetting<Double>("WallThickness" ,(Double) tfWallThickness.getValue()));
+		master.setValue(8, new MachineSetting<Integer>("WallThickness" ,(Integer) tfWallThickness.getValue()));
 		//master.setValue(9, new MachineSetting<Double>("UseSupport" ,(Double) tfRetractLength.getValue()));
 		master.setValue(10, new MachineSetting<Double>("RetractLength" ,(Double) tfRetractLength.getValue()));
-		master.setValue(11, new MachineSetting<Double>("TravelSpd" ,(Double) tfTravelSpeed.getValue()));
-		master.setValue(12, new MachineSetting<Double>("PeriSpd" ,(Double) tfPerimeterSpeed.getValue()));
-		master.setValue(13, new MachineSetting<Double>("BridgeSpd" ,(Double) tfBridgeSpeed.getValue()));
-		master.setValue(14, new MachineSetting<Double>("GapFillSpd" ,(Double) tfGapFillSpeed.getValue()));
-		master.setValue(15, new MachineSetting<Double>("InfillSpd" ,(Double) tfInfillSpeed.getValue()));
-		master.setValue(16, new MachineSetting<Double>("SupportMatSpd" ,(Double) tfSupportMaterialSpeed.getValue()));
-		master.setValue(17, new MachineSetting<Double>("SmPeriSpdPcnt" ,(Double) tfSmallPerimeterSpeedPercent.getValue()));
-		master.setValue(18, new MachineSetting<Double>("ExtPeriSpdPcnt" ,(Double) tfExternalPerimeterSpeedPercent.getValue()));
-		master.setValue(19, new MachineSetting<Double>("SolidInfillSpdPcnt" ,(Double) tfSolidInfillSpeedPercent.getValue()));
-		master.setValue(20, new MachineSetting<Double>("TopSolidInfillSpdPcnt" ,(Double) tfTopSolidInfillSpeedPercent.getValue()));
-		master.setValue(21, new MachineSetting<Double>("SupportMatIntSpdPcnt" ,(Double) tfSupportMaterialInterSpeedPercent.getValue()));
-		master.setValue(22, new MachineSetting<Double>("FirstLayerSpdPcnt" ,(Double) tfFirstLayerSpeedPercent.getValue()));
+		master.setValue(11, new MachineSetting<Integer>("TravelSpd" ,(Integer) tfTravelSpeed.getValue()));
+		master.setValue(12, new MachineSetting<Integer>("PeriSpd" ,(Integer) tfPerimeterSpeed.getValue()));
+		master.setValue(13, new MachineSetting<Integer>("BridgeSpd" ,(Integer) tfBridgeSpeed.getValue()));
+		master.setValue(14, new MachineSetting<Integer>("GapFillSpd" ,(Integer) tfGapFillSpeed.getValue()));
+		master.setValue(15, new MachineSetting<Integer>("InfillSpd" ,(Integer) tfInfillSpeed.getValue()));
+		master.setValue(16, new MachineSetting<Integer>("SupportMatSpd" ,(Integer) tfSupportMaterialSpeed.getValue()));
+		master.setValue(17, new MachineSetting<Integer>("SmPeriSpdPcnt" ,(Integer) tfSmallPerimeterSpeedPercent.getValue()));
+		master.setValue(18, new MachineSetting<Integer>("ExtPeriSpdPcnt" ,(Integer) tfExternalPerimeterSpeedPercent.getValue()));
+		master.setValue(19, new MachineSetting<Integer>("SolidInfillSpdPcnt" ,(Integer) tfSolidInfillSpeedPercent.getValue()));
+		master.setValue(20, new MachineSetting<Integer>("TopSolidInfillSpdPcnt" ,(Integer) tfTopSolidInfillSpeedPercent.getValue()));
+		master.setValue(21, new MachineSetting<Integer>("SupportMatIntSpdPcnt" ,(Integer) tfSupportMaterialInterSpeedPercent.getValue()));
+		master.setValue(22, new MachineSetting<Integer>("FirstLayerSpdPcnt" ,(Integer) tfFirstLayerSpeedPercent.getValue()));
 	}
 }

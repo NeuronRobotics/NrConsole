@@ -342,8 +342,8 @@ public class Slic3rPrinter extends SettingsPanel implements SettingsChangeListen
 		master.setValue(2, new MachineSetting<Double>("PCenterY" ,(Double) tfPrintCenterY.getValue()));
 		master.setValue(3, new MachineSetting<Double>("FilaDia" ,(Double) tfFilaDia.getValue()));
 		master.setValue(4, new MachineSetting<Double>("ExtMult" ,(Double) tfExtrusionMult.getValue()));
-		master.setValue(5, new MachineSetting<Double>("PTemp" ,(Double) tfPTemp.getValue()));
-		master.setValue(6, new MachineSetting<Double>("BTemp" ,(Double) tfBTemp.getValue()));
+		master.setValue(5, new MachineSetting<Integer>("PTemp" ,(Integer) tfPTemp.getValue()));
+		master.setValue(6, new MachineSetting<Integer>("BTemp" ,(Integer) tfBTemp.getValue()));
 		
 	}
 }

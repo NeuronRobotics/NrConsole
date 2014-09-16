@@ -128,4 +128,14 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 		
 		return (double) settings.get(index).getValue();
 	}
+	
+	public int getIntegerValue(int index){
+			
+			return (int) settings.get(index).getValue();
+		}
+	
+	public boolean getBooleanValue(int index){
+		
+		return (boolean) settings.get(index).getValue();
+	}
 }
