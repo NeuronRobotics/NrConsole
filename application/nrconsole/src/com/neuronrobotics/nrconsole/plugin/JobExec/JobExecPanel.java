@@ -458,7 +458,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 
 			layersSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
-					if ((lastUpdate + 100) > System.currentTimeMillis()){
+					if ((lastUpdate + 100) < System.currentTimeMillis()){
 						lastUpdate = System.currentTimeMillis();
 						app.setLayersToShow(layersSlider.getValue());
 						updatePrintInfo();
@@ -891,6 +891,15 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JList<String> getList() {
 		if (list == null) {
 			list = new JList();
+			list.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					if (arg0.getClickCount() == 2){
+						gCodes = files.get(list.getSelectedIndex());
+						loadGcodeFile();
+					}
+				}
+			});
 			list.setModel(new AbstractListModel() {
 				String[] values = new String[] {"Click \"Open 3D File\"", "to load a file."};
 				public int getSize() {
