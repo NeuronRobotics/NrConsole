@@ -212,25 +212,14 @@ public class MachineSimDisplay extends SimpleApplication{
     public void start() {
         // set some default settings in-case
         // settings dialog is not shown
-		showSettings = true;
-        boolean loadSettings = false;
-        AppSettings test = new AppSettings(true);
-       
+		showSettings = true;  
+             
        if (settings == null) {
             setSettings(new AppSettings(true));
-            loadSettings = true;
         }
        	settings.setRenderer(AppSettings.LWJGL_OPENGL_ANY);
-       	settings.setAudioRenderer(null);
-       	
-        // show settings dialog
-        /*if (showSettings) {
-            if (!JmeSystem.showSettingsDialog(settings, loadSettings)) {
-                return;
-            }
-        }*/
-        //re-setting settings they can have been merged from the registry.
-       
+       	settings.setAudioRenderer(null);   	
+            
         setSettings(settings);
         panel.setMinimumSize(new Dimension(100,100));
         createCanvas(); // create canvas!
