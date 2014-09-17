@@ -724,7 +724,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		case MOVING:
 			getProgressBar().setValue((int) psl.getTempreture());
 			//TODO: need to get temperature setpoint   getSpinnerTemp().setValue((int) printer.)
-			
+			getProgressBar().setToolTipText("Current Temp: " + psl.getTempreture());
 			//If the temperature is close to the setpoint, make the color of the bar green to indicate good temperature at a glance
 			if (Math.abs(getProgressBar().getValue() - (int) getSpinnerTemp().getValue())< 3){
 				getProgressBar().setForeground(Color.GREEN);
@@ -791,10 +791,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JProgressBar getProgressBar() {
 		if (progressBar == null) {
 			progressBar = new JProgressBar();
+			progressBar.setOrientation(SwingConstants.VERTICAL);
 			progressBar.setFont(new Font("Tahoma", Font.PLAIN, 16));			
 			progressBar.setMaximum(300);
 			progressBar.setStringPainted(true);
-			progressBar.setOrientation(SwingConstants.VERTICAL);
 			progressBar.setValue(25);
 			progressBar.setString("Hot End Temp: ");
 			progressBar.setForeground(Color.ORANGE);
