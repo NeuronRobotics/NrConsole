@@ -1,5 +1,6 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import jme3tools.optimize.GeometryBatchFactory;
@@ -20,7 +21,8 @@ public class PrintObject{
 	private GCodes codes;
 	private MachineSimDisplay msd;
 
-
+	private String name;
+	private File codeFile;
 	private Vector3f printVolume = new Vector3f(200,0,200);
 	private Vector3f printOrigin = new Vector3f(0,0,0);
 	private Mesh pVol;
@@ -34,8 +36,15 @@ public class PrintObject{
 	public PrintObject (GCodes _codes, MachineSimDisplay _msd){
 		codes = _codes;
 		msd = _msd;
+		
 	}
-	
+	public PrintObject (GCodes _codes, MachineSimDisplay _msd, String _name, File _codeFile){
+		codes = _codes;
+		msd = _msd;
+		name = _name;
+		codeFile = _codeFile;
+		msd.loadPrintObject(this);
+	}
 	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
 		printVolume = _printVolume;
 		printOrigin = _printOrigin;
@@ -333,6 +342,18 @@ public class PrintObject{
 	 */
 	public ArrayList<Geometry> getBatchedObject(){
 		return getBatchedLayers(getNumLayers());
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public File getCodeFile() {
+		return codeFile;
+	}
+	public void setCodeFile(File codeFile) {
+		this.codeFile = codeFile;
 	}
 	
 	
