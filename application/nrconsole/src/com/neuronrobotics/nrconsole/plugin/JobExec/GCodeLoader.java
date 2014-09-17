@@ -15,7 +15,7 @@ import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class GCodeLoader {
 	private GCodeInterpreter interp;
-	private GCodes codes = new GCodes();
+	private GCodes codes;
 	private double extOffset = 0;
 	public double currlayer;
 	public double prevLayer;
@@ -23,6 +23,10 @@ public class GCodeLoader {
 		return codes;
 	}
 
+	public GCodeLoader(DisplayConfigs _displayConfigs){
+		codes = new GCodes(_displayConfigs);
+	}
+	
 	public void setCodes(GCodes _codes) {
 		codes = _codes;
 	}

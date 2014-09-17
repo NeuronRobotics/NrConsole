@@ -81,20 +81,32 @@ public class MachineSimDisplay extends SimpleApplication{
 	private PrintObject printObj;
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	private Material matHead;
-	public MachineSimDisplay(JPanel _panel){		
+	private DisplayConfigs displayConfigs;
+	
+	
+	public DisplayConfigs getDisplayConfigs() {
+		return displayConfigs;
+	}
+
+	public void setDisplayConfigs(DisplayConfigs displayConfigs) {
+		this.displayConfigs = displayConfigs;
+	}
+
+	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
 		panel = _panel;
 		printObj = new PrintObject(this);
+		setDisplayConfigs(_displayConfigs);
 	}
 	
 	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
-		printObj.configure(_printVolume, _printOrigin);
+		displayConfigs.configure(_printVolume, _printOrigin);
 		
 	}
 	public void configureRect(float _printX, float _printY, float _printZ){
-		printObj.configureRect(_printX, _printY, _printZ);
+		displayConfigs.configureRect(_printX, _printY, _printZ);
 	}
 	public void configureCylinder(float _printR, float _printZ){
-		printObj.configureCylinder(_printR, _printZ);
+		displayConfigs.configureCylinder(_printR, _printZ);
 	}
 	public void addListener(PrintTestListener toAdd) {
         listeners.add(toAdd);
@@ -248,7 +260,7 @@ public void waitForUpdate(){
 		    
         flyCam.setEnabled(false);
         
-       BoundingBox bb = printObj.getVolBB();
+       BoundingBox bb = displayConfigs.getVolBB();
         
         
         chaseCam = new ChaseCamera(getCamera(),rootNode, getInputManager());
@@ -306,7 +318,7 @@ public void waitForUpdate(){
         
         //Quad base = new Quad(200, 200);
         
-        Geometry base = new Geometry("Base", printObj.getPrintBase());
+        Geometry base = new Geometry("Base", displayConfigs.getPrintBase());
         //geom.setLocalTranslation(new Vector3f(-250,-250,0));
         Material mat = new Material(assetManager,  // Create new material and...
         	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).

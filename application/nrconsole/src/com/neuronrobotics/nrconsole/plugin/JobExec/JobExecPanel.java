@@ -8,13 +8,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 import net.miginfocom.swing.MigLayout;
+
+import com.jme3.math.Vector3f;
 import com.jme3.system.AppSettings;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
@@ -28,18 +32,23 @@ import com.neuronrobotics.replicator.driver.SliceStatusData;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+
 import javax.swing.JSplitPane;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JCheckBox;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.Font;
 import java.awt.Color;
+
 import javax.swing.JTextPane;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
@@ -115,24 +124,20 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JCheckBox chckbxShowTroubledLines;
 	private JCheckBox chckbxShowDangerousLines;
 	private JCheckBox chckbxShowNonextrudeLines;
-	
+	private BowlerBoardDevice delt;
 	public ArrayList<PrintObject> objects = new ArrayList<PrintObject>();
 
 	private JButton btnEmergencyStop;
 
 	
 	public JobExecPanel() {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				initComponents();
-			}
-		});
+		
 
 	}
 
-	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
+	public void setDevices(BowlerBoardDevice _delt, NRPrinter printer) {
 		this.printer = printer;
-
+		delt = _delt;
 		for (LinkConfiguration link : printer.getLinkConfigurations()) {
 			if (link.getName().toLowerCase().contains("hotend")) {
 				channelHotEnd = link.getHardwareIndex();
@@ -145,6 +150,12 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			}
 		}
 		printer.addPrinterStatusListener(this);
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				
+				initComponents();
+			}
+		});
 	}
 
 	/**
@@ -253,7 +264,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			updatePrintInfo();
 			app.loadingGCode();
 			gCodeStream = new FileInputStream(_gCodes);
-			codeOps = new GCodeLoader();
+			codeOps = new GCodeLoader(getConfigs());
 
 			isGoodFile = codeOps.loadCodes(gCodeStream);
 
@@ -268,7 +279,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			// codeOps.getCodes().printOutput();
 			getJButtonRunJob().setEnabled(isGoodFile);
 			getBtnOpen3DFile().setEnabled(true);
-			PrintObject newObj = new PrintObject(codeOps.getCodes(),app, fileName, _gCodes);
+			PrintObject newObj = new PrintObject(codeOps.getCodes(),app, _gCodes);
 			
 			objects.add(newObj);
 			refreshPrintQueue();
@@ -408,7 +419,21 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			}
 		});
 	}
+	public DisplayConfigs getConfigs(){
+		DisplayConfigs dC = new DisplayConfigs();
+		
+		dC.configure(new Vector3f(200, 0, 200),
+				new Vector3f((float) printer.getSlicer().getPrintCenter()[0], 
+						(float) printer.getSlicer().getPrintCenter()[1],
+						0));
+		dC.setFilaDia(printer.getSlicer().getFilimentDiameter());
+		dC.setNozzleDia(printer.getSlicer().getNozzle_diameter());
+	
 
+	
+	
+	return dC;
+}
 	private JPanel getPanel_1() {
 		if (panel == null) {
 			panel = new JPanel();
@@ -417,7 +442,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 panel.setToolTipText("Left Click + Drag to Rotate \n"
 		+ "Right Click + Drag to Strafe \n"
 		+ "Scroll for Zoom");
-			app = new MachineSimDisplay(panel);
+			app = new MachineSimDisplay(panel, getConfigs());
 			
 			app.addListener(new PrintTestListener() {
 

@@ -20,13 +20,10 @@ public class PrintObject{
 	private ArrayList<LayerGeoms> layers = new ArrayList<LayerGeoms>();
 	private GCodes codes;
 	private MachineSimDisplay msd;
-
+	private DisplayConfigs displayConfigs;	
 	private String name;
 	private File codeFile;
-	private Vector3f printVolume = new Vector3f(200,0,200);
-	private Vector3f printOrigin = new Vector3f(0,0,0);
-	private Mesh pVol;
-	private BoundingBox pbb;
+
 	
 	private int numFailLines = 0;
 	private int numProblemLines =0;
@@ -64,79 +61,15 @@ public class PrintObject{
 		msd = _msd;
 		
 	}
-	public PrintObject (GCodes _codes, MachineSimDisplay _msd, String _name, File _codeFile){
+	public PrintObject (GCodes _codes, MachineSimDisplay _msd, File _codeFile){
 		codes = _codes;
 		msd = _msd;
-		name = _name;
+		name = _codeFile.getName();
 		codeFile = _codeFile;
+		displayConfigs = msd.getDisplayConfigs();
 		msd.loadPrintObject(this);
 	}
-	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
-		printVolume = _printVolume;
-		printOrigin = _printOrigin;
-		
-	}
-	public void configureRect(float _printX, float _printY, float _printZ){
-		printVolume.set(_printX, _printY, _printZ);
-	}
-	public void configureCylinder(float _printR, float _printZ){
-		printVolume.set(_printR, 0, _printZ);
-	}
-	public void configureOrigin(float _originX, float _originY, float _originZ){
-		printOrigin.set(_originX, _originY, _originZ);
-	}
 	
-	
-	public Mesh getPrintVol(){
-		if (pVol == null){
-		
-		if (printVolume.getY()==0){//It's a cylinder
-			pVol = new Cylinder(100,100,(printVolume.getX()/2),printVolume.getZ(), true, false);
-		}
-		else{//It's a cube
-			Box b = new Box();
-			printOrigin.set(printVolume.getX()/2,printVolume.getY()/2,0);
-			b.updateGeometry(printOrigin, printVolume.getX()/2, printVolume.getY()/2, printVolume.getZ()/2);
-			pVol = b;
-		}
-		}
-		
-		return pVol;
-		
-	}
-	public boolean isCubeVol(){
-		if (printVolume.getY() == 0){
-			return false;
-		}
-		else{
-			return true;
-		}
-	}
-	public Mesh getPrintBase(){
-		Mesh base;
-		
-		if (printVolume.getY()==0){//It's a cylinder
-			base = new Cylinder(100,100,(printVolume.getX()/2),0,true,false);
-		}
-		else{//It's a cube
-			Box b = new Box();
-			printOrigin.set(printVolume.getX()/2,printVolume.getY()/2,0);
-			b.updateGeometry(printOrigin, printVolume.getX()/2, printVolume.getY()/2, 0);
-			base = b;
-		}
-		
-		
-		return base;
-		
-	}
-	public BoundingBox getVolBB(){
-		if (pbb == null){
-			pbb = new BoundingBox((BoundingBox) getPrintVol().getBound());
-		}
-		
-		
-		return pbb;
-	}
 	
 	
 	private Geometry buildGeom(GCodePosition _code){
@@ -226,22 +159,22 @@ public class PrintObject{
         /*TODO: this is bad...
          * we should be able to find a way to check for this regardless of build volume shape
          */
-        if (isCubeVol()){
-        	if (!getVolBB().contains(end) || !getVolBB().contains(start)){
+        if (displayConfigs.isCubeVol()){
+        	if (!displayConfigs.getVolBB().contains(end) || !displayConfigs.getVolBB().contains(start)){
         		geom.setMaterial(msd.getMatFail());
         		geom.setName("Fail Extrude");
         		numFailLines++;
         	}
         }
         else{
-        	Vector3f layerCenterStart = new Vector3f(getVolBB().getCenter().getX(), getVolBB().getCenter().getY(), start.getZ());
-        	Vector3f layerCenterEnd = new Vector3f(getVolBB().getCenter().getX(), getVolBB().getCenter().getY(), end.getZ());
-        	if (layerCenterEnd.distance(end) > (printVolume.getX()/2)){
+        	Vector3f layerCenterStart = new Vector3f(displayConfigs.getVolBB().getCenter().getX(), displayConfigs.getVolBB().getCenter().getY(), start.getZ());
+        	Vector3f layerCenterEnd = new Vector3f(displayConfigs.getVolBB().getCenter().getX(), displayConfigs.getVolBB().getCenter().getY(), end.getZ());
+        	if (layerCenterEnd.distance(end) > (displayConfigs.getPrintVolume().getX()/2)){
         		geom.setMaterial(msd.getMatFail());
         		geom.setName("Fail Extrude");
         		numFailLines++;
         	}
-        	if (layerCenterStart.distance(start) > (printVolume.getX()/2)){
+        	if (layerCenterStart.distance(start) > (displayConfigs.getPrintVolume().getX()/2)){
         		geom.setMaterial(msd.getMatFail());
         		geom.setName("Fail Extrude");
         		numFailLines++;
