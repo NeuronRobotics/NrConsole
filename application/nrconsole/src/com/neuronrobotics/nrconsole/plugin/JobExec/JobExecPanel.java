@@ -75,13 +75,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	
 	long lastUpdate = 0;
 	
-	public String fileName = "None";
-	
-	private ArrayList<File> files = new ArrayList<File>();
-	
-	private ArrayList<String> fileNames = new ArrayList<String>();
-	
-	
+	public String fileName = "None";	
 	private JProgressBar progressBar;
 
 	
@@ -122,6 +116,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JCheckBox chckbxShowDangerousLines;
 	private JCheckBox chckbxShowNonextrudeLines;
 	
+	public ArrayList<PrintObject> objects = new ArrayList<PrintObject>();
 
 	private JButton btnEmergencyStop;
 
@@ -226,7 +221,9 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	}
 
 
-
+public PrintObject objToDisplay(){
+	return objects.get(list.getSelectedIndex());
+}
 	public void updatePrintInfo() {
 		getTfLayerShown().setText(
 				"(File: " + fileName + ") (# Layers: "
@@ -234,16 +231,16 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 						+ getSliderLayer().getValue() + ")");
 	}
 
-	private void loadGcodeFile() {
+	private void loadGcodeFile(File _gCodes) {
 		try {
 			
 			
 			isIllegal = false;
 			isWarn = false;
-			fileName = gCodes.getName();
+			fileName = _gCodes.getName();
 			updatePrintInfo();
 			app.loadingGCode();
-			gCodeStream = new FileInputStream(gCodes);
+			gCodeStream = new FileInputStream(_gCodes);
 			codeOps = new GCodeLoader();
 
 			isGoodFile = codeOps.loadCodes(gCodeStream);
@@ -259,7 +256,11 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			// codeOps.getCodes().printOutput();
 			getJButtonRunJob().setEnabled(isGoodFile);
 			getBtnOpen3DFile().setEnabled(true);
-			int numLayers = app.loadGCode(codeOps.getCodes());
+			PrintObject newObj = new PrintObject(codeOps.getCodes(),app, fileName, _gCodes);
+			
+			objects.add(newObj);
+			refreshPrintQueue();
+			int numLayers = newObj.getNumLayers();
 			
 			layersSlider.setMaximum(numLayers);
 			layersSlider.setValue(numLayers);
@@ -272,7 +273,18 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		}
 
 	}
-
+	
+	private void switchPrintObject(PrintObject _obj){
+		app.loadPrintObject(_obj);
+		int numLayers = _obj.getNumLayers();
+		
+		layersSlider.setMaximum(numLayers);
+		layersSlider.setValue(numLayers);
+	}
+	
+	private void switchPrintObject(int _objIndex){
+		switchPrintObject(objects.get(_objIndex));	
+	}
 	private void actionForBtnOpen3DFile(ActionEvent event) {
 		new Thread() {
 			public void run() {
@@ -299,16 +311,9 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 				// If this is a gcode file, load in the codes
 				if (new GCodeFilter().accept(rawObject)) {
 					
-					loadGcodeFile();
-					files.add(gCodes);
-					String [] names = new String[files.size()];
-					for (int i = 0; i < names.length; i++) {
-						names[i] = files.get(i).getName();
-					}
-					getList().setListData(names);
-					if (names.length > 0){
-						getList().setSelectedIndex(0);
-					}
+					loadGcodeFile(gCodes);
+				
+					
 				}
 
 			}
@@ -316,7 +321,18 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		getBtnOpen3DFile().setEnabled(false);
 
 	}
-
+public void refreshPrintQueue(){
+	String [] names = new String[objects.size()];
+	for (int i = 0; i < names.length; i++) {
+		names[i] = objects.get(i).getName();
+	}
+	getList().setListData(names);
+	if (names.length > 0){
+		getList().setSelectedIndex(names.length -1);
+	}
+}
+	
+	
 	public void doNotPrint() {
 		isIllegal = true;
 		getJButtonRunJob().setEnabled(false);
@@ -458,11 +474,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 
 			layersSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
-					if ((lastUpdate + 100) < System.currentTimeMillis()){
-						lastUpdate = System.currentTimeMillis();
-						app.setLayersToShow(layersSlider.getValue());
+					
+						app.setLayersToShow(layersSlider.getValue(), objToDisplay());
 						updatePrintInfo();
-					}
+					
 					
 				}
 			});
@@ -642,16 +657,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			if (gCodes != null && gCodes.isFile() && gCodes.canRead()) {
 				try {
 					
-					loadGcodeFile();
-					files.add(gCodes);
-					String [] names = new String[files.size()];
-					for (int i = 0; i < names.length; i++) {
-						names[i] = files.get(i).getName();
-					}
-					getList().setListData(names);
-					if (names.length > 0){
-						getList().setSelectedIndex(0);
-					}
+					loadGcodeFile(gCodes);
+					
+					
+					
 					return;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -894,9 +903,8 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			list.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					if (arg0.getClickCount() == 2){
-						gCodes = files.get(list.getSelectedIndex());
-						loadGcodeFile();
+					if (arg0.getClickCount() == 2){						
+						loadGcodeFile(objects.get(list.getSelectedIndex()).getCodeFile());
 					}
 				}
 			});
@@ -912,8 +920,12 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			list.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (arg0.getValueIsAdjusting() == false){
-						gCodes = files.get(list.getSelectedIndex());
-						loadGcodeFile();
+						if (list.isSelectionEmpty()){
+							list.setSelectedIndex(0);
+						}
+						//gCodes = files.get(list.getSelectedIndex());
+						//loadGcodeFile();
+						switchPrintObject(list.getSelectedIndex());
 					}
 					
 				}

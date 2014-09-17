@@ -77,6 +77,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	private boolean showDangerous = true;
 	private boolean showNonExtrude = true;
 	private boolean showAxes = true;
+	private boolean isUpdating = false;
 	private PrintObject printObj;
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	private Material matHead;
@@ -103,6 +104,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	}
 	
 	public boolean isPrintAllowed(){
+		waitForUpdate();
 		for (Geometry geo : shapes) {
 			if (geo.getMaterial() == getMatFail()){
 				return false;
@@ -111,6 +113,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		return true;
 	}
 	public boolean isPrintWarned(){
+		waitForUpdate();
 		for (Geometry geo : shapes) {
 			if (geo.getMaterial() == getMatProblem()){
 				return true;
@@ -120,8 +123,17 @@ public class MachineSimDisplay extends SimpleApplication{
 	}
 	
 	
-
-	
+public void waitForUpdate(){
+	while (isUpdating == true){
+		
+	}
+}
+	public void startUpdate(){
+		isUpdating = true;
+	}
+	public void endUpdate(){
+		isUpdating = false;
+	}
 	
 	
 	public Material getMatGood(){
@@ -178,33 +190,36 @@ public class MachineSimDisplay extends SimpleApplication{
 	public int getLayersToShow(){
 		return layersToShow;
 	}
-	public void setLayersToShow(int numLayers){
-		
+	public void setLayersToShow(int numLayers, PrintObject _obj){
+		waitForUpdate();
 		shapes.clear();
-		shapes = printObj.getBatchedLayers(numLayers);
+		shapes = _obj.getBatchedLayers(numLayers);
 		layersToShow = numLayers;
 		hasChanged = true;
 		
 	}
+		
 	
 	
-	public int loadGCode(GCodes _codes){
+	
+	
+	public void loadPrintObject(PrintObject _object){
 		
 		
+		waitForUpdate();
 		shapes.clear();
 		
 		
-		printObj = new PrintObject(_codes, this);
-		printObj.processGCodes();
-		shapes = printObj.getBatchedObject();
-		System.out.println("Num of Codes: " + _codes.size());
+		if (_object.getNumLayers() == 0){
+			_object.processGCodes();
+		}
+		
+		shapes = _object.getBatchedObject();
 		System.out.println("Num of Shapes: " + shapes.size());
 		lastShownIndex = shapes.size();
 		
 		hasChanged = true;
-		return printObj.getNumLayers();
 	}
-	
 	
 	
 	
@@ -408,7 +423,7 @@ public class MachineSimDisplay extends SimpleApplication{
 			hasChanged = false;
 			System.out.println("Number of lines: " + shapes.size());
 			
-						
+			startUpdate();			
 			
 			obj.detachAllChildren();
 			
@@ -436,6 +451,7 @@ public class MachineSimDisplay extends SimpleApplication{
 					rootNode.getChild("Z Axis").setCullHint(CullHint.Always);
 				}
 			}
+			endUpdate();
 			if (loading == true){// Only run these bits if this is the first time we are loading this file
 				if (!isPrintAllowed()){
 					notifyIllegalPrint();
