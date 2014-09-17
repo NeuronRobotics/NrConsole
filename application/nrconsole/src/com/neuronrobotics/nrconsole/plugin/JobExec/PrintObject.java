@@ -28,6 +28,32 @@ public class PrintObject{
 	private Mesh pVol;
 	private BoundingBox pbb;
 	
+	private int numFailLines = 0;
+	private int numProblemLines =0;
+	private int numGoodLines = 0;
+	private int numMoveLines = 0;
+	
+	
+	public int getNumMoveLines(){
+		return numMoveLines;
+	}
+	public int getNumFailLines() {
+		return numFailLines;
+	}
+
+	public int getNumProblemLines() {
+		return numProblemLines;
+	}
+
+	public int getNumGoodLines() {
+		return numGoodLines;
+	}
+	
+	
+	
+	public int numLines(){
+		return numFailLines + numProblemLines + numGoodLines;
+	}
 	
 	public PrintObject ( MachineSimDisplay _msd){
 		codes = null;
@@ -183,15 +209,18 @@ public class PrintObject{
         if (codes.isGoodExtrusion(_code)){
         	geom.setMaterial(msd.getMatGood());
         	geom.setName("Good Extrude");
+        	numGoodLines++;
         }
         else{
         	geom.setMaterial(msd.getMatProblem());
         	geom.setName("Problem Extrude");
+        	numProblemLines++;
         }
         if ((extentX > 100) || (extentY > 1) || (extentZ > 1)){
 		//	System.out.println("The Extents: (" + x2 + ","+ y2 + "," + z2 + ")");
         	geom.setMaterial(msd.getMatProblem());
         	geom.setName("Problem Extrude");
+        	numProblemLines++;
 		}
                
         /*TODO: this is bad...
@@ -201,6 +230,7 @@ public class PrintObject{
         	if (!getVolBB().contains(end) || !getVolBB().contains(start)){
         		geom.setMaterial(msd.getMatFail());
         		geom.setName("Fail Extrude");
+        		numFailLines++;
         	}
         }
         else{
@@ -209,10 +239,12 @@ public class PrintObject{
         	if (layerCenterEnd.distance(end) > (printVolume.getX()/2)){
         		geom.setMaterial(msd.getMatFail());
         		geom.setName("Fail Extrude");
+        		numFailLines++;
         	}
         	if (layerCenterStart.distance(start) > (printVolume.getX()/2)){
         		geom.setMaterial(msd.getMatFail());
         		geom.setName("Fail Extrude");
+        		numFailLines++;
         	}
         }
         
@@ -259,6 +291,7 @@ public class PrintObject{
 		}
 		*/
         geom.setMaterial(msd.getMatLine());                   // set the cube's material
+        numMoveLines++;
         return geom;
 		}
 		return null;

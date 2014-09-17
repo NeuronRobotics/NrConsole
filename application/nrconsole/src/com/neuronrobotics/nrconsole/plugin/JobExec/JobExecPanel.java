@@ -221,14 +221,26 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	}
 
 
-public PrintObject objToDisplay(){
-	return objects.get(list.getSelectedIndex());
-}
+	public PrintObject objToDisplay(){
+		if (getList().isSelectionEmpty()){
+			return null;
+		}
+		return objects.get(getList().getSelectedIndex());
+	}
 	public void updatePrintInfo() {
-		getTfLayerShown().setText(
-				"(File: " + fileName + ") (# Layers: "
-						+ getSliderLayer().getMaximum() + ") (# Layers Shown: "
-						+ getSliderLayer().getValue() + ")");
+		try {
+			getLblNumdanger().setText(Integer.toString(objToDisplay().getNumFailLines()));
+			getLblNumgood().setText(Integer.toString(objToDisplay().getNumGoodLines()));
+			getLblNumtroubled().setText(Integer.toString(objToDisplay().getNumProblemLines()));
+			getLblNumnonextrude().setText(Integer.toString(objToDisplay().getNumMoveLines()));
+				getTfLayerShown().setText(
+						"(File: " + fileName + ") (# Layers: "
+								+ getSliderLayer().getMaximum() + ") (# Layers Shown: "
+								+ getSliderLayer().getValue() + ")");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	
 	}
 
 	private void loadGcodeFile(File _gCodes) {
@@ -277,9 +289,7 @@ public PrintObject objToDisplay(){
 	private void switchPrintObject(PrintObject _obj){
 		app.loadPrintObject(_obj);
 		int numLayers = _obj.getNumLayers();
-		
-		layersSlider.setMaximum(numLayers);
-		layersSlider.setValue(numLayers);
+		updatePrintInfo();
 	}
 	
 	private void switchPrintObject(int _objIndex){
@@ -321,15 +331,16 @@ public PrintObject objToDisplay(){
 		getBtnOpen3DFile().setEnabled(false);
 
 	}
-public void refreshPrintQueue(){
-	String [] names = new String[objects.size()];
-	for (int i = 0; i < names.length; i++) {
-		names[i] = objects.get(i).getName();
-	}
-	getList().setListData(names);
-	if (names.length > 0){
-		getList().setSelectedIndex(names.length -1);
-	}
+	public void refreshPrintQueue(){
+		String [] names = new String[objects.size()];
+		for (int i = 0; i < names.length; i++) {
+			names[i] = objects.get(i).getName();
+		}
+		getList().setListData(names);
+		if (names.length > 0){
+			getList().setSelectedIndex(names.length -1);
+		}
+		
 }
 	
 	
@@ -506,10 +517,14 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		if (panel_4 == null) {
 			panel_4 = new JPanel();
 			panel_4.setLayout(new MigLayout("", "[][][][][]", "[]"));
-			panel_4.add(getChckbxShowGoodLines(), "cell 0 0");
-			panel_4.add(getChckbxShowTroubledLines(), "cell 1 0");
-			panel_4.add(getChckbxShowDangerousLines(), "cell 2 0");
-			panel_4.add(getChckbxShowNonextrudeLines(), "cell 3 0");
+			panel_4.add(getChckbxShowGoodLines(), "flowy,cell 0 0");
+			panel_4.add(getChckbxShowTroubledLines(), "flowy,cell 1 0");
+			panel_4.add(getChckbxShowDangerousLines(), "flowy,cell 2 0");
+			panel_4.add(getChckbxShowNonextrudeLines(), "flowy,cell 3 0");
+			panel_4.add(getLblNumgood(), "cell 0 0,growx");
+			panel_4.add(getLblNumtroubled(), "cell 1 0,growx");
+			panel_4.add(getLblNumdanger(), "cell 2 0,growx");
+			panel_4.add(getLblNumnonextrude(), "cell 3 0,growx");
 		}
 		return panel_4;
 	}
@@ -785,6 +800,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		return progressBar;
 	}
 	private boolean isInternalUpdate = false;
+	private JLabel lblNumgood;
+	private JLabel lblNumtroubled;
+	private JLabel lblNumdanger;
+	private JLabel lblNumnonextrude;
 	
 	
 	
@@ -939,5 +958,37 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			scrollPane.setViewportView(getTextPaneLog());
 		}
 		return scrollPane;
+	}
+	private JLabel getLblNumgood() {
+		if (lblNumgood == null) {
+			lblNumgood = new JLabel("0");
+			lblNumgood.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumgood.setToolTipText("This is the number of good g-codes.");
+		}
+		return lblNumgood;
+	}
+	private JLabel getLblNumtroubled() {
+		if (lblNumtroubled == null) {
+			lblNumtroubled = new JLabel("0");
+			lblNumtroubled.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumtroubled.setToolTipText("This is the number of troubled g-codes.");
+		}
+		return lblNumtroubled;
+	}
+	private JLabel getLblNumdanger() {
+		if (lblNumdanger == null) {
+			lblNumdanger = new JLabel("0");
+			lblNumdanger.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumdanger.setToolTipText("This is the number of dangerous/unprintable g-codes.");
+		}
+		return lblNumdanger;
+	}
+	private JLabel getLblNumnonextrude() {
+		if (lblNumnonextrude == null) {
+			lblNumnonextrude = new JLabel("0");
+			lblNumnonextrude.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumnonextrude.setToolTipText("This is the number of  non-extrusion g-codes.");
+		}
+		return lblNumnonextrude;
 	}
 }
