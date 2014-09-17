@@ -289,9 +289,6 @@ public class PrintObject{
  * After all GCodes have be loaded, process them to create geometries representing each one
  */
 	public void processGCodes(){
-		if(layers.size() > 0){
-			return; // If layers has stuff in it, we probably already did this, and don't want to do it again.
-		}
 		int layer = 0;
 		layers.clear();
 		layers.add(new LayerGeoms());
