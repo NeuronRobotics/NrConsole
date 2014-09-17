@@ -289,6 +289,8 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private void switchPrintObject(PrintObject _obj){
 		app.loadPrintObject(_obj);
 		int numLayers = _obj.getNumLayers();
+		layersSlider.setMaximum(numLayers);
+		layersSlider.setValue(numLayers);
 		updatePrintInfo();
 	}
 	
