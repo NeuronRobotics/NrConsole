@@ -234,7 +234,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			getLblNumtroubled().setText(Integer.toString(objToDisplay().getNumProblemLines()));
 			getLblNumnonextrude().setText(Integer.toString(objToDisplay().getNumMoveLines()));
 				getTfLayerShown().setText(
-						"(File: " + fileName + ") (# Layers: "
+						"(File: " + objToDisplay().getName() + ") (# Layers: "
 								+ getSliderLayer().getMaximum() + ") (# Layers Shown: "
 								+ getSliderLayer().getValue() + ")");
 		} catch (Exception e) {
