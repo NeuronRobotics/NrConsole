@@ -212,14 +212,12 @@ public class MachineSimDisplay extends SimpleApplication{
     public void start() {
         // set some default settings in-case
         // settings dialog is not shown
-		showSettings = true;  
-             
-       if (settings == null) {
+		showSettings = true;               
+		if (settings == null) {
             setSettings(new AppSettings(true));
         }
        	settings.setRenderer(AppSettings.LWJGL_OPENGL_ANY);
-       	settings.setAudioRenderer(null);   	
-            
+       	settings.setAudioRenderer(null);   	            
         setSettings(settings);
         panel.setMinimumSize(new Dimension(100,100));
         createCanvas(); // create canvas!
@@ -258,10 +256,8 @@ public class MachineSimDisplay extends SimpleApplication{
         chaseCam.setDragToRotate(true);
         setPauseOnLostFocus(false);
               
-              Vector3f max = bb.getMax(null);
-              System.out.println(max.toString());
-              Vector3f min = bb.getMin(null);
-              System.out.println(min.toString());
+        Vector3f max = bb.getMax(null);
+        Vector3f min = bb.getMin(null);
         PointLight lamp_light = new PointLight();
         lamp_light.setColor(ColorRGBA.White);
         lamp_light.setRadius(700f);
@@ -312,10 +308,7 @@ public class MachineSimDisplay extends SimpleApplication{
         Vector3f end = new Vector3f(0,0,-1);
         rotateUp = new Matrix3f();
         rotateUp.fromStartEndVectors(init, end);
-        rootNode.setLocalRotation(rotateUp);
-       
-        
-       
+        rootNode.setLocalRotation(rotateUp); 
         loadAxes(0,0,0);
         
 	}
