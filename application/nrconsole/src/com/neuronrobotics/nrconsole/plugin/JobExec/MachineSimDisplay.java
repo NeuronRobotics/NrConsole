@@ -77,23 +77,36 @@ public class MachineSimDisplay extends SimpleApplication{
 	private boolean showDangerous = true;
 	private boolean showNonExtrude = true;
 	private boolean showAxes = true;
+	private boolean isUpdating = false;
 	private PrintObject printObj;
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	private Material matHead;
-	public MachineSimDisplay(JPanel _panel){		
+	private DisplayConfigs displayConfigs;
+	
+	
+	public DisplayConfigs getDisplayConfigs() {
+		return displayConfigs;
+	}
+
+	public void setDisplayConfigs(DisplayConfigs displayConfigs) {
+		this.displayConfigs = displayConfigs;
+	}
+
+	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
 		panel = _panel;
 		printObj = new PrintObject(this);
+		setDisplayConfigs(_displayConfigs);
 	}
 	
 	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
-		printObj.configure(_printVolume, _printOrigin);
+		displayConfigs.configure(_printVolume, _printOrigin);
 		
 	}
 	public void configureRect(float _printX, float _printY, float _printZ){
-		printObj.configureRect(_printX, _printY, _printZ);
+		displayConfigs.configureRect(_printX, _printY, _printZ);
 	}
 	public void configureCylinder(float _printR, float _printZ){
-		printObj.configureCylinder(_printR, _printZ);
+		displayConfigs.configureCylinder(_printR, _printZ);
 	}
 	public void addListener(PrintTestListener toAdd) {
         listeners.add(toAdd);
@@ -103,6 +116,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	}
 	
 	public boolean isPrintAllowed(){
+		waitForUpdate();
 		for (Geometry geo : shapes) {
 			if (geo.getMaterial() == getMatFail()){
 				return false;
@@ -111,6 +125,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		return true;
 	}
 	public boolean isPrintWarned(){
+		waitForUpdate();
 		for (Geometry geo : shapes) {
 			if (geo.getMaterial() == getMatProblem()){
 				return true;
@@ -120,8 +135,17 @@ public class MachineSimDisplay extends SimpleApplication{
 	}
 	
 	
-
-	
+public void waitForUpdate(){
+	while (isUpdating == true){
+		
+	}
+}
+	public void startUpdate(){
+		isUpdating = true;
+	}
+	public void endUpdate(){
+		isUpdating = false;
+	}
 	
 	
 	public Material getMatGood(){
@@ -178,33 +202,36 @@ public class MachineSimDisplay extends SimpleApplication{
 	public int getLayersToShow(){
 		return layersToShow;
 	}
-	public void setLayersToShow(int numLayers){
-		
+	public void setLayersToShow(int numLayers, PrintObject _obj){
+		waitForUpdate();
 		shapes.clear();
-		shapes = printObj.getBatchedLayers(numLayers);
+		shapes = _obj.getBatchedLayers(numLayers);
 		layersToShow = numLayers;
 		hasChanged = true;
 		
 	}
+		
 	
 	
-	public int loadGCode(GCodes _codes){
+	
+	
+	public void loadPrintObject(PrintObject _object){
 		
 		
+		waitForUpdate();
 		shapes.clear();
 		
 		
-		printObj = new PrintObject(_codes, this);
-		printObj.processGCodes();
-		shapes = printObj.getBatchedObject();
-		System.out.println("Num of Codes: " + _codes.size());
+		if (_object.getNumLayers() == 0){
+			_object.processGCodes();
+		}
+		
+		shapes = _object.getBatchedObject();
 		System.out.println("Num of Shapes: " + shapes.size());
 		lastShownIndex = shapes.size();
 		
 		hasChanged = true;
-		return printObj.getNumLayers();
 	}
-	
 	
 	
 	
@@ -233,7 +260,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		    
         flyCam.setEnabled(false);
         
-       BoundingBox bb = printObj.getVolBB();
+       BoundingBox bb = displayConfigs.getVolBB();
         
         
         chaseCam = new ChaseCamera(getCamera(),rootNode, getInputManager());
@@ -291,7 +318,7 @@ public class MachineSimDisplay extends SimpleApplication{
         
         //Quad base = new Quad(200, 200);
         
-        Geometry base = new Geometry("Base", printObj.getPrintBase());
+        Geometry base = new Geometry("Base", displayConfigs.getPrintBase());
         //geom.setLocalTranslation(new Vector3f(-250,-250,0));
         Material mat = new Material(assetManager,  // Create new material and...
         	    "Common/MatDefs/Light/Lighting.j3md"); // ... specify .j3md file to use (illuminated).
@@ -408,7 +435,7 @@ public class MachineSimDisplay extends SimpleApplication{
 			hasChanged = false;
 			System.out.println("Number of lines: " + shapes.size());
 			
-						
+			startUpdate();			
 			
 			obj.detachAllChildren();
 			
@@ -436,6 +463,7 @@ public class MachineSimDisplay extends SimpleApplication{
 					rootNode.getChild("Z Axis").setCullHint(CullHint.Always);
 				}
 			}
+			endUpdate();
 			if (loading == true){// Only run these bits if this is the first time we are loading this file
 				if (!isPrintAllowed()){
 					notifyIllegalPrint();

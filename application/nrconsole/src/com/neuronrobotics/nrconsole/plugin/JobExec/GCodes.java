@@ -7,20 +7,21 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class GCodes extends ArrayList<GCodePosition>{
-double filaDia = 3;
-double nozzleDia = .5;	
+
+DisplayConfigs displayConfigs;
+
+public GCodes(DisplayConfigs _displayConfigs){
+	displayConfigs = _displayConfigs;
+}
+
+
+
+
+
 int layers = 1;
 
-public double getFilaDia() {
-	return filaDia;
-}
-/*public boolean add(double _x, double _y, double _z, double _e, int _layer){
-	if (_layer > layers){
-		layers = _layer;
-	}
-	return add(new GCodePosition(_x, _y, _z, _e, _layer));
-}
-*/
+
+
 public boolean add(double _x, double _y, double _z, double _e){
 	
 	if (size() >  1){
@@ -38,9 +39,7 @@ public boolean add(double _x, double _y, double _z, double _e){
 
 
 
-public void setFilaDia(double _filaDia) {
-	filaDia = _filaDia;
-}
+
 
 public void printOutput(){
 	
@@ -174,7 +173,7 @@ public double getMoveExtLength(GCodePosition _code){
 public double getMoveExtVolume(int _position1, int _position2){
 	double eVol = 0;
 	
-	eVol = (Math.PI * (Math.pow((filaDia/2),2))) * getMoveExtLength(_position1, _position2);
+	eVol = (Math.PI * (Math.pow((displayConfigs.getFilaDia()/2),2))) * getMoveExtLength(_position1, _position2);
 	
 	return eVol;
 }
@@ -183,7 +182,7 @@ public double getMoveExtVolume(int _position1, int _position2){
 public double getMoveExtVolume(GCodePosition _pos1, GCodePosition _pos2){
 	double eVol = 0;
 	
-	eVol = (Math.PI * (Math.pow((filaDia/2),2))) * getMoveExtLength(_pos1, _pos2);
+	eVol = (Math.PI * (Math.pow((displayConfigs.getFilaDia()/2),2))) * getMoveExtLength(_pos1, _pos2);
 	
 	return eVol;
 }
@@ -238,10 +237,10 @@ public boolean isGoodExtrusion(GCodePosition _code){
 	boolean isOK = true;
 	
 	if (getMoveExtLength(_code) > 0){
-		if (getMoveVolExtWidth(_code) <= nozzleDia*.75){
+		if (getMoveVolExtWidth(_code) <= displayConfigs.getNozzleDia()*.75){
 			isOK = false;
 		}
-		if (getLayerHeight(_code) >= nozzleDia){
+		if (getLayerHeight(_code) >= displayConfigs.getNozzleDia()){
 			isOK = false;
 		}
 	}

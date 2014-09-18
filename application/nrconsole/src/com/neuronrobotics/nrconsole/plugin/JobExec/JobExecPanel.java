@@ -8,13 +8,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
 import net.miginfocom.swing.MigLayout;
+
+import com.jme3.math.Vector3f;
 import com.jme3.system.AppSettings;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GCodeFilter;
@@ -28,18 +32,23 @@ import com.neuronrobotics.replicator.driver.SliceStatusData;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
+
 import javax.swing.JSplitPane;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JCheckBox;
+
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.Font;
 import java.awt.Color;
+
 import javax.swing.JTextPane;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
@@ -75,13 +84,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	
 	long lastUpdate = 0;
 	
-	public String fileName = "None";
-	
-	private ArrayList<File> files = new ArrayList<File>();
-	
-	private ArrayList<String> fileNames = new ArrayList<String>();
-	
-	
+	public String fileName = "None";	
 	private JProgressBar progressBar;
 
 	
@@ -121,23 +124,20 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JCheckBox chckbxShowTroubledLines;
 	private JCheckBox chckbxShowDangerousLines;
 	private JCheckBox chckbxShowNonextrudeLines;
-	
+	private BowlerBoardDevice delt;
+	public ArrayList<PrintObject> objects = new ArrayList<PrintObject>();
 
 	private JButton btnEmergencyStop;
 
 	
 	public JobExecPanel() {
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				initComponents();
-			}
-		});
+		
 
 	}
 
-	public void setDevices(BowlerBoardDevice delt, NRPrinter printer) {
+	public void setDevices(BowlerBoardDevice _delt, NRPrinter printer) {
 		this.printer = printer;
-
+		delt = _delt;
 		for (LinkConfiguration link : printer.getLinkConfigurations()) {
 			if (link.getName().toLowerCase().contains("hotend")) {
 				channelHotEnd = link.getHardwareIndex();
@@ -150,6 +150,12 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			}
 		}
 		printer.addPrinterStatusListener(this);
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				
+				initComponents();
+			}
+		});
 	}
 
 	/**
@@ -226,25 +232,39 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	}
 
 
-
+	public PrintObject objToDisplay(){
+		if (getList().isSelectionEmpty()){
+			return null;
+		}
+		return objects.get(getList().getSelectedIndex());
+	}
 	public void updatePrintInfo() {
-		getTfLayerShown().setText(
-				"(File: " + fileName + ") (# Layers: "
-						+ getSliderLayer().getMaximum() + ") (# Layers Shown: "
-						+ getSliderLayer().getValue() + ")");
+		try {
+			getLblNumdanger().setText(Integer.toString(objToDisplay().getNumFailLines()));
+			getLblNumgood().setText(Integer.toString(objToDisplay().getNumGoodLines()));
+			getLblNumtroubled().setText(Integer.toString(objToDisplay().getNumProblemLines()));
+			getLblNumnonextrude().setText(Integer.toString(objToDisplay().getNumMoveLines()));
+				getTfLayerShown().setText(
+						"(File: " + objToDisplay().getName() + ") (# Layers: "
+								+ getSliderLayer().getMaximum() + ") (# Layers Shown: "
+								+ getSliderLayer().getValue() + ")");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	
 	}
 
-	private void loadGcodeFile() {
+	private void loadGcodeFile(File _gCodes) {
 		try {
 			
 			
 			isIllegal = false;
 			isWarn = false;
-			fileName = gCodes.getName();
+			fileName = _gCodes.getName();
 			updatePrintInfo();
 			app.loadingGCode();
-			gCodeStream = new FileInputStream(gCodes);
-			codeOps = new GCodeLoader();
+			gCodeStream = new FileInputStream(_gCodes);
+			codeOps = new GCodeLoader(getConfigs());
 
 			isGoodFile = codeOps.loadCodes(gCodeStream);
 
@@ -259,7 +279,11 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			// codeOps.getCodes().printOutput();
 			getJButtonRunJob().setEnabled(isGoodFile);
 			getBtnOpen3DFile().setEnabled(true);
-			int numLayers = app.loadGCode(codeOps.getCodes());
+			PrintObject newObj = new PrintObject(codeOps.getCodes(),app, _gCodes);
+			
+			objects.add(newObj);
+			refreshPrintQueue();
+			int numLayers = newObj.getNumLayers();
 			
 			layersSlider.setMaximum(numLayers);
 			layersSlider.setValue(numLayers);
@@ -272,7 +296,18 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		}
 
 	}
-
+	
+	private void switchPrintObject(PrintObject _obj){
+		app.loadPrintObject(_obj);
+		int numLayers = _obj.getNumLayers();
+		layersSlider.setMaximum(numLayers);
+		layersSlider.setValue(numLayers);
+		updatePrintInfo();
+	}
+	
+	private void switchPrintObject(int _objIndex){
+		switchPrintObject(objects.get(_objIndex));	
+	}
 	private void actionForBtnOpen3DFile(ActionEvent event) {
 		new Thread() {
 			public void run() {
@@ -299,16 +334,9 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 				// If this is a gcode file, load in the codes
 				if (new GCodeFilter().accept(rawObject)) {
 					
-					loadGcodeFile();
-					files.add(gCodes);
-					String [] names = new String[files.size()];
-					for (int i = 0; i < names.length; i++) {
-						names[i] = files.get(i).getName();
-					}
-					getList().setListData(names);
-					if (names.length > 0){
-						getList().setSelectedIndex(0);
-					}
+					loadGcodeFile(gCodes);
+				
+					
 				}
 
 			}
@@ -316,7 +344,19 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		getBtnOpen3DFile().setEnabled(false);
 
 	}
-
+	public void refreshPrintQueue(){
+		String [] names = new String[objects.size()];
+		for (int i = 0; i < names.length; i++) {
+			names[i] = objects.get(i).getName();
+		}
+		getList().setListData(names);
+		if (names.length > 0){
+			getList().setSelectedIndex(names.length -1);
+		}
+		
+}
+	
+	
 	public void doNotPrint() {
 		isIllegal = true;
 		getJButtonRunJob().setEnabled(false);
@@ -379,7 +419,21 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			}
 		});
 	}
+	public DisplayConfigs getConfigs(){
+		DisplayConfigs dC = new DisplayConfigs();
+		
+		dC.configure(new Vector3f(200, 0, 200),
+				new Vector3f((float) printer.getSlicer().getPrintCenter()[0], 
+						(float) printer.getSlicer().getPrintCenter()[1],
+						0));
+		dC.setFilaDia(printer.getSlicer().getFilimentDiameter());
+		dC.setNozzleDia(printer.getSlicer().getNozzle_diameter());
+	
 
+	
+	
+	return dC;
+}
 	private JPanel getPanel_1() {
 		if (panel == null) {
 			panel = new JPanel();
@@ -388,7 +442,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 panel.setToolTipText("Left Click + Drag to Rotate \n"
 		+ "Right Click + Drag to Strafe \n"
 		+ "Scroll for Zoom");
-			app = new MachineSimDisplay(panel);
+			app = new MachineSimDisplay(panel, getConfigs());
 			
 			app.addListener(new PrintTestListener() {
 
@@ -458,11 +512,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 
 			layersSlider.addChangeListener(new ChangeListener() {
 				public void stateChanged(ChangeEvent arg0) {
-					if ((lastUpdate + 100) < System.currentTimeMillis()){
-						lastUpdate = System.currentTimeMillis();
-						app.setLayersToShow(layersSlider.getValue());
+					
+						app.setLayersToShow(layersSlider.getValue(), objToDisplay());
 						updatePrintInfo();
-					}
+					
 					
 				}
 			});
@@ -491,10 +544,14 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		if (panel_4 == null) {
 			panel_4 = new JPanel();
 			panel_4.setLayout(new MigLayout("", "[][][][][]", "[]"));
-			panel_4.add(getChckbxShowGoodLines(), "cell 0 0");
-			panel_4.add(getChckbxShowTroubledLines(), "cell 1 0");
-			panel_4.add(getChckbxShowDangerousLines(), "cell 2 0");
-			panel_4.add(getChckbxShowNonextrudeLines(), "cell 3 0");
+			panel_4.add(getChckbxShowGoodLines(), "flowy,cell 0 0");
+			panel_4.add(getChckbxShowTroubledLines(), "flowy,cell 1 0");
+			panel_4.add(getChckbxShowDangerousLines(), "flowy,cell 2 0");
+			panel_4.add(getChckbxShowNonextrudeLines(), "flowy,cell 3 0");
+			panel_4.add(getLblNumgood(), "cell 0 0,growx");
+			panel_4.add(getLblNumtroubled(), "cell 1 0,growx");
+			panel_4.add(getLblNumdanger(), "cell 2 0,growx");
+			panel_4.add(getLblNumnonextrude(), "cell 3 0,growx");
 		}
 		return panel_4;
 	}
@@ -642,16 +699,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			if (gCodes != null && gCodes.isFile() && gCodes.canRead()) {
 				try {
 					
-					loadGcodeFile();
-					files.add(gCodes);
-					String [] names = new String[files.size()];
-					for (int i = 0; i < names.length; i++) {
-						names[i] = files.get(i).getName();
-					}
-					getList().setListData(names);
-					if (names.length > 0){
-						getList().setSelectedIndex(0);
-					}
+					loadGcodeFile(gCodes);
+					
+					
+					
 					return;
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -698,7 +749,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		case MOVING:
 			getProgressBar().setValue((int) psl.getTempreture());
 			//TODO: need to get temperature setpoint   getSpinnerTemp().setValue((int) printer.)
-			
+			getProgressBar().setToolTipText("Current Temp: " + psl.getTempreture());
 			//If the temperature is close to the setpoint, make the color of the bar green to indicate good temperature at a glance
 			if (Math.abs(getProgressBar().getValue() - (int) getSpinnerTemp().getValue())< 3){
 				getProgressBar().setForeground(Color.GREEN);
@@ -765,10 +816,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JProgressBar getProgressBar() {
 		if (progressBar == null) {
 			progressBar = new JProgressBar();
+			progressBar.setOrientation(SwingConstants.VERTICAL);
 			progressBar.setFont(new Font("Tahoma", Font.PLAIN, 16));			
 			progressBar.setMaximum(300);
 			progressBar.setStringPainted(true);
-			progressBar.setOrientation(SwingConstants.VERTICAL);
 			progressBar.setValue(25);
 			progressBar.setString("Hot End Temp: ");
 			progressBar.setForeground(Color.ORANGE);
@@ -776,6 +827,10 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		return progressBar;
 	}
 	private boolean isInternalUpdate = false;
+	private JLabel lblNumgood;
+	private JLabel lblNumtroubled;
+	private JLabel lblNumdanger;
+	private JLabel lblNumnonextrude;
 	
 	
 	
@@ -894,9 +949,8 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			list.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					if (arg0.getClickCount() == 2){
-						gCodes = files.get(list.getSelectedIndex());
-						loadGcodeFile();
+					if (arg0.getClickCount() == 2){						
+						loadGcodeFile(objects.get(list.getSelectedIndex()).getCodeFile());
 					}
 				}
 			});
@@ -912,8 +966,12 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			list.addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent arg0) {
 					if (arg0.getValueIsAdjusting() == false){
-						gCodes = files.get(list.getSelectedIndex());
-						loadGcodeFile();
+						if (list.isSelectionEmpty()){
+							list.setSelectedIndex(0);
+						}
+						//gCodes = files.get(list.getSelectedIndex());
+						//loadGcodeFile();
+						switchPrintObject(list.getSelectedIndex());
 					}
 					
 				}
@@ -927,5 +985,37 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			scrollPane.setViewportView(getTextPaneLog());
 		}
 		return scrollPane;
+	}
+	private JLabel getLblNumgood() {
+		if (lblNumgood == null) {
+			lblNumgood = new JLabel("0");
+			lblNumgood.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumgood.setToolTipText("This is the number of good g-codes.");
+		}
+		return lblNumgood;
+	}
+	private JLabel getLblNumtroubled() {
+		if (lblNumtroubled == null) {
+			lblNumtroubled = new JLabel("0");
+			lblNumtroubled.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumtroubled.setToolTipText("This is the number of troubled g-codes.");
+		}
+		return lblNumtroubled;
+	}
+	private JLabel getLblNumdanger() {
+		if (lblNumdanger == null) {
+			lblNumdanger = new JLabel("0");
+			lblNumdanger.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumdanger.setToolTipText("This is the number of dangerous/unprintable g-codes.");
+		}
+		return lblNumdanger;
+	}
+	private JLabel getLblNumnonextrude() {
+		if (lblNumnonextrude == null) {
+			lblNumnonextrude = new JLabel("0");
+			lblNumnonextrude.setHorizontalAlignment(SwingConstants.CENTER);
+			lblNumnonextrude.setToolTipText("This is the number of  non-extrusion g-codes.");
+		}
+		return lblNumnonextrude;
 	}
 }

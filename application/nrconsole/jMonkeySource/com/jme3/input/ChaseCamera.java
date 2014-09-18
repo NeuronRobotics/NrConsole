@@ -321,7 +321,7 @@ public class ChaseCamera implements ActionListener, AnalogListener, Control {
         	vec = vec.normalize().mult(value * strafeSpeed);
         	
         	lookAtOffset.addLocal(vec.x, 0 , vec.z);
-        	System.out.println(lookAtOffset);
+        	
         }
 
 
