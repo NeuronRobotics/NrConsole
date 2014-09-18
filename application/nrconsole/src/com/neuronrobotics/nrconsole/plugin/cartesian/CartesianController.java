@@ -8,10 +8,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-<<<<<<< HEAD
 import com.neuronrobotics.nrconsole.plugin.JobExec.NRConsoleJobExecPlugin;
-=======
->>>>>>> master
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
