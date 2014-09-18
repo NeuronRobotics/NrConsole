@@ -9,19 +9,37 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.lwjgl.openal.AL;
+
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 @SuppressWarnings("unused")
-public class NRConsole implements ActionListener {
+
+/**
+ * 
+ * @author technocopia05
+ *
+ */
+public class NRConsole {
+	
 	private NRConsoleWindow nrcFrame = null;
 
-	private PluginManager manager=new PluginManager();
-	private MenuBar nrcMenubar = new MenuBar(manager);
-	private showManager shower = new showManager ();
-	private static NRConsole self;
+	private PluginManager manager=new PluginManager();//This is the class that manages the plugins and their associated tabs in the gui
+	private MenuBar nrcMenubar = new MenuBar(manager);//This is the menu bar for the main gui window
+	private showManager shower = new showManager ();//This is some kludgey bullshit to manage the paint and update of the gui. //TODO take this out
+	private static NRConsole self; //Used to reference this class within this class to get around the "static" qualifier. //TODO take this out
+	
+	/**
+	 * Main function for GUI.
+	 * Creates a new GUI with the NRConsole constructor,
+	 * giving it a boolean that indicates if any command
+	 * line arguments are present (false if any command line
+	 * arguments are present).
+	 * @param args
+	 */
 	public static void main(String [] args) {
 		try {
 			if(args.length != 0)
@@ -34,16 +52,11 @@ public class NRConsole implements ActionListener {
 		}
 	}
 	
-	public static void disconnect() {
-		self.nrcMenubar.disconnect();
-	}
-	
 	public NRConsole(boolean debug) {
 		self = this;
 		nrcFrame = new NRConsoleWindow();
 		nrcFrame.setJMenuBar(nrcMenubar);
 		nrcMenubar.setMenues(null);
-		nrcMenubar.addActionListener(this);
 		
 		nrcFrame.setLocationRelativeTo(null);
 		nrcFrame.setVisible(true);
@@ -54,20 +67,12 @@ public class NRConsole implements ActionListener {
 			Log.enableDebugPrint();
 		}
 		
-//		while(!nrcFrame.isShowing()){
-//			ThreadUtil.wait(100);
-//		}
-//		
-//		while(nrcFrame.isShowing()){
-//			ThreadUtil.wait(500);
-//		}
-//		manager.disconnect();
-//		System.out.println("Exit clean");
-//		System.exit(0);
+
 		nrcFrame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent winEvt) {
 				manager.disconnect();
+				AL.destroy();//Used to clean up any audio streams before exit. Will throw an error if not used ("AL lib: (EE) alc_cleanup: 1 device not closed")
 				System.out.println("Exit clean");
 		        System.exit(0); 
 		    }
@@ -75,11 +80,12 @@ public class NRConsole implements ActionListener {
 	}
 	
 	
-	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("set-connection")) {
-			//System.out.println("Do something with the aciton command.");
-		}
-	}
+	/**
+	 * This private class is some kludgey bullshit
+	 * TODO: take this out
+	 * @author technocopia05
+	 *
+	 */
 	private class showManager extends Thread implements IPluginUpdateListener{
 		public void run(){
 			try{
@@ -92,22 +98,22 @@ public class NRConsole implements ActionListener {
 					
 					onPluginListUpdate(manager);
 					manager.addIPluginUpdateListener(this);
-					//nrcFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);  
+					 
 					while(nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
-					//System.out.println("Exiting Application");
+					
 				}else{
 					manager.removeIPluginUpdateListener(this);
 					nrcMenubar.setMenues(null);
 					nrcFrame.displayLogo(manager);
 					nrcFrame.invalidate();
 					nrcFrame.setVisible(true);
-					//System.out.println("Starting splash");
+					
 					while(!nrcMenubar.isReady()){
 						ThreadUtil.wait(50);
 					}
-					//System.out.println("Exiting splash");
+					
 				}
 			}
 		}

@@ -10,13 +10,16 @@ import javax.swing.JPanel;
 import javazoom.jl.decoder.Manager;
 
 import com.neuronrobotics.nrconsole.plugin.BowlerCam.NRConsoleBowlerCameraPlugin;
+import com.neuronrobotics.nrconsole.plugin.BowlerConfig.NRConsoleBowlerConfigPlugin;
 import com.neuronrobotics.nrconsole.plugin.BowlerRPCDisplay.NRConsoleBowlerRPCDisplayPlugin;
+import com.neuronrobotics.nrconsole.plugin.DeviceConfig.NRConsoleDeviceConfigPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.NRConsoleDyIOPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.bootloader.NRConsoleBootloaderPlugin;
 import com.neuronrobotics.nrconsole.plugin.cartesian.CartesianController;
+import com.neuronrobotics.nrconsole.plugin.JobExec.NRConsoleJobExecPlugin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
@@ -193,12 +196,16 @@ public class PluginManager {
 		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 		// HACK this should load using OSGI
 		// Once instantiated they add themselves to the static list of plugins
+		new NRConsoleJobExecPlugin(this);
+		new NRConsoleDeviceConfigPlugin(this);
 		new CartesianController(this);
 		new NRConsoleDyIOPlugin(this);
 		new NRConsolePIDPlugin(this);
 		new NRConsoleBowlerCameraPlugin(this);
 		new NRConsoleBootloaderPlugin(this);
 		new NRConsoleBowlerRPCDisplayPlugin(this);
+		
+		//new NRConsoleBowlerConfigPlugin(this);
 		//System.out.println("Updating plugins:"+plugins);
 		
 		//END HACK
@@ -243,6 +250,11 @@ public class PluginManager {
 		return height;
 	}
 
+	/**
+	 * Find the PID plugin and start it
+	 * Searched through the available plugins to find it
+	 * Start the plugin using a virtual device 
+	 */
 	public void connectVirtualPID() {
 		for(int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin pl= plugins.get(i);

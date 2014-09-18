@@ -1,10 +1,9 @@
 package com.neuronrobotics.nrconsole;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.HierarchyBoundsListener;
 import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
@@ -16,8 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.Scrollable;
-import net.miginfocom.swing.MigLayout;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
@@ -28,37 +27,39 @@ import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	private ArrayList<JPanel> panels=new ArrayList<JPanel>();
 	private static final String name = "Neuron Robotics Console ";
-//	public static int panelHight = 700;
-//	public static int panelWidth = 1095;
+
 	private static final long serialVersionUID = 1L;
 	private JPanel scroller = new  JPanel();
 	private JScrollPane scrollPanel = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 	
 	private JTabbedPane modePane = new JTabbedPane();
-	private JPanel active=null;
+
 	private static NRConsoleWindow instance = null;
 	public ImageIcon logo = new ImageIcon(NRConsole.class.getResource("images/logo.png"));
 	private PluginManager manager;
+	
 	public static Dimension getNRWindowSize(){
 		if(instance!= null)
 			return instance.getWindowSize();
 		return  new Dimension(400,400);
 	}
+	
 	public Dimension getWindowSize(){
 		Dimension d = new Dimension(getWidth(),getHeight());
-		//System.out.println("Window size "+d);
 		return d;
 	}
+	
 	private JPanel logoPanel = new JPanel();
 	
 	public NRConsoleWindow() {
 		super(getConsoleVersion());
 		instance=this;
+		scroller.setLayout(new BorderLayout(0, 0));
 		scroller.add(logoPanel);
 		
 		scrollPanel.setViewportView(scroller);
 		scrollPanel.getVerticalScrollBar().setUnitIncrement(20);
-		add(scrollPanel);
+		getContentPane().add(scrollPanel);
 		getContentPane().addHierarchyBoundsListener(new HierarchyBoundsListener(){
 			
 			public void ancestorMoved(HierarchyEvent arg0) {
@@ -72,6 +73,20 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 				updateScroller();
 				modePane.setSize(getWindowSize());
 			}			
+		});
+		modePane.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				try {
+					modePane.setMinimumSize(modePane.getSelectedComponent().getMinimumSize());
+					updateUI();
+				} catch (Exception e2) {
+					// TODO: handle exception
+				}
+				
+				
+			}
 		});
 		logoPanel.setLayout(new GridLayout(3, 2));
 		logoPanel.add(new JLabel(logo),"[0,2]");
@@ -89,10 +104,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	}
 	private void updateScroller(){
 		if(manager!=null)
-			scroller.setPreferredSize(new Dimension(	manager.getMinimumWidth(),
-														manager.getMinimumHeight()
-													)
-									  );
+			scroller.setPreferredSize(getCurrentPanelMinSize());
 		scroller.setSize(getWindowSize());
 		scroller.invalidate();
 		scroller.repaint();
@@ -101,10 +113,8 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	private void updateUI(){
 		//setSize(new Dimension(panelWidth+53,panelHight+105));
 		if (manager !=null){
-			setSize((manager.getMinimumWidth()+53),805);
-			modePane.setSize(	manager.getMinimumWidth(),
-								manager.getMinimumHeight()
-							);	
+			//setSize((getCurrentPanelMinSize().width+53),805);
+			modePane.setSize(getCurrentPanelMinSize());	
 		}else {
 			setSize((1095+53),805);
 		}
@@ -127,7 +137,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		}
 		manager.addIPluginUpdateListener(this);
 		scroller.add(modePane);
-		updateUI();
+		//updateUI();
 	}
 
 	public void displayLogo(PluginManager deviceManager) {
@@ -145,5 +155,16 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		//System.out.println(this.getClass()+" is refreshing");
 		setDeviceManager(manager);
 	}
-
+	
+	public Dimension getCurrentPanelMinSize(){
+		if (getCurrentPanel().getMinimumSize() != null){
+			return getCurrentPanel().getMinimumSize();
+		}
+		else{
+			return new Dimension(manager.getMinimumWidth(), manager.getMinimumHeight());
+		}
+	}
+	public Component getCurrentPanel(){
+		return modePane.getSelectedComponent();
+	}
 }

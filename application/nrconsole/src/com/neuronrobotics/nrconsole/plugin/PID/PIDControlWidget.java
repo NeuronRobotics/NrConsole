@@ -310,7 +310,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		pidRunning.setVisible(false);
 	}
 	private void setPID(double p,double i,double d,double vp,double vd, double latch, boolean use, boolean stop, double up, double low){
-		setSet(true);
+		//setSet(true);
 		getPidStop().setEnabled(true);
 		getPIDConfiguration().setEnabled(true);
 		getPIDConfiguration().setInverted(inverted.isSelected());
@@ -329,13 +329,13 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 		ConfigurePIDController();
 
 	}
-	public void setSet(boolean set) {
-		this.set = set;
-	}
-	public boolean isReady() {
-		return set;
-	}
-	
+//	public void setSet(boolean set) {
+//		this.set = set;
+//	}
+//	public boolean isReady() {
+//		return set;
+//	}
+//	
 	
 	public String toString() {
 		return "GROUP # "+(int)getGroup();
@@ -344,7 +344,7 @@ public class PIDControlWidget extends JPanel implements IPIDEventListener,Action
 	
 	public void onPIDEvent(PIDEvent e) {
 		if(e.getGroup()==getGroup()){
-			//System.out.println("From PID control widget: "+e);
+			Log.info("From PID control widget: "+e);
 			setPositionDisplay(e.getValue());	
 		}
 	}
