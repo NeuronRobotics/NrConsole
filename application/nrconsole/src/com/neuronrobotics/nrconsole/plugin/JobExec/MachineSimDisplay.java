@@ -83,7 +83,16 @@ public class MachineSimDisplay extends SimpleApplication{
 	private Material matHead;
 	private DisplayConfigs displayConfigs;
 	
-	
+	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
+		panel = _panel;
+		printObj = new PrintObject(this);
+		setDisplayConfigs(_displayConfigs);
+	}
+	public MachineSimDisplay(JPanel _panel){		
+		panel = _panel;
+		printObj = new PrintObject(this);
+		
+	}
 	public DisplayConfigs getDisplayConfigs() {
 		return displayConfigs;
 	}
@@ -92,11 +101,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		this.displayConfigs = displayConfigs;
 	}
 
-	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
-		panel = _panel;
-		printObj = new PrintObject(this);
-		setDisplayConfigs(_displayConfigs);
-	}
+	
 	
 	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
 		displayConfigs.configure(_printVolume, _printOrigin);

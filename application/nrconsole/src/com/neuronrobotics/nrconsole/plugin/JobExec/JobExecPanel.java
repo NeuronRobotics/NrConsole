@@ -131,8 +131,11 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	
 	public JobExecPanel() {
-		initComponents();
-
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {				
+				initComponents();
+			}
+		});
 	}
 
 	public void setDevices(BowlerBoardDevice _delt, NRPrinter printer) {
@@ -150,12 +153,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			}
 		}
 		printer.addPrinterStatusListener(this);
-		java.awt.EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				
-				initComponents();
-			}
-		});
+		app.setDisplayConfigs(getConfigs());
 	}
 
 	/**
@@ -456,7 +454,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 panel.setToolTipText("Left Click + Drag to Rotate \n"
 		+ "Right Click + Drag to Strafe \n"
 		+ "Scroll for Zoom");
-			app = new MachineSimDisplay(panel, getConfigs());
+			app = new MachineSimDisplay(panel);
 			
 			app.addListener(new PrintTestListener() {
 
