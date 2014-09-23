@@ -1018,6 +1018,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			list = new JList<>(getDefaultListModel());
 			list.setEnabled(false);
 			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			list.setCellRenderer(new JobQueueCellRender());
 			list.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
