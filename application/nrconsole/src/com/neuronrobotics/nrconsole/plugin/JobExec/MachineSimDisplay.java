@@ -203,34 +203,49 @@ public void waitForUpdate(){
 		return layersToShow;
 	}
 	public void setLayersToShow(int numLayers, PrintObject _obj){
-		waitForUpdate();
-		shapes.clear();
-		shapes = _obj.getBatchedLayers(numLayers);
-		layersToShow = numLayers;
-		hasChanged = true;
+		if (_obj != null){
+			waitForUpdate();
+			shapes.clear();
+			shapes = _obj.getBatchedLayers(numLayers);
+			layersToShow = numLayers;
+			hasChanged = true;
+		}
+		else{
+			clearObject();
+		}
 		
 	}
 		
 	
 	
-	
+	public void clearObject(){
+		waitForUpdate();
+		shapes.clear();
+		lastShownIndex = 0;
+		layersToShow = 0;
+		hasChanged = true;
+	}
 	
 	public void loadPrintObject(PrintObject _object){
 		
-		
-		waitForUpdate();
-		shapes.clear();
-		
-		
-		if (_object.getNumLayers() == 0){
-			_object.processGCodes();
+		if (_object != null){
+			waitForUpdate();
+			shapes.clear();
+			
+			
+			if (_object.getNumLayers() == 0){
+				_object.processGCodes();
+			}
+			
+			shapes = _object.getBatchedObject();
+			System.out.println("Num of Shapes: " + shapes.size());
+			lastShownIndex = shapes.size();
+			
+			hasChanged = true;
 		}
-		
-		shapes = _object.getBatchedObject();
-		System.out.println("Num of Shapes: " + shapes.size());
-		lastShownIndex = shapes.size();
-		
-		hasChanged = true;
+		else{
+			clearObject();
+		}
 	}
 	
 	

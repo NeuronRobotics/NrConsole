@@ -131,7 +131,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	
 	public JobExecPanel() {
-		
+		initComponents();
 
 	}
 
@@ -248,8 +248,13 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 						"(File: " + objToDisplay().getName() + ") (# Layers: "
 								+ getSliderLayer().getMaximum() + ") (# Layers Shown: "
 								+ getSliderLayer().getValue() + ")");
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch (Exception e) { //If we can't get something, just show the defaults
+			getLblNumdanger().setText(Integer.toString(0));
+			getLblNumgood().setText(Integer.toString(0));
+			getLblNumtroubled().setText(Integer.toString(0));
+			getLblNumnonextrude().setText(Integer.toString(0));
+				getTfLayerShown().setText(
+						"(File: N/A) (# Layers: 0) (# Layers Shown: 0)");
 		}
 	
 	}
@@ -306,7 +311,16 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	}
 	
 	private void switchPrintObject(int _objIndex){
+		if (_objIndex > -1){
 		switchPrintObject(objects.get(_objIndex));	
+		}
+		else{
+			int numLayers = 0;
+			layersSlider.setMaximum(numLayers);
+			layersSlider.setValue(numLayers);
+			updatePrintInfo();
+			app.clearObject();
+		}
 	}
 	private void actionForBtnOpen3DFile(ActionEvent event) {
 		new Thread() {
@@ -532,10 +546,11 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JPanel getTopButtonsPanel() {
 		if (topButtonsPanel == null) {
 			topButtonsPanel = new JPanel();
-			topButtonsPanel.setLayout(new MigLayout("", "[][][][9.00,center][grow][10.00][grow][10.00][grow][][grow][][grow][]", "[center]"));
+			topButtonsPanel.setLayout(new MigLayout("", "[][][][][9.00,center][grow][10.00][grow][10.00][grow][][grow][][grow][]", "[center]"));
 			topButtonsPanel.add(getBtnOpen3DFile(), "cell 0 0,grow");
 			topButtonsPanel.add(getJButtonRunJob(), "cell 1 0,grow");
 			topButtonsPanel.add(getBtnPausePrint(), "cell 2 0");
+			topButtonsPanel.add(getBtnClearPrintQueue(), "cell 3 0");
 		}
 		return topButtonsPanel;
 	}
@@ -795,7 +810,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	}
 	private JLabel getLblPrintQueue() {
 		if (lblPrintQueue == null) {
-			lblPrintQueue = new JLabel("Print Queue:");
+			lblPrintQueue = new JLabel("Job Queue:");
 		}
 		return lblPrintQueue;
 	}
@@ -831,6 +846,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JLabel lblNumtroubled;
 	private JLabel lblNumdanger;
 	private JLabel lblNumnonextrude;
+	private JButton btnClearPrintQueue;
 	
 	
 	
@@ -1017,5 +1033,19 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			lblNumnonextrude.setToolTipText("This is the number of  non-extrusion g-codes.");
 		}
 		return lblNumnonextrude;
+	}
+	private JButton getBtnClearPrintQueue() {
+		if (btnClearPrintQueue == null) {
+			btnClearPrintQueue = new JButton("Clear Job Queue");
+			btnClearPrintQueue.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					objects.clear();
+					refreshPrintQueue();
+					
+					
+				}
+			});
+		}
+		return btnClearPrintQueue;
 	}
 }
