@@ -62,7 +62,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		PrefsLoader prefs = new PrefsLoader();
 		String path = prefs.getSlic3rLocation();
 		if (new File(path).exists() == false){
-			 path = FileSelectionFactory.GetFile(null, new Slic3rFilter()).getPath();
+			 path = FileSelectionFactory.GetFile(null,"Location of slic3r-console.exe", "Select" , new Slic3rFilter()).getPath();
 			 prefs.setSlic3rLocation(path);
 		}
 		Slic3r.setExecutableLocation(path);
