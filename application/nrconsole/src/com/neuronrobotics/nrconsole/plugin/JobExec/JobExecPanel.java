@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import net.miginfocom.swing.MigLayout;
@@ -1016,6 +1017,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 		if (list == null) {
 			list = new JList<>(getDefaultListModel());
 			list.setEnabled(false);
+			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
