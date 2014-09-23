@@ -322,5 +322,8 @@ public class PrintObject{
 		this.codeFile = codeFile;
 	}
 	
-	
+	@Override
+	public String toString(){
+		return getName();
+	}
 }

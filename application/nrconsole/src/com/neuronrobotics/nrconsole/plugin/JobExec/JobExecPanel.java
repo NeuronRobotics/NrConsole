@@ -114,7 +114,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JPanel panel_8;//Contains lblPrintQueue, list;
 	private JLabel lblPrintQueue;
 	private JList<String> list;
-	private DefaultListModel<String> objectListModel;
+	private DefaultListModel<PrintObject> objectListModel;
 	private DefaultListModel<String> defaultListModel;
 	private JPanel panel_2;//Contains panel
 	private JPanel panel;//Contains 3d rendering, layersSlider, panel_5
@@ -363,7 +363,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 		if (objects.size() > 0){
 			getObjectListModel().clear();
 			for (PrintObject printObject : objects) {
-				getObjectListModel().addElement(printObject.getName());
+				getObjectListModel().addElement(printObject);
 			}		
 			getList().setEnabled(true);
 			getList().setModel(getObjectListModel());
@@ -985,7 +985,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	
 	private String defaultListStr1 = "Click \"Open 3D File\"";
 	private String defaultListStr2 = "to load a file.";
-	private DefaultListModel<String> getObjectListModel(){
+	private DefaultListModel<PrintObject> getObjectListModel(){
 		if (objectListModel == null){
 			objectListModel = new DefaultListModel<>();			
 			objectListModel.addListDataListener(new ListDataListener() {
