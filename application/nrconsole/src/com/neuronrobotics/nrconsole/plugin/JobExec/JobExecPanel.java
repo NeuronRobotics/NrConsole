@@ -63,6 +63,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
@@ -366,11 +367,15 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 			for (PrintObject printObject : objects) {
 				getObjectListModel().addElement(printObject);
 			}		
+			getBtnRemoveSelectedJob().setEnabled(true);
+			getBtnClearPrintQueue().setEnabled(true);
 			getList().setEnabled(true);
 			getList().setModel(getObjectListModel());
 			getList().setSelectedIndex(getObjectListModel().getSize()-1);
 		}
 		else{			
+			getBtnRemoveSelectedJob().setEnabled(false);
+			getBtnClearPrintQueue().setEnabled(false);
 			getList().clearSelection();			
 			getList().setModel(getDefaultListModel());
 			getList().setEnabled(false);
@@ -814,7 +819,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			panel_8 = new JPanel();
 			panel_8.setLayout(new BorderLayout(0, 0));
 			panel_8.add(getLblPrintQueue(), BorderLayout.NORTH);
-			panel_8.add(getList(), BorderLayout.CENTER);
+			panel_8.add(getScrollPane_1(), BorderLayout.CENTER);
 		}
 		return panel_8;
 	}
@@ -832,7 +837,8 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	}
 	private JTextPane getTextPaneLog() {
 		if (textPaneLog == null) {
-			textPaneLog = new JTextPane();			
+			textPaneLog = new JTextPane();
+			textPaneLog.setEditable(false);
 			textPaneLog.setAutoscrolls(true);
 			
 		}
@@ -986,6 +992,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	
 	private String defaultListStr1 = "Click \"Open 3D File\"";
 	private String defaultListStr2 = "to load a file.";
+	private JScrollPane scrollPane_1;
 	private DefaultListModel<PrintObject> getObjectListModel(){
 		if (objectListModel == null){
 			objectListModel = new DefaultListModel<>();			
@@ -1016,6 +1023,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JList getList() {
 		if (list == null) {
 			list = new JList<>(getDefaultListModel());
+			list.setToolTipText("The current job queue is listed here. \n Jobs are colored based on their status, red for fail, orange for problems, green for good. \n Double clicking a job will reload it.");
 			list.setEnabled(false);
 			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list.setCellRenderer(new JobQueueCellRender());
@@ -1050,7 +1058,9 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
+			scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scrollPane.setViewportView(getTextPaneLog());
+			
 		}
 		return scrollPane;
 	}
@@ -1089,6 +1099,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JButton getBtnClearPrintQueue() {
 		if (btnClearPrintQueue == null) {
 			btnClearPrintQueue = new JButton("Clear Job Queue");
+			btnClearPrintQueue.setEnabled(false);
 			btnClearPrintQueue.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					objects.clear();
@@ -1103,7 +1114,23 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private JButton getBtnRemoveSelectedJob() {
 		if (btnRemoveSelectedJob == null) {
 			btnRemoveSelectedJob = new JButton("Remove Selected Job");
+			btnRemoveSelectedJob.setEnabled(false);
+			btnRemoveSelectedJob.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if (!getList().isSelectionEmpty()){
+						objects.remove(getList().getSelectedIndex());
+						refreshPrintQueue();
+					}
+				}
+			});
 		}
 		return btnRemoveSelectedJob;
+	}
+	private JScrollPane getScrollPane_1() {
+		if (scrollPane_1 == null) {
+			scrollPane_1 = new JScrollPane();
+			scrollPane_1.setViewportView(getList());
+		}
+		return scrollPane_1;
 	}
 }
