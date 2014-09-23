@@ -472,16 +472,9 @@ public void waitForUpdate(){
 				if (geom.getMaterial() == getMatLine() && isShowNonExtrude()){
 					obj.attachChild(geom);
 				}
-				if (isShowAxes()){
-					rootNode.getChild("X Axis").setCullHint(CullHint.Never);
-					rootNode.getChild("Y Axis").setCullHint(CullHint.Never);
-					rootNode.getChild("Z Axis").setCullHint(CullHint.Never);
-				}
-				else{
-					rootNode.getChild("X Axis").setCullHint(CullHint.Always);
-					rootNode.getChild("Y Axis").setCullHint(CullHint.Always);
-					rootNode.getChild("Z Axis").setCullHint(CullHint.Always);
-				}
+				
+				
+				
 			}
 			endUpdate();
 			if (loading == true){// Only run these bits if this is the first time we are loading this file
@@ -492,20 +485,34 @@ public void waitForUpdate(){
 					notifyWarnPrint();
 				}
 			}
+			
 			if (printHeadVisible){
 				rootNode.attachChild(getPrintHead());
 			}
 			else{
 				rootNode.detachChild(getPrintHead());
 			}
-			
+			if (isShowAxes()){
+				if (rootNode.getChild("X Axis") == null && rootNode.getChild("Y Axis") == null && rootNode.getChild("Z Axis") == null)
+				loadAxes(0,0,0);
+			}
+			else{
+				if (rootNode.getChild("X Axis") != null){
+					rootNode.detachChildNamed("X Axis");
+				}
+				if (rootNode.getChild("Y Axis") != null){
+					rootNode.detachChildNamed("Y Axis");
+				}
+				if (rootNode.getChild("Z Axis") != null){
+					rootNode.detachChildNamed("Z Axis");
+				}
+				
+			}
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
 			loading =  false;
 		}
-		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + 
-			//	"Horizontal: " + chaseCam.getHorizontalRotation()+
-				//"Zoom: " + chaseCam.getDistanceToTarget());
+		
 	 }
 
 	public boolean isShowGood() {
