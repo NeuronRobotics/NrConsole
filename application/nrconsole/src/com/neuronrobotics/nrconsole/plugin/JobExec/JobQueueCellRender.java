@@ -23,23 +23,6 @@ private ArrayList<PrintObject> objects;
 			if (isSelected){
 				switch (obj.getPrintStatus()) {
 				case FAIL:
-					setBackground(Color.decode("#ff8080"));
-					break;
-				case PROBLEM:
-					setBackground(Color.decode("#ffe380"));
-					break;
-				case GOOD:
-					setBackground(Color.decode("#80ff80"));
-					break;
-				default:
-					break;
-				}
-				setForeground(Color.BLACK);
-				setText("> " + obj.toString());
-			}
-			else{
-				switch (obj.getPrintStatus()) {
-				case FAIL:
 					setBackground(Color.RED);
 					break;
 				case PROBLEM:
@@ -51,6 +34,24 @@ private ArrayList<PrintObject> objects;
 				default:
 					break;
 				}
+				setForeground(Color.BLACK);
+				setText("> " + obj.toString());
+			}
+			else{
+				switch (obj.getPrintStatus()) {
+				case FAIL:
+					setBackground(Color.decode("#ff8080"));
+					break;
+				case PROBLEM:
+					setBackground(Color.decode("#ffe380"));
+					break;
+				case GOOD:
+					setBackground(Color.decode("#80ff80"));
+					break;
+				default:
+					break;
+				}
+				
 				setForeground(Color.BLACK);
 				setText(obj.toString());
 			}
