@@ -72,7 +72,11 @@ public class NRConsole {
 			@Override
 			public void windowClosing(WindowEvent winEvt) {
 				manager.disconnect();
-				AL.destroy();//Used to clean up any audio streams before exit. Will throw an error if not used ("AL lib: (EE) alc_cleanup: 1 device not closed")
+				try{
+					AL.destroy();//Used to clean up any audio streams before exit. Will throw an error if not used ("AL lib: (EE) alc_cleanup: 1 device not closed")
+				}catch(Error e){
+					// if no audio loaded, still exit clean
+				}
 				System.out.println("Exit clean");
 		        System.exit(0); 
 		    }
