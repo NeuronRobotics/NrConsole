@@ -25,11 +25,27 @@ public class PrintObject{
 	private File codeFile;
 
 	
+	public static enum PrintStatus{
+		GOOD, PROBLEM, FAIL
+	}
+	
+	
 	private int numFailLines = 0;
 	private int numProblemLines =0;
 	private int numGoodLines = 0;
 	private int numMoveLines = 0;
 	
+	public PrintStatus getPrintStatus(){
+		if (getNumFailLines() > 0){
+			return PrintStatus.FAIL;
+		}
+		else if (getNumProblemLines() > 0){
+			return PrintStatus.PROBLEM;
+		}
+		else{
+			return PrintStatus.GOOD;
+		}
+	}
 	
 	public int getNumMoveLines(){
 		return numMoveLines;
@@ -322,5 +338,8 @@ public class PrintObject{
 		this.codeFile = codeFile;
 	}
 	
-	
+	@Override
+	public String toString(){
+		return getName();
+	}
 }

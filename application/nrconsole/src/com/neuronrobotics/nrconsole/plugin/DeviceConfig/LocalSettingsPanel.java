@@ -78,7 +78,7 @@ public class LocalSettingsPanel extends SettingsPanel {
 		getTfSlic3rLocation().setText(prefs.getSlic3rLocation());
 	}
 	private void changeSlic3rLocation(){
-		slic3rPath = FileSelectionFactory.GetFile(null, new Slic3rFilter()).getPath();
+		slic3rPath = FileSelectionFactory.GetFile(null,"Location of slic3r-console.exe", "Select" , new Slic3rFilter()).getPath();
 		prefs.setSlic3rLocation(slic3rPath);
 		getTfSlic3rLocation().setText(prefs.getSlic3rLocation());
 	}

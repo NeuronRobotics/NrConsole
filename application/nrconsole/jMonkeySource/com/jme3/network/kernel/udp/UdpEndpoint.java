@@ -127,7 +127,7 @@ public class UdpEndpoint implements Endpoint
             kernel.enqueueWrite( this, p );
                                                                
             //socket.send(p);
-        } catch( IOException e ) {
+        } catch( Exception e ) {
             throw new KernelException( "Error sending datagram to:" + address, e );
         }
     }

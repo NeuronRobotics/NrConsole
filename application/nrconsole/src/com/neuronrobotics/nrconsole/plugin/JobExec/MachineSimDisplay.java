@@ -83,7 +83,16 @@ public class MachineSimDisplay extends SimpleApplication{
 	private Material matHead;
 	private DisplayConfigs displayConfigs;
 	
-	
+	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
+		panel = _panel;
+		printObj = new PrintObject(this);
+		setDisplayConfigs(_displayConfigs);
+	}
+	public MachineSimDisplay(JPanel _panel){		
+		panel = _panel;
+		printObj = new PrintObject(this);
+		
+	}
 	public DisplayConfigs getDisplayConfigs() {
 		return displayConfigs;
 	}
@@ -92,11 +101,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		this.displayConfigs = displayConfigs;
 	}
 
-	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
-		panel = _panel;
-		printObj = new PrintObject(this);
-		setDisplayConfigs(_displayConfigs);
-	}
+	
 	
 	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
 		displayConfigs.configure(_printVolume, _printOrigin);
@@ -203,34 +208,49 @@ public void waitForUpdate(){
 		return layersToShow;
 	}
 	public void setLayersToShow(int numLayers, PrintObject _obj){
-		waitForUpdate();
-		shapes.clear();
-		shapes = _obj.getBatchedLayers(numLayers);
-		layersToShow = numLayers;
-		hasChanged = true;
+		if (_obj != null){
+			waitForUpdate();
+			shapes.clear();
+			shapes = _obj.getBatchedLayers(numLayers);
+			layersToShow = numLayers;
+			hasChanged = true;
+		}
+		else{
+			clearObject();
+		}
 		
 	}
 		
 	
 	
-	
+	public void clearObject(){
+		waitForUpdate();
+		shapes.clear();
+		lastShownIndex = 0;
+		layersToShow = 0;
+		hasChanged = true;
+	}
 	
 	public void loadPrintObject(PrintObject _object){
 		
-		
-		waitForUpdate();
-		shapes.clear();
-		
-		
-		if (_object.getNumLayers() == 0){
-			_object.processGCodes();
+		if (_object != null){
+			waitForUpdate();
+			shapes.clear();
+			
+			
+			if (_object.getNumLayers() == 0){
+				_object.processGCodes();
+			}
+			
+			shapes = _object.getBatchedObject();
+			System.out.println("Num of Shapes: " + shapes.size());
+			lastShownIndex = shapes.size();
+			
+			hasChanged = true;
 		}
-		
-		shapes = _object.getBatchedObject();
-		System.out.println("Num of Shapes: " + shapes.size());
-		lastShownIndex = shapes.size();
-		
-		hasChanged = true;
+		else{
+			clearObject();
+		}
 	}
 	
 	
@@ -452,16 +472,9 @@ public void waitForUpdate(){
 				if (geom.getMaterial() == getMatLine() && isShowNonExtrude()){
 					obj.attachChild(geom);
 				}
-				if (isShowAxes()){
-					rootNode.getChild("X Axis").setCullHint(CullHint.Never);
-					rootNode.getChild("Y Axis").setCullHint(CullHint.Never);
-					rootNode.getChild("Z Axis").setCullHint(CullHint.Never);
-				}
-				else{
-					rootNode.getChild("X Axis").setCullHint(CullHint.Always);
-					rootNode.getChild("Y Axis").setCullHint(CullHint.Always);
-					rootNode.getChild("Z Axis").setCullHint(CullHint.Always);
-				}
+				
+				
+				
 			}
 			endUpdate();
 			if (loading == true){// Only run these bits if this is the first time we are loading this file
@@ -472,20 +485,34 @@ public void waitForUpdate(){
 					notifyWarnPrint();
 				}
 			}
+			
 			if (printHeadVisible){
 				rootNode.attachChild(getPrintHead());
 			}
 			else{
 				rootNode.detachChild(getPrintHead());
 			}
-			
+			if (isShowAxes()){
+				if (rootNode.getChild("X Axis") == null && rootNode.getChild("Y Axis") == null && rootNode.getChild("Z Axis") == null)
+				loadAxes(0,0,0);
+			}
+			else{
+				if (rootNode.getChild("X Axis") != null){
+					rootNode.detachChildNamed("X Axis");
+				}
+				if (rootNode.getChild("Y Axis") != null){
+					rootNode.detachChildNamed("Y Axis");
+				}
+				if (rootNode.getChild("Z Axis") != null){
+					rootNode.detachChildNamed("Z Axis");
+				}
+				
+			}
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
 			loading =  false;
 		}
-		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + 
-			//	"Horizontal: " + chaseCam.getHorizontalRotation()+
-				//"Zoom: " + chaseCam.getDistanceToTarget());
+		
 	 }
 
 	public boolean isShowGood() {
