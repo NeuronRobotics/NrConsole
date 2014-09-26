@@ -69,6 +69,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	private Material matLine;
 	private boolean loading= false;
 	private BitmapText loadingText = null;
+	private BitmapText slicingText = null;
 	private Vector3f scaleRate = new Vector3f(.5f,.5f,.5f);
 	private boolean printHeadVisible;
 	private Geometry printHead;
@@ -82,6 +83,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	private Material matHead;
 	private DisplayConfigs displayConfigs;
+	private boolean isSlicing = false;
 	
 	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
 		panel = _panel;
@@ -427,6 +429,46 @@ public void waitForUpdate(){
 		
 		return loadingText;
 	}
+	
+	public BitmapText getSlicingText(float tpf){
+		if (slicingText == null){
+			guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+	        slicingText = new BitmapText(guiFont, false);
+	        
+	        slicingText.setSize(guiFont.getCharSet().getRenderedSize());
+	        slicingText.setText("Slicing...");
+	        
+	        float offsetX = (panel.getWidth()/2) - ((slicingText.getLineWidth()*slicingText.getLocalScale().getX())/2);
+			float offsetY = (panel.getHeight()/2) + ((slicingText.getHeight()*slicingText.getLocalScale().getX())/2);
+			
+			slicingText.setLocalTranslation(offsetX, offsetY, 0);
+	        slicingText.setName("Slicing Text");
+		}
+		else{
+			if (slicingText.getLocalScale().getX() > 5.0f){
+				scaleFactor = -2.0f;
+				
+			}
+			if (slicingText.getLocalScale().getX() < 1.5f){
+				scaleFactor = 2.0f;
+				
+			}
+			float scaleInc = scaleFactor * tpf;
+			scaleInc += slicingText.getLocalScale().getX();
+			
+			slicingText.setLocalScale(scaleInc);
+			
+			
+			float offsetX = (panel.getWidth()/2) - ((slicingText.getLineWidth()*slicingText.getLocalScale().getX())/2);
+			float offsetY = (panel.getHeight()/2) + ((slicingText.getHeight()*slicingText.getLocalScale().getX())/2);
+			
+			slicingText.setLocalTranslation(offsetX, offsetY, 0);
+			
+		}
+			
+		
+		return slicingText;
+	}
 	private void notifyIllegalPrint(){
 		for (PrintTestListener ptl : listeners) {
 			ptl.printIsIllegal();
@@ -448,6 +490,14 @@ public void waitForUpdate(){
 		else{
 			
 			guiNode.detachChildNamed("Loading Text");
+		}
+		if (isSlicing == true  && hasChanged == false){
+			//Do something to let the user know things are happening			
+	        guiNode.attachChild(getSlicingText(tpf));
+		}
+		else{
+			
+			guiNode.detachChildNamed("Slicing Text");
 		}
 		
 		if (hasChanged == true){
@@ -591,6 +641,12 @@ public void waitForUpdate(){
 	 */
 	public void setPrintHeadVisible(boolean _printHeadVisible) {
 		printHeadVisible = _printHeadVisible;
+	}
+	public boolean isSlicing() {
+		return isSlicing;
+	}
+	public void setSlicing(boolean isSlicing) {
+		this.isSlicing = isSlicing;
 	}
 	
 }

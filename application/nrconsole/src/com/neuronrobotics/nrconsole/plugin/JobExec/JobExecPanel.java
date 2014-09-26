@@ -168,7 +168,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	 */
 	private void initComponents() {
 		getPanel_1();// initialize the 3d engine
-		setLayout(new MigLayout("", "[][157px,grow]", "[][center][grow][grow][]"));
+		setLayout(new MigLayout("", "[][157px,grow]", "[][center][grow][][]"));
 		add(getTopButtonsPanel(), "cell 1 0,growx");
 		add(getPanel_6(), "cell 1 1,grow");
 		add(getProgressBar(), "cell 0 0 1 5,growy");
@@ -345,12 +345,13 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 				gCodes = new File(gCodePath);
 				// Only if it is a .stl file should we slice it
 				if (new StlFilter().accept(rawObject)) {
+					app.setSlicing(true);
 					printer.slice(rawObject, gCodes);
 					
 				}
 				// If this is a gcode file, load in the codes
 				if (new GCodeFilter().accept(rawObject)) {
-					
+					app.loadingGCode();
 					loadGcodeFile(gCodes);
 				
 					
@@ -724,6 +725,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			break;
 		case SUCCESS:
 			Log.warning(ssd.toString());
+			app.setSlicing(false);
 			System.out.println(gCodes.getAbsolutePath());
 			// Once the slicing is done, load the gcode file from the slice
 			if (gCodes != null && gCodes.isFile() && gCodes.canRead()) {
