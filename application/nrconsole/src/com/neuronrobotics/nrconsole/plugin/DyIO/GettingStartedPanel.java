@@ -48,9 +48,8 @@ public class GettingStartedPanel extends JPanel {
 	}
 	
 	//Method to launch a page in a browser
-	//Made public on 5/28 by paularudy@gmail.com to allow object "helpButton" to function
-	public static void openPage(String URL) throws Exception {
-		URI uri = new URI(URL);
+	//used to allow object "helpButton" to function
+	public static void openPage(URI uri) throws Exception {
 		getDesktop().browse(uri);
 	}
 	

@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
@@ -60,7 +61,8 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Digital_Input_Channel");
+					
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(dic));
 				} catch (Exception exceptE) {
 					//TODO: launch error message window
 					
