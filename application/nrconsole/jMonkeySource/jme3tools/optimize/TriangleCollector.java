@@ -32,6 +32,15 @@
 
 package jme3tools.optimize;
 
+import java.nio.Buffer;
+import java.nio.ShortBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.jme3.light.Light;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
@@ -40,9 +49,6 @@ import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.util.BufferUtils;
 import com.jme3.util.IntMap;
 import com.jme3.util.IntMap.Entry;
-import java.nio.Buffer;
-import java.nio.ShortBuffer;
-import java.util.*;
 
 public class TriangleCollector {
 

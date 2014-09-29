@@ -1,23 +1,20 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.PrefsLoader;
 import com.neuronrobotics.nrconsole.util.Slic3rFilter;
-
-import javax.swing.SwingConstants;
 
 public class LocalSettingsPanel extends SettingsPanel {
 	private JTextField tfSlic3rLocation;

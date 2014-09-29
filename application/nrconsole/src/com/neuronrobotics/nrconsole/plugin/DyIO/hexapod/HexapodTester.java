@@ -7,19 +7,17 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
-
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.sdk.addons.walker.BasicWalker;
-
-import javax.swing.border.EtchedBorder;
-import javax.swing.plaf.basic.BasicArrowButton;
 
 public class HexapodTester extends JPanel implements KeyListener {
 	/**

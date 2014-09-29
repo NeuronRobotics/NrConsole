@@ -32,10 +32,6 @@
 
 package jme3test.awt;
 
-import com.jme3.app.Application;
-import com.jme3.system.AppSettings;
-import com.jme3.system.JmeCanvasContext;
-import com.jme3.system.JmeSystem;
 import java.applet.Applet;
 import java.awt.Canvas;
 import java.awt.Graphics;
@@ -43,7 +39,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.swing.SwingUtilities;
+
+import com.jme3.app.Application;
+import com.jme3.system.AppSettings;
+import com.jme3.system.JmeCanvasContext;
+import com.jme3.system.JmeSystem;
 
 /**
  *

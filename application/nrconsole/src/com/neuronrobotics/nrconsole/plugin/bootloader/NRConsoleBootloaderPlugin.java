@@ -3,7 +3,6 @@ package com.neuronrobotics.nrconsole.plugin.bootloader;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;

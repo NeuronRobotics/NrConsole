@@ -13,9 +13,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import org.lwjgl.openal.AL;
-
 import net.miginfocom.swing.MigLayout;
+
+import org.lwjgl.openal.AL;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;

@@ -31,6 +31,9 @@
  */
 package jme3test.bullet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme3.animation.AnimChannel;
 import com.jme3.animation.AnimControl;
 import com.jme3.animation.AnimEventListener;
@@ -74,8 +77,6 @@ import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
 import com.jme3.util.SkyFactory;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A walking animated character followed by a 3rd person camera on a terrain with LOD.

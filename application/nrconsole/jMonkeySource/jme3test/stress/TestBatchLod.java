@@ -31,6 +31,8 @@
  */
 package jme3test.stress;
 
+import jme3tools.optimize.GeometryBatchFactory;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
@@ -39,7 +41,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.control.LodControl;
-import jme3tools.optimize.GeometryBatchFactory;
 
 public class TestBatchLod extends SimpleApplication {
 

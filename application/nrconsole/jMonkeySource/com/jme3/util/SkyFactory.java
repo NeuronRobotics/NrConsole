@@ -31,6 +31,9 @@
  */
 package com.jme3.util;
 
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.TextureKey;
 import com.jme3.bounding.BoundingSphere;
@@ -44,8 +47,6 @@ import com.jme3.texture.Image;
 import com.jme3.texture.Image.Format;
 import com.jme3.texture.Texture;
 import com.jme3.texture.TextureCubeMap;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 /**
  * <code>SkyFactory</code> is used to create jME {@link Spatial}s that can

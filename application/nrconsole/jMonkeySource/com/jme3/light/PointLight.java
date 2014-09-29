@@ -31,6 +31,8 @@
  */
 package com.jme3.light;
 
+import java.io.IOException;
+
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -38,7 +40,6 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import java.io.IOException;
 
 /**
  * Represents a point light.

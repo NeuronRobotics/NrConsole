@@ -31,6 +31,15 @@
  */
 package jme3test.terrain;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.export.Savable;
 import com.jme3.export.binary.BinaryExporter;
@@ -52,9 +61,6 @@ import com.jme3.terrain.heightmap.AbstractHeightMap;
 import com.jme3.terrain.heightmap.ImageBasedHeightMap;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import java.io.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Saves and loads terrain.

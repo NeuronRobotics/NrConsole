@@ -29,12 +29,13 @@
  */
 package com.jme3.terrain.noise.basis;
 
-import com.jme3.terrain.noise.Basis;
-import com.jme3.terrain.noise.modulator.Modulator;
-import com.jme3.terrain.noise.modulator.NoiseModulator;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jme3.terrain.noise.Basis;
+import com.jme3.terrain.noise.modulator.Modulator;
+import com.jme3.terrain.noise.modulator.NoiseModulator;
 
 /**
  * Utility base class for Noise implementations

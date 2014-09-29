@@ -31,11 +31,13 @@
  */
 package com.jme3.network.message;
 
-import com.jme3.network.AbstractMessage;
-import com.jme3.network.serializing.*;
-import com.jme3.network.serializing.serializers.StringSerializer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import com.jme3.network.AbstractMessage;
+import com.jme3.network.serializing.Serializable;
+import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.serializers.StringSerializer;
 
 /**
  * Represents a disconnect message.

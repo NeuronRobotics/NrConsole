@@ -31,6 +31,8 @@
  */
 package jme3test.post;
 
+import java.io.File;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.HttpZipLocator;
 import com.jme3.asset.plugins.ZipLocator;
@@ -48,7 +50,6 @@ import com.jme3.post.ssao.SSAOFilter;
 import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.WaterFilter;
-import java.io.File;
 
 public class TestMultiplesFilters extends SimpleApplication {
 

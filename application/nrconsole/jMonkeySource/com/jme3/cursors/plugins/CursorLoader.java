@@ -31,11 +31,6 @@
  */
 package com.jme3.cursors.plugins;
 
-import com.jme3.asset.AssetInfo;
-import com.jme3.asset.AssetKey;
-import com.jme3.asset.AssetLoader;
-import com.jme3.util.BufferUtils;
-import com.jme3.util.LittleEndien;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -48,7 +43,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
+
+import com.jme3.asset.AssetInfo;
+import com.jme3.asset.AssetKey;
+import com.jme3.asset.AssetLoader;
+import com.jme3.util.BufferUtils;
+import com.jme3.util.LittleEndien;
 
 /**
  *

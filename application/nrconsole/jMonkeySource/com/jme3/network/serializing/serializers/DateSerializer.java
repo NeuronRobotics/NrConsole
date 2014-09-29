@@ -31,10 +31,11 @@
  */
 package com.jme3.network.serializing.serializers;
 
-import com.jme3.network.serializing.Serializer;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Date;
+
+import com.jme3.network.serializing.Serializer;
 
 /**
  * Date serializer.

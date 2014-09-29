@@ -31,10 +31,11 @@
  */
 package com.jme3.network.serializing.serializers;
 
-import com.jme3.network.serializing.Serializer;
-import com.jme3.network.serializing.SerializerException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+
+import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.SerializerException;
 
 /**
  * Enum serializer.

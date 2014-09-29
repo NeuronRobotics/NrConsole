@@ -32,6 +32,9 @@
 
 package jme3test.stress;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
@@ -41,8 +44,6 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial.CullHint;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.util.NativeObjectManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Generates 400 new meshes every frame then leaks them.

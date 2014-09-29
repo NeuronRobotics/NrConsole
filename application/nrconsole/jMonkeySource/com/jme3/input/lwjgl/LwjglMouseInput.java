@@ -32,6 +32,14 @@
 
 package com.jme3.input.lwjgl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Cursor;
+import org.lwjgl.input.Mouse;
+
 import com.jme3.cursors.plugins.JmeCursor;
 import com.jme3.input.MouseInput;
 import com.jme3.input.RawInputListener;
@@ -39,12 +47,6 @@ import com.jme3.input.event.MouseButtonEvent;
 import com.jme3.input.event.MouseMotionEvent;
 import com.jme3.system.lwjgl.LwjglAbstractDisplay;
 import com.jme3.system.lwjgl.LwjglTimer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Cursor;
-import org.lwjgl.input.Mouse;
 
 public class LwjglMouseInput implements MouseInput {
 

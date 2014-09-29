@@ -31,13 +31,14 @@
  */
 package com.jme3.network.rmi;
 
-import com.jme3.network.serializing.Serializer;
-import com.jme3.network.serializing.SerializerRegistration;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.SerializerRegistration;
 
 /**
  * {@link RmiSerializer} is responsible for serializing RMI messages

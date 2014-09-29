@@ -31,11 +31,12 @@
  */
 package com.jme3.network.rmi;
 
-import com.jme3.network.HostedConnection;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.jme3.network.HostedConnection;
 
 /**
  * Contains various meta-data about an RMI interface.

@@ -19,14 +19,14 @@ import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jivesoftware.smack.XMPPException;
+
 import com.neuronrobotics.application.xmpp.DyIOConversationFactory;
 import com.neuronrobotics.application.xmpp.GoogleChat.GoogleChatEngine;
 import com.neuronrobotics.application.xmpp.GoogleChat.IChatLog;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
-
-import org.jivesoftware.smack.XMPPException;
 
 public class GoogleChatLogin extends JPanel implements IChatLog {
 

@@ -31,8 +31,14 @@
  */
 package jme3test.stress;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import jme3tools.optimize.LodGenerator;
+
 import com.jme3.animation.AnimChannel;
-import com.jme3.animation.AnimControl;
 import com.jme3.animation.SkeletonControl;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
@@ -50,11 +56,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.VertexBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import jme3tools.optimize.LodGenerator;
 
 public class TestLodGeneration extends SimpleApplication {
 

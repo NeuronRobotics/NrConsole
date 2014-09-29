@@ -9,8 +9,6 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IDyIOChannelModeChangeListener;
-import com.neuronrobotics.sdk.dyio.IDyIOEvent;
-import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
 
 public class ChannelManager  implements IDyIOChannelModeChangeListener {
 	public static final int ALIGNED_LEFT = 0;

@@ -31,11 +31,12 @@
  */
 package jme3test.tools;
 
+import jme3tools.savegame.SaveGame;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import jme3tools.savegame.SaveGame;
 
 public class TestSaveGame extends SimpleApplication {
 

@@ -32,14 +32,15 @@
 
 package jme3test.app;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.util.BufferUtils;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 public class TestReleaseDirectMemory extends SimpleApplication {
 

@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.SchedulerGui;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class NRDyIOGoogleChat extends AbstractNRConsoleTabedPanelPlugin {

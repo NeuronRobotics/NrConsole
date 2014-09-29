@@ -1,5 +1,23 @@
 package com.jme3.input.lwjgl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import net.java.games.input.Component;
+import net.java.games.input.Component.Identifier;
+import net.java.games.input.Component.Identifier.Axis;
+import net.java.games.input.Component.Identifier.Button;
+import net.java.games.input.Component.POV;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.Event;
+import net.java.games.input.EventQueue;
+import net.java.games.input.Rumbler;
+
 import com.jme3.input.AbstractJoystick;
 import com.jme3.input.DefaultJoystickAxis;
 import com.jme3.input.DefaultJoystickButton;
@@ -12,17 +30,6 @@ import com.jme3.input.JoystickCompatibilityMappings;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.JoyAxisEvent;
 import com.jme3.input.event.JoyButtonEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import net.java.games.input.*;
-import net.java.games.input.Component.Identifier;
-import net.java.games.input.Component.Identifier.Axis;
-import net.java.games.input.Component.Identifier.Button;
-import net.java.games.input.Component.POV;
 
 public class JInputJoyInput implements JoyInput {
 

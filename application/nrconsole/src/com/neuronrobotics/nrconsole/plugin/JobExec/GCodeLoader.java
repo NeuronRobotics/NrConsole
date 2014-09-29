@@ -2,16 +2,9 @@ package com.neuronrobotics.nrconsole.plugin.JobExec;
 
 import java.io.InputStream;
 
-import javax.vecmath.Point3f;
-
-import com.neuronrobotics.replicator.driver.PrinterStatus;
-import com.neuronrobotics.replicator.driver.PrinterStatusListener;
-import com.neuronrobotics.replicator.driver.PrinterStatus.PrinterState;
 import com.neuronrobotics.replicator.driver.interpreter.CodeHandler;
 import com.neuronrobotics.replicator.driver.interpreter.GCodeInterpreter;
 import com.neuronrobotics.replicator.driver.interpreter.GCodeLineData;
-import com.neuronrobotics.sdk.addons.kinematics.math.RotationNR;
-import com.neuronrobotics.sdk.addons.kinematics.math.TransformNR;
 
 public class GCodeLoader {
 	private GCodeInterpreter interp;

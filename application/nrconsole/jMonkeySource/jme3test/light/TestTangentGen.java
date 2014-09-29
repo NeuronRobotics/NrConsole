@@ -32,6 +32,9 @@
 
 package jme3test.light;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
@@ -47,8 +50,6 @@ import com.jme3.scene.shape.Quad;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.util.BufferUtils;
 import com.jme3.util.TangentBinormalGenerator;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 
 public class TestTangentGen extends SimpleApplication {

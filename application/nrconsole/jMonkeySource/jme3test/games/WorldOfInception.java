@@ -31,6 +31,10 @@
  */
 package jme3test.games;
 
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
@@ -57,9 +61,6 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * WorldOfInception - Find the galaxy center ;)

@@ -32,6 +32,9 @@
 
 package jme3test.asset;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme3.asset.AssetKey;
 import com.jme3.asset.AssetProcessor;
 import com.jme3.asset.CloneableAssetProcessor;
@@ -40,8 +43,6 @@ import com.jme3.asset.cache.AssetCache;
 import com.jme3.asset.cache.SimpleAssetCache;
 import com.jme3.asset.cache.WeakRefAssetCache;
 import com.jme3.asset.cache.WeakRefCloneAssetCache;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestAssetCache {
    

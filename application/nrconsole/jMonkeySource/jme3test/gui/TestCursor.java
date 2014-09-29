@@ -1,8 +1,9 @@
 package jme3test.gui;
 
+import java.util.ArrayList;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.cursors.plugins.JmeCursor;
-import java.util.ArrayList;
 
 /**
  * This test class demonstrate how to change cursor in jME3.

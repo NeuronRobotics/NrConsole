@@ -31,8 +31,6 @@
  */
 package com.jme3.network.serializing.serializers;
 
-import com.jme3.network.serializing.Serializer;
-import com.jme3.network.serializing.SerializerRegistration;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -41,6 +39,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
+
+import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.SerializerRegistration;
 
 public class MapSerializer extends Serializer {
 

@@ -31,10 +31,9 @@
  */
 package com.jme3.texture;
 
-import com.jme3.texture.Image.Format;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import com.jme3.texture.Image.Format;
 
 /**
  * This class implements a Texture array

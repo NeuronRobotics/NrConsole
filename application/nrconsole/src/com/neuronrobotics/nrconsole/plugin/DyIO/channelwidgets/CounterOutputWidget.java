@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -17,7 +16,6 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.CounterOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
-import com.neuronrobotics.sdk.dyio.peripherals.ICounterInputListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ICounterOutputListener;
 
 

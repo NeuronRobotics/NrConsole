@@ -32,13 +32,14 @@
 
 package jme3test.audio;
 
+import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.Environment;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import org.lwjgl.openal.AL10;
-import org.lwjgl.openal.AL11;
 
 /**
  * Test Doppler Effect

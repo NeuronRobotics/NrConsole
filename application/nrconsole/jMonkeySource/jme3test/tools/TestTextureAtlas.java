@@ -31,6 +31,8 @@
  */
 package jme3test.tools;
 
+import jme3tools.optimize.TextureAtlas;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -40,7 +42,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
-import jme3tools.optimize.TextureAtlas;
 
 public class TestTextureAtlas extends SimpleApplication {
 
