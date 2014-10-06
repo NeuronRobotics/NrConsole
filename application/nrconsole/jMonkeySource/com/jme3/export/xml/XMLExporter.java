@@ -32,14 +32,16 @@
 
 package com.jme3.export.xml;
 
-import com.jme3.export.JmeExporter;
-import com.jme3.export.OutputCapsule;
-import com.jme3.export.Savable;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import com.jme3.export.JmeExporter;
+import com.jme3.export.OutputCapsule;
+import com.jme3.export.Savable;
 
 /**
  * Part of the jME XML IO system as introduced in the google code jmexml project.

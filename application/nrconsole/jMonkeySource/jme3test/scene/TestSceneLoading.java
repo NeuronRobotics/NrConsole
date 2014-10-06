@@ -32,6 +32,8 @@
 
 package jme3test.scene;
 
+import java.io.File;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.HttpZipLocator;
 import com.jme3.asset.plugins.ZipLocator;
@@ -43,7 +45,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.util.SkyFactory;
-import java.io.File;
 
 public class TestSceneLoading extends SimpleApplication {
 

@@ -1,5 +1,7 @@
 package jme3test.terrain;
 
+import java.io.File;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.ScreenshotAppState;
 import com.jme3.asset.plugins.HttpZipLocator;
@@ -27,7 +29,6 @@ import com.jme3.terrain.geomipmap.grid.AssetTileLoader;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import java.io.File;
 
 public class TerrainGridTileLoaderTest extends SimpleApplication {
 

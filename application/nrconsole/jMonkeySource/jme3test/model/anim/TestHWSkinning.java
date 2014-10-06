@@ -31,7 +31,12 @@
  */
 package jme3test.model.anim;
 
-import com.jme3.animation.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.jme3.animation.AnimChannel;
+import com.jme3.animation.AnimControl;
+import com.jme3.animation.SkeletonControl;
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
@@ -42,8 +47,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestHWSkinning extends SimpleApplication implements ActionListener{
 

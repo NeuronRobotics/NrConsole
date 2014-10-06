@@ -3,7 +3,6 @@ package com.neuronrobotics.nrconsole.plugin.DyIO;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -11,9 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.neuronrobotics.sdk.config.SDKBuildInfo;
-
 import net.miginfocom.swing.MigLayout;
+
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 
 public class GettingStartedPanel extends JPanel {
 

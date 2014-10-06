@@ -1,21 +1,16 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
-import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.BorderLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JScrollPane;
-import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-
 import com.neuronrobotics.nrconsole.util.PrefsLoader;
-
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Slic3rMasterPanel extends SettingsPanel {
 	private JScrollPane scrollPane;

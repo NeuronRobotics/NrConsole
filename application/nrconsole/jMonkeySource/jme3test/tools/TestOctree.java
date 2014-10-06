@@ -32,6 +32,13 @@
 
 package jme3test.tools;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import jme3tools.optimize.FastOctnode;
+import jme3tools.optimize.Octree;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.light.DirectionalLight;
@@ -46,14 +53,8 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.WireBox;
-import com.jme3.scene.plugins.ogre.MeshLoader;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
 import com.jme3.texture.FrameBuffer;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import jme3tools.optimize.FastOctnode;
-import jme3tools.optimize.Octree;
 
 
 public class TestOctree extends SimpleApplication implements SceneProcessor {

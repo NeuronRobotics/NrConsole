@@ -31,14 +31,6 @@
  */
 package com.jme3.scene;
 
-import com.jme3.export.*;
-import com.jme3.material.Material;
-import com.jme3.math.Matrix4f;
-import com.jme3.math.Transform;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.mesh.IndexBuffer;
-import com.jme3.util.SafeArrayList;
-import com.jme3.util.TempVars;
 import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.FloatBuffer;
@@ -48,6 +40,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.export.InputCapsule;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.OutputCapsule;
+import com.jme3.export.Savable;
+import com.jme3.material.Material;
+import com.jme3.math.Matrix4f;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.mesh.IndexBuffer;
+import com.jme3.util.SafeArrayList;
+import com.jme3.util.TempVars;
 
 /**
  * BatchNode holds geometries that are a batched version of all the geometries that are in its sub scenegraph.

@@ -31,8 +31,9 @@
  */
 package com.jme3.network.base;
 
-import com.jme3.network.kernel.Connector;
 import java.io.IOException;
+
+import com.jme3.network.kernel.Connector;
 
 
 /**

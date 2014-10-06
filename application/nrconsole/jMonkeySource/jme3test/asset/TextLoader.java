@@ -1,9 +1,10 @@
 package jme3test.asset;
 
-import com.jme3.asset.AssetInfo;
-import com.jme3.asset.AssetLoader;
 import java.io.IOException;
 import java.util.Scanner;
+
+import com.jme3.asset.AssetInfo;
+import com.jme3.asset.AssetLoader;
 
 /**
  * An example implementation of {@link AssetLoader} to load text

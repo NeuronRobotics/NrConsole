@@ -31,13 +31,15 @@
  */
 package jme3test.app;
 
-import com.jme3.app.SimpleApplication;
-import com.jme3.font.BitmapText;
-import com.jme3.system.AppSettings;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Logger;
+
 import javax.imageio.ImageIO;
+
+import com.jme3.app.SimpleApplication;
+import com.jme3.font.BitmapText;
+import com.jme3.system.AppSettings;
 
 public class TestChangeAppIcon extends SimpleApplication {
 

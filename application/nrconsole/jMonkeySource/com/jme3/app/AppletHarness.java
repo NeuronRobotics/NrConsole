@@ -31,9 +31,6 @@
  */
 package com.jme3.app;
 
-import com.jme3.system.AppSettings;
-import com.jme3.system.JmeCanvasContext;
-import com.jme3.system.JmeSystem;
 import java.applet.Applet;
 import java.awt.Canvas;
 import java.awt.Graphics;
@@ -42,8 +39,13 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+
+import com.jme3.system.AppSettings;
+import com.jme3.system.JmeCanvasContext;
+import com.jme3.system.JmeSystem;
 
 /**
  * @author Kirill Vainer

@@ -1,17 +1,12 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
-
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JFormattedTextField;
-import javax.swing.text.MaskFormatter;
 
 public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 	private JLabel lblNozzleDiameter;

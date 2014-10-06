@@ -31,6 +31,8 @@
  */
 package com.jme3.post.filters;
 
+import java.io.IOException;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -41,7 +43,6 @@ import com.jme3.post.Filter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.texture.Texture2D;
-import java.io.IOException;
 
 /**
  * This filter compose a texture with the viewport texture. This is used to

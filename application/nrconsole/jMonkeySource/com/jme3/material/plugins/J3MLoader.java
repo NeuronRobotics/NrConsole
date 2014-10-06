@@ -31,10 +31,28 @@
  */
 package com.jme3.material.plugins;
 
-import com.jme3.asset.*;
-import com.jme3.material.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.jme3.asset.AssetInfo;
+import com.jme3.asset.AssetKey;
+import com.jme3.asset.AssetLoadException;
+import com.jme3.asset.AssetLoader;
+import com.jme3.asset.AssetManager;
+import com.jme3.asset.AssetNotFoundException;
+import com.jme3.asset.MaterialKey;
+import com.jme3.asset.TextureKey;
+import com.jme3.material.FixedFuncBinding;
+import com.jme3.material.MatParam;
+import com.jme3.material.Material;
+import com.jme3.material.MaterialDef;
+import com.jme3.material.RenderState;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.material.RenderState.FaceCullMode;
+import com.jme3.material.TechniqueDef;
 import com.jme3.material.TechniqueDef.LightMode;
 import com.jme3.material.TechniqueDef.ShadowMode;
 import com.jme3.math.ColorRGBA;
@@ -47,11 +65,6 @@ import com.jme3.texture.Texture2D;
 import com.jme3.util.PlaceholderAssets;
 import com.jme3.util.blockparser.BlockLanguageParser;
 import com.jme3.util.blockparser.Statement;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class J3MLoader implements AssetLoader {
 

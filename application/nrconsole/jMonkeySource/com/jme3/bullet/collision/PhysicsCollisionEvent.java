@@ -31,11 +31,12 @@
  */
 package com.jme3.bullet.collision;
 
+import java.util.EventObject;
+
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import com.jme3.bullet.util.Converter;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import java.util.EventObject;
 
 /**
  * A CollisionEvent stores all information about a collision in the PhysicsWorld.

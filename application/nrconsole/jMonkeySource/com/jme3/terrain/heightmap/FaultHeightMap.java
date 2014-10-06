@@ -31,10 +31,11 @@
  */
 package com.jme3.terrain.heightmap;
 
-import com.jme3.math.FastMath;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.math.FastMath;
 
 /**
  * Creates an heightmap based on the fault algorithm. Each iteration, a random line

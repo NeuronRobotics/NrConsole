@@ -32,13 +32,14 @@
 
 package jme3test.conversion;
 
+import jme3tools.converters.model.ModelConverter;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Mesh;
-import jme3tools.converters.model.ModelConverter;
 
 public class TestTriangleStrip extends SimpleApplication {
 

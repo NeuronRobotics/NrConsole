@@ -17,12 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.neuronrobotics.sdk.bowlercam.device.BowlerCamDevice;
 import com.neuronrobotics.sdk.bowlercam.device.IWebcamImageListener;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-
-import net.miginfocom.swing.MigLayout;
 
 public class BowlerCamPanel extends JPanel implements IWebcamImageListener {
 	/**

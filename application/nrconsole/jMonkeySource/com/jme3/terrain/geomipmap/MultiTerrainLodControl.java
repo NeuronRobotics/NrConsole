@@ -31,13 +31,14 @@
  */
 package com.jme3.terrain.geomipmap;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import com.jme3.terrain.geomipmap.lodcalc.LodCalculator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * An extension of the TerrainLodControl that handles

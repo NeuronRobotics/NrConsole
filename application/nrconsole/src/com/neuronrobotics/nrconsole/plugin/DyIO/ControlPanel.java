@@ -9,13 +9,11 @@ import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.Timer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -28,10 +26,9 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.DigitalOutputWidg
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.LabelChannelUI;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.PPMReaderWidget;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.SPIChannelWidget;
-import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.SliderChannelUI;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.ServoWidget;
+import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.SliderChannelUI;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.UARTChannelUI;
-import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;

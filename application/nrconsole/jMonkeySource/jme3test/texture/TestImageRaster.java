@@ -1,6 +1,8 @@
 package jme3test.texture;
 
 
+import java.nio.ByteBuffer;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
@@ -19,7 +21,6 @@ import com.jme3.texture.Texture.MinFilter;
 import com.jme3.texture.Texture2D;
 import com.jme3.texture.image.ImageRaster;
 import com.jme3.util.BufferUtils;
-import java.nio.ByteBuffer;
 
 public class TestImageRaster extends SimpleApplication {
     

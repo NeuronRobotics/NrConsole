@@ -31,6 +31,9 @@
  */
 package com.jme3.post.filters;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -43,8 +46,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.texture.Image.Format;
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * BloomFilter is used to make objects in the scene have a glow effect.<br>

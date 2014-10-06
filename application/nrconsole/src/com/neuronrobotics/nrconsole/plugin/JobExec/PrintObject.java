@@ -5,13 +5,10 @@ import java.util.ArrayList;
 
 import jme3tools.optimize.GeometryBatchFactory;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Cylinder;
 import com.jme3.scene.shape.Line;
 
 public class PrintObject{

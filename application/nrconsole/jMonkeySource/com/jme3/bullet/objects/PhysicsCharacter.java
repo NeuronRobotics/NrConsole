@@ -31,6 +31,8 @@
  */
 package com.jme3.bullet.objects;
 
+import java.io.IOException;
+
 import com.bulletphysics.collision.dispatch.CollisionFlags;
 import com.bulletphysics.collision.dispatch.PairCachingGhostObject;
 import com.bulletphysics.collision.shapes.ConvexShape;
@@ -46,7 +48,6 @@ import com.jme3.export.OutputCapsule;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import java.io.IOException;
 
 /**
  * Basic Bullet Character

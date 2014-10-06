@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.dyio.DyIO;
 
 public class HexapodNRConsolePulgin extends AbstractNRConsoleTabedPanelPlugin {
 	public static final String[] myNames ={"neuronrobotics.dyio.*"};

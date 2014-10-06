@@ -32,13 +32,14 @@
 
 package jme3tools.converters;
 
-import com.jme3.asset.AssetManager;
-import com.jme3.system.JmeSystem;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
+
+import com.jme3.asset.AssetManager;
+import com.jme3.system.JmeSystem;
 
 public class FolderConverter {
 

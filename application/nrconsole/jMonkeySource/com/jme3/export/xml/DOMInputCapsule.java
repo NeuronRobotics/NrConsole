@@ -32,19 +32,29 @@
 
 package com.jme3.export.xml;
 
-import com.jme3.export.InputCapsule;
-import com.jme3.export.Savable;
-import com.jme3.export.SavableClassUtil;
-import com.jme3.util.BufferUtils;
-import com.jme3.util.IntMap;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
-import org.w3c.dom.*;
+
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import com.jme3.export.InputCapsule;
+import com.jme3.export.Savable;
+import com.jme3.export.SavableClassUtil;
+import com.jme3.util.BufferUtils;
+import com.jme3.util.IntMap;
 
 /**
  * Part of the jME XML IO system as introduced in the google code jmexml project.

@@ -17,17 +17,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.neuronrobotics.sdk.common.MACAddress;
-import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIOPowerState;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-
-
-
-import net.miginfocom.swing.MigLayout;
 
 public class DyIOPanel extends JPanel {
 	private static final long serialVersionUID = 1L;

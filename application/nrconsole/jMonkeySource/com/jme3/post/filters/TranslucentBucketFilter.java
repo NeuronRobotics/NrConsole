@@ -31,6 +31,9 @@
  */
 package com.jme3.post.filters;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.material.Material;
@@ -45,8 +48,6 @@ import com.jme3.scene.Spatial;
 import com.jme3.texture.FrameBuffer;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture2D;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A filter to handle translucent objects when rendering a scene with filters that uses depth like WaterFilter and SSAOFilter

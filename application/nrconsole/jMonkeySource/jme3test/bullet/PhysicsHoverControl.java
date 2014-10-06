@@ -31,6 +31,8 @@
  */
 package jme3test.bullet;
 
+import java.io.IOException;
+
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.PhysicsTickListener;
 import com.jme3.bullet.collision.shapes.CollisionShape;
@@ -46,7 +48,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
-import java.io.IOException;
 
 /**
  * PhysicsHoverControl uses a RayCast Vehicle with "slippery wheels" to simulate a hovering tank

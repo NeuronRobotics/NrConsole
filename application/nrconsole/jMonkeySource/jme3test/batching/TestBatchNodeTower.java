@@ -31,6 +31,8 @@
  */
 package jme3test.batching;
 
+import jme3test.bullet.BombControl;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.TextureKey;
 import com.jme3.bullet.BulletAppState;
@@ -59,7 +61,6 @@ import com.jme3.system.AppSettings;
 import com.jme3.system.NanoTimer;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import jme3test.bullet.BombControl;
 
 /**
  *
