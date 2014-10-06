@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
+import com.neuronrobotics.nrconsole.util.NRConsoleDocumentationFactory;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
@@ -27,6 +28,7 @@ import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class DyIOPanel extends JPanel {
+	private DyIOPanel self = this;//used for NRConsoleDocumentationFactory.getDocumentationURL input
 	private static final long serialVersionUID = 1L;
 	private ImageIcon image;
 	private JLabel voltage = new JLabel("Battery Voltage");
@@ -74,7 +76,7 @@ public class DyIOPanel extends JPanel {
 	    fwInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Update_Firmware");
+					GettingStartedPanel.openPage(NRConsoleDocumentationFactory.getDocumentationURL(self));
 				} catch (Exception e1) {
 					
 				}
@@ -126,7 +128,6 @@ public class DyIOPanel extends JPanel {
 	
 	public void addChannels(List<ChannelManager> list, boolean alignedLeft) {
 		int index = 0;
-		//removeAll();
 		for(ChannelManager cp : list) {
 			cp.getChannelPanel().setAlignedLeft(alignedLeft);
 			int x = (alignedLeft ? 125 : 350);
@@ -169,11 +170,9 @@ public class DyIOPanel extends JPanel {
 		 */
 		private static final long serialVersionUID = 3204367369543884223L;
 		private DyIOPowerState state = DyIOPowerState.BATTERY_UNPOWERED;
-		//DyIOPowerState old;
 		showOption thread;
 		
 		public void setState(DyIOPowerState s){
-			//old = state;
 			state = s;
 			if( thread==null) {
 				 thread= new showOption();
@@ -199,7 +198,6 @@ public class DyIOPanel extends JPanel {
 	    		}
 	    		Graphics2D g2 = (Graphics2D)g;
 	    		g2.fillRect(0, 0,75, 75);
-	    		//g2.fillOval(0, 0, 75, 75);
 	    	} catch (Exception e) {
 	    		
 	    	}
@@ -225,14 +223,12 @@ public class DyIOPanel extends JPanel {
 			while(DyIORegestry.get().isAvailable()) {
 				if(newState) {
 					newState =false;
-					//System.out.println("Dialog Start");
 					if(old == DyIOPowerState.BATTERY_POWERED && state !=DyIOPowerState.BATTERY_POWERED){
 						JOptionPane.showMessageDialog(null, "WARNING!\nBattery needs to be charged or has been disconnected \nServos have been disabled for safety", "DyIO Power Warning", JOptionPane.WARNING_MESSAGE);
 					}else 
 					if(old != DyIOPowerState.BATTERY_POWERED && state ==DyIOPowerState.BATTERY_POWERED){
 						JOptionPane.showMessageDialog(null, "Battery is connected \nServos/Motors need to be re-enabled to start up", "DyIO Power Warning", JOptionPane.INFORMATION_MESSAGE);
 					}
-					//System.out.println("Dialog done");
 				}else {
 					ThreadUtil.wait(5);
 				}

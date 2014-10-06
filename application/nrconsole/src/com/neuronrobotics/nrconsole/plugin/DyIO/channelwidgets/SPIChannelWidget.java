@@ -16,14 +16,13 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.SPIChannel;
 
 public class SPIChannelWidget extends ControlWidget {
-	/**
-	 * long 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JComboBox ss = new JComboBox();
 	private ByteList dataStream = new ByteList();
@@ -60,6 +59,7 @@ public class SPIChannelWidget extends ControlWidget {
 				
 			}	
 		});
+		
 		clear.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent arg0) {
@@ -76,16 +76,17 @@ public class SPIChannelWidget extends ControlWidget {
 					JOptionPane.showMessageDialog(null, "Please select  Chip Select pin", "Chip Select error", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-				//Log.enableDebugPrint(true);
+				
 				byte [] back = spi.write(s.intValue(), dataStream.getBytes());
-				//Log.enableDebugPrint(false);
+				
 				rx.setText(new ByteList(back).toString());
 			}	
 		});
 		
-		//Button to launch info page for Digital Input panel
+		//Button to launch info page for SPIChannel panel
 		JButton helpButton = new JButton("Help");
-		//Label for Digital Input Panel
+		
+		//Label for SPIChannel Panel
 		JLabel helpLabel = new JLabel("SPI Panel");
 		JPanel pan1 = new JPanel(new MigLayout()); 
 		pan1.add(helpLabel, "split 2, span 2, align left");
@@ -95,14 +96,16 @@ public class SPIChannelWidget extends ControlWidget {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/SPI_Passthrough_Channel");
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(spi));
 				} catch (Exception exceptE) {}
 			}
 		});
+		
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
-		//Digital Input Panel label formating
+		
+		//SPIChannel Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
 		JPanel pan = new JPanel(new MigLayout()); 
@@ -120,7 +123,6 @@ public class SPIChannelWidget extends ControlWidget {
 		pan.add(addByteButton);
 		
 		add(pan);
-		
 	}
 	
 	public DyIOAbstractPeripheral getPerpheral() {

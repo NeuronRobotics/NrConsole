@@ -16,6 +16,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
@@ -48,9 +49,10 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		sliderUI.setMajorTickSpacing(15);
 		sliderUI.setPaintTicks(true);
 		
-		//Button to launch info page for Digital Input panel
+		//Button to launch info page for Servo Panel
 		JButton helpButton = new JButton("Help");
-		//Label for Digital Input Panel
+		
+		//Label for Servo Panel
 		JLabel helpLabel = new JLabel("Servo Panel");
 		add(helpLabel, "split 2, span 2, align left");
 		add(helpButton, "gapleft 200, wrap, align right");
@@ -58,14 +60,16 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Servo_Channel");
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(sc));
 				} catch (Exception exceptE) {}
 			}
 		});
+		
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
-		//Digital Input Panel label formating
+		
+		//Servo Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
 		
@@ -103,7 +107,6 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		valueUI.setText(formatValue(value));
 	}
 
-	
 	public void stateChanged(ChangeEvent e) {
 		valueUI.setText(formatValue(sliderUI.getValue()));
 		
@@ -121,13 +124,12 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 			save.setEnabled(true);
 		else
 			save.setEnabled(false);
+		
 		if( startup == false ) {
-			
 			sc.SetPosition(sliderUI.getValue());
 			recordValue(sliderUI.getValue());
 		}
 	}
-
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == save){
@@ -137,12 +139,10 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		}
 	}
 	
-	
 	public void pollValue() {
 		recordValue(sliderUI.getValue());
 	}
 
-	
 	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;

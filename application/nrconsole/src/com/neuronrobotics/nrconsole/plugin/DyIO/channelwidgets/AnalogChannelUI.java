@@ -15,6 +15,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.dyio.peripherals.AnalogInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.IAnalogInputListener;
@@ -43,9 +44,9 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 		sliderUI.setPaintTicks(true);
 		sliderUI.setEnabled(false);
 		
-		
 		//Button to launch info page for Digital Input panel
 		JButton helpButton = new JButton("Help");
+		
 		//Label for Digital Input Panel
 		JLabel helpLabel = new JLabel("Analog Input Panel");
 		add(helpLabel, "split 2, span 2, align left");
@@ -54,19 +55,20 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Analog_Input_Channel");
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(aic));
 				} catch (Exception exceptE) {}
 			}
 		});
+		
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
+		
 		//Digital Input Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
 		
 		JPanel pan = new JPanel(new MigLayout()); 
-		
 		
 		pan.add(sliderUI);
 		vals.add(valueUI,"wrap");
@@ -95,12 +97,10 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 		recordValue(value );
 	}
 
-	
 	public void onAnalogValueChange(AnalogInputChannel channel,double value) {
 		setValue(value);
 		async.setSelected(true);
 	}
-
 	
 	public void actionPerformed(ActionEvent e) {
 		setValue(aic.getScaledValue());
@@ -117,13 +117,11 @@ public class AnalogChannelUI extends ControlWidget implements IAnalogInputListen
 		}
 	}
 	
-	
 	public void pollValue() {
 		if(!async.isSelected())
 			setValue(aic.getValue());
 	}
 
-	
 	public DyIOAbstractPeripheral getPerpheral() {
 		return aic;
 	}

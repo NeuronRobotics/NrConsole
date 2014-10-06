@@ -19,6 +19,7 @@ import org.lwjgl.openal.AL;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.nrconsole.util.NRConsoleDocumentationFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
@@ -28,6 +29,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	private PluginManager manager;//Manages the display/update of plugins
 	private boolean ready=false;//Is changed to true when the menus are initialized/set up
 	
+	private MenuBar self = this;//used for NRConsoleDocumentationFactory.getDocumentationURL input
 	//JMenus and their associated JMenuItems
 	
 	//The "File" menu
@@ -140,7 +142,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 				//If it fails, will generate, pack and show the aboutFrame containing the aboutPanel.
 				//The aboutPanel contains a jlabel displaying the current console version number
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/NR_Console_Intro");
+					GettingStartedPanel.openPage(NRConsoleDocumentationFactory.getDocumentationURL(self));
 				} catch (Exception e1) {
 				    aboutPanel.add(new JLabel(NRConsoleWindow.getConsoleVersion()),"wrap");//Set up the about panel
 					aboutFrame = new JFrame(aboutPanel.getName());

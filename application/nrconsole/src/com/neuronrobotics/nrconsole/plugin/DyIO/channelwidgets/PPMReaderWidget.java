@@ -13,15 +13,13 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.IPPMReaderListener;
 import com.neuronrobotics.sdk.dyio.peripherals.PPMReaderChannel;
 
 public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener{
 
-	/**
-	 * long 
-	 */
 	private static final long serialVersionUID = 1L;
 	private PPMReaderChannel ppmr;
 	private JLabel [] ppmLabels = new JLabel[6] ;
@@ -30,10 +28,9 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 	private JPanel values = new JPanel(new MigLayout());
 	public PPMReaderWidget(ChannelManager c) {
 		super(c);
-		//System.out.println("\nInitializing PPM channel");
+		
 		try {
 			ppmr = new PPMReaderChannel(getChannel());
-			
 			cross = ppmr.getCrossLink();
 			int [] vals = ppmr.getValues();
 			for(int i=0;i<ppmLabels.length;i++){
@@ -52,9 +49,11 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 				values.add(ppmLabels[i]);
 				values.add(ppmLinks[i],"wrap");
 			}
-			//Button to launch info page for Digital Input panel
+			
+			//Button to launch info page for PPMReaderChannel panel
 			JButton helpButton = new JButton("Help");
-			//Label for Digital Input Panel
+			
+			//Label for PPMReaderChannel Panel
 			JLabel helpLabel = new JLabel("PPM R/C signal Panel");
 			add(helpLabel, "split 2, span 2, align left");
 			add(helpButton, "gapleft 200, wrap, align right");
@@ -62,33 +61,37 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					try {
-						GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/PPM_Reader_Channel");
+						GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(ppmr));
 					} catch (Exception exceptE) {}
 				}
 			});
+			
 			//Help button formating
 			helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 			helpButton.setBackground(Color.green);
-			//Digital Input Panel label formating
+			
+			//PPMReaderChannel Panel label formating
 			helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 			helpLabel.setForeground(Color.GRAY);
 			
 			add(values);
 			ppmr.addPPMReaderListener(this);
-			//System.out.println("\nPPM UI ok");
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			throw new RuntimeException();
 		}
 		
 	}
+	
 	private void selectChan(int ppmChan,int dyioChan){
-		//System.out.println("\nSelecting dyio channel: "+dyioChan+" on ppm: "+ppmChan);
+		
 		if(dyioChan == PPMReaderChannel.NO_CROSSLINK)
 			return;
 		for(int i=0;i<25;i++){
 			Object o = ppmLinks[ppmChan].getItemAt(i);
 			Integer in= new Integer(PPMReaderChannel.NO_CROSSLINK);
+			
 			try{
 				 in= (Integer)o;
 			}catch(ClassCastException nx) {
@@ -99,13 +102,14 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 					
 				}
 			}
-			//System.out.println("Int value of item: "+o);
+			
 			if(in.intValue() == dyioChan){
 				ppmLinks[ppmChan].setSelectedItem(o);
 				return;
 			}
 		}
 	}
+	
 	private class linkListener implements ActionListener{
 		private int index;
 		public linkListener(int i){
@@ -122,22 +126,17 @@ public class PPMReaderWidget extends ControlWidget implements IPPMReaderListener
 			}catch(Exception ex){
 				links[index]=PPMReaderChannel.NO_CROSSLINK;
 			}
+			
 			ppmr.setCrossLink(links);
 		}
 		
 	}
-	
 	
 	public void onPPMPacket(int[] values) {
 		for(int i=0;i<ppmLabels.length;i++){
 			ppmLabels[i].setText(new Integer(values[i]).toString());
 		}
 		repaint();
-//		String s="\nPPM event: [";
-//		for(int i=0;i<values.length;i++){
-//			s+=values[i]+" ";
-//		}
-//		System.out.println(s+"]");
 	}
 	
 	public DyIOAbstractPeripheral getPerpheral() {

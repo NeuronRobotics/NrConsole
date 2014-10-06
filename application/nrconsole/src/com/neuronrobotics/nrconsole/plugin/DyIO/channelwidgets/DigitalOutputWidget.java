@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalOutputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 
@@ -28,10 +29,10 @@ public class DigitalOutputWidget extends ControlWidget implements ActionListener
 		
 		doc = new DigitalOutputChannel(getChannel());
 		
-		
-		//Button to launch info page for Digital Input panel
+		//Button to launch info page for Digital Output panel
 		JButton helpButton = new JButton("Help");
-		//Label for Digital Input Panel
+		
+		//Label for Digital Output Panel
 		JLabel helpLabel = new JLabel("Digital Output Panel");
 		add(helpLabel, "split 2, span 2, align left");
 		add(helpButton, "gapleft 200, wrap, align right");
@@ -39,18 +40,18 @@ public class DigitalOutputWidget extends ControlWidget implements ActionListener
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Digital_Output_Channel");
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(doc));
 				} catch (Exception exceptE) {}
 			}
 		});
+		
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
-		//Digital Input Panel label formating
+		
+		//Digital Output Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
-		
-		
 		
 		add(button);
 		
@@ -69,23 +70,21 @@ public class DigitalOutputWidget extends ControlWidget implements ActionListener
 			recordValue(0);
 		}
 	}
-
 	
 	public void actionPerformed(ActionEvent e) { 
 		if(doc.getChannel().getDevice().getCachedMode()){
 			doc.getChannel().getDevice().setCachedMode(false);
 		}
+		
 		if(doc.setHigh(!state)) {
 			setValue(!state);
 		}
 	}
-
 	
 	public void pollValue() {
 		setValue(doc.isHigh());
 	}
 
-	
 	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;

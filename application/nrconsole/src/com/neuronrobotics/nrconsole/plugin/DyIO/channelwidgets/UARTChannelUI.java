@@ -16,6 +16,7 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.common.ByteList;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -24,9 +25,7 @@ import com.neuronrobotics.sdk.dyio.peripherals.IUARTStreamListener;
 import com.neuronrobotics.sdk.dyio.peripherals.UARTChannel;
 
 public class UARTChannelUI extends ControlWidget implements ActionListener,IUARTStreamListener{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JTextField transmit = new JTextField(20);
 	private JTextArea  receive = new JTextArea(5, 15);
@@ -67,9 +66,10 @@ public class UARTChannelUI extends ControlWidget implements ActionListener,IUART
 			uart.addUARTStreamListener(this);
 		clear.addActionListener(this);
 		
-		//Button to launch info page for Digital Input panel
+		//Button to launch info page for UART panel
 		JButton helpButton = new JButton("Help");
-		//Label for Digital Input Panel
+		
+		//Label for UART Panel
 		JLabel helpLabel = new JLabel("UART Serial Panel");
 		JPanel pan1 = new JPanel(new MigLayout()); 
 		pan1.add(helpLabel, "split 2, span 2, align left");
@@ -79,14 +79,16 @@ public class UARTChannelUI extends ControlWidget implements ActionListener,IUART
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/UART_Passthrough_Channel");
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(uart));
 				} catch (Exception exceptE) {}
 			}
 		});
+		
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
-		//Digital Input Panel label formating
+		
+		//UART Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
 		JPanel pan = new JPanel(new MigLayout()); 
@@ -103,7 +105,6 @@ public class UARTChannelUI extends ControlWidget implements ActionListener,IUART
 		}
 		add(pan);
 	}
-	
 	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == send) { 
@@ -124,23 +125,19 @@ public class UARTChannelUI extends ControlWidget implements ActionListener,IUART
 			Integer in = (Integer)baudrates.getSelectedItem();
 			baud = in.intValue();
 			uart.setUARTBaudrate(baud);
-			//System.out.println("Setting baudrate: "+baud);
 		}
 		
 	}
-	
 	
 	public void onChannelEvent(DyIOChannelEvent event) {
 		String s = receive.getText();
 		try {
 			String got = new ByteList(uart.getBytes()).toString();
-			//System.out.println("Got: "+new ByteList(uart.getBytes()));
 			s+="\n"+got;
 		} catch (Exception e) {}
 		receive.setText(s);
 	}
 
-	
 	public DyIOAbstractPeripheral getPerpheral() {
 		// TODO Auto-generated method stub
 		return null;
