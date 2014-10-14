@@ -31,10 +31,11 @@
  */
 package com.jme3.network.message;
 
-import com.jme3.network.AbstractMessage;
-import com.jme3.network.serializing.Serializable;
 import java.util.Arrays;
 import java.util.List;
+
+import com.jme3.network.AbstractMessage;
+import com.jme3.network.serializing.Serializable;
 
 /**
  *  Contains information about any extra server channels (if they exist).  

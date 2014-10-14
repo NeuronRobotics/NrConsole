@@ -31,6 +31,9 @@
  */
 package com.jme3.bullet.collision.shapes;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
 import com.bulletphysics.collision.shapes.BvhTriangleMeshShape;
 import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.collision.shapes.TriangleIndexVertexArray;
@@ -41,8 +44,6 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Mesh;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 
 /**
  * Basic mesh collision shape

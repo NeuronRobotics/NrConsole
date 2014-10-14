@@ -31,17 +31,22 @@
  */
 package com.jme3.export.binary;
 
-import com.jme3.export.FormatVersion;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.Savable;
-import com.jme3.export.SavableClassUtil;
-import com.jme3.math.FastMath;
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.export.FormatVersion;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.Savable;
+import com.jme3.export.SavableClassUtil;
+import com.jme3.math.FastMath;
 
 /**
  * Exports to the jME Binary Format. Format descriptor: (each numbered item

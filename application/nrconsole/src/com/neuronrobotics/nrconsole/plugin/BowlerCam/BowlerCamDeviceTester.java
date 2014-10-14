@@ -2,42 +2,14 @@ package com.neuronrobotics.nrconsole.plugin.BowlerCam;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.net.URL;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTextArea;
-import javax.swing.SwingConstants;
-
-
 
 import net.miginfocom.swing.MigLayout;
 
-
-//import com.neuronrobotics.sdk.BowlerImaging.ImageProcessingFactory;
-
-import com.neuronrobotics.sdk.bowlercam.device.BowlerCamDevice;
-import com.neuronrobotics.sdk.bowlercam.device.IWebcamImageListener;
-import com.neuronrobotics.sdk.bowlercam.device.ItemMarker;
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.network.UDPBowlerConnection;
-import com.neuronrobotics.sdk.util.ThreadUtil;
+//import com.neuronrobotics.sdk.BowlerImaging.ImageProcessingFactory;
 
 @SuppressWarnings("unused")
 public class BowlerCamDeviceTester{

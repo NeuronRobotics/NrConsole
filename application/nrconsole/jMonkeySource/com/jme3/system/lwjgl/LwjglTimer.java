@@ -32,10 +32,12 @@
 
 package com.jme3.system.lwjgl;
 
-import com.jme3.system.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.lwjgl.Sys;
+
+import com.jme3.system.Timer;
 
 /**
  * <code>Timer</code> handles the system's time related functionality. This

@@ -32,6 +32,8 @@
 
 package jme3test.bullet;
 
+import java.io.File;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.HttpZipLocator;
 import com.jme3.asset.plugins.ZipLocator;
@@ -50,7 +52,6 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.plugins.ogre.OgreMeshKey;
-import java.io.File;
 
 public class TestQ3 extends SimpleApplication implements ActionListener {
 

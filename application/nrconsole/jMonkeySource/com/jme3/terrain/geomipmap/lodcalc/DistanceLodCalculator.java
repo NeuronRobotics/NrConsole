@@ -31,6 +31,10 @@
  */
 package com.jme3.terrain.geomipmap.lodcalc;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
@@ -38,9 +42,6 @@ import com.jme3.export.OutputCapsule;
 import com.jme3.math.Vector3f;
 import com.jme3.terrain.geomipmap.TerrainPatch;
 import com.jme3.terrain.geomipmap.UpdatedTerrainPatch;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Calculates the LOD of the terrain based on its distance from the

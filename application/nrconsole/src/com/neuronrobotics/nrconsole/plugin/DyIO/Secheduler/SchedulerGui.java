@@ -24,7 +24,6 @@ import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.dyio.sequencer.CoreScheduler;
 import com.neuronrobotics.sdk.dyio.sequencer.ServoOutputScheduleChannel;
 import com.neuronrobotics.sdk.serial.SerialConnection;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class SchedulerGui extends JPanel{
 

@@ -1,11 +1,12 @@
 package jme3test.app;
 
-import com.jme3.scene.Mesh;
-import com.jme3.system.AppSettings;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.prefs.BackingStoreException;
+
+import com.jme3.scene.Mesh;
+import com.jme3.system.AppSettings;
 
 public class TestCustomAppSettings {
     

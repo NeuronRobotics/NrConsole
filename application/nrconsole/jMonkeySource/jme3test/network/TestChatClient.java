@@ -31,16 +31,28 @@
  */
 package jme3test.network;
 
-import com.jme3.network.Client;
-import com.jme3.network.Message;
-import com.jme3.network.MessageListener;
-import com.jme3.network.Network;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import javax.swing.*;
+
+import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
 import jme3test.network.TestChatServer.ChatMessage;
+
+import com.jme3.network.Client;
+import com.jme3.network.Message;
+import com.jme3.network.MessageListener;
+import com.jme3.network.Network;
 
 /**
  *  A simple test chat server.  When SM implements a set

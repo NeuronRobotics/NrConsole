@@ -1,6 +1,5 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO.hexapod;
 
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;

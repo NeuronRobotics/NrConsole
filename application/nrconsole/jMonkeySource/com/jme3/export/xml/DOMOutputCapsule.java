@@ -32,6 +32,22 @@
 
 package com.jme3.export.xml;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.jme3.export.FormatVersion;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.OutputCapsule;
@@ -39,15 +55,6 @@ import com.jme3.export.Savable;
 import com.jme3.export.SavableClassUtil;
 import com.jme3.util.IntMap;
 import com.jme3.util.IntMap.Entry;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-import java.util.*;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Part of the jME XML IO system as introduced in the google code jmexml project.

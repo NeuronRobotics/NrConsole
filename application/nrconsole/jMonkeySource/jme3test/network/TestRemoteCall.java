@@ -32,6 +32,9 @@
 
 package jme3test.network;
 
+import java.io.IOException;
+import java.util.concurrent.Callable;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.export.Savable;
 import com.jme3.network.Client;
@@ -41,8 +44,6 @@ import com.jme3.network.rmi.ObjectStore;
 import com.jme3.network.serializing.Serializer;
 import com.jme3.network.serializing.serializers.SavableSerializer;
 import com.jme3.scene.Spatial;
-import java.io.IOException;
-import java.util.concurrent.Callable;
 
 public class TestRemoteCall {
 

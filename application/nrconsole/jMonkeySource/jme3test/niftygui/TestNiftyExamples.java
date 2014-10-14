@@ -34,6 +34,7 @@ package jme3test.niftygui;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.niftygui.NiftyJmeDisplay;
+
 import de.lessvoid.nifty.Nifty;
 
 public class TestNiftyExamples extends SimpleApplication {

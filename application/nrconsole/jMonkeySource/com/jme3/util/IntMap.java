@@ -31,9 +31,10 @@
  */
 package com.jme3.util;
 
-import com.jme3.util.IntMap.Entry;
 import java.util.Iterator;
 import java.util.Map;
+
+import com.jme3.util.IntMap.Entry;
 
 /**
  * Similar to a {@link Map} except that ints are used as keys.

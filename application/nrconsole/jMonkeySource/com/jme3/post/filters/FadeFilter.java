@@ -31,6 +31,8 @@
  */
 package com.jme3.post.filters;
 
+import java.io.IOException;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -40,7 +42,6 @@ import com.jme3.material.Material;
 import com.jme3.post.Filter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
-import java.io.IOException;
 
 /**
  *

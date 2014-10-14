@@ -31,11 +31,12 @@
  */
 package com.jme3.renderer;
 
+import java.util.HashSet;
+
 import com.jme3.scene.Mesh;
 import com.jme3.shader.Shader;
 import com.jme3.texture.FrameBuffer;
 import com.jme3.texture.Image;
-import java.util.HashSet;
 
 /**
  * The statistics class allows tracking of real-time rendering statistics.

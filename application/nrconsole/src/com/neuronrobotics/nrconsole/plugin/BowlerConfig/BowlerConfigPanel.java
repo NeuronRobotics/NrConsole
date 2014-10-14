@@ -1,36 +1,28 @@
 package com.neuronrobotics.nrconsole.plugin.BowlerConfig;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
-import com.neuronrobotics.replicator.driver.NRPrinter;
-import com.neuronrobotics.sdk.addons.kinematics.AbstractKinematicsNR;
-import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
-import com.sun.org.apache.xml.internal.serialize.Printer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
 
-import javax.swing.JList;
-
-import org.jfree.ui.WizardDialog;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
+import com.neuronrobotics.replicator.driver.NRPrinter;
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 
 
 public class BowlerConfigPanel extends JPanel implements KeyListener{

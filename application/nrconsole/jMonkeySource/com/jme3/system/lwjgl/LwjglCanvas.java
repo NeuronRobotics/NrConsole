@@ -32,21 +32,23 @@
 
 package com.jme3.system.lwjgl;
 
-import com.jme3.system.AppSettings;
-import com.jme3.system.JmeCanvasContext;
-import com.jme3.system.JmeContext.Type;
-import com.jme3.system.JmeSystem;
-import com.jme3.system.Platform;
 import java.awt.Canvas;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.SwingUtilities;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.Pbuffer;
 import org.lwjgl.opengl.PixelFormat;
+
+import com.jme3.system.AppSettings;
+import com.jme3.system.JmeCanvasContext;
+import com.jme3.system.JmeSystem;
+import com.jme3.system.Platform;
 
 public class LwjglCanvas extends LwjglAbstractDisplay implements JmeCanvasContext {
 

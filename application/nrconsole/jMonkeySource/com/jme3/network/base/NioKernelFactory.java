@@ -31,9 +31,10 @@
  */
 package com.jme3.network.base;
 
+import java.io.IOException;
+
 import com.jme3.network.kernel.Kernel;
 import com.jme3.network.kernel.tcp.SelectorKernel;
-import java.io.IOException;
 
 
 /**

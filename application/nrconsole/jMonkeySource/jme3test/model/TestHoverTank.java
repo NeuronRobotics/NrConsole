@@ -31,6 +31,8 @@
  */
 package jme3test.model;
 
+import jme3test.post.BloomUI;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.ChaseCamera;
 import com.jme3.light.DirectionalLight;
@@ -42,7 +44,6 @@ import com.jme3.post.filters.BloomFilter;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.control.LodControl;
-import jme3test.post.BloomUI;
 
 /**
  *

@@ -31,6 +31,8 @@
  */
 package com.jme3.bullet.joints;
 
+import java.io.IOException;
+
 import com.bulletphysics.dynamics.constraintsolver.HingeConstraint;
 import com.jme3.bullet.objects.PhysicsRigidBody;
 import com.jme3.bullet.util.Converter;
@@ -39,7 +41,6 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.math.Vector3f;
-import java.io.IOException;
 
 /**
  * <i>From bullet manual:</i><br>

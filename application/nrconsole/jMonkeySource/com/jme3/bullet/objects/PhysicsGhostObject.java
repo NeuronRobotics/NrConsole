@@ -31,6 +31,10 @@
  */
 package com.jme3.bullet.objects;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.bulletphysics.collision.dispatch.CollisionFlags;
 import com.bulletphysics.collision.dispatch.PairCachingGhostObject;
 import com.bulletphysics.linearmath.Transform;
@@ -45,9 +49,6 @@ import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * <i>From Bullet manual:</i><br>

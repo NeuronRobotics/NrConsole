@@ -31,6 +31,11 @@
  */
 package com.jme3.scene;
 
+import java.io.IOException;
+import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.asset.AssetNotFoundException;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.Collidable;
@@ -41,13 +46,8 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.material.Material;
 import com.jme3.math.Matrix4f;
-import com.jme3.math.Transform;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.util.TempVars;
-import java.io.IOException;
-import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * <code>Geometry</code> defines a leaf node of the scene graph. The leaf node

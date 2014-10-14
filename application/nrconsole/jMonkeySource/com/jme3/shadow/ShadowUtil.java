@@ -31,6 +31,12 @@
  */
 package com.jme3.shadow;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.math.FastMath;
@@ -42,10 +48,6 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.GeometryList;
 import com.jme3.scene.Geometry;
 import com.jme3.util.TempVars;
-import static java.lang.Math.max;
-import static java.lang.Math.min;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Includes various useful shadow mapping functions.

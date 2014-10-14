@@ -31,6 +31,8 @@
  */
 package com.jme3.cinematic.events;
 
+import java.io.IOException;
+
 import com.jme3.animation.LoopMode;
 import com.jme3.app.Application;
 import com.jme3.cinematic.Cinematic;
@@ -46,7 +48,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
-import java.io.IOException;
 
 /**
  * A MotionTrack is a control over the spatial that manage the position and direction of the spatial while following a motion Path

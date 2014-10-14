@@ -14,7 +14,6 @@ import javax.swing.Timer;
 
 import net.miginfocom.swing.MigLayout;
 
-
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IChannelEventListener;

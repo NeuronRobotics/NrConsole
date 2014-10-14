@@ -2,12 +2,10 @@ package com.neuronrobotics.nrconsole.plugin.kinematics;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -16,8 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.jfree.io.IOUtils;
-
+import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.XmlFilter;
@@ -26,8 +23,6 @@ import com.neuronrobotics.sdk.addons.kinematics.gui.DHKinematicsViewer;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;
-
-import net.miginfocom.swing.MigLayout;
 
 public class KinematicsLab extends JPanel {
 	

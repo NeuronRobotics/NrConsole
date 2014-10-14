@@ -31,8 +31,9 @@
  */
 package com.jme3.network.kernel;
 
-import com.jme3.network.Filter;
 import java.nio.ByteBuffer;
+
+import com.jme3.network.Filter;
 
 /**
  *  Defines the basic byte[] passing messaging

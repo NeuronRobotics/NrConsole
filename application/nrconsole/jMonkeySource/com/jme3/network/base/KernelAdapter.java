@@ -31,6 +31,13 @@
  */
 package com.jme3.network.base;
 
+import java.nio.ByteBuffer;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.network.Filter;
 import com.jme3.network.HostedConnection;
 import com.jme3.network.Message;
@@ -40,12 +47,6 @@ import com.jme3.network.kernel.EndpointEvent;
 import com.jme3.network.kernel.Envelope;
 import com.jme3.network.kernel.Kernel;
 import com.jme3.network.message.ClientRegistrationMessage;
-import java.nio.ByteBuffer;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *  Wraps a single Kernel and forwards new messages

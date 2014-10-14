@@ -31,6 +31,10 @@
  */
 package com.jme3.bullet.joints;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+
 import com.bulletphysics.dynamics.constraintsolver.Generic6DofConstraint;
 import com.bulletphysics.linearmath.Transform;
 import com.jme3.bullet.joints.motors.RotationalLimitMotor;
@@ -43,9 +47,6 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * <i>From bullet manual:</i><br>

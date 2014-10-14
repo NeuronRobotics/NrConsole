@@ -31,6 +31,10 @@
  */
 package com.jme3.bullet.objects;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bulletphysics.collision.dispatch.CollisionFlags;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
@@ -49,9 +53,6 @@ import com.jme3.export.OutputCapsule;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * <p>PhysicsRigidBody - Basic physics object</p>

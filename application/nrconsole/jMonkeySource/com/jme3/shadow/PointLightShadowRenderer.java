@@ -31,6 +31,8 @@
  */
 package com.jme3.shadow;
 
+import java.io.IOException;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -43,7 +45,6 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.queue.GeometryList;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
-import java.io.IOException;
 
 /**
  * PointLightShadowRenderer renders shadows for a point light

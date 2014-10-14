@@ -3,7 +3,6 @@ package com.neuronrobotics.nrconsole.plugin.DyIO;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -11,9 +10,9 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.neuronrobotics.sdk.config.SDKBuildInfo;
-
 import net.miginfocom.swing.MigLayout;
+
+import com.neuronrobotics.sdk.config.SDKBuildInfo;
 
 public class GettingStartedPanel extends JPanel {
 
@@ -48,9 +47,8 @@ public class GettingStartedPanel extends JPanel {
 	}
 	
 	//Method to launch a page in a browser
-	//Made public on 5/28 by paularudy@gmail.com to allow object "helpButton" to function
-	public static void openPage(String URL) throws Exception {
-		URI uri = new URI(URL);
+	//used to allow object "helpButton" to function
+	public static void openPage(URI uri) throws Exception {
 		getDesktop().browse(uri);
 	}
 	

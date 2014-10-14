@@ -1,15 +1,11 @@
 package com.neuronrobotics.nrconsole.plugin.DyIO;
 
 import java.awt.Dimension;
-import java.util.ArrayList;
 
-import javax.swing.JMenu;
 import javax.swing.JPanel;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
-import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class NRConsoleGettingStartedPlugin extends AbstractNRConsoleTabedPanelPlugin {

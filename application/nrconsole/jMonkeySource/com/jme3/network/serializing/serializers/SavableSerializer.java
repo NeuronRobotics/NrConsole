@@ -31,14 +31,15 @@
  */
 package com.jme3.network.serializing.serializers;
 
-import com.jme3.export.Savable;
-import com.jme3.export.binary.BinaryExporter;
-import com.jme3.export.binary.BinaryImporter;
-import com.jme3.network.serializing.Serializer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+
+import com.jme3.export.Savable;
+import com.jme3.export.binary.BinaryExporter;
+import com.jme3.export.binary.BinaryImporter;
+import com.jme3.network.serializing.Serializer;
 
 public class SavableSerializer extends Serializer {
 

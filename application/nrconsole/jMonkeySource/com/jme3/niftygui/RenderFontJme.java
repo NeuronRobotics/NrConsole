@@ -33,6 +33,7 @@ package com.jme3.niftygui;
 
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+
 import de.lessvoid.nifty.spi.render.RenderFont;
 
 public class RenderFontJme implements RenderFont {

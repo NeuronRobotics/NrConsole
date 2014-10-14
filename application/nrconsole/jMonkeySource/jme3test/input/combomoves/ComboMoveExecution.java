@@ -34,6 +34,7 @@ package jme3test.input.combomoves;
 
 import java.util.Arrays;
 import java.util.HashSet;
+
 import jme3test.input.combomoves.ComboMove.ComboMoveState;
 
 public class ComboMoveExecution {

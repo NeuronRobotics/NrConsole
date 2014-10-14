@@ -31,14 +31,20 @@
  */
 package com.jme3.network.serializing.serializers;
 
-import com.jme3.network.serializing.Serializer;
-import com.jme3.network.serializing.SerializerException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.SerializerException;
 
 /**
  * The field serializer is the default serializer used for custom class.

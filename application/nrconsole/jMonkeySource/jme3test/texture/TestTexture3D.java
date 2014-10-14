@@ -31,6 +31,11 @@
  */
 package jme3test.texture;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
 import com.jme3.light.PointLight;
@@ -47,10 +52,6 @@ import com.jme3.texture.Image.Format;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture3D;
 import com.jme3.util.BufferUtils;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
 
 public class TestTexture3D extends SimpleApplication {
 

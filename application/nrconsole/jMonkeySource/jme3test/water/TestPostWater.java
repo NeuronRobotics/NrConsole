@@ -1,5 +1,8 @@
 package jme3test.water;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.audio.AudioNode;
 import com.jme3.audio.LowPassFilter;
@@ -34,8 +37,6 @@ import com.jme3.texture.Texture.WrapMode;
 import com.jme3.texture.Texture2D;
 import com.jme3.util.SkyFactory;
 import com.jme3.water.WaterFilter;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * test

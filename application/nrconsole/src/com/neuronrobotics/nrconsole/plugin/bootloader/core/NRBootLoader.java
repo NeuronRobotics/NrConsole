@@ -9,15 +9,11 @@ import com.neuronrobotics.sdk.commands.neuronrobotics.bootloader.BootloaderIDCom
 import com.neuronrobotics.sdk.commands.neuronrobotics.bootloader.EraseFlashCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.bootloader.ProgramSectionCommand;
 import com.neuronrobotics.sdk.commands.neuronrobotics.bootloader.ResetChipCommand;
-import com.neuronrobotics.sdk.common.BowlerAbstractCommand;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
 import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.BowlerDatagramFactory;
 import com.neuronrobotics.sdk.common.ByteList;
-import com.neuronrobotics.sdk.common.InvalidConnectionException;
-import com.neuronrobotics.sdk.common.Log;
-import com.neuronrobotics.sdk.serial.SerialConnection;
 
 /**
  * @author hephaestus

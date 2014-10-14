@@ -31,13 +31,14 @@
  */
 package com.jme3.texture;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 /**
  * Describes a cubemap texture.

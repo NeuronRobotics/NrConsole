@@ -31,11 +31,53 @@
  */
 package com.jme3.audio.lwjgl;
 
-import com.jme3.audio.AudioSource.Status;
-import com.jme3.audio.*;
-import com.jme3.math.Vector3f;
-import com.jme3.util.BufferUtils;
-import com.jme3.util.NativeObjectManager;
+import static org.lwjgl.openal.AL10.AL_BUFFER;
+import static org.lwjgl.openal.AL10.AL_BUFFERS_PROCESSED;
+import static org.lwjgl.openal.AL10.AL_CONE_INNER_ANGLE;
+import static org.lwjgl.openal.AL10.AL_CONE_OUTER_ANGLE;
+import static org.lwjgl.openal.AL10.AL_CONE_OUTER_GAIN;
+import static org.lwjgl.openal.AL10.AL_DIRECTION;
+import static org.lwjgl.openal.AL10.AL_FALSE;
+import static org.lwjgl.openal.AL10.AL_FORMAT_MONO16;
+import static org.lwjgl.openal.AL10.AL_FORMAT_MONO8;
+import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO16;
+import static org.lwjgl.openal.AL10.AL_FORMAT_STEREO8;
+import static org.lwjgl.openal.AL10.AL_GAIN;
+import static org.lwjgl.openal.AL10.AL_LOOPING;
+import static org.lwjgl.openal.AL10.AL_MAX_DISTANCE;
+import static org.lwjgl.openal.AL10.AL_ORIENTATION;
+import static org.lwjgl.openal.AL10.AL_PAUSED;
+import static org.lwjgl.openal.AL10.AL_PITCH;
+import static org.lwjgl.openal.AL10.AL_POSITION;
+import static org.lwjgl.openal.AL10.AL_REFERENCE_DISTANCE;
+import static org.lwjgl.openal.AL10.AL_RENDERER;
+import static org.lwjgl.openal.AL10.AL_SOURCE_RELATIVE;
+import static org.lwjgl.openal.AL10.AL_SOURCE_STATE;
+import static org.lwjgl.openal.AL10.AL_STOPPED;
+import static org.lwjgl.openal.AL10.AL_TRUE;
+import static org.lwjgl.openal.AL10.AL_VELOCITY;
+import static org.lwjgl.openal.AL10.AL_VENDOR;
+import static org.lwjgl.openal.AL10.AL_VERSION;
+import static org.lwjgl.openal.AL10.alBufferData;
+import static org.lwjgl.openal.AL10.alDeleteBuffers;
+import static org.lwjgl.openal.AL10.alDeleteSources;
+import static org.lwjgl.openal.AL10.alGenBuffers;
+import static org.lwjgl.openal.AL10.alGenSources;
+import static org.lwjgl.openal.AL10.alGetError;
+import static org.lwjgl.openal.AL10.alGetSourcei;
+import static org.lwjgl.openal.AL10.alGetString;
+import static org.lwjgl.openal.AL10.alListener;
+import static org.lwjgl.openal.AL10.alListener3f;
+import static org.lwjgl.openal.AL10.alListenerf;
+import static org.lwjgl.openal.AL10.alSource3f;
+import static org.lwjgl.openal.AL10.alSourcePause;
+import static org.lwjgl.openal.AL10.alSourcePlay;
+import static org.lwjgl.openal.AL10.alSourceQueueBuffers;
+import static org.lwjgl.openal.AL10.alSourceStop;
+import static org.lwjgl.openal.AL10.alSourceUnqueueBuffers;
+import static org.lwjgl.openal.AL10.alSourcef;
+import static org.lwjgl.openal.AL10.alSourcei;
+
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -43,9 +85,30 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.lwjgl.LWJGLException;
-import static org.lwjgl.openal.AL10.*;
-import org.lwjgl.openal.*;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.AL11;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.ALCdevice;
+import org.lwjgl.openal.EFX10;
+import org.lwjgl.openal.OpenALException;
+
+import com.jme3.audio.AudioBuffer;
+import com.jme3.audio.AudioData;
+import com.jme3.audio.AudioParam;
+import com.jme3.audio.AudioRenderer;
+import com.jme3.audio.AudioSource;
+import com.jme3.audio.AudioSource.Status;
+import com.jme3.audio.AudioStream;
+import com.jme3.audio.Environment;
+import com.jme3.audio.Filter;
+import com.jme3.audio.Listener;
+import com.jme3.audio.ListenerParam;
+import com.jme3.audio.LowPassFilter;
+import com.jme3.math.Vector3f;
+import com.jme3.util.BufferUtils;
+import com.jme3.util.NativeObjectManager;
 
 public class LwjglAudioRenderer implements AudioRenderer, Runnable {
 

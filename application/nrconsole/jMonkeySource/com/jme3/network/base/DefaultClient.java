@@ -31,19 +31,25 @@
  */
 package com.jme3.network.base;
 
-import com.jme3.network.*;
-import com.jme3.network.ClientStateListener.DisconnectInfo;
-import com.jme3.network.kernel.Connector;
-import com.jme3.network.message.ChannelInfoMessage;
-import com.jme3.network.message.ClientRegistrationMessage;
-import com.jme3.network.message.DisconnectMessage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.network.Client;
+import com.jme3.network.ClientStateListener;
+import com.jme3.network.ClientStateListener.DisconnectInfo;
+import com.jme3.network.ErrorListener;
+import com.jme3.network.Message;
+import com.jme3.network.MessageListener;
+import com.jme3.network.kernel.Connector;
+import com.jme3.network.message.ChannelInfoMessage;
+import com.jme3.network.message.ClientRegistrationMessage;
+import com.jme3.network.message.DisconnectMessage;
 
 /**
  *  A default implementation of the Client interface that delegates

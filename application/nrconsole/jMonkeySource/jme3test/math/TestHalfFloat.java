@@ -32,8 +32,9 @@
 
 package jme3test.math;
 
-import com.jme3.math.FastMath;
 import java.util.Scanner;
+
+import com.jme3.math.FastMath;
 
 public class TestHalfFloat {
     public static void main(String[] args){

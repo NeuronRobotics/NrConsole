@@ -1,28 +1,13 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
 import java.awt.Dimension;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.prefs.Preferences;
 
 import javax.swing.JPanel;
 
-import net.miginfocom.swing.MigLayout;
-
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
-import com.neuronrobotics.nrconsole.util.PrefsLoader;
-import com.neuronrobotics.nrconsole.util.Slic3rFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
-import com.neuronrobotics.replicator.driver.Slic3r;
-import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class NRConsoleDeviceConfigPlugin extends AbstractNRConsoleTabedPanelPlugin{

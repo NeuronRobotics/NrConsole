@@ -31,9 +31,6 @@
  */
 package com.jme3.network.serializing.serializers;
 
-import com.jme3.network.Message;
-import com.jme3.network.message.ZIPCompressedMessage;
-import com.jme3.network.serializing.Serializer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,6 +38,10 @@ import java.nio.ByteBuffer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import com.jme3.network.Message;
+import com.jme3.network.message.ZIPCompressedMessage;
+import com.jme3.network.serializing.Serializer;
 
 /**
  * Serializes ZIP messages.
