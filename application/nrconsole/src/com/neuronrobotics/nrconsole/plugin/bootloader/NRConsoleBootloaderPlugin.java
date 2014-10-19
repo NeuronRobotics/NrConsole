@@ -10,7 +10,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class NRConsoleBootloaderPlugin extends AbstractNRConsoleTabedPanelPlugin {
 	private  BootloaderPanel bcp = new  BootloaderPanel();
-	public static final String[] myNames ={"neuronrobotics.bootloader.*"};
+	public static final String[] myNames ={"neuronrobotics.bootloader.*","bcs.bootloader.*"};
 
 	public NRConsoleBootloaderPlugin(PluginManager pm){
 		super(myNames,pm);
