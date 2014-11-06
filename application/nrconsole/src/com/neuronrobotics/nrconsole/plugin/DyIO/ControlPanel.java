@@ -124,7 +124,8 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		
 		DyIOChannelMode mode = getMode();
 		if(previousMode==null || mode != previousMode){
-			Log.debug("BEGIN Setup mode UI: "+getManager().getChannel().getChannelNumber()+" "+getManager().getChannel()+"\n\tPrevious mode was: "+previousMode);
+			Log.debug("BEGIN Setup mode UI: "+getManager().getChannel().getChannelNumber()+" "+getManager().getChannel()+
+					"\n\tPrevious mode was: "+previousMode);
 			previousMode=mode;
 			try{
 				switch(mode) {
