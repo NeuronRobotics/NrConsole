@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -17,6 +18,13 @@ import net.miginfocom.swing.MigLayout;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.replicator.driver.Slic3r;
+import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
+import com.neuronrobotics.sdk.addons.kinematics.LinkFactory;
+
+import javax.swing.JList;
+import javax.swing.JTextField;
+
+import java.awt.BorderLayout;
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 //import com.sun.deploy.uitoolkit.impl.fx.Utils;
 
@@ -44,7 +52,9 @@ public class DeviceConfigPanel extends JPanel {
 	
 	private Slic3rMasterPanel slic3rSettingsPanel = new Slic3rMasterPanel();
 	private LocalSettingsPanel localSettingsPanel = new LocalSettingsPanel();
-	
+	private JPanel axisConfigsPanel;
+	private JTabbedPane AxisTabs;
+	private ArrayList<AxisPanel> axisPanels = new ArrayList<AxisPanel>();
 	public DeviceConfigPanel() {
 		
 		java.awt.EventQueue.invokeLater(new Runnable() {
@@ -98,6 +108,22 @@ public class DeviceConfigPanel extends JPanel {
 			slic3rSettingsPanel.setValue(20, new MachineSetting<Integer>("TopSolidInfillSpdPcnt" ,printer.getSlicer().getTopSolidInfillSpeedPercent()));
 			slic3rSettingsPanel.setValue(21, new MachineSetting<Integer>("SupportMatIntSpdPcnt" ,printer.getSlicer().getSupportMaterialSpeed()));
 			slic3rSettingsPanel.setValue(22, new MachineSetting<Integer>("FirstLayerSpdPcnt" ,printer.getSlicer().getFirstLayerSpeedPercent()));
+			
+			System.out.println(printer.getLinkConfigurations().size());
+			
+			
+			getAxisTabs().removeAll();
+			axisPanels.clear();
+			
+			for (LinkConfiguration lCfg : printer.getLinkConfigurations()) {
+				AxisPanel aPNL = new AxisPanel(lCfg);
+				axisPanels.add(aPNL);
+				getAxisTabs().addTab(lCfg.getName(), aPNL);
+			}
+				
+				
+			
+			
 			localSettingsPanel.reloadAllSettings();
 		
 	}
@@ -129,6 +155,14 @@ public class DeviceConfigPanel extends JPanel {
 				 slic3rSettingsPanel.getIntegerValue(21),
 				 slic3rSettingsPanel.getIntegerValue(22)); 
 		printer.getDeltaDevice().setSlic3rConfiguration(newSettings);
+		for (AxisPanel axisPanel : axisPanels) {
+			axisPanel.writeSettings();
+			printer.getDeltaDevice().setLinkConfiguration(axisPanels.indexOf(axisPanel), axisPanel.getLink());
+		}
+		
+		//printer.setD
+		
+		
 	}
 	
 	private JPanel getPnlAction() {
@@ -178,12 +212,27 @@ public class DeviceConfigPanel extends JPanel {
 			
 			tabPnlSettings.addTab(slic3rSettingsPanel.getPanelName(), null, slic3rSettingsPanel, null);
 			tabPnlSettings.addTab(localSettingsPanel.getPanelName(), null, localSettingsPanel, null);
+			tabPnlSettings.addTab("Axis Configs", null, getAxisConfigsPanel(), null);
 			
 		}
 		return tabPnlSettings;
 	}
 	
 	
+	private JPanel getAxisConfigsPanel() {
+		if (axisConfigsPanel == null) {
+			axisConfigsPanel = new JPanel();
+			axisConfigsPanel.setLayout(new BorderLayout(0, 0));
+			axisConfigsPanel.add(getAxisTabs(), BorderLayout.CENTER);
+		}
+		return axisConfigsPanel;
+	}
+	private JTabbedPane getAxisTabs() {
+		if (AxisTabs == null) {
+			AxisTabs = new JTabbedPane(JTabbedPane.TOP);
+		}
+		return AxisTabs;
+	}
 }
 
 	
