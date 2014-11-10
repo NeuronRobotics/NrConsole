@@ -210,7 +210,7 @@ public class DyIOPanel extends JPanel {
 		DyIOPowerState state;
 		boolean newState =false;
 		public void setState(DyIOPowerState s){
-			if(!DyIORegestry.get().isBrownOutDetectEnabled())
+			if(!DyIORegestry.get().isServoPowerSafeMode())
 				return;
 			if(!newState) {
 				old = state;

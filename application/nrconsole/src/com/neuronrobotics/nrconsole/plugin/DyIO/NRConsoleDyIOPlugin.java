@@ -150,7 +150,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		//System.out.println(this.getClass()+" setupDyIO: "+ channels.size());
 		devicePanel.addChannels(channels.subList(00, 12), false);
 		devicePanel.addChannels(channels.subList(12, 24), true);
-	    DyIORegestry.get().enableBrownOutDetect(true);
+	    DyIORegestry.get().setServoPowerSafeMode(true);
 	}
 
 	

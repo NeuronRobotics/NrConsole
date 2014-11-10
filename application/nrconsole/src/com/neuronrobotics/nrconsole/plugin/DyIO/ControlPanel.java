@@ -68,7 +68,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 			//Invalid state, ignore for now...
 			return;
 		}
-		if(hasServ == false && getManager().getChannel().getDevice().isBrownOutDetectEnabled()){
+		if(hasServ == false && getManager().getChannel().getDevice().isServoPowerSafeMode()){
 			modes.removeItem(DyIOChannelMode.SERVO_OUT);
 		}else{
 			boolean servoExists = false;
@@ -136,7 +136,12 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 					setCurrentWidget(new DigitalInputWidget(getManager()));
 					break;
 				case DIGITAL_OUT:
+					int l = Log.getMinimumPrintLevel();
+					//Log.enableInfoPrint();
+					
 					setCurrentWidget(new DigitalOutputWidget(getManager()));
+
+					Log.setMinimumPrintLevel(l);
 					break;
 				case SERVO_OUT:
 					setCurrentWidget(new ServoWidget(getManager(), mode));
