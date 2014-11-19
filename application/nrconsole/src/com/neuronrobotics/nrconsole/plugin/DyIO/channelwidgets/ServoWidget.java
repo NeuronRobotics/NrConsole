@@ -41,7 +41,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		}catch (Exception e){
 			return;
 		}
-		
+		saveValue = sc.getConfiguration();
 		setLayout(new MigLayout());
 
 		sliderUI.setMaximum(0);
