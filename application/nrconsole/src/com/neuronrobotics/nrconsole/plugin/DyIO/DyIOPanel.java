@@ -82,7 +82,7 @@ public class DyIOPanel extends JPanel {
 				}
 			}
 		});
-	    brownOutDetect.setSelected(true);
+	    brownOutDetect.setSelected(false);
 	    brownOutDetect.addActionListener(new ActionListener() {
 			
 			@Override
