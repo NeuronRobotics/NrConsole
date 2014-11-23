@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.util.NRConsoleDocumentationFactory;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
@@ -82,7 +83,10 @@ public class DyIOPanel extends JPanel {
 				}
 			}
 		});
+	    int pr = Log.getMinimumPrintLevel();
+	    Log.enableInfoPrint();
 	    brownOutDetect.setSelected(DyIORegestry.get().isServoPowerSafeMode());
+	    Log.setMinimumPrintLevel(pr);
 	    brownOutDetect.addActionListener(new ActionListener() {
 			
 			@Override
