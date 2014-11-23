@@ -82,7 +82,7 @@ public class DyIOPanel extends JPanel {
 				}
 			}
 		});
-	    brownOutDetect.setSelected(false);
+	    brownOutDetect.setSelected(DyIORegestry.get().isServoPowerSafeMode());
 	    brownOutDetect.addActionListener(new ActionListener() {
 			
 			@Override
