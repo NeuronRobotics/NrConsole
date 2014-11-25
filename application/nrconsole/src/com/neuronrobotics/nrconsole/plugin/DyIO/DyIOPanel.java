@@ -85,7 +85,7 @@ public class DyIOPanel extends JPanel {
 		});
 	    int pr = Log.getMinimumPrintLevel();
 	    Log.enableInfoPrint();
-	    brownOutDetect.setSelected(DyIORegestry.get().isServoPowerSafeMode());
+	    //brownOutDetect.setSelected(DyIORegestry.get().isServoPowerSafeMode());
 	    Log.setMinimumPrintLevel(pr);
 	    brownOutDetect.addActionListener(new ActionListener() {
 			
@@ -238,6 +238,11 @@ public class DyIOPanel extends JPanel {
 				}
 			}
 		}
+	}
+
+	public void setBrownOutMode(boolean servoPowerSafeMode) {
+		// TODO Auto-generated method stub
+		brownOutDetect.setSelected(servoPowerSafeMode);
 	}
 
 }

@@ -48,7 +48,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private JMenuItem graphOptionsMenuItem = new JMenuItem("Graphing Options");
 	private JMenuItem exportData = new JMenuItem("Export Data to File");
 	private boolean active=false;
-	private DyIOPanel devicePanel = new DyIOPanel();
+	private DyIOPanel devicePanel =null;
 	private DyIOControlsPanel deviceControls = new DyIOControlsPanel();
 	private ArrayList<ChannelManager> channels = new ArrayList<ChannelManager>();
 	//private HexapodConfigPanel hex=null;
@@ -77,6 +77,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 				getDeviceControls().repaint();
 			}
 		};
+		
 		wrapper.add(getDeviceDisplay(), "pos 5 5");
 		wrapper.add(getDeviceControls(), "pos 560 5");
 		wrapper.setName("DyIO");
@@ -147,9 +148,11 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 
 		}
+		DyIORegestry.get().getBatteryVoltage(true);
+		getDeviceDisplay().setBrownOutMode(DyIORegestry.get().isServoPowerSafeMode());
 		//System.out.println(this.getClass()+" setupDyIO: "+ channels.size());
-		devicePanel.addChannels(channels.subList(00, 12), false);
-		devicePanel.addChannels(channels.subList(12, 24), true);
+		getDeviceDisplay().addChannels(channels.subList(00, 12), false);
+		getDeviceDisplay().addChannels(channels.subList(12, 24), true);
 	    
 	}
 
@@ -288,6 +291,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	}
 
 	public DyIOPanel getDeviceDisplay() {
+		if(devicePanel == null)
+			devicePanel  = new DyIOPanel();
 		return devicePanel;
 	}
 	
@@ -354,7 +359,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	public void onDyIOEvent(IDyIOEvent e) {
 		if(e.getClass() == DyIOPowerEvent.class){
 			//System.out.println("Got power event: "+e);
-			devicePanel.setPowerEvent(((DyIOPowerEvent)e));
+			getDeviceDisplay().setPowerEvent(((DyIOPowerEvent)e));
 			try{
 				for(ChannelManager cm : channels) {
 					cm.onDyIOPowerEvent();
