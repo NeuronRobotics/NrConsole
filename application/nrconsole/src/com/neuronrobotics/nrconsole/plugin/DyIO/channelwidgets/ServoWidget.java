@@ -113,8 +113,11 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		if(!liveUpdate.isSelected() && sliderUI.getValueIsAdjusting()) {
 			return;
 		}
-		
-		pollValue();
+		try{
+			pollValue();
+		}catch (Exception ex){
+			ex.printStackTrace();
+		}
 		
 		if(sc.getChannel().getDevice().getCachedMode()){
 			sc.getChannel().getDevice().setCachedMode(false);
