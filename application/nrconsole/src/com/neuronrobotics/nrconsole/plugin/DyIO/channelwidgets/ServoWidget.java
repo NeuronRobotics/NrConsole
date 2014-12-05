@@ -17,6 +17,7 @@ import net.miginfocom.swing.MigLayout;
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
 import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
@@ -154,9 +155,10 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	@Override
 	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
 		if(srv == sc){
+			Log.warning("Changing the servo from async "+srv.getChannel().getChannelNumber()+" to val: "+position);
 			sliderUI.removeChangeListener(this);
-			sliderUI.setValue(position);
-			valueUI.setText(formatValue(position));
+			//sliderUI.setValue(position);
+			valueUI.setText(formatValue(position& 0x000000ff));
 			sliderUI.addChangeListener(this);
 		}
 	}
