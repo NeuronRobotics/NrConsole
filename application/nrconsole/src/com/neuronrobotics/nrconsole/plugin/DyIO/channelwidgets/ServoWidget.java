@@ -29,8 +29,10 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	private JSlider sliderUI = new JSlider();
 	private JSlider speed = new JSlider();
 	private JLabel valueUI = new JLabel();
+	private JLabel timeUI = new JLabel("0.00s");
 	private JCheckBox liveUpdate = new JCheckBox("Live");
-	private JButton save = new JButton("Set Default");
+	private JButton save = new JButton("Set");
+	
 	private ServoChannel sc;
 	private boolean startup = true;
 	private int saveValue = 256;
@@ -51,6 +53,13 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		speed.setMajorTickSpacing(1000);
 		speed.setPaintTicks(true);
 		speed.setValue(0);
+		speed.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				timeUI.setText(String.format("%1.2f s", ((float)(speed.getValue()))/1000.0));
+			}
+		});
 		
 		sliderUI.setMaximum(0);
 		sliderUI.setMaximum(255);
@@ -85,11 +94,12 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		pan.add(new JLabel("Set Speed"), "wrap");
 		pan.add(new JLabel("Max"));
 		pan.add(speed);
-		pan.add(new JLabel("5 seconds"), "wrap");
+		pan.add(timeUI, "wrap");
 		pan.add(new JLabel("Value"));
 		pan.add(sliderUI);
 		pan.add(valueUI);
 		pan.add(liveUpdate, "wrap");
+		pan.add(new JLabel("Set Default"));
 		pan.add(save);
 		add(pan);
 		int val = getChannel().getValue();

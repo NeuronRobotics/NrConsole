@@ -160,6 +160,7 @@ public class DyIOPanel extends JPanel {
     		
     	}
     }
+	
 	public void setPowerEvent(DyIOPowerEvent dyIOPowerEvent) {
 		setVoltage(dyIOPowerEvent.getVoltage());
 		A.setState(dyIOPowerEvent.getChannelAMode());
@@ -168,6 +169,7 @@ public class DyIOPanel extends JPanel {
 	    setFw(DyIORegestry.get().getFirmwareRev());
 		repaint();
 	}
+	
 	private class bankLED extends JPanel{
 		/**
 		 * 
