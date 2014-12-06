@@ -27,6 +27,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	private static final long serialVersionUID = 1L;
 	
 	private JSlider sliderUI = new JSlider();
+	private JSlider speed = new JSlider();
 	private JLabel valueUI = new JLabel();
 	private JCheckBox liveUpdate = new JCheckBox("Live");
 	private JButton save = new JButton("Set Default");
@@ -45,6 +46,12 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		saveValue = sc.getConfiguration();
 		setLayout(new MigLayout());
 
+		speed.setMaximum(0);
+		speed.setMaximum(5000);
+		speed.setMajorTickSpacing(1000);
+		speed.setPaintTicks(true);
+		speed.setValue(0);
+		
 		sliderUI.setMaximum(0);
 		sliderUI.setMaximum(255);
 		sliderUI.setMajorTickSpacing(15);
@@ -75,13 +82,19 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		helpLabel.setForeground(Color.GRAY);
 		
 		JPanel pan = new JPanel(new MigLayout()); 
+		pan.add(new JLabel("Set Speed"), "wrap");
+		pan.add(new JLabel("Max"));
+		pan.add(speed);
+		pan.add(new JLabel("5 seconds"), "wrap");
+		pan.add(new JLabel("Value"));
 		pan.add(sliderUI);
 		pan.add(valueUI);
 		pan.add(liveUpdate, "wrap");
 		pan.add(save);
 		add(pan);
-		
-		setValue(getChannel().getValue());
+		int val = getChannel().getValue();
+		setValue(val);
+		valueUI.setText(formatValue(val));
 		liveUpdate.setSelected(true);
 		
 		sliderUI.addChangeListener(this);
@@ -90,7 +103,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	}
 	
 	private String formatValue(int value) {
-		return String.format("%03d", value);
+		return String.format("%03d", value & 0x000000ff);
 	}
 
 	private void setValue(int value) {
@@ -105,13 +118,13 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		pollValue();
 		recordValue(value);
 		sliderUI.setValue(value);
-		valueUI.setText(formatValue(value));
+		//valueUI.setText(formatValue(value));
 	}
 
 	public void stateChanged(ChangeEvent e) {
-		valueUI.setText(formatValue(sliderUI.getValue()));
+		//valueUI.setText(formatValue(sliderUI.getValue()));
 		
-		if(!liveUpdate.isSelected() && sliderUI.getValueIsAdjusting()) {
+		if((!liveUpdate.isSelected() && sliderUI.getValueIsAdjusting()) ||(sliderUI.getValueIsAdjusting() && speed.getValue()>0)) {
 			return;
 		}
 		try{
@@ -130,7 +143,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 			save.setEnabled(false);
 		
 		if( startup == false ) {
-			sc.SetPosition(sliderUI.getValue());
+			sc.SetPosition(sliderUI.getValue(),((float)(speed.getValue()))/1000);
 			recordValue(sliderUI.getValue());
 		}
 	}
@@ -158,7 +171,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 			Log.warning("Changing the servo from async "+srv.getChannel().getChannelNumber()+" to val: "+position);
 			sliderUI.removeChangeListener(this);
 			//sliderUI.setValue(position);
-			valueUI.setText(formatValue(position& 0x000000ff));
+			valueUI.setText(formatValue(position));
 			sliderUI.addChangeListener(this);
 		}
 	}
