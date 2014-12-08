@@ -107,9 +107,11 @@ private SettingsListItem setScale;
 		thisLink.setIndex(setHardwareIndex.getIntValue());
 		thisLink.setHomingTicksPerSecond(setHomingTicksPerSecond.getIntValue());
 		thisLink.setIndexLatch(setIndexLatch.getIntValue());
-		
-		thisLink.setLowerLimit(setLowerLimit.getDoubleValue());
-		thisLink.setUpperLimit(setUpperLimit.getDoubleValue());
+		thisLink.setKP(setKP.getDoubleValue());
+		thisLink.setKI(setKI.getDoubleValue());
+		thisLink.setKD(setKD.getDoubleValue());
+		thisLink.setLowerLimit(setLowerLimit.getIntValue());
+		thisLink.setUpperLimit(setUpperLimit.getIntValue());
 		thisLink.setLowerVelocity(setLowerVelocity.getDoubleValue());
 		thisLink.setUpperVelocity(setUpperVelocity.getDoubleValue());
 		thisLink.setLinkIndex(setLinkIndex.getIntValue());
