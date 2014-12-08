@@ -82,7 +82,7 @@ public class SettingsListItem extends JPanel {
 	}
 	public int getIntValue(){
 		try {
-			return Integer.parseInt(getTxtSetVal().getText());
+			return Integer.valueOf(getTxtSetVal().getText());
 		} catch (Exception e) {
 			return 1;
 		}
@@ -90,7 +90,8 @@ public class SettingsListItem extends JPanel {
 	}
 	public double getDoubleValue(){
 		try {
-			return Double.parseDouble(getTxtSetVal().getText());
+			
+			return Double.valueOf(getTxtSetVal().getText());
 		} catch (Exception e) {
 			return 1;
 		}
