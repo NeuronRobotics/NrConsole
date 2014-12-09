@@ -204,6 +204,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 				onDisconnect(manager.getConnection());
 			}
 		}catch(Exception ex){
+			ex.printStackTrace();
 			disconnect();//clear any partial connection
 			onDisconnect(manager.getConnection());
 			ex.printStackTrace();

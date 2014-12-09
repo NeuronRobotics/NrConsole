@@ -178,7 +178,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	@Override
 	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
 		if(srv == sc){
-			Log.warning("Changing the servo from async "+srv.getChannel().getChannelNumber()+" to val: "+position);
+			//Log.warning("Changing the servo from async "+srv.getChannel().getChannelNumber()+" to val: "+position);
 			sliderUI.removeChangeListener(this);
 			//sliderUI.setValue(position);
 			valueUI.setText(formatValue(position));
