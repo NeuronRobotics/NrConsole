@@ -70,7 +70,7 @@ public class NRConsole {
 						
 						blApp = new NRBoot(con);
 						
-						Hexml hex = new Hexml(new File(args[portIndex].split("=")[1]));
+						Hexml hex = new Hexml(new File(args[xmlIndex].split("=")[1]));
 						blApp.loadCores(hex.getCores());
 						
 						while(blApp.isLoadDone() == false) {
