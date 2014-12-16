@@ -23,6 +23,7 @@ public class NRBootLoader extends BowlerAbstractDevice {
 	
 	public NRBootLoader(BowlerAbstractConnection serialConnection) {
 		setConnection(serialConnection);
+		
 		if(!connect()) {
 			throw new RuntimeException("Failed to connect bootloader");
 		}

@@ -2,12 +2,18 @@ package com.neuronrobotics.nrconsole;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 import org.lwjgl.openal.AL;
 
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.plugin.bootloader.core.Hexml;
+import com.neuronrobotics.nrconsole.plugin.bootloader.core.NRBoot;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.genericdevice.GenericDevice;
+import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 @SuppressWarnings("unused")
@@ -36,10 +42,39 @@ public class NRConsole {
 	 */
 	public static void main(String [] args) {
 		try {
-			if(args.length != 0)
-				new NRConsole(true);
-			else
+			if(args.length != 0){
+				if(args.length ==1)
+					new NRConsole(true);
+				else{
+					if (args[1].contains("xml") && args[2].contains("port")){
+						System.out.println("Running "+args[2]+" with "+args[1]);
+						SerialConnection con;
+						NRBoot blApp;
+						try{
+							con = new SerialConnection(args[2].split("=")[1]);
+							con.ping();
+						}catch (Exception e){
+							con = (SerialConnection) ConnectionDialog.promptConnection();
+							con.ping();
+						}
+						
+						blApp = new NRBoot(con);
+						
+						Hexml hex = new Hexml(new File(args[1].split("=")[1]));
+						blApp.loadCores(hex.getCores());
+						
+						while(blApp.isLoadDone() == false) {
+							try {Thread.sleep(1000);} catch (InterruptedException e) {}
+							System.out.println("Progress: "+blApp.getProgressValue());
+						}
+						System.exit(0);
+					}
+					System.err.println("Unknown "+args[2]+" with "+args[1]);
+					System.exit(1);
+				}
+			}else{
 				new NRConsole(false);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
