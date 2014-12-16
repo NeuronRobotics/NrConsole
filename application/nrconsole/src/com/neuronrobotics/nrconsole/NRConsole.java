@@ -46,12 +46,22 @@ public class NRConsole {
 				if(args.length ==1)
 					new NRConsole(true);
 				else{
-					if (args[1].contains("xml") && args[2].contains("port")){
-						System.out.println("Running "+args[2]+" with "+args[1]);
+					Integer xmlIndex=null;
+					Integer portIndex=null;
+					for(int i=0;i<args.length;i++){
+						if(args[i].contains("xml")){
+							xmlIndex=i;
+						}
+						if(args[i].contains("port")){
+							portIndex=i;
+						}
+					}
+					if (xmlIndex!=null && portIndex!=null){
+						System.out.println("Running "+args[portIndex]+" with "+args[xmlIndex]);
 						SerialConnection con;
 						NRBoot blApp;
 						try{
-							con = new SerialConnection(args[2].split("=")[1]);
+							con = new SerialConnection(args[portIndex].split("=")[1]);
 							con.ping();
 						}catch (Exception e){
 							con = (SerialConnection) ConnectionDialog.promptConnection();
@@ -60,7 +70,7 @@ public class NRConsole {
 						
 						blApp = new NRBoot(con);
 						
-						Hexml hex = new Hexml(new File(args[1].split("=")[1]));
+						Hexml hex = new Hexml(new File(args[portIndex].split("=")[1]));
 						blApp.loadCores(hex.getCores());
 						
 						while(blApp.isLoadDone() == false) {
@@ -69,7 +79,7 @@ public class NRConsole {
 						}
 						System.exit(0);
 					}
-					System.err.println("Unknown "+args[2]+" with "+args[1]);
+					System.err.println("Unknown "+args);
 					System.exit(1);
 				}
 			}else{
