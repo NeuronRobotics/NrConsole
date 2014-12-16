@@ -230,10 +230,10 @@ public class DyIOPanel extends JPanel {
 				if(newState) {
 					newState =false;
 					if(old == DyIOPowerState.BATTERY_POWERED && state !=DyIOPowerState.BATTERY_POWERED){
-						JOptionPane.showMessageDialog(null, "WARNING!\nBattery needs to be charged or has been disconnected \nServos have been disabled for safety", "DyIO Power Warning", JOptionPane.WARNING_MESSAGE);
+						//JOptionPane.showMessageDialog(null, "WARNING!\nBattery needs to be charged or has been disconnected \nServos have been disabled for safety", "DyIO Power Warning", JOptionPane.WARNING_MESSAGE);
 					}else 
 					if(old != DyIOPowerState.BATTERY_POWERED && state ==DyIOPowerState.BATTERY_POWERED){
-						JOptionPane.showMessageDialog(null, "Battery is connected \nServos/Motors need to be re-enabled to start up", "DyIO Power Warning", JOptionPane.INFORMATION_MESSAGE);
+						//JOptionPane.showMessageDialog(null, "Battery is connected \nServos/Motors need to be re-enabled to start up", "DyIO Power Warning", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}else {
 					ThreadUtil.wait(5);
