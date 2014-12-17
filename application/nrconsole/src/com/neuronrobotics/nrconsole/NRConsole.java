@@ -63,12 +63,13 @@ public class NRConsole {
 						try{
 							con = new SerialConnection(args[portIndex].split("=")[1]);
 							con.ping();
+							blApp = new NRBoot(con);
 						}catch (Exception e){
 							con = (SerialConnection) ConnectionDialog.promptConnection();
 							con.ping();
+							blApp = new NRBoot(con);
 						}
 						
-						blApp = new NRBoot(con);
 						
 						Hexml hex = new Hexml(new File(args[xmlIndex].split("=")[1]));
 						blApp.loadCores(hex.getCores());

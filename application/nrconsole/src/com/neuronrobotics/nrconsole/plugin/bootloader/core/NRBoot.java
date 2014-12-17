@@ -20,7 +20,7 @@ public class NRBoot {
 		}catch(RuntimeException e) {
 			//e.printStackTrace();
 			String message = "Not a bootloader device";
-    		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
+    		//JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
     		throw e;
 		}
 		//System.out.println("Connection to bowler device ready");
