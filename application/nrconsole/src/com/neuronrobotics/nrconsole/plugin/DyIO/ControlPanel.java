@@ -42,7 +42,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	public static final int panelWidth =400;
 	
 	private static final long serialVersionUID = 1L;
-	private JComboBox modes = new JComboBox();
+	private JComboBox<DyIOChannelMode> modes = new JComboBox<DyIOChannelMode>();
 	private ChannelManager manager;
 	private HashMap<DyIOChannelMode, ControlWidget> widgets = new HashMap<DyIOChannelMode, ControlWidget>();
 	private ControlWidget currentWidget=null;
@@ -120,11 +120,10 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		getManager().getChannelRecorder().setGraphing(true);
 	}
 	
-	public void setUpModeUI() {	
+	public void setUpModeUI(DyIOChannelMode mode) {	
 		
-		DyIOChannelMode mode = getMode();
 		if(previousMode==null || mode != previousMode){
-			Log.debug("BEGIN Setup mode UI: "+getManager().getChannel().getChannelNumber()+" "+getManager().getChannel()+
+			Log.info("BEGIN Setup mode UI: "+getManager().getChannel().getChannelNumber()+" "+getManager().getChannel()+
 					"\n\tPrevious mode was: "+previousMode);
 			previousMode=mode;
 			try{
@@ -214,18 +213,13 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		Log.debug("END Setup mode UI: "+getManager().getChannel()+this.getClass());
 	}
 	
-	private ControlWidget getWidget(DyIOChannelMode mode) {
-
-		return getCurrentWidget();
-	}
-	
 	public void refresh() {
-		//System.out.println(this.getClass()+" Refresh");
-		try {
-			setUpModeUI();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		new RuntimeException("Who calls theis??").printStackTrace();
+//		try {
+//			setUpModeUI();
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void autoPoll() {
@@ -285,35 +279,6 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		}
 	}
 	
-	private class AutoPollTime {
-		private String title;
-		private int time;
-		
-		public AutoPollTime(String title, int time) {
-			this.title = title;
-			this.time = time;
-		}
-		
-		public int toInt() {
-			return time;
-		}
-		
-		
-		public String toString() {
-			return title;
-		}
-		
-		
-		public boolean equals(Object o) {
-			if(!(o instanceof AutoPollTime)) {
-				return false;
-			}
-			
-			AutoPollTime a = (AutoPollTime) o;
-			return a.time == time;
-		}
-	}
-
 	public DyIOChannelMode getMode() {
 		return getManager().getChannel().getMode();
 	}
