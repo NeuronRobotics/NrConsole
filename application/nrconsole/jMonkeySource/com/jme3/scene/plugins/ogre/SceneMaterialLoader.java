@@ -31,10 +31,6 @@
  */
 package com.jme3.scene.plugins.ogre;
 
-import com.jme3.asset.AssetManager;
-import com.jme3.asset.AssetNotFoundException;
-import com.jme3.material.MaterialList;
-import com.jme3.scene.plugins.ogre.matext.OgreMaterialKey;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,13 +38,20 @@ import java.io.InputStreamReader;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.jme3.asset.AssetManager;
+import com.jme3.asset.AssetNotFoundException;
+import com.jme3.material.MaterialList;
+import com.jme3.scene.plugins.ogre.matext.OgreMaterialKey;
 
 /**
  * This is a utility class to load a {@link MaterialList} from a 

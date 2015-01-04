@@ -19,20 +19,22 @@ import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 
+import org.jivesoftware.smack.XMPPException;
+
 import com.neuronrobotics.application.xmpp.DyIOConversationFactory;
 import com.neuronrobotics.application.xmpp.GoogleChat.GoogleChatEngine;
 import com.neuronrobotics.application.xmpp.GoogleChat.IChatLog;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.nrconsole.util.NRConsoleDocumentationFactory;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.Log;
-
-import org.jivesoftware.smack.XMPPException;
 
 public class GoogleChatLogin extends JPanel implements IChatLog {
 
 	/**
 	 * 
 	 */
+	private GoogleChatLogin self = this;//used for NRConsoleDocumentationFactory.getDocumentationURL input,DyIOConversationFactory input
 	private static final long serialVersionUID = 3814334384450486363L;
 	private JLabel imageIcon;
 	private JPasswordField pass = new JPasswordField(15);
@@ -41,12 +43,11 @@ public class GoogleChatLogin extends JPanel implements IChatLog {
 	private JButton disconnect=new JButton("Disconnect");
 	private JTextArea log = new JTextArea(30, 50);
 	private GoogleChatEngine eng;
-	private GoogleChatLogin mine;
+
 	public GoogleChatLogin(){
 		setName("DyIO Cloud Connect");
 		setLayout(new MigLayout());
 		
-		mine=this;
 		InputStream stream = GoogleChatLogin.class.getResourceAsStream( "google-logo-plus.png" );
 		try {
 			BufferedImage image = ImageIO.read( stream );
@@ -66,7 +67,7 @@ public class GoogleChatLogin extends JPanel implements IChatLog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/DyIO_Cloud_Connect");
+					GettingStartedPanel.openPage(NRConsoleDocumentationFactory.getDocumentationURL(self));// ------------------------------------------
 				} catch (Exception exceptE) {}
 			}
 		});
@@ -123,7 +124,7 @@ public class GoogleChatLogin extends JPanel implements IChatLog {
 			String u = user.getText()+"@gmail.com";
 			String p = new String(pass.getPassword());
 			//System.out.println("Login= "+u+":"+p);
-			eng = new GoogleChatEngine(	new DyIOConversationFactory(mine),
+			eng = new GoogleChatEngine(	new DyIOConversationFactory(self),
 										u,
 										p);
 			connect.setEnabled(false);

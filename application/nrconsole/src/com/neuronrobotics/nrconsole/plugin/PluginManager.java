@@ -7,19 +7,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 
-import javazoom.jl.decoder.Manager;
-
 import com.neuronrobotics.nrconsole.plugin.BowlerCam.NRConsoleBowlerCameraPlugin;
-import com.neuronrobotics.nrconsole.plugin.BowlerConfig.NRConsoleBowlerConfigPlugin;
 import com.neuronrobotics.nrconsole.plugin.BowlerRPCDisplay.NRConsoleBowlerRPCDisplayPlugin;
 import com.neuronrobotics.nrconsole.plugin.DeviceConfig.NRConsoleDeviceConfigPlugin;
 import com.neuronrobotics.nrconsole.plugin.DyIO.NRConsoleDyIOPlugin;
-import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
-import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
+import com.neuronrobotics.nrconsole.plugin.JobExec.NRConsoleJobExecPlugin;
 import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.nrconsole.plugin.bootloader.NRConsoleBootloaderPlugin;
 import com.neuronrobotics.nrconsole.plugin.cartesian.CartesianController;
-import com.neuronrobotics.nrconsole.plugin.JobExec.NRConsoleJobExecPlugin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;

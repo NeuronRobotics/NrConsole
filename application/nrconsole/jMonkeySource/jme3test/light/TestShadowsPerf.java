@@ -31,6 +31,9 @@
  */
 package jme3test.light;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -51,8 +54,6 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
 import com.jme3.shadow.EdgeFilteringMode;
 import com.jme3.util.TangentBinormalGenerator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TestShadowsPerf extends SimpleApplication {
 

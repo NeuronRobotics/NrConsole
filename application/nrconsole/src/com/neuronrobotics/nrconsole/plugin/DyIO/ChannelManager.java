@@ -9,10 +9,8 @@ import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.IDyIOChannelModeChangeListener;
-import com.neuronrobotics.sdk.dyio.IDyIOEvent;
-import com.neuronrobotics.sdk.dyio.IDyIOEventListener;
 
-public class ChannelManager  implements IDyIOChannelModeChangeListener {
+public class ChannelManager implements IDyIOChannelModeChangeListener   {
 	public static final int ALIGNED_LEFT = 0;
 	public static final int ALIGNED_RIGHT = 1;
 	
@@ -34,8 +32,6 @@ public class ChannelManager  implements IDyIOChannelModeChangeListener {
 		channel.addChannelEventListener(channelPanel);
 
 		onModeChange(channel.getMode());
-		controlPanel.setUpModeUI();
-		controlPanel.refresh();
 		
 		channel.addChannelModeChangeListener(this);
 	}
@@ -114,15 +110,16 @@ public class ChannelManager  implements IDyIOChannelModeChangeListener {
 		}
 	}
 
-	
+	@Override
 	public void onModeChange(DyIOChannelMode newMode) {
-		Log.info("Updating mode on channel: "+channel.getChannelNumber()+" mode: "+newMode);
+		Log.debug("Updating mode on channel: "+channel.getChannelNumber()+" mode: "+newMode);
 		channelPanel.setMode(newMode);
-		controlPanel.setUpModeUI();
+		controlPanel.setUpModeUI(newMode);
 	}
 
 
 	public void onDyIOPowerEvent() {
 		controlPanel.setupModesComboBox();
 	}
+
 }

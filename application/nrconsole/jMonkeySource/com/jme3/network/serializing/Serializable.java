@@ -31,9 +31,10 @@
  */
 package com.jme3.network.serializing;
 
-import com.jme3.network.serializing.serializers.FieldSerializer;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import com.jme3.network.serializing.serializers.FieldSerializer;
 
 /**
  * Use this annotation when a class is going to be transferred

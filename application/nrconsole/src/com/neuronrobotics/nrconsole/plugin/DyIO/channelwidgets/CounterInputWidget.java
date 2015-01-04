@@ -14,15 +14,14 @@ import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.peripherals.CounterInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
 import com.neuronrobotics.sdk.dyio.peripherals.ICounterInputListener;
 
 public class CounterInputWidget extends ControlWidget implements ICounterInputListener,ActionListener{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	CounterInputChannel ci;
 	private JTextField field = new JTextField();
@@ -36,9 +35,10 @@ public class CounterInputWidget extends ControlWidget implements ICounterInputLi
 		field.setColumns(10);
 		field.setEnabled(false);
 		
-		//Button to launch info page for Digital Input panel
+		//Button to launch info page for Counter Input panel
 		JButton helpButton = new JButton("Help");
-		//Label for Digital Input Panel
+		
+		//Label for Counter Input Panel
 		JLabel helpLabel = new JLabel("Encoder/Counter input Panel");
 		JPanel pan1 = new JPanel(new MigLayout()); 
 		pan1.add(helpLabel, "split 2, span 2, align left");
@@ -48,21 +48,21 @@ public class CounterInputWidget extends ControlWidget implements ICounterInputLi
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Counter_Input_Channel");
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(ci));
 				} catch (Exception exceptE) {}
 			}
 		});
+		
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
+		
 		//Digital Input Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
-		JPanel pan = new JPanel(new MigLayout()); 
 
 		add(field);
 		add(refresh);
-		//add(async);
 		
 		ci.addCounterInputListener(this);
 		refresh.addActionListener(this);
@@ -81,7 +81,6 @@ public class CounterInputWidget extends ControlWidget implements ICounterInputLi
 		async.setSelected(true);
 	}
 
-	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == field) { 
 			

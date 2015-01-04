@@ -32,6 +32,9 @@
 
 package jme3test.model.anim;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
 import com.jme3.animation.Bone;
 import com.jme3.animation.Skeleton;
 import com.jme3.animation.SkeletonControl;
@@ -47,8 +50,6 @@ import com.jme3.scene.VertexBuffer.Format;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.VertexBuffer.Usage;
 import com.jme3.scene.shape.Box;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 public class TestCustomAnim extends SimpleApplication {
 

@@ -31,14 +31,15 @@
  */
 package com.jme3.network.serializing.serializers;
 
-import com.jme3.network.serializing.Serializer;
-import com.jme3.network.serializing.SerializerRegistration;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
+
+import com.jme3.network.serializing.Serializer;
+import com.jme3.network.serializing.SerializerRegistration;
 
 /**
  * Serializes collections.

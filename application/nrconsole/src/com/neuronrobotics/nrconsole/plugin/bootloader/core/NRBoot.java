@@ -4,14 +4,10 @@ package com.neuronrobotics.nrconsole.plugin.bootloader.core;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.serial.SerialConnection;
-import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
 public class NRBoot {
 	private NRBootLoader boot;
@@ -24,7 +20,7 @@ public class NRBoot {
 		}catch(RuntimeException e) {
 			//e.printStackTrace();
 			String message = "Not a bootloader device";
-    		JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
+    		//JOptionPane.showMessageDialog(null, message, message, JOptionPane.ERROR_MESSAGE);
     		throw e;
 		}
 		//System.out.println("Connection to bowler device ready");

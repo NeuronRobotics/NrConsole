@@ -31,6 +31,13 @@
  */
 package com.jme3.terrain.geomipmap;
 
+import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.BufferUnderflowException;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.math.FastMath;
@@ -44,13 +51,6 @@ import com.jme3.scene.mesh.IndexBuffer;
 import com.jme3.terrain.GeoMap;
 import com.jme3.util.BufferUtils;
 import com.jme3.util.TempVars;
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.BufferOverflowException;
-import java.nio.BufferUnderflowException;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 /**
  * Produces the mesh for the TerrainPatch.

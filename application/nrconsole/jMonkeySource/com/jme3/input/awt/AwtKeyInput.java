@@ -31,9 +31,6 @@
  */
 package com.jme3.input.awt;
 
-import com.jme3.input.KeyInput;
-import com.jme3.input.RawInputListener;
-import com.jme3.input.event.KeyInputEvent;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -41,6 +38,10 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.input.KeyInput;
+import com.jme3.input.RawInputListener;
+import com.jme3.input.event.KeyInputEvent;
 
 /**
  * <code>AwtKeyInput</code>

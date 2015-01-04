@@ -1,56 +1,26 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.text.DefaultEditorKit.CutAction;
 
-import jme3test.games.CubeField;
-import jme3tools.optimize.GeometryBatchFactory;
-
-import com.jme3.app.FlyCamAppState;
 import com.jme3.app.SimpleApplication;
 import com.jme3.bounding.BoundingBox;
-import com.jme3.bounding.BoundingVolume;
-import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
-import com.jme3.input.RawInputListener;
-import com.jme3.input.event.JoyAxisEvent;
-import com.jme3.input.event.JoyButtonEvent;
-import com.jme3.input.event.KeyInputEvent;
-import com.jme3.input.event.MouseButtonEvent;
-import com.jme3.input.event.MouseMotionEvent;
-import com.jme3.input.event.TouchEvent;
-import com.jme3.light.AmbientLight;
-import com.jme3.light.DirectionalLight;
-import com.jme3.light.Light;
 import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Matrix3f;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.renderer.queue.GeometryList;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial.CullHint;
-import com.jme3.scene.VertexBuffer;
-import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Cylinder;
 import com.jme3.scene.shape.Dome;
 import com.jme3.scene.shape.Line;
-import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeCanvasContext;
-import com.jme3.system.JmeSystem;
-import com.jogamp.newt.Display;
 
 public class MachineSimDisplay extends SimpleApplication{
 	JmeCanvasContext ctx;
@@ -69,6 +39,7 @@ public class MachineSimDisplay extends SimpleApplication{
 	private Material matLine;
 	private boolean loading= false;
 	private BitmapText loadingText = null;
+	private BitmapText slicingText = null;
 	private Vector3f scaleRate = new Vector3f(.5f,.5f,.5f);
 	private boolean printHeadVisible;
 	private Geometry printHead;
@@ -82,8 +53,18 @@ public class MachineSimDisplay extends SimpleApplication{
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
 	private Material matHead;
 	private DisplayConfigs displayConfigs;
+	private boolean isSlicing = false;
 	
-	
+	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
+		panel = _panel;
+		printObj = new PrintObject(this);
+		setDisplayConfigs(_displayConfigs);
+	}
+	public MachineSimDisplay(JPanel _panel){		
+		panel = _panel;
+		printObj = new PrintObject(this);
+		
+	}
 	public DisplayConfigs getDisplayConfigs() {
 		return displayConfigs;
 	}
@@ -92,11 +73,7 @@ public class MachineSimDisplay extends SimpleApplication{
 		this.displayConfigs = displayConfigs;
 	}
 
-	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
-		panel = _panel;
-		printObj = new PrintObject(this);
-		setDisplayConfigs(_displayConfigs);
-	}
+	
 	
 	public void configure(Vector3f _printVolume, Vector3f _printOrigin){
 		displayConfigs.configure(_printVolume, _printOrigin);
@@ -203,34 +180,49 @@ public void waitForUpdate(){
 		return layersToShow;
 	}
 	public void setLayersToShow(int numLayers, PrintObject _obj){
-		waitForUpdate();
-		shapes.clear();
-		shapes = _obj.getBatchedLayers(numLayers);
-		layersToShow = numLayers;
-		hasChanged = true;
+		if (_obj != null){
+			waitForUpdate();
+			shapes.clear();
+			shapes = _obj.getBatchedLayers(numLayers);
+			layersToShow = numLayers;
+			hasChanged = true;
+		}
+		else{
+			clearObject();
+		}
 		
 	}
 		
 	
 	
-	
+	public void clearObject(){
+		waitForUpdate();
+		shapes.clear();
+		lastShownIndex = 0;
+		layersToShow = 0;
+		hasChanged = true;
+	}
 	
 	public void loadPrintObject(PrintObject _object){
 		
-		
-		waitForUpdate();
-		shapes.clear();
-		
-		
-		if (_object.getNumLayers() == 0){
-			_object.processGCodes();
+		if (_object != null){
+			waitForUpdate();
+			shapes.clear();
+			
+			
+			if (_object.getNumLayers() == 0){
+				_object.processGCodes();
+			}
+			
+			shapes = _object.getBatchedObject();
+			System.out.println("Num of Shapes: " + shapes.size());
+			lastShownIndex = shapes.size();
+			
+			hasChanged = true;
 		}
-		
-		shapes = _object.getBatchedObject();
-		System.out.println("Num of Shapes: " + shapes.size());
-		lastShownIndex = shapes.size();
-		
-		hasChanged = true;
+		else{
+			clearObject();
+		}
 	}
 	
 	
@@ -407,6 +399,46 @@ public void waitForUpdate(){
 		
 		return loadingText;
 	}
+	
+	public BitmapText getSlicingText(float tpf){
+		if (slicingText == null){
+			guiFont = assetManager.loadFont("Interface/Fonts/Default.fnt");
+	        slicingText = new BitmapText(guiFont, false);
+	        
+	        slicingText.setSize(guiFont.getCharSet().getRenderedSize());
+	        slicingText.setText("Slicing...");
+	        
+	        float offsetX = (panel.getWidth()/2) - ((slicingText.getLineWidth()*slicingText.getLocalScale().getX())/2);
+			float offsetY = (panel.getHeight()/2) + ((slicingText.getHeight()*slicingText.getLocalScale().getX())/2);
+			
+			slicingText.setLocalTranslation(offsetX, offsetY, 0);
+	        slicingText.setName("Slicing Text");
+		}
+		else{
+			if (slicingText.getLocalScale().getX() > 5.0f){
+				scaleFactor = -2.0f;
+				
+			}
+			if (slicingText.getLocalScale().getX() < 1.5f){
+				scaleFactor = 2.0f;
+				
+			}
+			float scaleInc = scaleFactor * tpf;
+			scaleInc += slicingText.getLocalScale().getX();
+			
+			slicingText.setLocalScale(scaleInc);
+			
+			
+			float offsetX = (panel.getWidth()/2) - ((slicingText.getLineWidth()*slicingText.getLocalScale().getX())/2);
+			float offsetY = (panel.getHeight()/2) + ((slicingText.getHeight()*slicingText.getLocalScale().getX())/2);
+			
+			slicingText.setLocalTranslation(offsetX, offsetY, 0);
+			
+		}
+			
+		
+		return slicingText;
+	}
 	private void notifyIllegalPrint(){
 		for (PrintTestListener ptl : listeners) {
 			ptl.printIsIllegal();
@@ -428,6 +460,14 @@ public void waitForUpdate(){
 		else{
 			
 			guiNode.detachChildNamed("Loading Text");
+		}
+		if (isSlicing == true  && hasChanged == false){
+			//Do something to let the user know things are happening			
+	        guiNode.attachChild(getSlicingText(tpf));
+		}
+		else{
+			
+			guiNode.detachChildNamed("Slicing Text");
 		}
 		
 		if (hasChanged == true){
@@ -452,16 +492,9 @@ public void waitForUpdate(){
 				if (geom.getMaterial() == getMatLine() && isShowNonExtrude()){
 					obj.attachChild(geom);
 				}
-				if (isShowAxes()){
-					rootNode.getChild("X Axis").setCullHint(CullHint.Never);
-					rootNode.getChild("Y Axis").setCullHint(CullHint.Never);
-					rootNode.getChild("Z Axis").setCullHint(CullHint.Never);
-				}
-				else{
-					rootNode.getChild("X Axis").setCullHint(CullHint.Always);
-					rootNode.getChild("Y Axis").setCullHint(CullHint.Always);
-					rootNode.getChild("Z Axis").setCullHint(CullHint.Always);
-				}
+				
+				
+				
 			}
 			endUpdate();
 			if (loading == true){// Only run these bits if this is the first time we are loading this file
@@ -472,20 +505,34 @@ public void waitForUpdate(){
 					notifyWarnPrint();
 				}
 			}
+			
 			if (printHeadVisible){
 				rootNode.attachChild(getPrintHead());
 			}
 			else{
 				rootNode.detachChild(getPrintHead());
 			}
-			
+			if (isShowAxes()){
+				if (rootNode.getChild("X Axis") == null && rootNode.getChild("Y Axis") == null && rootNode.getChild("Z Axis") == null)
+				loadAxes(0,0,0);
+			}
+			else{
+				if (rootNode.getChild("X Axis") != null){
+					rootNode.detachChildNamed("X Axis");
+				}
+				if (rootNode.getChild("Y Axis") != null){
+					rootNode.detachChildNamed("Y Axis");
+				}
+				if (rootNode.getChild("Z Axis") != null){
+					rootNode.detachChildNamed("Z Axis");
+				}
+				
+			}
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
 			loading =  false;
 		}
-		//System.out.println("Vertical: " + chaseCam.getVerticalRotation() + 
-			//	"Horizontal: " + chaseCam.getHorizontalRotation()+
-				//"Zoom: " + chaseCam.getDistanceToTarget());
+		
 	 }
 
 	public boolean isShowGood() {
@@ -564,6 +611,12 @@ public void waitForUpdate(){
 	 */
 	public void setPrintHeadVisible(boolean _printHeadVisible) {
 		printHeadVisible = _printHeadVisible;
+	}
+	public boolean isSlicing() {
+		return isSlicing;
+	}
+	public void setSlicing(boolean isSlicing) {
+		this.isSlicing = isSlicing;
 	}
 	
 }

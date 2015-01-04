@@ -31,6 +31,10 @@
  */
 package com.jme3.terrain.geomipmap.picking;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Ray;
@@ -40,9 +44,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.terrain.geomipmap.TerrainPatch;
 import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.geomipmap.picking.BresenhamYUpGridTracer.Direction;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * It basically works by casting a pick ray

@@ -32,6 +32,8 @@
 
 package jme3test.post;
 
+import java.io.File;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.plugins.HttpZipLocator;
 import com.jme3.asset.plugins.ZipLocator;
@@ -48,7 +50,6 @@ import com.jme3.post.filters.FogFilter;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.util.SkyFactory;
-import java.io.File;
 
 public class TestFog extends SimpleApplication {
 

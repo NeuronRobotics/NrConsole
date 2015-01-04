@@ -32,6 +32,12 @@
 
 package jme3test.export;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.asset.AssetKey;
 import com.jme3.asset.ModelKey;
@@ -48,11 +54,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Sphere;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TestAssetLinkNode extends SimpleApplication {
 

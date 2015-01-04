@@ -1,27 +1,16 @@
 package com.neuronrobotics.nrconsole.plugin.PID;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.neuronrobotics.nrconsole.NRConsoleWindow;
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
-import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
-
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
-import com.neuronrobotics.sdk.common.BowlerAbstractDevice;
-import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.pid.GenericPIDDevice;
 import com.neuronrobotics.sdk.pid.VirtualGenericPIDDevice;

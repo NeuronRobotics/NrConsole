@@ -16,6 +16,26 @@ public class IntelHexParser {
 	private long highAddress=0;
 	ArrayList<ByteData> packetList = new ArrayList<ByteData>();
 	private long dataIndex=0; 
+	private long base = 0x1D00A000L;
+	private long head =  0x1D01FFFFL;
+	
+	public static String hex(long n) {
+	    // call toUpperCase() if that's required
+	    return String.format("0x%8s", Long.toHexString(n)).replace(' ', '0');
+	}
+	
+	private void checkAddressValidity(long currentAddress, NRBootCoreType type){
+		if(type==NRBootCoreType.PIC32){
+			if(currentAddress>head ){
+				throw new RuntimeException("Address "+hex(currentAddress)+" is larger than "+hex(head));
+			}
+			if(currentAddress<base){
+				throw new RuntimeException("Address "+hex(currentAddress)+" is less than "+hex(base));
+			}	
+		}
+		
+	}
+	
 	public IntelHexParser(ArrayList<hexLine> lines, NRBootCoreType type) throws IOException{
 	     ByteData tmp=null;
 	     hexLine  previousLine=null;
@@ -33,6 +53,7 @@ public class IntelHexParser {
 	    		 ////System.out.println(l);
 	    		 
 	    		 currentAddress=l.getStartAddress();
+	    		 checkAddressValidity(currentAddress,type);
 	    		 if (previousLine != null){
 	    			 endOfLastAddress = previousLine.getEndAddress();
 	    		 }
@@ -54,7 +75,10 @@ public class IntelHexParser {
 				    	 }
 	    			 }
 	    			 tmp.setData(b);
+	    			 
 	    			 currentAddress++;
+
+		    		 checkAddressValidity(currentAddress,type);
 	    		 }
 	    		 previousLine=l;
 	    	 }

@@ -32,6 +32,10 @@
 
 package jme3tools.optimize;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import com.jme3.bounding.BoundingBox;
 import com.jme3.bounding.BoundingVolume;
 import com.jme3.collision.CollisionResults;
@@ -46,9 +50,6 @@ import com.jme3.scene.Mesh;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.debug.WireBox;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 public class Octree {
 

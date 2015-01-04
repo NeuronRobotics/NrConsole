@@ -31,8 +31,9 @@
  */
 package jme3tools.navigation;
 
-import com.jme3.math.Vector3f;
 import java.text.DecimalFormat;
+
+import com.jme3.math.Vector3f;
 
 
 /**

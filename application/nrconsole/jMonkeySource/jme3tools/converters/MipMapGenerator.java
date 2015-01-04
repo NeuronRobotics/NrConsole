@@ -31,16 +31,17 @@
  */
 package jme3tools.converters;
 
-import com.jme3.math.FastMath;
-import com.jme3.texture.Image;
-import com.jme3.texture.Image.Format;
-import com.jme3.texture.plugins.AWTLoader;
-import com.jme3.util.BufferUtils;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+import com.jme3.math.FastMath;
+import com.jme3.texture.Image;
+import com.jme3.texture.Image.Format;
+import com.jme3.texture.plugins.AWTLoader;
+import com.jme3.util.BufferUtils;
 
 public class MipMapGenerator {
 

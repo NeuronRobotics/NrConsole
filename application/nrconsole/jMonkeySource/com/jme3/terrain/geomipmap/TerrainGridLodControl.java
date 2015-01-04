@@ -31,11 +31,12 @@
  */
 package com.jme3.terrain.geomipmap;
 
+import java.util.List;
+
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
 import com.jme3.terrain.Terrain;
 import com.jme3.terrain.geomipmap.lodcalc.LodCalculator;
-import java.util.List;
 
 /**
  * Updates grid offsets and cell positions.

@@ -2,6 +2,7 @@ package com.neuronrobotics.nrconsole.plugin;
 
 import java.awt.Dimension;
 import java.util.ArrayList;
+
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 

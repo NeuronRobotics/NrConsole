@@ -1,23 +1,20 @@
 package com.neuronrobotics.nrconsole.plugin.DeviceConfig;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.PrefsLoader;
 import com.neuronrobotics.nrconsole.util.Slic3rFilter;
-
-import javax.swing.SwingConstants;
 
 public class LocalSettingsPanel extends SettingsPanel {
 	private JTextField tfSlic3rLocation;
@@ -78,7 +75,7 @@ public class LocalSettingsPanel extends SettingsPanel {
 		getTfSlic3rLocation().setText(prefs.getSlic3rLocation());
 	}
 	private void changeSlic3rLocation(){
-		slic3rPath = FileSelectionFactory.GetFile(null, new Slic3rFilter()).getPath();
+		slic3rPath = FileSelectionFactory.GetFile(null,"Location of slic3r-console.exe", "Select" , new Slic3rFilter()).getPath();
 		prefs.setSlic3rLocation(slic3rPath);
 		getTfSlic3rLocation().setText(prefs.getSlic3rLocation());
 	}

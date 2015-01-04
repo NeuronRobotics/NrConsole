@@ -7,14 +7,11 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
 
-import com.neuronrobotics.nrconsole.NRConsole;
-import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.ControlWidget;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncMode;
 import com.neuronrobotics.sdk.commands.bcs.io.AsyncThreshholdEdgeType;
 import com.neuronrobotics.sdk.common.InvalidResponseException;
@@ -31,8 +28,8 @@ public class AdvancedAsyncWidget extends JPanel {
 	private ControlPanel controlPanel;
 	private JCheckBox async = new JCheckBox("Async");
 	private JPanel advanced = new JPanel(new MigLayout());
-	private JComboBox type = new JComboBox();
-	private JComboBox edge = new JComboBox();
+	private JComboBox<AsyncMode> type = new JComboBox<AsyncMode>();
+	private JComboBox<AsyncThreshholdEdgeType> edge = new JComboBox<AsyncThreshholdEdgeType>();
 	private JTextField time =  new JTextField(4);
 	private JTextField dvalue =  new JTextField(4);
 	private JTextField tvalue =  new JTextField(4);
@@ -56,27 +53,28 @@ public class AdvancedAsyncWidget extends JPanel {
 		type.addItem(AsyncMode.DEADBAND);
 		type.addItem(AsyncMode.THRESHHOLD);
 		type.addItem(AsyncMode.AUTOSAMP);
-		type.addActionListener(new ActionListener() {
+		
+		ActionListener asyncEvent = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateAsyncPanel();
 				updateDevice();
 			}
-		});
+		};
+		
+		type.addActionListener(asyncEvent);
 		
 		edge.addItem(AsyncThreshholdEdgeType.BOTH);		
 		edge.addItem(AsyncThreshholdEdgeType.RISING);	
 		edge.addItem(AsyncThreshholdEdgeType.FALLING);	
-		edge.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateAsyncPanel();
-				updateDevice();
-			}
-		});
+		edge.addActionListener(asyncEvent);
 		update.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				updateDevice();
 			}
 		});
+		time.addActionListener(asyncEvent);
+		tvalue.addActionListener(asyncEvent);
+		dvalue.addActionListener(asyncEvent);
 		perm.add(update);
 		perm.add(type);
 		perm.add(time);
@@ -202,19 +200,9 @@ public class AdvancedAsyncWidget extends JPanel {
 				//getPerpheral().setAsync(true);
 				add(advanced);
 			}
-			switch(getPerpheral().getMode()){
-			case ANALOG_IN:
-				setType(AsyncMode.DEADBAND);
-				break;
-			case DIGITAL_IN:
-				time.setText(new Integer(5).toString());
-			case COUNT_IN_INT:
-			case COUNT_OUT_INT:	
-				setType(AsyncMode.NOTEQUAL);
-				break;
-			}
+			setType(AsyncMode.NOTEQUAL);
 		}
-		time.setText(new Integer(100).toString());
+		time.setText(new Integer(10).toString());
 		Log.debug("Setting up async");
 		updateAsync();
 		try {

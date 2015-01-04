@@ -32,8 +32,9 @@
 package com.jme3.network.rmi;
 
 
-import com.jme3.network.serializing.Serializable;
 import java.lang.reflect.Method;
+
+import com.jme3.network.serializing.Serializable;
 
 @Serializable
 public class ObjectDef {

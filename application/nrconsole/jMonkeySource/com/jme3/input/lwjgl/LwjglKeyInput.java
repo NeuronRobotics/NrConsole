@@ -32,16 +32,18 @@
 
 package com.jme3.input.lwjgl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+
 import com.jme3.input.KeyInput;
 import com.jme3.input.RawInputListener;
 import com.jme3.input.event.KeyInputEvent;
 import com.jme3.system.lwjgl.LwjglAbstractDisplay;
 import com.jme3.system.lwjgl.LwjglTimer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
 
 public class LwjglKeyInput implements KeyInput {
 

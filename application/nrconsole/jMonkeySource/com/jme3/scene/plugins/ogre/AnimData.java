@@ -31,9 +31,10 @@
  */
 package com.jme3.scene.plugins.ogre;
 
+import java.util.ArrayList;
+
 import com.jme3.animation.Animation;
 import com.jme3.animation.Skeleton;
-import java.util.ArrayList;
 
 public class AnimData {
 

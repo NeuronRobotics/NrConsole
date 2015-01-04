@@ -1,18 +1,9 @@
 package com.neuronrobotics.nrconsole.plugin.JobExec;
 
 import java.awt.Dimension;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.prefs.Preferences;
 
 import javax.swing.JPanel;
-
-import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
@@ -22,7 +13,6 @@ import com.neuronrobotics.nrconsole.util.Slic3rFilter;
 import com.neuronrobotics.replicator.driver.BowlerBoardDevice;
 import com.neuronrobotics.replicator.driver.NRPrinter;
 import com.neuronrobotics.replicator.driver.Slic3r;
-import com.neuronrobotics.sdk.addons.kinematics.gui.SampleGuiNR;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 
 public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
@@ -62,7 +52,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin{
 		PrefsLoader prefs = new PrefsLoader();
 		String path = prefs.getSlic3rLocation();
 		if (new File(path).exists() == false){
-			 path = FileSelectionFactory.GetFile(null, new Slic3rFilter()).getPath();
+			 path = FileSelectionFactory.GetFile(null,"Location of slic3r-console.exe", "Select" , new Slic3rFilter()).getPath();
 			 prefs.setSlic3rLocation(path);
 		}
 		Slic3r.setExecutableLocation(path);

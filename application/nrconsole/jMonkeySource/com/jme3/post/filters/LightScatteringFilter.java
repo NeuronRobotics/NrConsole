@@ -31,6 +31,8 @@
  */
 package com.jme3.post.filters;
 
+import java.io.IOException;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
@@ -44,7 +46,6 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue;
-import java.io.IOException;
 
 /**
  * LightScattering filters creates rays comming from a light sources 

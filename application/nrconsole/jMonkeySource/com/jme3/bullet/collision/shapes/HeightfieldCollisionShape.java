@@ -31,6 +31,8 @@
  */
 package com.jme3.bullet.collision.shapes;
 
+import java.io.IOException;
+
 import com.bulletphysics.dom.HeightfieldTerrainShape;
 import com.jme3.bullet.util.Converter;
 import com.jme3.export.InputCapsule;
@@ -40,7 +42,6 @@ import com.jme3.export.OutputCapsule;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Mesh;
-import java.io.IOException;
 
 /**
  * Uses Bullet Physics Heightfield terrain collision system. This is MUCH faster

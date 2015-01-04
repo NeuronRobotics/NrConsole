@@ -31,8 +31,15 @@
  */
 package com.jme3.bullet.objects;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import com.bulletphysics.collision.dispatch.CollisionObject;
-import com.bulletphysics.dynamics.vehicle.*;
+import com.bulletphysics.dynamics.vehicle.DefaultVehicleRaycaster;
+import com.bulletphysics.dynamics.vehicle.RaycastVehicle;
+import com.bulletphysics.dynamics.vehicle.VehicleRaycaster;
+import com.bulletphysics.dynamics.vehicle.VehicleTuning;
+import com.bulletphysics.dynamics.vehicle.WheelInfo;
 import com.jme3.bullet.PhysicsSpace;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.util.Converter;
@@ -41,13 +48,7 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.debug.Arrow;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * <p>PhysicsVehicleNode - Special PhysicsNode that implements vehicle functions</p>

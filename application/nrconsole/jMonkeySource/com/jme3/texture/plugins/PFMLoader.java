@@ -31,17 +31,18 @@
  */
 package com.jme3.texture.plugins;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.logging.Logger;
+
 import com.jme3.asset.AssetInfo;
 import com.jme3.asset.AssetLoader;
 import com.jme3.asset.TextureKey;
 import com.jme3.texture.Image;
 import com.jme3.texture.Image.Format;
 import com.jme3.util.BufferUtils;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.logging.Logger;
 
 public class PFMLoader implements AssetLoader {
 

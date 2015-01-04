@@ -1,5 +1,7 @@
 package jme3test.bullet;
  
+import java.util.List;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.collision.PhysicsCollisionObject;
@@ -10,7 +12,6 @@ import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.font.BitmapText;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.util.List;
 /**
  *
  * @author @wezrule

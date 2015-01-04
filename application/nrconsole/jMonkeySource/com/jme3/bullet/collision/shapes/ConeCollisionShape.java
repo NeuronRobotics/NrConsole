@@ -31,6 +31,8 @@
  */
 package com.jme3.bullet.collision.shapes;
 
+import java.io.IOException;
+
 import com.bulletphysics.collision.shapes.ConeShape;
 import com.bulletphysics.collision.shapes.ConeShapeX;
 import com.bulletphysics.collision.shapes.ConeShapeZ;
@@ -40,7 +42,6 @@ import com.jme3.export.InputCapsule;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
-import java.io.IOException;
 
 /**
  * Cone collision shape represents a 3D cone with a radius, height, and axis (X, Y or Z).

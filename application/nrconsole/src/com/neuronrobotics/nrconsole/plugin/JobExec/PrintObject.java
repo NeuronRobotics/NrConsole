@@ -5,13 +5,10 @@ import java.util.ArrayList;
 
 import jme3tools.optimize.GeometryBatchFactory;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.math.Matrix3f;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Mesh;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Cylinder;
 import com.jme3.scene.shape.Line;
 
 public class PrintObject{
@@ -25,11 +22,27 @@ public class PrintObject{
 	private File codeFile;
 
 	
+	public static enum PrintStatus{
+		GOOD, PROBLEM, FAIL
+	}
+	
+	
 	private int numFailLines = 0;
 	private int numProblemLines =0;
 	private int numGoodLines = 0;
 	private int numMoveLines = 0;
 	
+	public PrintStatus getPrintStatus(){
+		if (getNumFailLines() > 0){
+			return PrintStatus.FAIL;
+		}
+		else if (getNumProblemLines() > 0){
+			return PrintStatus.PROBLEM;
+		}
+		else{
+			return PrintStatus.GOOD;
+		}
+	}
 	
 	public int getNumMoveLines(){
 		return numMoveLines;
@@ -322,5 +335,8 @@ public class PrintObject{
 		this.codeFile = codeFile;
 	}
 	
-	
+	@Override
+	public String toString(){
+		return getName();
+	}
 }

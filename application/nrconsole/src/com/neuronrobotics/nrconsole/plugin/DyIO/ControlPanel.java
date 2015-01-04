@@ -9,13 +9,11 @@ import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
-import javax.swing.Timer;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -28,10 +26,9 @@ import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.DigitalOutputWidg
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.LabelChannelUI;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.PPMReaderWidget;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.SPIChannelWidget;
-import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.SliderChannelUI;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.ServoWidget;
+import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.SliderChannelUI;
 import com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets.UARTChannelUI;
-import com.neuronrobotics.sdk.commands.bcs.io.GetChannelModeCommand;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIOChannelEvent;
 import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
@@ -45,7 +42,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	public static final int panelWidth =400;
 	
 	private static final long serialVersionUID = 1L;
-	private JComboBox modes = new JComboBox();
+	private JComboBox<DyIOChannelMode> modes = new JComboBox<DyIOChannelMode>();
 	private ChannelManager manager;
 	private HashMap<DyIOChannelMode, ControlWidget> widgets = new HashMap<DyIOChannelMode, ControlWidget>();
 	private ControlWidget currentWidget=null;
@@ -71,7 +68,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 			//Invalid state, ignore for now...
 			return;
 		}
-		if(hasServ == false && getManager().getChannel().getDevice().isBrownOutDetectEnabled()){
+		if(hasServ == false && getManager().getChannel().getDevice().isServoPowerSafeMode()){
 			modes.removeItem(DyIOChannelMode.SERVO_OUT);
 		}else{
 			boolean servoExists = false;
@@ -123,11 +120,11 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		getManager().getChannelRecorder().setGraphing(true);
 	}
 	
-	public void setUpModeUI() {	
+	public void setUpModeUI(DyIOChannelMode mode) {	
 		
-		DyIOChannelMode mode = getMode();
 		if(previousMode==null || mode != previousMode){
-			Log.debug("BEGIN Setup mode UI: "+getManager().getChannel().getChannelNumber()+" "+getManager().getChannel()+"\n\tPrevious mode was: "+previousMode);
+			Log.info("BEGIN Setup mode UI: "+getManager().getChannel().getChannelNumber()+" "+getManager().getChannel()+
+					"\n\tPrevious mode was: "+previousMode);
 			previousMode=mode;
 			try{
 				switch(mode) {
@@ -138,7 +135,12 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 					setCurrentWidget(new DigitalInputWidget(getManager()));
 					break;
 				case DIGITAL_OUT:
+					int l = Log.getMinimumPrintLevel();
+					//Log.enableInfoPrint();
+					
 					setCurrentWidget(new DigitalOutputWidget(getManager()));
+
+					Log.setMinimumPrintLevel(l);
 					break;
 				case SERVO_OUT:
 					setCurrentWidget(new ServoWidget(getManager(), mode));
@@ -211,18 +213,13 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		Log.debug("END Setup mode UI: "+getManager().getChannel()+this.getClass());
 	}
 	
-	private ControlWidget getWidget(DyIOChannelMode mode) {
-
-		return getCurrentWidget();
-	}
-	
 	public void refresh() {
-		//System.out.println(this.getClass()+" Refresh");
-		try {
-			setUpModeUI();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
+		new RuntimeException("Who calls theis??").printStackTrace();
+//		try {
+//			setUpModeUI();
+//		} catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void autoPoll() {
@@ -282,35 +279,6 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 		}
 	}
 	
-	private class AutoPollTime {
-		private String title;
-		private int time;
-		
-		public AutoPollTime(String title, int time) {
-			this.title = title;
-			this.time = time;
-		}
-		
-		public int toInt() {
-			return time;
-		}
-		
-		
-		public String toString() {
-			return title;
-		}
-		
-		
-		public boolean equals(Object o) {
-			if(!(o instanceof AutoPollTime)) {
-				return false;
-			}
-			
-			AutoPollTime a = (AutoPollTime) o;
-			return a.time == time;
-		}
-	}
-
 	public DyIOChannelMode getMode() {
 		return getManager().getChannel().getMode();
 	}

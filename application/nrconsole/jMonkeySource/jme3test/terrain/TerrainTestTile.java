@@ -31,6 +31,8 @@
  */
 package jme3test.terrain;
 
+import java.util.List;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
@@ -53,7 +55,6 @@ import com.jme3.terrain.geomipmap.TerrainQuad;
 import com.jme3.terrain.geomipmap.lodcalc.DistanceLodCalculator;
 import com.jme3.texture.Texture;
 import com.jme3.texture.Texture.WrapMode;
-import java.util.List;
 
 /**
  * Demonstrates the NeighbourFinder interface for TerrainQuads,

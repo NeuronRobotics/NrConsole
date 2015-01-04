@@ -31,14 +31,38 @@
  */
 package com.jme3.bullet;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.ContactAddedCallback;
 import com.bulletphysics.ContactDestroyedCallback;
 import com.bulletphysics.ContactProcessedCallback;
-import com.bulletphysics.collision.broadphase.*;
-import com.bulletphysics.collision.dispatch.*;
+import com.bulletphysics.collision.broadphase.AxisSweep3;
+import com.bulletphysics.collision.broadphase.AxisSweep3_32;
+import com.bulletphysics.collision.broadphase.BroadphaseInterface;
+import com.bulletphysics.collision.broadphase.BroadphaseProxy;
+import com.bulletphysics.collision.broadphase.CollisionFilterGroups;
+import com.bulletphysics.collision.broadphase.DbvtBroadphase;
+import com.bulletphysics.collision.broadphase.OverlapFilterCallback;
+import com.bulletphysics.collision.broadphase.SimpleBroadphase;
+import com.bulletphysics.collision.dispatch.CollisionDispatcher;
+import com.bulletphysics.collision.dispatch.CollisionObject;
+import com.bulletphysics.collision.dispatch.CollisionWorld;
 import com.bulletphysics.collision.dispatch.CollisionWorld.LocalConvexResult;
 import com.bulletphysics.collision.dispatch.CollisionWorld.LocalRayResult;
+import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.dispatch.GhostPairCallback;
+import com.bulletphysics.collision.dispatch.PairCachingGhostObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import com.bulletphysics.collision.shapes.ConvexShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
@@ -52,7 +76,13 @@ import com.bulletphysics.dynamics.vehicle.RaycastVehicle;
 import com.bulletphysics.extras.gimpact.GImpactCollisionAlgorithm;
 import com.jme3.app.AppTask;
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.collision.*;
+import com.jme3.bullet.collision.PhysicsCollisionEvent;
+import com.jme3.bullet.collision.PhysicsCollisionEventFactory;
+import com.jme3.bullet.collision.PhysicsCollisionGroupListener;
+import com.jme3.bullet.collision.PhysicsCollisionListener;
+import com.jme3.bullet.collision.PhysicsCollisionObject;
+import com.jme3.bullet.collision.PhysicsRayTestResult;
+import com.jme3.bullet.collision.PhysicsSweepTestResult;
 import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.control.PhysicsControl;
 import com.jme3.bullet.control.RigidBodyControl;
@@ -66,17 +96,6 @@ import com.jme3.math.Transform;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * <p>PhysicsSpace - The central jbullet-jme physics space</p>

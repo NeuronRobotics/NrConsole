@@ -1,19 +1,20 @@
 package com.neuronrobotics.nrconsole;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import java.io.File;
 
 import org.lwjgl.openal.AL;
 
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.plugin.bootloader.core.Hexml;
+import com.neuronrobotics.nrconsole.plugin.bootloader.core.NRBoot;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.MACAddress;
+import com.neuronrobotics.sdk.genericdevice.GenericDevice;
+import com.neuronrobotics.sdk.serial.SerialConnection;
+import com.neuronrobotics.sdk.ui.ConnectionDialog;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 @SuppressWarnings("unused")
@@ -42,10 +43,50 @@ public class NRConsole {
 	 */
 	public static void main(String [] args) {
 		try {
-			if(args.length != 0)
-				new NRConsole(true);
-			else
+			if(args.length != 0){
+				if(args.length ==1)
+					new NRConsole(true);
+				else{
+					Integer xmlIndex=null;
+					Integer portIndex=null;
+					for(int i=0;i<args.length;i++){
+						if(args[i].contains("xml")){
+							xmlIndex=i;
+						}
+						if(args[i].contains("port")){
+							portIndex=i;
+						}
+					}
+					if (xmlIndex!=null && portIndex!=null){
+						System.out.println("Running "+args[portIndex]+" with "+args[xmlIndex]);
+						SerialConnection con;
+						NRBoot blApp;
+						try{
+							con = new SerialConnection(args[portIndex].split("=")[1]);
+							con.ping(new MACAddress());
+							blApp = new NRBoot(con);
+						}catch (Exception e){
+							con = (SerialConnection) ConnectionDialog.promptConnection();
+							con.ping(new MACAddress());
+							blApp = new NRBoot(con);
+						}
+						
+						
+						Hexml hex = new Hexml(new File(args[xmlIndex].split("=")[1]));
+						blApp.loadCores(hex.getCores());
+						
+						while(blApp.isLoadDone() == false) {
+							try {Thread.sleep(1000);} catch (InterruptedException e) {}
+							System.out.println("Progress: "+blApp.getProgressValue());
+						}
+						System.exit(0);
+					}
+					System.err.println("Unknown "+args);
+					System.exit(1);
+				}
+			}else{
 				new NRConsole(false);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
@@ -72,7 +113,11 @@ public class NRConsole {
 			@Override
 			public void windowClosing(WindowEvent winEvt) {
 				manager.disconnect();
-				AL.destroy();//Used to clean up any audio streams before exit. Will throw an error if not used ("AL lib: (EE) alc_cleanup: 1 device not closed")
+				try{
+					AL.destroy();//Used to clean up any audio streams before exit. Will throw an error if not used ("AL lib: (EE) alc_cleanup: 1 device not closed")
+				}catch(Error e){
+					// if no audio loaded, still exit clean
+				}
 				System.out.println("Exit clean");
 		        System.exit(0); 
 		    }

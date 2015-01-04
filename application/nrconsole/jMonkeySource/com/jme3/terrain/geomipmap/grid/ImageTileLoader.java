@@ -31,6 +31,10 @@
  */
 package com.jme3.terrain.geomipmap.grid;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.asset.AssetManager;
 import com.jme3.asset.AssetNotFoundException;
 import com.jme3.asset.TextureKey;
@@ -39,11 +43,11 @@ import com.jme3.export.JmeImporter;
 import com.jme3.math.Vector3f;
 import com.jme3.terrain.geomipmap.TerrainGridTileLoader;
 import com.jme3.terrain.geomipmap.TerrainQuad;
-import com.jme3.terrain.heightmap.*;
+import com.jme3.terrain.heightmap.AbstractHeightMap;
+import com.jme3.terrain.heightmap.HeightMap;
+import com.jme3.terrain.heightmap.ImageBasedHeightMap;
+import com.jme3.terrain.heightmap.Namer;
 import com.jme3.texture.Texture;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

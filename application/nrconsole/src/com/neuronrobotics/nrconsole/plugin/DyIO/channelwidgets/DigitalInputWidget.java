@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 
 import com.neuronrobotics.nrconsole.plugin.DyIO.ChannelManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GettingStartedPanel;
+import com.neuronrobotics.sdk.common.BowlerDocumentationFactory;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.peripherals.DigitalInputChannel;
 import com.neuronrobotics.sdk.dyio.peripherals.DyIOAbstractPeripheral;
@@ -28,7 +29,6 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 	
 	//Label for Digital Input Panel
 	private JLabel helpLabel = new JLabel("Digital Input Panel");
-	
 	
 	private DigitalInputChannel dic;
 	
@@ -50,7 +50,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		add(refresh);
 					
 		
-		//add(async);
+		
 		setValue(true);
 		dic.addDigitalInputListener(this);
 		refresh.addActionListener(this);
@@ -60,7 +60,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					GettingStartedPanel.openPage("http://wiki.neuronrobotics.com/Digital_Input_Channel");
+					GettingStartedPanel.openPage(BowlerDocumentationFactory.getDocumentationURL(dic));
 				} catch (Exception exceptE) {
 					//TODO: launch error message window
 					
@@ -71,6 +71,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		//Help button formating
 		helpButton.setFont((helpButton.getFont()).deriveFont(8f));
 		helpButton.setBackground(Color.green);
+		
 		//Digital Input Panel label formating
 		helpLabel.setHorizontalTextPosition(JLabel.LEFT);
 		helpLabel.setForeground(Color.GRAY);
@@ -115,7 +116,7 @@ public class DigitalInputWidget extends ControlWidget implements IDigitalInputLi
 		
 		if(!async.isSelected())
 			setValue(dic.isHigh());
-		//throw new RuntimeException();
+		
 	}
 
 	

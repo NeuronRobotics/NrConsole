@@ -31,6 +31,8 @@
  */
 package com.jme3.scene.debug;
 
+import java.nio.FloatBuffer;
+
 import com.jme3.bounding.BoundingBox;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.VertexBuffer;
@@ -38,7 +40,6 @@ import com.jme3.scene.VertexBuffer.Format;
 import com.jme3.scene.VertexBuffer.Type;
 import com.jme3.scene.VertexBuffer.Usage;
 import com.jme3.util.BufferUtils;
-import java.nio.FloatBuffer;
 
 public class WireBox extends Mesh {
 

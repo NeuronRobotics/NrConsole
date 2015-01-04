@@ -31,10 +31,11 @@
  */
 package com.jme3.terrain;
 
+import java.util.List;
+
 import com.jme3.material.Material;
 import com.jme3.math.Vector2f;
 import com.jme3.math.Vector3f;
-import java.util.List;
 
 /**
  * Terrain can be one or many meshes comprising of a, probably large, piece of land.

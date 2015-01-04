@@ -38,7 +38,12 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.cinematic.Cinematic;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.PlayState;
-import com.jme3.cinematic.events.*;
+import com.jme3.cinematic.events.AbstractCinematicEvent;
+import com.jme3.cinematic.events.AnimationEvent;
+import com.jme3.cinematic.events.CinematicEvent;
+import com.jme3.cinematic.events.CinematicEventListener;
+import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.cinematic.events.SoundEvent;
 import com.jme3.font.BitmapText;
 import com.jme3.input.ChaseCamera;
 import com.jme3.input.controls.ActionListener;
@@ -58,6 +63,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.shadow.PssmShadowRenderer;
+
 import de.lessvoid.nifty.Nifty;
 
 public class TestCinematic extends SimpleApplication {

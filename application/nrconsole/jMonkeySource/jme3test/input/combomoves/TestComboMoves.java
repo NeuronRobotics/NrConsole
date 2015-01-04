@@ -32,15 +32,16 @@
 
 package jme3test.input.combomoves;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.math.ColorRGBA;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 public class TestComboMoves extends SimpleApplication implements ActionListener {
 

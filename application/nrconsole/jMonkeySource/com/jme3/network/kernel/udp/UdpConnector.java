@@ -31,12 +31,17 @@
  */
 package com.jme3.network.kernel.udp;
 
-import com.jme3.network.kernel.Connector;
-import com.jme3.network.kernel.ConnectorException;
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import com.jme3.network.kernel.Connector;
+import com.jme3.network.kernel.ConnectorException;
 
 
 /**

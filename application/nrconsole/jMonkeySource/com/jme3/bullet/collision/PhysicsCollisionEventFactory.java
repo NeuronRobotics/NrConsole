@@ -31,8 +31,9 @@
  */
 package com.jme3.bullet.collision;
 
-import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 
 /**
  *

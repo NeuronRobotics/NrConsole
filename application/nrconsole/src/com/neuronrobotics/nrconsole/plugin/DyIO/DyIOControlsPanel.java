@@ -4,15 +4,13 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.Scrollable;
 
-import com.neuronrobotics.nrconsole.NRConsoleWindow;
-
 import net.miginfocom.swing.MigLayout;
+
+import com.neuronrobotics.nrconsole.NRConsoleWindow;
 
 public class DyIOControlsPanel extends JPanel {
 	private static final long serialVersionUID = 1L;

@@ -36,6 +36,7 @@ import com.jme3.texture.Image;
 import com.jme3.texture.Texture.MagFilter;
 import com.jme3.texture.Texture.MinFilter;
 import com.jme3.texture.Texture2D;
+
 import de.lessvoid.nifty.spi.render.RenderImage;
 
 public class RenderImageJme implements RenderImage {

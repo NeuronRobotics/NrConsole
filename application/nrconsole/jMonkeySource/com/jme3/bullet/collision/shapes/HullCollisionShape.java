@@ -31,6 +31,11 @@
  */
 package com.jme3.bullet.collision.shapes;
 
+import java.io.IOException;
+import java.nio.FloatBuffer;
+
+import javax.vecmath.Vector3f;
+
 import com.bulletphysics.collision.shapes.ConvexHullShape;
 import com.bulletphysics.util.ObjectArrayList;
 import com.jme3.bullet.util.Converter;
@@ -40,9 +45,6 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.OutputCapsule;
 import com.jme3.scene.Mesh;
 import com.jme3.scene.VertexBuffer.Type;
-import java.io.IOException;
-import java.nio.FloatBuffer;
-import javax.vecmath.Vector3f;
 
 public class HullCollisionShape extends CollisionShape {
 

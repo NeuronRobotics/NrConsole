@@ -29,8 +29,9 @@
  */
 package com.jme3.terrain.noise.filter;
 
-import com.jme3.terrain.noise.Basis;
 import java.nio.FloatBuffer;
+
+import com.jme3.terrain.noise.Basis;
 
 public class HydraulicErodeFilter extends AbstractFilter {
 

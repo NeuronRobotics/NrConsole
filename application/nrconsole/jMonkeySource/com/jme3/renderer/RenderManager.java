@@ -31,26 +31,31 @@
  */
 package com.jme3.renderer;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Logger;
+
 import com.jme3.material.Material;
 import com.jme3.material.MaterialDef;
 import com.jme3.material.RenderState;
 import com.jme3.material.Technique;
-import com.jme3.math.*;
+import com.jme3.math.Matrix4f;
 import com.jme3.post.SceneProcessor;
 import com.jme3.renderer.queue.GeometryList;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.*;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.Mesh;
+import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.VertexBuffer;
 import com.jme3.shader.Uniform;
 import com.jme3.shader.UniformBinding;
 import com.jme3.shader.UniformBindingManager;
 import com.jme3.system.NullRenderer;
 import com.jme3.system.Timer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * <code>RenderManager</code> is a high-level rendering interface that is

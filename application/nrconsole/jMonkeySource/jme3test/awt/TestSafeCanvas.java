@@ -1,5 +1,11 @@
 package jme3test.awt;
 
+import java.awt.Canvas;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
@@ -7,10 +13,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.system.AppSettings;
 import com.jme3.system.JmeCanvasContext;
-import java.awt.Canvas;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import javax.swing.JFrame;
 
 public class TestSafeCanvas extends SimpleApplication {
 

@@ -1,5 +1,8 @@
 package jme3test.material;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.material.Material;
 import com.jme3.material.Technique;
@@ -8,8 +11,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import com.jme3.shader.Shader;
 import com.jme3.texture.Texture;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TestShaderNodes extends SimpleApplication {
 

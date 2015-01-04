@@ -31,6 +31,10 @@
  */
 package com.jme3.niftygui;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
@@ -47,6 +51,7 @@ import com.jme3.scene.VertexBuffer.Usage;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture2D;
 import com.jme3.util.BufferUtils;
+
 import de.lessvoid.nifty.elements.render.TextRenderer.RenderFontNull;
 import de.lessvoid.nifty.render.BlendMode;
 import de.lessvoid.nifty.spi.render.MouseCursor;
@@ -55,9 +60,6 @@ import de.lessvoid.nifty.spi.render.RenderFont;
 import de.lessvoid.nifty.spi.render.RenderImage;
 import de.lessvoid.nifty.tools.Color;
 import de.lessvoid.nifty.tools.resourceloader.NiftyResourceLoader;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.util.HashMap;
 
 public class RenderDeviceJme implements RenderDevice {
     

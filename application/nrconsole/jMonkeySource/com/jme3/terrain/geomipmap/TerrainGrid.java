@@ -31,20 +31,6 @@
  */
 package com.jme3.terrain.geomipmap;
 
-import com.jme3.bounding.BoundingBox;
-import com.jme3.export.InputCapsule;
-import com.jme3.export.JmeExporter;
-import com.jme3.export.JmeImporter;
-import com.jme3.export.OutputCapsule;
-import com.jme3.material.Material;
-import com.jme3.math.FastMath;
-import com.jme3.math.Vector2f;
-import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
-import com.jme3.scene.control.UpdateControl;
-import com.jme3.terrain.Terrain;
-import com.jme3.terrain.heightmap.HeightMap;
-import com.jme3.terrain.heightmap.HeightMapGrid;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +46,21 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.bounding.BoundingBox;
+import com.jme3.export.InputCapsule;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.OutputCapsule;
+import com.jme3.material.Material;
+import com.jme3.math.FastMath;
+import com.jme3.math.Vector2f;
+import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
+import com.jme3.scene.control.UpdateControl;
+import com.jme3.terrain.Terrain;
+import com.jme3.terrain.heightmap.HeightMap;
+import com.jme3.terrain.heightmap.HeightMapGrid;
 
 /**
  * <p>

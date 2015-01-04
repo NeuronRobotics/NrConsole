@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,14 +12,13 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.neuronrobotics.nrconsole.util.IntegerComboBox;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
 import com.neuronrobotics.sdk.dyio.sequencer.ISchedulerListener;
 import com.neuronrobotics.sdk.dyio.sequencer.ServoOutputScheduleChannel;
-import com.sun.corba.se.impl.legacy.connection.USLPort;
-
-import net.miginfocom.swing.MigLayout;
 
 public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositionUpdateListener,ActionListener,ISchedulerListener{
 

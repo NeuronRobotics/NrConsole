@@ -31,11 +31,12 @@
  */
 package com.jme3.terrain.geomipmap.lodcalc;
 
+import java.io.IOException;
+
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.renderer.Camera;
 import com.jme3.terrain.geomipmap.TerrainPatch;
-import java.io.IOException;
 
 /**
  * TODO: Make it work with multiple cameras

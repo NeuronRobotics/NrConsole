@@ -8,24 +8,20 @@ import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.graphing.DyIOGraphPlugin;
 import com.neuronrobotics.graphing.ExcelWriter;
-import com.neuronrobotics.graphing.GraphingOptionsDialog;
-import com.neuronrobotics.graphing.GraphingWindow;
 import com.neuronrobotics.nrconsole.plugin.INRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.DyIO.GoogleChat.NRDyIOGoogleChat;
 import com.neuronrobotics.nrconsole.plugin.DyIO.Secheduler.NRConsoleSchedulerPlugin;
-import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodConfigPanel;
 import com.neuronrobotics.nrconsole.plugin.DyIO.hexapod.HexapodNRConsolePulgin;
 import com.neuronrobotics.nrconsole.plugin.PID.NRConsolePIDPlugin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -33,7 +29,6 @@ import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIOChannel;
-import com.neuronrobotics.sdk.dyio.DyIOChannelMode;
 import com.neuronrobotics.sdk.dyio.DyIOFirmwareOutOfDateException;
 import com.neuronrobotics.sdk.dyio.DyIOPowerEvent;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
@@ -53,7 +48,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private JMenuItem graphOptionsMenuItem = new JMenuItem("Graphing Options");
 	private JMenuItem exportData = new JMenuItem("Export Data to File");
 	private boolean active=false;
-	private DyIOPanel devicePanel = new DyIOPanel();
+	private DyIOPanel devicePanel =null;
 	private DyIOControlsPanel deviceControls = new DyIOControlsPanel();
 	private ArrayList<ChannelManager> channels = new ArrayList<ChannelManager>();
 	//private HexapodConfigPanel hex=null;
@@ -82,6 +77,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 				getDeviceControls().repaint();
 			}
 		};
+		
 		wrapper.add(getDeviceDisplay(), "pos 5 5");
 		wrapper.add(getDeviceControls(), "pos 560 5");
 		wrapper.setName("DyIO");
@@ -152,10 +148,12 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 
 		}
+		DyIORegestry.get().getBatteryVoltage(true);
+		getDeviceDisplay().setBrownOutMode(DyIORegestry.get().isServoPowerSafeMode());
 		//System.out.println(this.getClass()+" setupDyIO: "+ channels.size());
-		devicePanel.addChannels(channels.subList(00, 12), false);
-		devicePanel.addChannels(channels.subList(12, 24), true);
-	    DyIORegestry.get().enableBrownOutDetect(true);
+		getDeviceDisplay().addChannels(channels.subList(00, 12), false);
+		getDeviceDisplay().addChannels(channels.subList(12, 24), true);
+	    
 	}
 
 	
@@ -293,6 +291,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	}
 
 	public DyIOPanel getDeviceDisplay() {
+		if(devicePanel == null)
+			devicePanel  = new DyIOPanel();
 		return devicePanel;
 	}
 	
@@ -358,8 +358,8 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	
 	public void onDyIOEvent(IDyIOEvent e) {
 		if(e.getClass() == DyIOPowerEvent.class){
-			//System.out.println("Got power event: "+e);
-			devicePanel.setPowerEvent(((DyIOPowerEvent)e));
+			System.out.println("Got power event: "+e);
+			getDeviceDisplay().setPowerEvent(((DyIOPowerEvent)e));
 			try{
 				for(ChannelManager cm : channels) {
 					cm.onDyIOPowerEvent();

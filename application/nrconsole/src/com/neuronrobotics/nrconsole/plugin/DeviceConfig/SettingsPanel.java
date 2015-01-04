@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import com.neuronrobotics.nrconsole.plugin.JobExec.PrintTestListener;
-
 public abstract class SettingsPanel extends JPanel {
 private ArrayList<MachineSetting> settings = new ArrayList<MachineSetting>();
 private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeListener>();

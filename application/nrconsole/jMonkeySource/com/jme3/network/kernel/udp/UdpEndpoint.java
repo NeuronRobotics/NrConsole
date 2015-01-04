@@ -31,14 +31,15 @@
  */
 package com.jme3.network.kernel.udp;
 
-import com.jme3.network.kernel.Endpoint;
-import com.jme3.network.kernel.Kernel;
-import com.jme3.network.kernel.KernelException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+
+import com.jme3.network.kernel.Endpoint;
+import com.jme3.network.kernel.Kernel;
+import com.jme3.network.kernel.KernelException;
 
 
 /**
@@ -127,7 +128,7 @@ public class UdpEndpoint implements Endpoint
             kernel.enqueueWrite( this, p );
                                                                
             //socket.send(p);
-        } catch( IOException e ) {
+        } catch( Exception e ) {
             throw new KernelException( "Error sending datagram to:" + address, e );
         }
     }

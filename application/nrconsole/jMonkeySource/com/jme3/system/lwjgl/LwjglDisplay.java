@@ -32,16 +32,23 @@
 
 package com.jme3.system.lwjgl;
 
-import com.jme3.system.AppSettings;
-import com.jme3.system.JmeContext.Type;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.lwjgl.LWJGLException;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.ARBMultisample;
+import org.lwjgl.opengl.ContextAttribs;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.PixelFormat;
+
+import com.jme3.system.AppSettings;
 
 public class LwjglDisplay extends LwjglAbstractDisplay {
 

@@ -31,11 +31,6 @@
  */
 package com.jme3.network.rmi;
 
-import com.jme3.network.*;
-import com.jme3.network.ClientStateListener.DisconnectInfo;
-import com.jme3.network.serializing.Serializer;
-import com.jme3.util.IntMap;
-import com.jme3.util.IntMap.Entry;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -44,6 +39,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.jme3.network.Client;
+import com.jme3.network.ClientStateListener;
+import com.jme3.network.ConnectionListener;
+import com.jme3.network.HostedConnection;
+import com.jme3.network.Message;
+import com.jme3.network.MessageListener;
+import com.jme3.network.Server;
+import com.jme3.network.serializing.Serializer;
+import com.jme3.util.IntMap;
+import com.jme3.util.IntMap.Entry;
 
 public class ObjectStore {
 

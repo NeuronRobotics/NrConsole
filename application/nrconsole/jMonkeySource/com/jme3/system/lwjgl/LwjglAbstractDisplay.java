@@ -32,6 +32,16 @@
 
 package com.jme3.system.lwjgl;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.OpenGLException;
+import org.lwjgl.opengl.Util;
+
 import com.jme3.input.JoyInput;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -40,16 +50,7 @@ import com.jme3.input.lwjgl.JInputJoyInput;
 import com.jme3.input.lwjgl.LwjglKeyInput;
 import com.jme3.input.lwjgl.LwjglMouseInput;
 import com.jme3.system.AppSettings;
-import com.jme3.system.JmeContext.Type;
 import com.jme3.system.JmeSystem;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.OpenGLException;
-import org.lwjgl.opengl.Util;
 
 public abstract class LwjglAbstractDisplay extends LwjglContext implements Runnable {
 

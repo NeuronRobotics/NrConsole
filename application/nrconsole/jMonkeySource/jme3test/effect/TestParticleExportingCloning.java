@@ -32,6 +32,9 @@
 
 package jme3test.effect;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import com.jme3.app.SimpleApplication;
 import com.jme3.effect.ParticleEmitter;
 import com.jme3.effect.ParticleMesh.Type;
@@ -40,8 +43,6 @@ import com.jme3.export.binary.BinaryExporter;
 import com.jme3.export.binary.BinaryImporter;
 import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 public class TestParticleExportingCloning extends SimpleApplication {
 
