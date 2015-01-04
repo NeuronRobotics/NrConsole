@@ -11,6 +11,7 @@ import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.plugin.bootloader.core.Hexml;
 import com.neuronrobotics.nrconsole.plugin.bootloader.core.NRBoot;
 import com.neuronrobotics.sdk.common.Log;
+import com.neuronrobotics.sdk.common.MACAddress;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.serial.SerialConnection;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
@@ -62,11 +63,11 @@ public class NRConsole {
 						NRBoot blApp;
 						try{
 							con = new SerialConnection(args[portIndex].split("=")[1]);
-							con.ping();
+							con.ping(new MACAddress());
 							blApp = new NRBoot(con);
 						}catch (Exception e){
 							con = (SerialConnection) ConnectionDialog.promptConnection();
-							con.ping();
+							con.ping(new MACAddress());
 							blApp = new NRBoot(con);
 						}
 						
