@@ -160,7 +160,7 @@ public class DeviceConfigPanel extends JPanel {
 			printer.getDeltaDevice().setLinkConfiguration(axisPanels.indexOf(axisPanel), axisPanel.getLink());
 		}
 		
-		//printer.setD
+		
 		
 		
 	}
