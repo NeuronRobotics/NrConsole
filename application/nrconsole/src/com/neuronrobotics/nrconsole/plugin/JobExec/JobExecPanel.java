@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -40,9 +39,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import net.miginfocom.swing.MigLayout;
-
 import com.jme3.math.Vector3f;
 import com.jme3.system.AppSettings;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
@@ -57,7 +54,6 @@ import com.neuronrobotics.replicator.driver.SliceStatusData;
 import com.neuronrobotics.sdk.addons.kinematics.LinkConfiguration;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-
 public class JobExecPanel extends JPanel implements PrinterStatusListener {
 
 	/**
@@ -125,7 +121,7 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JCheckBox chckbxShowNonextrudeLines;
 	private BowlerBoardDevice delt;
 	public ArrayList<PrintObject> objects = new ArrayList<PrintObject>();
-
+	public ArrayList<Vector3f> movePoints = new ArrayList<Vector3f>();
 	private JButton btnEmergencyStop;
 
 	
@@ -483,6 +479,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			});
 			panel.add(getSliderLayer(), BorderLayout.EAST);
 			panel.add(getPanel_5_1(), BorderLayout.SOUTH);
+			panel.add(getBtnSwitchToLive(), BorderLayout.NORTH);
 			app.start();
 			new AppSettings(true);
 
@@ -772,6 +769,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			Log.warning(psl.toString());
 			break;
 		case MOVING:
+			movePoints.add(new Vector3f((float)psl.getHeadLocation().getX(),(float)psl.getHeadLocation().getY(),(float)psl.getHeadLocation().getZ()));
 			getProgressBar().setValue((int) psl.getTempreture());
 			//TODO: need to get temperature setpoint   getSpinnerTemp().setValue((int) printer.)
 			getProgressBar().setToolTipText("Current Temp: " + psl.getTempreture());
@@ -988,6 +986,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private String defaultListStr1 = "Click \"Open 3D File\"";
 	private String defaultListStr2 = "to load a file.";
 	private JScrollPane scrollPane_1;
+	private JButton btnSwitchToLive;
 	private DefaultListModel<PrintObject> getObjectListModel(){
 		if (objectListModel == null){
 			objectListModel = new DefaultListModel<>();			
@@ -1127,5 +1126,39 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			scrollPane_1.setViewportView(getList());
 		}
 		return scrollPane_1;
+	}
+
+	private JButton getBtnSwitchToLive() {
+		if (btnSwitchToLive == null) {
+			btnSwitchToLive = new JButton("Switch to Live Plot");
+			btnSwitchToLive.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					app.setMovePoints(movePoints);
+					if (arg0.getButton() == MouseEvent.BUTTON1){
+						app.setShowPrintPlot(!app.isShowPrintPlot());
+					}
+					
+					if (app.isShowPrintPlot() == true){//When we are showing the live print plot
+						if(arg0.getButton() == MouseEvent.BUTTON3){//Clear the object list
+							System.out.println("Clear Plot");
+							movePoints.clear();
+							app.setMovePoints(movePoints);
+						}
+						btnSwitchToLive.setText("Show Object (Right Click to Clear Live Plot)");
+						app.setShowPrintPlot(true);
+						
+					}
+					else{																		
+						btnSwitchToLive.setText("Show Live Plot");
+						app.setShowPrintPlot(false);	
+						app.setHasChanged(true);
+					}
+					
+				}
+			});
+			
+		}
+		return btnSwitchToLive;
 	}
 }

@@ -32,7 +32,7 @@ public class NRConsoleDocumentationFactory {
 
 				try {
 					return new URI(
-							"http://wiki.neuronrobotics.com/NR_Console_Intro");
+							"http://neuronrobotics.github.io/DyIO-First-Steps/Testing-With-NR-Console");
 				} catch (URISyntaxException uriE) {
 					Log.error(e.getMessage());
 				}
@@ -41,7 +41,7 @@ public class NRConsoleDocumentationFactory {
 
 				try {
 					return new URI(
-							"http://wiki.neuronrobotics.com/NR_Console_Update_Firmware");
+							"http://neuronrobotics.github.io/Getting-to-Know-the-DyIO/Anatomy-of-the-DyIO/");
 				} catch (URISyntaxException uriE) {
 					Log.error(e.getMessage());
 				}

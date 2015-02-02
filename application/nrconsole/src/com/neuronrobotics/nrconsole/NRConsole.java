@@ -72,7 +72,6 @@ public class NRConsole {
 						}
 						
 						
-						
 						Hexml hex = new Hexml(new File(args[xmlIndex].split("=")[1]));
 						blApp.loadCores(hex.getCores());
 						
