@@ -180,6 +180,7 @@ public class BootloaderPanel extends JPanel implements ActionListener {
 	}
 	public class LoaderChecker extends Thread{
 		public void run() {
+			setName("Bowler Platform  boot loader checker");
 			progress.setMaximum(getBlApp().getProgressMax());
 			progress.setMinimum(0);
 			//progress.setIndeterminate(true);
