@@ -12,7 +12,7 @@ private ArrayList<PrintObject> objects;
 
 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Object> list,
+	public Component getListCellRendererComponent(JList list,
 			Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		
 		

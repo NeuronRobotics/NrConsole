@@ -104,9 +104,9 @@ public class JobExecPanel extends JPanel implements PrinterStatusListener {
 	private JTextPane textPaneLog;
 	private JPanel panel_8;//Contains lblPrintQueue, list;
 	private JLabel lblPrintQueue;
-	private JList<String> list;
-	private DefaultListModel<PrintObject> objectListModel;
-	private DefaultListModel<String> defaultListModel;
+	private JList list;
+	private DefaultListModel objectListModel;
+	private DefaultListModel defaultListModel;
 	private JPanel panel_2;//Contains panel
 	private JPanel panel;//Contains 3d rendering, layersSlider, panel_5
 	private JSlider layersSlider;
@@ -972,9 +972,9 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	
 	
 	
-	private DefaultListModel<String> getDefaultListModel(){
+	private DefaultListModel getDefaultListModel(){
 		if (defaultListModel == null){
-			defaultListModel = new DefaultListModel<String>();
+			defaultListModel = new DefaultListModel();
 			defaultListModel.add(0, defaultListStr1);
 			defaultListModel.add(1, defaultListStr2);
 			
@@ -987,9 +987,9 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	private String defaultListStr2 = "to load a file.";
 	private JScrollPane scrollPane_1;
 	private JButton btnSwitchToLive;
-	private DefaultListModel<PrintObject> getObjectListModel(){
+	private DefaultListModel getObjectListModel(){
 		if (objectListModel == null){
-			objectListModel = new DefaultListModel<>();			
+			objectListModel = new DefaultListModel();			
 			objectListModel.addListDataListener(new ListDataListener() {
 				
 				@Override
@@ -1016,7 +1016,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 	
 	private JList getList() {
 		if (list == null) {
-			list = new JList<>(getDefaultListModel());
+			list = new JList(getDefaultListModel());
 			list.setToolTipText("The current job queue is listed here. \n Jobs are colored based on their status, red for fail, orange for problems, green for good. \n Double clicking a job will reload it.");
 			list.setEnabled(false);
 			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
