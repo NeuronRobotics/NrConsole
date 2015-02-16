@@ -774,7 +774,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 			//TODO: need to get temperature setpoint   getSpinnerTemp().setValue((int) printer.)
 			getProgressBar().setToolTipText("Current Temp: " + psl.getTempreture());
 			//If the temperature is close to the setpoint, make the color of the bar green to indicate good temperature at a glance
-			if (Math.abs(getProgressBar().getValue() - (int) getSpinnerTemp().getValue())< 3){
+			if (Math.abs(getProgressBar().getValue() - (Integer) getSpinnerTemp().getValue())< 3){
 				getProgressBar().setForeground(Color.GREEN);
 			}
 			else{
@@ -877,7 +877,7 @@ panel.setToolTipText("Left Click + Drag to Rotate \n"
 				public void stateChanged(ChangeEvent arg0) {
 					//TODO: if this value is manually changed by the user (not automatically changed) the print temperature should be changed
 					if (!isInternalUpdate){
-						printer.setExtrusionTempreture((double) spinnerTemp.getValue());
+						printer.setExtrusionTempreture((Double) spinnerTemp.getValue());
 					}		
 				}
 			});
