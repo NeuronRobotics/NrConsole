@@ -49,6 +49,7 @@ public class NRConsoleJobExecPlugin extends AbstractNRConsoleTabedPanelPlugin {
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		delt.setConnection(connection);
 		delt.connect();
+		
 		PrefsLoader prefs = new PrefsLoader();
 		String path = prefs.getSlic3rLocation();
 		if (new File(path).exists() == false) {
