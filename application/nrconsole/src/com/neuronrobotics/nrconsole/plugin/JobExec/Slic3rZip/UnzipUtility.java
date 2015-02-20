@@ -27,7 +27,7 @@ public class UnzipUtility {
     private static final int BUFFER_SIZE = 4096;
     
     public static String extractSlic3r() throws IOException{
-    	String file;
+    	String file = null;
     	String name = "Slic3r"+OSUtil.getExtension();
     	File zipFile=null;
 
@@ -35,19 +35,21 @@ public class UnzipUtility {
 	
     	if(OSUtil.isOSX()) {
 			file="osx/" + name;
-			return FileSelectionFactory.GetFile(zipFile,"Location of slic3r after installing dmg dmg", "Select" , new Slic3rFilter()).getPath();
+			return FileSelectionFactory.GetFile(zipFile,"Location of slic3r after installing dmg", "Select" , new Slic3rFilter()).getPath();
 			
 		}else{
 			String destDirectory=System.getProperty("java.io.tmpdir");
 			unzip(zipFile.getAbsolutePath(), destDirectory);
 			if(OSUtil.isWindows()) {
-				return destDirectory+"\\Slic3r\\slic3r.exe";
+				file=destDirectory+"\\Slic3r\\slic3r.exe";
 			}else if(OSUtil.isLinux()) {
-				return destDirectory+"/Slic3r/bin/slic3r";
+				file=destDirectory+"/Slic3r/bin/slic3r";
 			}
-			return null;
 		}
+    	File fileTest=  new File(file);
+    	fileTest.setExecutable(true);
     	
+    	return file;
     }
     
 	private  static  InputStream locateResource() {
