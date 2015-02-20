@@ -38,7 +38,7 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 	private List<String> axesNames = new ArrayList<String>();
 	private JTextField tfName;
 	private JTextField tfNumAxes;
-	private JList<String> listAxes;
+	private JList listAxes;
 	private JTextField tfHardIndex;
 	private JTextField tfkP;
 	private JTextField tfkI;
@@ -66,7 +66,7 @@ public class BowlerConfigPanel extends JPanel implements KeyListener{
 		tfNumAxes.setColumns(10);
 		
 		
-		listAxes = new JList<String>();
+		listAxes = new JList();
 		listAxes.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
