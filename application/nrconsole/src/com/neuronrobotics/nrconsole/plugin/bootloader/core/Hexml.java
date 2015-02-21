@@ -68,9 +68,13 @@ public class Hexml {
 
 	}
 	private void loadRevision(Document doc) {
-		NodeList nlList= doc.getElementsByTagName("revision").item(0).getChildNodes();
-		Node nValue = (Node) nlList.item(0);
-		revision = nValue.getNodeValue();
+		try{
+				NodeList nlList= doc.getElementsByTagName("revision").item(0).getChildNodes();
+				Node nValue = (Node) nlList.item(0);
+				revision = nValue.getNodeValue();
+		}catch(NullPointerException e){
+			revision = "0.0.0";
+		}
 	}
 	private static String getTagValue(String sTag, Element eElement){
 	    NodeList nlList= eElement.getElementsByTagName(sTag).item(0).getChildNodes();
