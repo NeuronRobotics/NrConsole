@@ -24,6 +24,8 @@ import java.io.FileInputStream;
 import javazoom.jl.player.MyPlayer;
 
 import com.neuronrobotics.sdk.util.ThreadUtil;
+
+
 public class SequencerMP3 {
     private MyPlayer player; 
     private String fn="";
@@ -36,6 +38,7 @@ public class SequencerMP3 {
             FileInputStream fis     = new FileInputStream(fn);
             BufferedInputStream bis = new BufferedInputStream(fis);
             player = new MyPlayer(bis);
+            
         }
         catch (Exception e) {
             System.out.println("Problem playing file " + filename);
