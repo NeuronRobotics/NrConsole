@@ -133,6 +133,7 @@ public class NRConsole {
 	 */
 	private class showManager extends Thread implements IPluginUpdateListener{
 		public void run(){
+			setName("NR-Console Show Manager ");
 			try{
 				nrcMenubar.connect();
 			}catch (Exception ex){

@@ -42,7 +42,7 @@ public class ControlPanel extends JPanel  implements IChannelEventListener,IDyIO
 	public static final int panelWidth =400;
 	
 	private static final long serialVersionUID = 1L;
-	private JComboBox<DyIOChannelMode> modes = new JComboBox<DyIOChannelMode>();
+	private JComboBox modes = new JComboBox();
 	private ChannelManager manager;
 	private HashMap<DyIOChannelMode, ControlWidget> widgets = new HashMap<DyIOChannelMode, ControlWidget>();
 	private ControlWidget currentWidget=null;

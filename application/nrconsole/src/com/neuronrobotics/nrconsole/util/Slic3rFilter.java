@@ -14,11 +14,11 @@ public class Slic3rFilter extends FileFilter {
 			return true;
 		}
 		String path = f.getAbsolutePath().toLowerCase();
-		if (f.getName().contains("slic3r.exe")) {
+		if (f.getName().toLowerCase().contains("slic3r")) {
 			return true;
 		}
 
-		return f.getName().matches("slic3r.exe");
+		return f.getName().toLowerCase().matches("slic3r");
 	}
 
 }

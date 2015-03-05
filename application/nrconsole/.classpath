@@ -47,5 +47,7 @@
 	<classpathentry kind="lib" path="lib/xmlpull-xpp3.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/smackx.jar"/>
+	<classpathentry kind="lib" path="lib/mp3plugin.jar"/>
+	<classpathentry kind="lib" path="/opt/microchip/mplabx/sys/java/jre1.7.0_25/lib/jfxrt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

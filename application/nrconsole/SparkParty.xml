@@ -1,5 +1,5 @@
 <ServoOutputSequenceGroup>
-	<mp3>/home/hephaestus/workspace/NRConsole/track.mp3</mp3>
+	<mp3>/home/hephaestus/git/NrConsole/application/nrconsole/track.mp3</mp3>
 	<loopTime>120</loopTime>
 	<ServoOutputSequence>
 		<outputMax>200</outputMax>
