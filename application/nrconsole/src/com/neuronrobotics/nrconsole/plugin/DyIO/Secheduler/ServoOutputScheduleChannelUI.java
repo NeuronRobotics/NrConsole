@@ -17,6 +17,7 @@ import net.miginfocom.swing.MigLayout;
 import com.neuronrobotics.nrconsole.util.IntegerComboBox;
 import com.neuronrobotics.sdk.dyio.peripherals.IServoPositionUpdateListener;
 import com.neuronrobotics.sdk.dyio.peripherals.ServoChannel;
+import com.neuronrobotics.sdk.dyio.sequencer.CoreScheduler;
 import com.neuronrobotics.sdk.dyio.sequencer.ISchedulerListener;
 import com.neuronrobotics.sdk.dyio.sequencer.ServoOutputScheduleChannel;
 
@@ -46,20 +47,26 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			//System.out.println("Pos listener");
-			flush();
-			if(!channel.isRecording()){
-				channel.flush();
+			
+			if(useSlider.isSelected() ){
+				flush();
+				if(!getCb().isPlaying())
+					channel.flush();
 			}else{
 				//System.out.println("Not flushing");
 			}
 			
 		}
 	};
+
+	private CoreScheduler cb;	
+	
 	public void flush(){
 		channel.setCurrentTargetValue(position.getValue());
 	}
-	public ServoOutputScheduleChannelUI(ServoOutputScheduleChannel chan){
+	public ServoOutputScheduleChannelUI(ServoOutputScheduleChannel chan, CoreScheduler cb){
 		
+		this.setCb(cb);
 		chan.addIServoPositionUpdateListener(this);
 		setChannel(chan);
 		setLayout(new MigLayout());
@@ -106,6 +113,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 				if(useSlider.isSelected()){
 					position.setEnabled(true);
 					getChannel().setRecording(true);
+					flush();
 				}else{
 					position.setEnabled(false);
 					getChannel().setRecording(false);
@@ -131,7 +139,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		position.setEnabled(false);
 		position.setMaximum(0);
 		position.setMaximum(255);
-		position.setMajorTickSpacing(15);
+		position.setMajorTickSpacing(5);
 		position.setPaintTicks(true);
 		position.setValue(chan.getCurrentTargetValue());
 		position.addChangeListener(posListener);
@@ -184,7 +192,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	public void onServoPositionUpdate(ServoChannel srv, int position,double time) {
 		if(useSlider.isSelected()){
 			channel.removeIServoPositionUpdateListener(this);
-			flush();
+			//flush();
 			channel.addIServoPositionUpdateListener(this);
 			return;
 		}
@@ -222,6 +230,12 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 		position.setEnabled(false);
 		getChannel().setRecording(false);
 		//System.out.println("Setting the pause in output UI");
+	}
+	public CoreScheduler getCb() {
+		return cb;
+	}
+	public void setCb(CoreScheduler cb) {
+		this.cb = cb;
 	}
 	
 	
