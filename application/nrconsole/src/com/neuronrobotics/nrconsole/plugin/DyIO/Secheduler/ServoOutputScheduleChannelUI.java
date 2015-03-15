@@ -63,6 +63,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 	
 	public void flush(){
 		channel.setCurrentTargetValue(position.getValue());
+		
 	}
 	public ServoOutputScheduleChannelUI(ServoOutputScheduleChannel chan, CoreScheduler cb){
 		
@@ -114,6 +115,7 @@ public class ServoOutputScheduleChannelUI extends JPanel implements IServoPositi
 					position.setEnabled(true);
 					getChannel().setRecording(true);
 					flush();
+					channel.flush();
 				}else{
 					position.setEnabled(false);
 					getChannel().setRecording(false);
