@@ -20,6 +20,7 @@ import javax.swing.event.ChangeListener;
 
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 
@@ -131,10 +132,13 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		scroller.removeAll();
 		modePane.removeAll();
 		panels=new ArrayList<JPanel>();
+		Log.warning("Start Adding plugins ");
 		for(JPanel p: manager.getPanels()){
+			Log.warning("Adding : " + p.getName());
 			modePane.addTab(p.getName(), p);
 			panels.add(p);
 		}
+		Log.warning("Done adding plugins ");
 		manager.addIPluginUpdateListener(this);
 		scroller.add(modePane);
 		//updateUI();
