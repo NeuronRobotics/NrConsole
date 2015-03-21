@@ -121,12 +121,16 @@ public class ScriptingEngine extends JPanel{
 		            System.setOut(new PrintStream(out));
 	
 		            binding.setVariable("dyio", DyIORegestry.get());
-		            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
-		            		binding, cc);
-	
-		            Script script = shell.parse(code.getText());
-		 
-		            Object obj = script.run();
+		            try{
+			            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
+			            		binding, cc);
+		
+			            Script script = shell.parse(code.getText());
+			 
+			            Object obj = script.run();
+		            }catch(org.codehaus.groovy.control.MultipleCompilationErrorsException ex){
+		            	throw ex;
+		            }
 		            reset();
 	            }catch(Exception e){
 	            	//e.printStackTrace();
