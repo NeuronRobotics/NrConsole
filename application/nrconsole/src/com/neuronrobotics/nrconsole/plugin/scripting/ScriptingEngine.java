@@ -131,6 +131,10 @@ public class ScriptingEngine extends JPanel{
 		            }catch(org.codehaus.groovy.control.MultipleCompilationErrorsException ex){
 		            	throw ex;
 		            }
+		            SwingUtilities.invokeLater(() -> {
+	            		output.append("\nScript Completed\n");
+	            		output.setCaretPosition(output.getDocument().getLength());
+	        		});
 		            reset();
 	            }catch(Exception e){
 	            	e.getMessage();
@@ -142,7 +146,7 @@ public class ScriptingEngine extends JPanel{
 		        			output.append("\n"+sw+"\n");
 		        			
 	            		}else{
-	            			output.append("\nScript Ended\n");
+	            			output.append("\nScript Interupted\n");
 	            		}
 	            		output.setCaretPosition(output.getDocument().getLength());
 	        			running = false;
