@@ -133,13 +133,18 @@ public class ScriptingEngine extends JPanel{
 		            }
 		            reset();
 	            }catch(Exception e){
-	            	//e.printStackTrace();
+	            	e.getMessage();
 	            	SwingUtilities.invokeLater(() -> {
-		            	StringWriter sw = new StringWriter();
-		            	PrintWriter pw = new PrintWriter(sw);
-		            	e.printStackTrace(pw);
-	        			output.append("\n"+sw+"\n");
-	        			output.setCaretPosition(output.getDocument().getLength());
+	            		if(!e.getMessage().contains("sleep interrupted")){
+			            	StringWriter sw = new StringWriter();
+			            	PrintWriter pw = new PrintWriter(sw);
+			            	e.printStackTrace(pw);
+		        			output.append("\n"+sw+"\n");
+		        			
+	            		}else{
+	            			output.append("\nScript Ended\n");
+	            		}
+	            		output.setCaretPosition(output.getDocument().getLength());
 	        			running = false;
 	        			run.setText("Run");
 	        			System.setOut(orig);
