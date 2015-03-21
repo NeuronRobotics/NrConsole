@@ -48,6 +48,6 @@
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/smackx.jar"/>
 	<classpathentry kind="lib" path="lib/mp3plugin.jar"/>
 	<classpathentry kind="lib" path="lib/groovy-2.3.7.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java 8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
