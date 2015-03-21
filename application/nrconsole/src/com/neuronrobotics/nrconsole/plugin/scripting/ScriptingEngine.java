@@ -42,10 +42,11 @@ public class ScriptingEngine extends JPanel{
 	private Thread scriptRunner=null;
 	
 	private void reset(){
+		System.setOut(orig);
+		running = false;
 		SwingUtilities.invokeLater(() -> {
-			running = false;
 			run.setText("Run");
-			System.setOut(orig);
+			
 		});
 
 	}
@@ -60,7 +61,15 @@ public class ScriptingEngine extends JPanel{
 		add(code,"wrap");
 		add(output,"wrap");
 		ThreadUtil.wait(1);
-		code.setText("println(dyio)\nwhile(true){\n\tThreadUtil.wait(1)\n}");
+		code.setText("println(dyio)\n"
+				+ "while(true){\n"
+				+ "\tThreadUtil.wait(100)\n"
+				+ "int value = dyio.getValue(15)\n"
+				+ "println(value)\n"
+				+ "int scaled = value/4\n"
+				+ "print(scaled)\n"
+				+ "\tdyio.setValue(0,scaled);\n"
+				+ "}");
 		
 		run.addActionListener(e -> {
 			if(running)
@@ -73,15 +82,17 @@ public class ScriptingEngine extends JPanel{
 	private void stop() {
 		// TODO Auto-generated method stub
 		reset();
-
-		scriptRunner.interrupt();
-		try {
-			scriptRunner.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		while(scriptRunner.isAlive()){
+			System.out.println("Interrupting");
+			ThreadUtil.wait(10);
+			try {
+				scriptRunner.interrupt();
+				scriptRunner.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		
 
 	}
 
@@ -92,6 +103,7 @@ public class ScriptingEngine extends JPanel{
 		scriptRunner = new Thread(){
 			public void run() {
 				try{
+					output.setText("");
 					CompilerConfiguration cc = new CompilerConfiguration();
 	
 		            cc.addCompilationCustomizers(
@@ -118,7 +130,7 @@ public class ScriptingEngine extends JPanel{
 		            	StringWriter sw = new StringWriter();
 		            	PrintWriter pw = new PrintWriter(sw);
 		            	e.printStackTrace(pw);
-	        			output.setText(output.getText()+"\n"+sw+"\n");
+	        			output.append("\n"+sw+"\n");
 	        			running = false;
 	        			run.setText("Run");
 	        			System.setOut(orig);
@@ -139,7 +151,7 @@ public class ScriptingEngine extends JPanel{
 		ThreadUtil.wait(100);
 		SwingUtilities.invokeLater(() -> {
 			if(out.size()>0){
-				output.setText(out+output.getText());
+				output.append(out.toString());
 				out.reset();
 			}
 		});
