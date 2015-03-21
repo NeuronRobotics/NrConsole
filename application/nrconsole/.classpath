@@ -48,5 +48,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NRSDK"/>
 	<classpathentry kind="lib" path="/NRSDK/lib_addons/smackx.jar"/>
 	<classpathentry kind="lib" path="lib/mp3plugin.jar"/>
+	<classpathentry kind="lib" path="lib/groovy-2.3.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
