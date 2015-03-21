@@ -5,26 +5,51 @@ import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.WatchEvent;
+import java.util.ArrayList;
 
+import javafx.application.Platform;
+
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
+import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
+import com.neuronrobotics.nrconsole.util.GroovyFilter;
+import com.neuronrobotics.nrconsole.util.Mp3Filter;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
+import com.neuronrobotics.sdk.util.FileChangeWatcher;
+import com.neuronrobotics.sdk.util.IFileChangeListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import net.miginfocom.swing.MigLayout;
 
-public class ScriptingEngine extends JPanel{
+public class ScriptingEngine extends JPanel implements IFileChangeListener{
 
 	/**
 	 * 
@@ -33,10 +58,15 @@ public class ScriptingEngine extends JPanel{
 	private JTextArea output;
 	private JTextArea code;
 	private JButton run;
+
+	private JLabel file =new JLabel("Defult.groovy");
+	private File currentFile = new File(file.getText());
+	
 	private boolean running = false;
 	ByteArrayOutputStream out = new ByteArrayOutputStream();
 	private PrintStream orig= System.out;
 	private Thread scriptRunner=null;
+	private FileChangeWatcher watcher;
 	
 	private void reset(){
 		System.setOut(orig);
@@ -50,25 +80,29 @@ public class ScriptingEngine extends JPanel{
 	public ScriptingEngine(){
 		setName("Bowler Scripting");
 		setLayout(new MigLayout());
-		code = new JTextArea(40, 20);
-		output = new JTextArea(40, 20);
+		code = new JTextArea(20, 40);
+		output = new JTextArea(20, 40);
 		JScrollPane scrollPane = new JScrollPane(output);
 		JScrollPane codeScroll = new JScrollPane(code);
-		scrollPane.setPreferredSize(new Dimension(800, 400));
-		codeScroll.setPreferredSize(new Dimension(800, 400));
+		scrollPane.setPreferredSize(new Dimension(900, 400));
+		codeScroll.setPreferredSize(new Dimension(900, 400));
 		
 		run = new JButton("Run");
-		add(run,"wrap");
+		JPanel controls = new JPanel(new MigLayout());
+		controls.add(run);
+		controls.add(file);
+		
+		add(controls,"wrap");
 		add(codeScroll,"wrap");
 		add(scrollPane,"wrap");
 		ThreadUtil.wait(1);
-		code.setText("println(dyio)\n"
+		setCode("println(dyio)\n"
 				+ "while(true){\n"
-				+ "\tThreadUtil.wait(100) // Spcae out the loop\n\n"
-				+ "\tlong start = System.currentTimeMillis() //capture the starting value \n\n"
-				+ "\tint value = dyio.getValue(15) //grab the value of pin 15\n"
-				+ "\tint scaled = value/4 //scale the analog voltage to match the range of the servos\n"
-				+ "\tdyio.setValue(0,scaled) // set the new value to the servo\n\n"
+				+ "\tThreadUtil.wait(100)                     // Spcae out the loop\n\n"
+				+ "\tlong start = System.currentTimeMillis()  //capture the starting value \n\n"
+				+ "\tint value = dyio.getValue(15)            //grab the value of pin 15\n"
+				+ "\tint scaled = value/4                     //scale the analog voltage to match the range of the servos\n"
+				+ "\tdyio.setValue(0,scaled)                  // set the new value to the servo\n\n"
 				+ "\t//Print out this loops values\n"
 				+ "\tprint(\" Loop took = \"+(System.currentTimeMillis()-start))\n"
 				+ "\tprint(\"ms Value= \"+value)\n"
@@ -81,6 +115,21 @@ public class ScriptingEngine extends JPanel{
 			else
 				start();			
 		});
+
+	    String ctrlSave = "CTRL Save";
+	    code.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), ctrlSave);
+	    code.getActionMap().put(ctrlSave, new AbstractAction() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 2405985221209391722L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Saving Script");
+				save();
+			}
+	    });
 	}
 
 	private void stop() {
@@ -137,7 +186,6 @@ public class ScriptingEngine extends JPanel{
 	        		});
 		            reset();
 	            }catch(Exception e){
-	            	e.getMessage();
 	            	SwingUtilities.invokeLater(() -> {
 	            		if(!e.getMessage().contains("sleep interrupted")){
 			            	StringWriter sw = new StringWriter();
@@ -177,6 +225,107 @@ public class ScriptingEngine extends JPanel{
 		SwingUtilities.invokeLater(() -> {
 			// TODO Auto-generated method stub
 			handlePrintUpdate();
+		});
+	}
+
+	public ArrayList<JMenu> getMenueItems() {
+		JMenu collectionMenu = new JMenu("Script");
+		JMenuItem open = new JMenuItem("Open");
+		open.addActionListener(e -> {
+			open();
+		});
+		collectionMenu.add(open);
+		
+		JMenuItem saveas = new JMenuItem("Save As");
+		saveas.addActionListener(e -> {
+			updateFile();
+			save();
+		});
+		collectionMenu.add(saveas);
+		
+		JMenuItem save = new JMenuItem("Save");
+		save.addActionListener(e -> {
+			save();
+		});
+		collectionMenu.add(save);
+
+		ArrayList<JMenu> m = new ArrayList<JMenu>();
+		m.add(collectionMenu);
+		return m;
+	}
+	
+	private void updateFile(){
+
+		 File last=FileSelectionFactory.GetFile(currentFile, new GroovyFilter());
+		 if(last != null){
+			 currentFile = last;
+	            if(watcher!=null){
+	            	watcher.close();
+	            }
+	            try {
+					watcher = new FileChangeWatcher(currentFile);
+		            watcher.addIFileChangeListener(this);
+		            watcher.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		 }
+		
+	}
+
+	private void open() {
+		
+		updateFile();
+		try {
+			setCode(new String(Files.readAllBytes(currentFile.toPath())));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+	}
+
+	private void save() {
+		// TODO Auto-generated method stub
+		try
+		{
+		    BufferedWriter writer = new BufferedWriter(new FileWriter(currentFile));
+		    writer.write (code.getText());
+		    writer.close();
+		} catch(Exception ex)
+		{
+		   //ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onFileChange(File fileThatChanged, WatchEvent event) {
+		// TODO Auto-generated method stub
+		if(fileThatChanged.getAbsolutePath().contains(currentFile.getAbsolutePath())){
+			System.out.println("Code in "+fileThatChanged.getAbsolutePath()+" changed");
+			Platform.runLater(new Runnable() {
+	            @Override
+	            public void run() {
+	            	try {
+						setCode(new String(Files.readAllBytes(Paths.get(fileThatChanged.getAbsolutePath())), "UTF-8"));
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+	            }
+	       });
+
+		}else{
+			//System.out.println("Othr Code in "+fileThatChanged.getAbsolutePath()+" changed");
+		}
+	}
+
+	protected void setCode(String string) {
+		SwingUtilities.invokeLater(() -> {
+			code.setText(string);
 		});
 	}
 

@@ -2,7 +2,9 @@ package com.neuronrobotics.nrconsole.plugin.scripting;
 
 import java.awt.Dimension;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
+import javax.swing.JMenu;
 import javax.swing.JPanel;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
@@ -21,6 +23,10 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	public NRConsoleScriptingPlugin( PluginManager pm) {
 		super(myNamespaces, pm);
 		
+	}
+	
+	public ArrayList<JMenu> getMenueItems() {
+		return se.getMenueItems();
 	}
 
 	@Override
