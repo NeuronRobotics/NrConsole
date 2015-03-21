@@ -4,25 +4,22 @@ import groovy.lang.Binding;
 import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 
-
+import java.awt.Dimension;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 
-
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
-
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import net.miginfocom.swing.MigLayout;
@@ -54,20 +51,25 @@ public class ScriptingEngine extends JPanel{
 	public ScriptingEngine(){
 		setName("Bowler Scripting");
 		setLayout(new MigLayout());
-		code = new JTextArea(4000, 20);
-		output = new JTextArea(4000, 20);
+		code = new JTextArea(40, 20);
+		output = new JTextArea(40, 20);
+		JScrollPane scrollPane = new JScrollPane(output);
+		JScrollPane codeScroll = new JScrollPane(code);
+		scrollPane.setPreferredSize(new Dimension(800, 400));
+		codeScroll.setPreferredSize(new Dimension(800, 400));
+		
 		run = new JButton("Run");
 		add(run,"wrap");
-		add(code,"wrap");
-		add(output,"wrap");
+		add(codeScroll,"wrap");
+		add(scrollPane,"wrap");
 		ThreadUtil.wait(1);
 		code.setText("println(dyio)\n"
 				+ "while(true){\n"
 				+ "\tThreadUtil.wait(100)\n"
-				+ "int value = dyio.getValue(15)\n"
-				+ "println(value)\n"
-				+ "int scaled = value/4\n"
-				+ "print(scaled)\n"
+				+ "\tint value = dyio.getValue(15)\n"
+				+ "\tprint(\"Value= \"+value)\n"
+				+ "\tint scaled = value/4\n"
+				+ "\tprintln(\" Scaled= \"+scaled)\n"
 				+ "\tdyio.setValue(0,scaled);\n"
 				+ "}");
 		
@@ -131,6 +133,7 @@ public class ScriptingEngine extends JPanel{
 		            	PrintWriter pw = new PrintWriter(sw);
 		            	e.printStackTrace(pw);
 	        			output.append("\n"+sw+"\n");
+	        			output.setCaretPosition(output.getDocument().getLength());
 	        			running = false;
 	        			run.setText("Run");
 	        			System.setOut(orig);
@@ -153,6 +156,7 @@ public class ScriptingEngine extends JPanel{
 			if(out.size()>0){
 				output.append(out.toString());
 				out.reset();
+				output.setCaretPosition(output.getDocument().getLength());
 			}
 		});
 		SwingUtilities.invokeLater(() -> {
