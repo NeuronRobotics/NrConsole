@@ -43,7 +43,6 @@ public class ScriptingEngine extends JPanel{
 		running = false;
 		SwingUtilities.invokeLater(() -> {
 			run.setText("Run");
-			
 		});
 
 	}
