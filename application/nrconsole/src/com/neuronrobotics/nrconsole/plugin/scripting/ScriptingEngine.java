@@ -66,11 +66,13 @@ public class ScriptingEngine extends JPanel{
 		code.setText("println(dyio)\n"
 				+ "while(true){\n"
 				+ "\tThreadUtil.wait(100)\n"
+				+ "\tlong start = System.currentTimeMillis()\n"
 				+ "\tint value = dyio.getValue(15)\n"
-				+ "\tprint(\"Value= \"+value)\n"
 				+ "\tint scaled = value/4\n"
-				+ "\tprintln(\" Scaled= \"+scaled)\n"
 				+ "\tdyio.setValue(0,scaled);\n"
+				+ "\tprint(\" Loop took = \"+(System.currentTimeMillis()-start))\n"
+				+ "\tprint(\"ms Value= \"+value)\n"
+				+ "\tprintln(\" Scaled= \"+scaled)\n"
 				+ "}");
 		
 		run.addActionListener(e -> {
