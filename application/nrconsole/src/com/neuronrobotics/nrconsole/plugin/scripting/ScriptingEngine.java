@@ -84,6 +84,10 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 
 	}
 	
+	private String getHTMLFromGist(String gist){
+		return "<script src=\"https://gist.github.com/madhephaestus/"+gist+".js\"></script>";
+	}
+	
 	public ScriptingEngine(){
 		setName("Bowler Scripting");
 		setLayout(new MigLayout());
@@ -93,6 +97,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
         SimpleSwingBrowser browser = new SimpleSwingBrowser();
         browser.setVisible(true);
         browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
+        //browser.loadHTML( getHTMLFromGist(currentGist));
 		JScrollPane codeScroll = new JScrollPane(code);
 		
 		scrollPane.setPreferredSize(new Dimension(1024, 400));

@@ -159,7 +159,14 @@ public class SimpleSwingBrowser extends JPanel {
             }
         });
     }
- 
+    public void loadHTML(final String html) {
+        Platform.runLater(new Runnable() {
+            @Override 
+            public void run() {
+                engine.loadContent(html);
+            }
+        });
+    }
     public void loadURL(final String url) {
         Platform.runLater(new Runnable() {
             @Override 
