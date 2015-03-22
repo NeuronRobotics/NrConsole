@@ -3,11 +3,13 @@ package com.neuronrobotics.nrconsole.plugin.scripting;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebEvent;
+import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
 import javax.swing.*;
@@ -30,6 +32,8 @@ public class SimpleSwingBrowser extends JPanel {
 
 
     private final JButton btnGo = new JButton("Go");
+    private final JButton forward = new JButton("Fwd");
+    private final JButton back = new JButton("Back");
     private final JButton btnHome = new JButton("Home");
     private final JButton btnNewGist = new JButton("New Gist");
     private final JTextField txtURL = new JTextField(100);
@@ -61,11 +65,19 @@ public class SimpleSwingBrowser extends JPanel {
         btnNewGist.addActionListener(e -> {
         	loadURL("https://gist.github.com/");
   		});
-  
+        back.addActionListener(e -> {
+        	goBack();
+  		});
+        forward.addActionListener(e -> {
+        	goForward();
+  		});
+        
         progressBar.setPreferredSize(new Dimension(150, 18));
         progressBar.setStringPainted(true);
   
         JPanel topBar = new JPanel(new MigLayout());
+        topBar.add(back);
+        topBar.add(forward);
         topBar.add(btnHome);
         topBar.add(btnNewGist);
         topBar.add(txtURL );
@@ -169,10 +181,40 @@ public class SimpleSwingBrowser extends JPanel {
                 Platform.runLater(() -> {
                 	view.setPrefWidth(1168);
                 	jfxPanel.setScene(new Scene(view));
+//                	view.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//
+//                        @Override
+//                        public void handle(MouseEvent mouse) {
+//
+//                        }
+//                    });
 				});
                 
             }
         });
+    }
+    public String goBack()
+    {    
+      final WebHistory history=engine.getHistory();
+      ObservableList<WebHistory.Entry> entryList=history.getEntries();
+      int currentIndex=history.getCurrentIndex();
+//      Out("currentIndex = "+currentIndex);
+//      Out(entryList.toString().replace("],","]\n"));
+
+      Platform.runLater(new Runnable() { public void run() { history.go(-1); } });
+      return entryList.get(currentIndex>0?currentIndex-1:currentIndex).getUrl();
+    }
+
+    public String goForward()
+    {    
+      final WebHistory history=engine.getHistory();
+      ObservableList<WebHistory.Entry> entryList=history.getEntries();
+      int currentIndex=history.getCurrentIndex();
+//      Out("currentIndex = "+currentIndex);
+//      Out(entryList.toString().replace("],","]\n"));
+
+      Platform.runLater(new Runnable() { public void run() { history.go(1); } });
+      return entryList.get(currentIndex<entryList.size()-1?currentIndex+1:currentIndex).getUrl();
     }
     public void loadHTML(final String html) {
         Platform.runLater(new Runnable() {
