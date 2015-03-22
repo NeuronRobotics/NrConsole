@@ -102,7 +102,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		JScrollPane outputPane = new JScrollPane(output);
         SimpleSwingBrowser browser = new SimpleSwingBrowser();
         browser.setVisible(true);
-        browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
+        browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
         //browser.setPreferredSize(new Dimension(1400,600));
         //browser.loadHTML( getHTMLFromGist(currentGist));
 		

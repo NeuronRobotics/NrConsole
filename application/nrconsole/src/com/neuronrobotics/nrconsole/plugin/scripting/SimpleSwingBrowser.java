@@ -30,6 +30,8 @@ public class SimpleSwingBrowser extends JPanel {
 
 
     private final JButton btnGo = new JButton("Go");
+    private final JButton btnHome = new JButton("Home");
+    private final JButton btnNewGist = new JButton("New Gist");
     private final JTextField txtURL = new JTextField(100);
     private final JProgressBar progressBar = new JProgressBar();
     private WebView view;
@@ -53,20 +55,26 @@ public class SimpleSwingBrowser extends JPanel {
  
         btnGo.addActionListener(al);
         txtURL.addActionListener(al);
-        
+        btnHome.addActionListener(e -> {
+        	loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
+		});
+        btnNewGist.addActionListener(e -> {
+        	loadURL("https://gist.github.com/");
+  		});
   
         progressBar.setPreferredSize(new Dimension(150, 18));
         progressBar.setStringPainted(true);
   
-        JPanel topBar = new JPanel(new BorderLayout(5, 0));
-        topBar.setBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5));
-        topBar.add(txtURL, BorderLayout.CENTER);
-        topBar.add(btnGo, BorderLayout.EAST);
+        JPanel topBar = new JPanel(new MigLayout());
+        topBar.add(btnHome);
+        topBar.add(btnNewGist);
+        topBar.add(txtURL );
+        topBar.add(btnGo);
  
-        JPanel statusBar = new JPanel(new BorderLayout(5, 0));
-        statusBar.setBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5));
-        statusBar.add(lblStatus, BorderLayout.CENTER);
-        statusBar.add(progressBar, BorderLayout.EAST);
+        JPanel statusBar = new JPanel(new MigLayout());
+        statusBar.add(progressBar);
+        statusBar.add(lblStatus);
+        
  
         add(topBar, "wrap");
         add(jfxPanel, "wrap");
@@ -171,9 +179,27 @@ public class SimpleSwingBrowser extends JPanel {
             @Override 
             public void run() {
                 engine.loadContent(html);
+                txtURL.setText("");
             }
         });
     }
+    
+    public URL getCurrentURL(){
+    	try {
+			return new URL(txtURL.getText());
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	try {
+			return new URL("gist.github.com");
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	return null;
+    }
+    
     public void loadURL(final String url) {
         Platform.runLater(new Runnable() {
             @Override 
