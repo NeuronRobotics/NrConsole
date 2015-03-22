@@ -180,6 +180,7 @@ public class SimpleSwingBrowser extends JPanel {
                 
                 Platform.runLater(() -> {
                 	view.setPrefWidth(1168);
+                	view.setPrefHeight(768);
                 	jfxPanel.setScene(new Scene(view));
 //                	view.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //
