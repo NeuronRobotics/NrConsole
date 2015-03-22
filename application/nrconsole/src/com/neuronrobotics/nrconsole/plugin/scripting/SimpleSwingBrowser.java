@@ -155,7 +155,7 @@ public class SimpleSwingBrowser extends JPanel {
                             }
                         });
 
-                jfxPanel.setScene(new Scene(view,1024,600));
+                jfxPanel.setScene(new Scene(view,950,600));
             }
         });
     }

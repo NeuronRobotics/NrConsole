@@ -22,6 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javafx.application.Platform;
 
@@ -38,6 +40,10 @@ import javax.swing.SwingUtilities;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
+import org.kohsuke.github.GHGist;
+import org.kohsuke.github.GHGistFile;
+import org.kohsuke.github.GHUser;
+import org.kohsuke.github.GitHub;
 
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GroovyFilter;
@@ -67,6 +73,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	private PrintStream orig= System.out;
 	private Thread scriptRunner=null;
 	private FileChangeWatcher watcher;
+	private String currentGist = "9de9e45c75a5588c4a81";
 	
 	private void reset(){
 		System.setOut(orig);
@@ -85,8 +92,9 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		JScrollPane scrollPane = new JScrollPane(output);
         SimpleSwingBrowser browser = new SimpleSwingBrowser();
         browser.setVisible(true);
-        browser.loadURL("https://gist.github.com/madhephaestus/9de9e45c75a5588c4a81");
-		JScrollPane codeScroll = new JScrollPane(browser);
+        browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
+		JScrollPane codeScroll = new JScrollPane(code);
+		
 		scrollPane.setPreferredSize(new Dimension(1024, 400));
 		codeScroll.setPreferredSize(new Dimension(1024, 400));
 		
@@ -95,11 +103,12 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		controls.add(run);
 		controls.add(file);
 		
-		add(browser,"wrap");
+		//add(browser,"wrap");
+		add(codeScroll,"wrap");
 		add(scrollPane,"wrap");
 		add(controls,"wrap");
 		
-		
+		getCode();
 		setCode("println(dyio)\n"
 				+ "while(true){\n"
 				+ "\tThreadUtil.wait(100)                     // Spcae out the loop\n\n"
@@ -113,15 +122,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 				+ "\tprintln(\" Scaled= \"+scaled)\n"
 				+ "}");
 //		setCode("<script src=\"https://gist.github.com/madhephaestus/9de9e45c75a5588c4a81.js\"></script>");
-	    SwingUtilities.invokeLater(new Runnable() {
 
-	        @Override
-	        public void run() {
-	            SimpleSwingBrowser browser = new SimpleSwingBrowser();
-	            browser.setVisible(true);
-	            browser.loadURL("http://oracle.com");
-	        }
-	    });
 		run.addActionListener(e -> {
 			if(running)
 				stop();
@@ -337,6 +338,20 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	}
 	
 	protected String getCode(){
+//		try {
+//			GitHub github = GitHub.connectAnonymously();
+//
+//			GHGist gist = github.getGist(currentGist);
+//			Map<String, GHGistFile> files = gist.getFiles();
+//			for (Entry<String, GHGistFile> entry : files.entrySet()) { 
+//				System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
+//			}
+//
+//
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return code.getText();
 	}
 
