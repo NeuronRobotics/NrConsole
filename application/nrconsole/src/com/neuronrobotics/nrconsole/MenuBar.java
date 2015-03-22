@@ -221,6 +221,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	 * and then disconnect from the device.
 	 */
 	public void disconnect() {
+		ready = false;//Set ready to true to indicate a successful disconnect
 		try {
 			manager.disconnect();
 		}catch(Exception ex) {
@@ -228,6 +229,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			ex.printStackTrace();
 		}
 		ThreadUtil.wait(75);
+		manager.firePluginUpdate();
 	}
 	
 	/**

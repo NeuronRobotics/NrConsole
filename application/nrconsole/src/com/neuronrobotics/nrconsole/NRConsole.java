@@ -126,7 +126,9 @@ public class NRConsole {
 		manager.addIPluginUpdateListener(new IPluginUpdateListener() {
 			
 			@Override
-			public void onPluginListUpdate(PluginManager manager) {
+			public void onPluginListUpdate(PluginManager m) {
+				if(manager != m)
+					return;
 				System.out.println("NRConsole is refreshing");
 				if(nrcMenubar.isReady()){
 					System.out.println("Connection ready");

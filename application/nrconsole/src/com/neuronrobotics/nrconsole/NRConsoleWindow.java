@@ -168,12 +168,13 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	}
 	
 	public Dimension getCurrentPanelMinSize(){
-		if (getCurrentPanel().getMinimumSize() != null){
-			return getCurrentPanel().getMinimumSize();
+		if(getCurrentPanel()!=null){
+			if (getCurrentPanel().getMinimumSize() != null){
+				return getCurrentPanel().getMinimumSize();
+			}
 		}
-		else{
-			return new Dimension(manager.getMinimumWidth(), manager.getMinimumHeight());
-		}
+		return new Dimension(manager.getMinimumWidth(), manager.getMinimumHeight());
+		
 	}
 	public Component getCurrentPanel(){
 		return modePane.getSelectedComponent();
