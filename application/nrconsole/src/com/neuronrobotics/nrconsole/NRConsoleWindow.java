@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -135,12 +136,18 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		Log.warning("Start Adding plugins ");
 		for(JPanel p: manager.getPanels()){
 			Log.warning("Adding : " + p.getName());
-			modePane.addTab(p.getName(), p);
-			panels.add(p);
+			SwingUtilities.invokeLater(() -> {
+				modePane.addTab(p.getName(), p);
+				panels.add(p);
+			});
+
 		}
 		Log.warning("Done adding plugins ");
 		manager.addIPluginUpdateListener(this);
-		scroller.add(modePane);
+		SwingUtilities.invokeLater(() -> {
+			scroller.add(modePane);
+			manager.getFrame().invalidate();
+		});
 		//updateUI();
 	}
 

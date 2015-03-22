@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 
@@ -30,7 +31,9 @@ public class PluginManager {
 	private int width=1095;
 	private int height=700;
 	private boolean virtual = false;
-	public PluginManager(){
+	private JFrame frame;
+	public PluginManager(JFrame frame){
+		this.setFrame(frame);
 		update();
 	}
 	
@@ -266,5 +269,13 @@ public class PluginManager {
 
 	public BowlerAbstractConnection getConnection() {
 		return connection;
+	}
+
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	public void setFrame(JFrame frame) {
+		this.frame = frame;
 	}
 }
