@@ -33,15 +33,15 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	//JMenus and their associated JMenuItems
 	
 	//The "File" menu
-	JMenu fileMenu;
+	JMenu fileMenu= new JMenu("File");//Create the "File" menu;
 	private JMenuItem quitMenuItem = new JMenuItem("Quit");
 	
 	//The "About" menu
-	JMenu aboutMenu;
+	JMenu aboutMenu = new JMenu("About");//Create the "About" menu;
 	private JMenuItem aboutMenuItem = new JMenuItem("About NRConsole");
 	
 	//The "Connection" menu
-	JMenu connectionMenu;
+	JMenu connectionMenu= new JMenu("Connection");//Create the "connection"  menu;
 	private JMenuItem disconnectMenuItem = new JMenuItem("Disconnect");
 	private JMenuItem setConnectionMenuItem = new JMenuItem("Set Connection");
 	private JMenuItem virtualPidMenuItem = new JMenuItem("Virtual PID");
@@ -64,16 +64,13 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		
 		//Create the menus and add their associated items
 		
-		fileMenu = new JMenu("File");//Create the "File" menu
 		fileMenu.add(quitMenuItem);//Add the "Quit" menu item
 		
-		
-		connectionMenu= new JMenu("Connection");//Create the "connection"  menu
+
 		connectionMenu.add(setConnectionMenuItem);//add the "Set Connection" menu item
 		connectionMenu.add(disconnectMenuItem);//add the "Disconnect" menu item
 		connectionMenu.add(virtualPidMenuItem);//add the "Virtual PID" menu item
 		
-		aboutMenu = new JMenu("About");//Create the "About" menu
 		aboutMenu.add(aboutMenuItem);//Add the "About NRConsole" menu item
 		
 		//Add the finished menus to the menu bar
@@ -247,10 +244,12 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 	 */
 	@Override
 	public void onDisconnect(BowlerAbstractConnection source) {
+		
 		disconnectMenuItem.setEnabled(false);
 		connectionMenu.setEnabled(true);
 		setMenues(null);//Remove all menus beside the default set (file, connection, about)
 		ready = false;	
+		manager.firePluginUpdate();
 	}
 	
 	/**
