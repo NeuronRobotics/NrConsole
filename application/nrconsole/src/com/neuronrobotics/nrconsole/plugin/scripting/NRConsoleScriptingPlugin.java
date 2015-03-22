@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.dyio.DyIORegestry;
 
 
 
@@ -17,11 +18,14 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 
 	private static final String[] myNamespaces = new String[]{"neuronrobotics.dyio.*"};
 	
-	ScriptingEngine se = new ScriptingEngine();
+	ScriptingEngine se =null;
+
+	private PluginManager pm;
 
 	
 	public NRConsoleScriptingPlugin( PluginManager pm) {
 		super(myNamespaces, pm);
+		this.pm = pm;
 		
 	}
 	
@@ -40,6 +44,7 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	@Override
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		// TODO Auto-generated method stub
+		se = new ScriptingEngine(DyIORegestry.get(),pm);
 		return true;
 	}
 

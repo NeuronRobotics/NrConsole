@@ -26,14 +26,14 @@ public class SimpleSwingBrowser extends JPanel {
 	private final JFXPanel jfxPanel = new JFXPanel();
     private WebEngine engine;
  
-    private final JPanel panel = new JPanel();
     private final JLabel lblStatus = new JLabel();
 
 
     private final JButton btnGo = new JButton("Go");
-    private final JTextField txtURL = new JTextField();
+    private final JTextField txtURL = new JTextField(100);
     private final JProgressBar progressBar = new JProgressBar();
- 
+    private WebView view;
+    
     public SimpleSwingBrowser() {
         super();
         setLayout(new MigLayout());
@@ -53,6 +53,7 @@ public class SimpleSwingBrowser extends JPanel {
  
         btnGo.addActionListener(al);
         txtURL.addActionListener(al);
+        
   
         progressBar.setPreferredSize(new Dimension(150, 18));
         progressBar.setStringPainted(true);
@@ -67,12 +68,11 @@ public class SimpleSwingBrowser extends JPanel {
         statusBar.add(lblStatus, BorderLayout.CENTER);
         statusBar.add(progressBar, BorderLayout.EAST);
  
-        //panel.add(topBar, BorderLayout.NORTH);
-        //panel.add(jfxPanel);
-       // panel.add(statusBar, BorderLayout.SOUTH);
+        add(topBar, "wrap");
+        add(jfxPanel, "wrap");
+        add(statusBar, "wrap");
         
-        add(jfxPanel,"dock north");
-        setPreferredSize(new Dimension(1400, 768));
+
 //        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        pack();
 
@@ -81,10 +81,12 @@ public class SimpleSwingBrowser extends JPanel {
     private void createScene() {
  
         Platform.runLater(new Runnable() {
-            @Override 
+
+
+			@Override 
             public void run() {
  
-                WebView view = new WebView();
+                view = new WebView();
                 engine = view.getEngine();
                 engine.titleProperty().addListener(new ChangeListener<String>() {
                     @Override
@@ -143,7 +145,7 @@ public class SimpleSwingBrowser extends JPanel {
                                     SwingUtilities.invokeLater(new Runnable() {
                                         @Override public void run() {
                                             JOptionPane.showMessageDialog(
-                                                    panel,
+                                                    null,
                                                     (value != null) ?
                                                     engine.getLocation() + "\n" + value.getMessage() :
                                                     engine.getLocation() + "\nUnexpected error.",
@@ -154,8 +156,13 @@ public class SimpleSwingBrowser extends JPanel {
                                 }
                             }
                         });
-
-                jfxPanel.setScene(new Scene(view,950,600));
+                
+                
+                Platform.runLater(() -> {
+                	view.setPrefWidth(1168);
+                	jfxPanel.setScene(new Scene(view));
+				});
+                
             }
         });
     }
@@ -184,22 +191,11 @@ public class SimpleSwingBrowser extends JPanel {
 
     private static String toURL(String str) {
         try {
-            return new URL(str).toExternalForm();
+            return new URL(str).toString();
         } catch (MalformedURLException exception) {
                 return null;
         }
     }
 
-   
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-                SimpleSwingBrowser browser = new SimpleSwingBrowser();
-                browser.setVisible(true);
-                browser.loadURL("http://oracle.com");
-           }     
-       });
-    }
+  
 }

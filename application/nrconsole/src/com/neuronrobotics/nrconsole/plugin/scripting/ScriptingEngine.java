@@ -45,9 +45,11 @@ import org.kohsuke.github.GHGistFile;
 import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 
+import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GroovyFilter;
 import com.neuronrobotics.nrconsole.util.Mp3Filter;
+import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.FileChangeWatcher;
 import com.neuronrobotics.sdk.util.IFileChangeListener;
@@ -74,6 +76,8 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	private Thread scriptRunner=null;
 	private FileChangeWatcher watcher;
 	private String currentGist = "9de9e45c75a5588c4a81";
+	private DyIO dyio;
+	private PluginManager pm;
 	
 	private void reset(){
 		System.setOut(orig);
@@ -88,30 +92,33 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		return "<script src=\"https://gist.github.com/madhephaestus/"+gist+".js\"></script>";
 	}
 	
-	public ScriptingEngine(){
+	public ScriptingEngine(DyIO dyio, PluginManager pm){
+		this.dyio = dyio;
+		this.pm = pm;
 		setName("Bowler Scripting");
 		setLayout(new MigLayout());
 		code = new JTextArea(20, 40);
-		output = new JTextArea(20, 40);
-		JScrollPane scrollPane = new JScrollPane(output);
+		output = new JTextArea(20, 100);
+		JScrollPane outputPane = new JScrollPane(output);
         SimpleSwingBrowser browser = new SimpleSwingBrowser();
         browser.setVisible(true);
         browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
+        //browser.setPreferredSize(new Dimension(1400,600));
         //browser.loadHTML( getHTMLFromGist(currentGist));
-		JScrollPane codeScroll = new JScrollPane(code);
-		
-		scrollPane.setPreferredSize(new Dimension(1024, 400));
-		codeScroll.setPreferredSize(new Dimension(1024, 400));
 		
 		run = new JButton("Run");
 		JPanel controls = new JPanel(new MigLayout());
 		controls.add(run);
 		controls.add(file);
 		
-		//add(browser,"wrap");
-		add(codeScroll,"wrap");
-		add(scrollPane,"wrap");
+//		JScrollPane codeScroll = new JScrollPane(code);
+//		codeScroll.setPreferredSize(new Dimension(1024, 400));
+//		add(codeScroll,"wrap");
+	
+		add(browser,"wrap");
 		add(controls,"wrap");
+		add(outputPane,"wrap");
+
 		
 		getCode();
 		setCode("println(dyio)\n"
@@ -188,7 +195,8 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		            Binding binding = new Binding();
 		            System.setOut(new PrintStream(out));
 	
-		            binding.setVariable("dyio", DyIORegestry.get());
+		            binding.setVariable("dyio", dyio);
+		            binding.setVariable("PluginManager", pm);
 		            try{
 			            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
 			            		binding, cc);
