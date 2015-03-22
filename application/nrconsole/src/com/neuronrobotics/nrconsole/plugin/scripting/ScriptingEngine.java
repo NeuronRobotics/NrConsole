@@ -83,19 +83,23 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		code = new JTextArea(20, 40);
 		output = new JTextArea(20, 40);
 		JScrollPane scrollPane = new JScrollPane(output);
-		JScrollPane codeScroll = new JScrollPane(code);
-		scrollPane.setPreferredSize(new Dimension(900, 400));
-		codeScroll.setPreferredSize(new Dimension(900, 400));
+        SimpleSwingBrowser browser = new SimpleSwingBrowser();
+        browser.setVisible(true);
+        browser.loadURL("https://gist.github.com/madhephaestus/9de9e45c75a5588c4a81");
+		JScrollPane codeScroll = new JScrollPane(browser);
+		scrollPane.setPreferredSize(new Dimension(1024, 400));
+		codeScroll.setPreferredSize(new Dimension(1024, 400));
 		
 		run = new JButton("Run");
 		JPanel controls = new JPanel(new MigLayout());
 		controls.add(run);
 		controls.add(file);
 		
-		add(controls,"wrap");
-		add(codeScroll,"wrap");
+		add(browser,"wrap");
 		add(scrollPane,"wrap");
-		ThreadUtil.wait(1);
+		add(controls,"wrap");
+		
+		
 		setCode("println(dyio)\n"
 				+ "while(true){\n"
 				+ "\tThreadUtil.wait(100)                     // Spcae out the loop\n\n"
@@ -108,7 +112,16 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 				+ "\tprint(\"ms Value= \"+value)\n"
 				+ "\tprintln(\" Scaled= \"+scaled)\n"
 				+ "}");
-		
+//		setCode("<script src=\"https://gist.github.com/madhephaestus/9de9e45c75a5588c4a81.js\"></script>");
+	    SwingUtilities.invokeLater(new Runnable() {
+
+	        @Override
+	        public void run() {
+	            SimpleSwingBrowser browser = new SimpleSwingBrowser();
+	            browser.setVisible(true);
+	            browser.loadURL("http://oracle.com");
+	        }
+	    });
 		run.addActionListener(e -> {
 			if(running)
 				stop();
@@ -174,7 +187,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
 			            		binding, cc);
 		
-			            Script script = shell.parse(code.getText());
+			            Script script = shell.parse(getCode());
 			 
 			            Object obj = script.run();
 		            }catch(org.codehaus.groovy.control.MultipleCompilationErrorsException ex){
@@ -290,7 +303,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		try
 		{
 		    BufferedWriter writer = new BufferedWriter(new FileWriter(currentFile));
-		    writer.write (code.getText());
+		    writer.write (getCode());
 		    writer.close();
 		} catch(Exception ex)
 		{
@@ -321,6 +334,10 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		}else{
 			//System.out.println("Othr Code in "+fileThatChanged.getAbsolutePath()+" changed");
 		}
+	}
+	
+	protected String getCode(){
+		return code.getText();
 	}
 
 	protected void setCode(String string) {

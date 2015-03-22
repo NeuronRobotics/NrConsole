@@ -15,7 +15,7 @@ public class GroovyFilter extends FileFilter {
 			return true;
 		}
 		
-		return f.getName().matches("([^\\s]+(\\.(?i)(groovy|java|))$)");
+		return f.getName().matches("([^\\s]+(\\.(?i)(groovy|java))$)");
 	}
 
 }

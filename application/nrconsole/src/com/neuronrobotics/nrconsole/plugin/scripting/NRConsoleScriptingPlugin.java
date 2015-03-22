@@ -26,7 +26,9 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	}
 	
 	public ArrayList<JMenu> getMenueItems() {
-		return se.getMenueItems();
+		if(se!=null)
+			return se.getMenueItems();
+		return null;
 	}
 
 	@Override
