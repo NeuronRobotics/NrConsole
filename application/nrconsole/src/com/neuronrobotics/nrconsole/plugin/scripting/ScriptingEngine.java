@@ -351,20 +351,20 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	}
 	
 	protected String getCode(){
-//		try {
-//			GitHub github = GitHub.connectAnonymously();
-//
-//			GHGist gist = github.getGist(currentGist);
-//			Map<String, GHGistFile> files = gist.getFiles();
-//			for (Entry<String, GHGistFile> entry : files.entrySet()) { 
-//				System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
-//			}
-//
-//
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		try {
+			GitHub github = GitHub.connectAnonymously();
+
+			GHGist gist = github.getGist(currentGist);
+			Map<String, GHGistFile> files = gist.getFiles();
+			for (Entry<String, GHGistFile> entry : files.entrySet()) { 
+				System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
+			}
+
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return code.getText();
 	}
 
