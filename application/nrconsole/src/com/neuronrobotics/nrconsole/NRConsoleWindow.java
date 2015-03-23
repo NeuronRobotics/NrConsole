@@ -94,6 +94,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		logoPanel.add(new JLabel(logo),"[0,2]");
 		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 		updateUI();
+		setSize(1000,1400);
 	}
 	
 	
@@ -113,13 +114,13 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		scroller.setVisible(true);
 	}
 	private void updateUI(){
-		//setSize(new Dimension(panelWidth+53,panelHight+105));
-		if (manager !=null){
-			//setSize((getCurrentPanelMinSize().width+53),805);
-			modePane.setSize(getCurrentPanelMinSize());	
-		}else {
-			setSize(1400,768);
-		}
+//		//setSize(new Dimension(panelWidth+53,panelHight+105));
+//		if (manager !=null){
+//			//setSize((getCurrentPanelMinSize().width+53),805);
+//			modePane.setSize(getCurrentPanelMinSize());	
+//		}else {
+			
+		//}
 		
 		updateScroller();
 
