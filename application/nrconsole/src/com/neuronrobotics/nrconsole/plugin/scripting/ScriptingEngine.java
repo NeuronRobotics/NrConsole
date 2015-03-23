@@ -67,8 +67,8 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	private JTextArea code;
 	private JButton run;
 
-	private JLabel file =new JLabel("Defult.groovy");
-	private File currentFile = new File(file.getText());
+	private JLabel fileLabel =new JLabel("No File Loaded");
+	private File currentFile = null;
 	
 	private boolean running = false;
 	ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -111,7 +111,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		run = new JButton("Run");
 		JPanel controls = new JPanel(new MigLayout());
 		controls.add(run);
-		controls.add(file);
+		controls.add(fileLabel);
 		
 //		JScrollPane codeScroll = new JScrollPane(code);
 //		codeScroll.setPreferredSize(new Dimension(1024, 400));
@@ -193,9 +193,14 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 					Map<String, GHGistFile> files = gist.getFiles();
 					for (Entry<String, GHGistFile> entry : files.entrySet()) { 
 						if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
-							GHGistFile file = entry.getValue();	
+							GHGistFile ghfile = entry.getValue();	
 							System.out.println("Key = " + entry.getKey());
-							setCode(file.getContent());
+							setCode(ghfile.getContent());
+							SwingUtilities.invokeLater(() -> {
+			            		fileLabel.setText(entry.getKey().toString());
+			            		if(currentFile==null)
+			            			currentFile = new File(fileLabel.getText());
+			        		});
 						}
 					}
 					
@@ -220,7 +225,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		            try{
 			            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
 			            		binding, cc);
-			            System.out.println(getCode()+"\n\n");
+			            System.out.println(getCode()+"\n\nStart\n\n");
 			            Script script = shell.parse(getCode());
 			 
 			            Object obj = script.run();
