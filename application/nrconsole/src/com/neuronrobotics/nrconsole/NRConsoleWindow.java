@@ -118,7 +118,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 			//setSize((getCurrentPanelMinSize().width+53),805);
 			modePane.setSize(getCurrentPanelMinSize());	
 		}else {
-			setSize((1095+53),805);
+			setSize(1400,768);
 		}
 		
 		updateScroller();
