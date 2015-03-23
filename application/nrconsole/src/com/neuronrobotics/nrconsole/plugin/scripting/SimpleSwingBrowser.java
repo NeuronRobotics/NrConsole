@@ -13,13 +13,18 @@ import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
 import javax.swing.*;
-
-
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -280,12 +285,36 @@ public class SimpleSwingBrowser extends JPanel {
 		
 		return null;
 	}
+    private String returnFirstGist(String html){
+    	//System.out.println(html);
+    	String slug = html.split("//gist.github.com/")[1];
+    	String js=		slug.split(".js")[0];
+    	String id  = js.split("/")[1];
+    	
+    	return id;
+    }
 
 	public String getCurrentGist() {
 		String gist = urlToGist(txtURL.getText());
 		if (gist==null){
-			System.out.println("Non Gist URL Detected");
-			
+		
+			try {
+				System.out.println("Non Gist URL Detected");
+				String html;
+				TransformerFactory tf = TransformerFactory.newInstance();
+				Transformer t = tf.newTransformer();
+				StringWriter sw = new StringWriter();
+				t.transform(new DOMSource(engine.getDocument()), new StreamResult(sw));
+				html = sw.getBuffer().toString();
+				return returnFirstGist(html);
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 		return gist;
 	}
