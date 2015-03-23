@@ -177,7 +177,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 
 	}
 	
-	private void loadCodeFromCurrentGist() throws IOException{
+	private void loadCodeFromCurrentGist() throws IOException, InterruptedException{
 		GitHub github = GitHub.connectAnonymously();
 		currentGist = browser.getCurrentGist();
 		System.out.println("Loading Gist: "+currentGist);
@@ -187,12 +187,13 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
 				GHGistFile ghfile = entry.getValue();	
 				System.out.println("Key = " + entry.getKey());
-				setCode(ghfile.getContent());
 				SwingUtilities.invokeLater(() -> {
+					setCode(ghfile.getContent());
             		fileLabel.setText(entry.getKey().toString());
             		if(currentFile==null)
             			currentFile = new File(fileLabel.getText());
         		});
+				Thread.sleep(200);
 				break;
 			}
 		}
