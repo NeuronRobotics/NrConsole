@@ -78,7 +78,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	private String currentGist = "40fadfa5804eee848e62";
 	private DyIO dyio;
 	private PluginManager pm;
-	private SimpleSwingBrowser browser;
+	private GithubGistBrowser browser;
 	
 	private void reset(){
 		System.setOut(orig);
@@ -101,7 +101,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		code = new JTextArea(20, 40);
 		output = new JTextArea(20, 100);
 		JScrollPane outputPane = new JScrollPane(output);
-        browser = new SimpleSwingBrowser();
+        browser = new GithubGistBrowser();
         browser.setVisible(true);
         browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
         //browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);

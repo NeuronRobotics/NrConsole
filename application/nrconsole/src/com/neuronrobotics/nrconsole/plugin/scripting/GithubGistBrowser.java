@@ -31,7 +31,11 @@ import java.net.URL;
 import static javafx.concurrent.Worker.State.FAILED;
 
 
-public class SimpleSwingBrowser extends JPanel {
+public class GithubGistBrowser extends JPanel {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5343656469640871773L;
 	private final JFXPanel jfxPanel = new JFXPanel();
     private WebEngine engine;
  
@@ -47,7 +51,7 @@ public class SimpleSwingBrowser extends JPanel {
     private final JProgressBar progressBar = new JProgressBar();
     private WebView view;
     
-    public SimpleSwingBrowser() {
+    public GithubGistBrowser() {
         super();
         setLayout(new MigLayout());
         initComponents();
@@ -121,7 +125,7 @@ public class SimpleSwingBrowser extends JPanel {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override 
                             public void run() {
-                                SimpleSwingBrowser.this.setName(newValue);
+                                GithubGistBrowser.this.setName(newValue);
                             }
                         });
                     }
