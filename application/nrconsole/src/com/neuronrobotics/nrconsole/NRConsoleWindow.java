@@ -94,7 +94,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		logoPanel.add(new JLabel(logo),"[0,2]");
 		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 		updateUI();
-		setSize(1000,1400);
+		setSize(1050,1200);
 	}
 	
 	
