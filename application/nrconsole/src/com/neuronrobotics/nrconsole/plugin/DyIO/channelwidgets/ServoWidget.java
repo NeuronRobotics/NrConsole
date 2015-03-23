@@ -126,7 +126,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		}
 		
 		pollValue();
-		recordValue(value);
+		
 		sliderUI.setValue(value);
 		//valueUI.setText(formatValue(value));
 	}
@@ -154,7 +154,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 		
 		if( startup == false ) {
 			sc.SetPosition(sliderUI.getValue(),((float)(speed.getValue()))/1000);
-			recordValue(sliderUI.getValue());
+			//recordValue(sliderUI.getValue());
 		}
 	}
 	
@@ -182,6 +182,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 			sliderUI.removeChangeListener(this);
 			sliderUI.setValue(position);
 			valueUI.setText(formatValue(position));
+			recordValue(position);
 			sliderUI.addChangeListener(this);
 		}
 	}
