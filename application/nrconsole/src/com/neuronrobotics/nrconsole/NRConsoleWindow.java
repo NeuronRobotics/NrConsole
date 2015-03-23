@@ -84,7 +84,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 					modePane.setMinimumSize(modePane.getSelectedComponent().getMinimumSize());
 					updateUI();
 				} catch (Exception e2) {
-					// TODO: handle exception
+					e2.printStackTrace();
 				}
 				
 				
@@ -137,18 +137,22 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 
 
 		manager.addIPluginUpdateListener(this);
-		SwingUtilities.invokeLater(() -> {
-			Log.warning("Start Adding plugins ");
-			for(JPanel p: manager.getPanels()){
+		
+		Log.warning("Start Adding plugins ");
+		for(JPanel p: manager.getPanels()){
+			SwingUtilities.invokeLater(() -> {
 				Log.warning("Adding : " + p.getName());
 				modePane.addTab(p.getName(), p);
 				panels.add(p);
-
-			}
+			});
+		}
+		SwingUtilities.invokeLater(() -> {
 			scroller.add(modePane);
 			manager.getFrame().invalidate();
 			Log.warning("Done adding plugins ");
 		});
+			
+		
 		//updateUI();
 	}
 

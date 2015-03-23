@@ -218,6 +218,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		                    		"com.neuronrobotics.sdk.dyio.peripherals",
 		                    		"com.neuronrobotics.sdk.dyio",
 		                    		"com.neuronrobotics.sdk.common",
+		                    		"com.neuronrobotics.sdk.ui",
 		                    		"com.neuronrobotics.sdk.util"
 		                    		).addStaticStars("com.neuronrobotics.sdk.util.ThreadUtil")
 		                    );
