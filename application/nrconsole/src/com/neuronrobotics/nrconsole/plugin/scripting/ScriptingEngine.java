@@ -206,6 +206,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		run.setText("Stop");
 		scriptRunner = new Thread(){
 			public void run() {
+				setName("Bowler Script Runner");
 				try{
 					
 					loadCodeFromCurrentGist();
