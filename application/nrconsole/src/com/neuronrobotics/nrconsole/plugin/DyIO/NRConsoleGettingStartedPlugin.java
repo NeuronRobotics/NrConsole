@@ -34,7 +34,7 @@ public class NRConsoleGettingStartedPlugin extends AbstractNRConsoleTabedPanelPl
 	@Override
 	public Dimension getMinimumWimdowDimentions() {
 		// TODO Auto-generated method stub
-		return new Dimension(1050,1200);
+		return new Dimension(1400,1000);
 	}
 
 }
