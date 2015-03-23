@@ -176,6 +176,28 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		}
 
 	}
+	
+	private void loadCodeFromCurrentGist() throws IOException{
+		GitHub github = GitHub.connectAnonymously();
+		currentGist = browser.getCurrentGist();
+		System.out.println("Loading Gist: "+currentGist);
+		GHGist gist = github.getGist(currentGist);
+		Map<String, GHGistFile> files = gist.getFiles();
+		for (Entry<String, GHGistFile> entry : files.entrySet()) { 
+			if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
+				GHGistFile ghfile = entry.getValue();	
+				System.out.println("Key = " + entry.getKey());
+				setCode(ghfile.getContent());
+				SwingUtilities.invokeLater(() -> {
+            		fileLabel.setText(entry.getKey().toString());
+            		if(currentFile==null)
+            			currentFile = new File(fileLabel.getText());
+        		});
+				break;
+			}
+		}
+		
+	}
 
 	private void start() {
 
@@ -185,25 +207,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			public void run() {
 				try{
 					
-					GitHub github = GitHub.connectAnonymously();
-					currentGist = browser.getCurrentGist();
-					System.out.println("Loading Gist: "+currentGist);
-					GHGist gist = github.getGist(currentGist);
-					System.out.println("Loading Gist Files");
-					Map<String, GHGistFile> files = gist.getFiles();
-					for (Entry<String, GHGistFile> entry : files.entrySet()) { 
-						if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
-							GHGistFile ghfile = entry.getValue();	
-							System.out.println("Key = " + entry.getKey());
-							setCode(ghfile.getContent());
-							SwingUtilities.invokeLater(() -> {
-			            		fileLabel.setText(entry.getKey().toString());
-			            		if(currentFile==null)
-			            			currentFile = new File(fileLabel.getText());
-			        		});
-						}
-					}
-					
+					loadCodeFromCurrentGist();
 					output.setText("");
 					CompilerConfiguration cc = new CompilerConfiguration();
 	
@@ -351,7 +355,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	}
 
 	@Override
-	public void onFileChange(File fileThatChanged, WatchEvent event) {
+	public void onFileChange(File fileThatChanged, @SuppressWarnings("rawtypes") WatchEvent event) {
 		// TODO Auto-generated method stub
 		if(fileThatChanged.getAbsolutePath().contains(currentFile.getAbsolutePath())){
 			System.out.println("Code in "+fileThatChanged.getAbsolutePath()+" changed");
