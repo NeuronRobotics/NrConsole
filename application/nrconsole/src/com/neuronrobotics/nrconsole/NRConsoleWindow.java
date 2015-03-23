@@ -151,9 +151,6 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 			manager.getFrame().invalidate();
 			Log.warning("Done adding plugins ");
 		});
-			
-		
-		//updateUI();
 	}
 
 	public void displayLogo(PluginManager deviceManager) {
