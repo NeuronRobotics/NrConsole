@@ -75,9 +75,10 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	private PrintStream orig= System.out;
 	private Thread scriptRunner=null;
 	private FileChangeWatcher watcher;
-	private String currentGist = "9de9e45c75a5588c4a81";
+	private String currentGist = "40fadfa5804eee848e62";
 	private DyIO dyio;
 	private PluginManager pm;
+	private SimpleSwingBrowser browser;
 	
 	private void reset(){
 		System.setOut(orig);
@@ -100,9 +101,10 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		code = new JTextArea(20, 40);
 		output = new JTextArea(20, 100);
 		JScrollPane outputPane = new JScrollPane(output);
-        SimpleSwingBrowser browser = new SimpleSwingBrowser();
+        browser = new SimpleSwingBrowser();
         browser.setVisible(true);
-        browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
+        //browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
+        browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
         //browser.setPreferredSize(new Dimension(1400,600));
         //browser.loadHTML( getHTMLFromGist(currentGist));
 		
@@ -120,7 +122,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		add(outputPane,"wrap");
 
 		
-		getCode();
+		//getCode();
 		setCode("println(dyio)\n"
 				+ "while(true){\n"
 				+ "\tThreadUtil.wait(100)                     // Spcae out the loop\n\n"
@@ -176,18 +178,36 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	}
 
 	private void start() {
-		// TODO Auto-generated method stub
+
 		running = true;
 		run.setText("Stop");
 		scriptRunner = new Thread(){
 			public void run() {
 				try{
+					
+					GitHub github = GitHub.connectAnonymously();
+					currentGist = browser.getCurrentGist();
+					System.out.println("Loading Gist: "+currentGist);
+					GHGist gist = github.getGist(currentGist);
+					System.out.println("Loading Gist Files");
+					Map<String, GHGistFile> files = gist.getFiles();
+					for (Entry<String, GHGistFile> entry : files.entrySet()) { 
+						if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
+							GHGistFile file = entry.getValue();	
+							System.out.println("Key = " + entry.getKey());
+							setCode(file.getContent());
+						}
+					}
+					
 					output.setText("");
 					CompilerConfiguration cc = new CompilerConfiguration();
 	
 		            cc.addCompilationCustomizers(
 		                    new ImportCustomizer().
 		                    addStarImports("com.neuronrobotics",
+		                    		"com.neuronrobotics.sdk.dyio.peripherals",
+		                    		"com.neuronrobotics.sdk.dyio",
+		                    		"com.neuronrobotics.sdk.common",
 		                    		"com.neuronrobotics.sdk.util"
 		                    		).addStaticStars("com.neuronrobotics.sdk.util.ThreadUtil")
 		                    );
@@ -200,7 +220,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		            try{
 			            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
 			            		binding, cc);
-		
+			            System.out.println(getCode()+"\n\n");
 			            Script script = shell.parse(getCode());
 			 
 			            Object obj = script.run();
@@ -228,7 +248,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	        			run.setText("Run");
 	        			System.setOut(orig);
 	        		});
-	            	throw e;
+	            	throw new RuntimeException(e);
 	            }
 				
 			}
@@ -351,20 +371,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	}
 	
 	protected String getCode(){
-		try {
-			GitHub github = GitHub.connectAnonymously();
 
-			GHGist gist = github.getGist(currentGist);
-			Map<String, GHGistFile> files = gist.getFiles();
-			for (Entry<String, GHGistFile> entry : files.entrySet()) { 
-				System.out.println("Key = " + entry.getKey() + ", Value = " + entry.getValue()); 
-			}
-
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return code.getText();
 	}
 

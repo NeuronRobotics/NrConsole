@@ -35,8 +35,11 @@ public abstract class RateLimitHandler {
         @Override
         public void onError(IOException e, HttpURLConnection uc) throws IOException {
             try {
+            	if(e.getMessage().contains("403")){
+            		throw (InterruptedIOException)new InterruptedIOException().initCause(e);
+            	}
                 Thread.sleep(parseWaitTime(uc));
-            } catch (InterruptedException _) {
+            } catch (InterruptedException ie) {
                 throw (InterruptedIOException)new InterruptedIOException().initCause(e);
             }
         }
@@ -46,6 +49,7 @@ public abstract class RateLimitHandler {
             if (v==null)    return 10000;   // can't tell
 
             return Math.max(10000, Long.parseLong(v)*1000 - System.currentTimeMillis());
+        	//return 10000;
         }
     };
 

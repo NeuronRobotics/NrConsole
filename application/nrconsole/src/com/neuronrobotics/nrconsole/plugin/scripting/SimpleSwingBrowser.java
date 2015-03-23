@@ -14,6 +14,8 @@ import javafx.scene.web.WebView;
 
 import javax.swing.*;
 
+
+
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.*;
@@ -223,6 +225,7 @@ public class SimpleSwingBrowser extends JPanel {
             public void run() {
                 engine.loadContent(html);
                 txtURL.setText("");
+
             }
         });
     }
@@ -265,6 +268,27 @@ public class SimpleSwingBrowser extends JPanel {
                 return null;
         }
     }
+    
+    public String urlToGist(String in) {
+		String domain = in.split("//")[1];
+		String [] tokens = domain.split("/");
+		if (tokens[0].toLowerCase().contains("gist.github.com") && tokens.length>=2){
+			String id = tokens[2].split("#")[0];
+			System.out.println("Gist URL Detected "+id);
+			return id;
+		}
+		
+		return null;
+	}
+
+	public String getCurrentGist() {
+		String gist = urlToGist(txtURL.getText());
+		if (gist==null){
+			System.out.println("Non Gist URL Detected");
+			
+		}
+		return gist;
+	}
 
   
 }
