@@ -4,6 +4,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 
+import javax.swing.SwingUtilities;
+
 import org.lwjgl.openal.AL;
 
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
@@ -26,11 +28,10 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
  */
 public class NRConsole {
 	
-	private NRConsoleWindow nrcFrame = null;
+	private NRConsoleWindow nrcFrame =  new NRConsoleWindow();
 
-	private PluginManager manager=new PluginManager();//This is the class that manages the plugins and their associated tabs in the gui
+	private PluginManager manager=new PluginManager(nrcFrame);//This is the class that manages the plugins and their associated tabs in the gui
 	private MenuBar nrcMenubar = new MenuBar(manager);//This is the menu bar for the main gui window
-	private showManager shower = new showManager ();//This is some kludgey bullshit to manage the paint and update of the gui. //TODO take this out
 	private static NRConsole self; //Used to reference this class within this class to get around the "static" qualifier. //TODO take this out
 	
 	/**
@@ -95,15 +96,14 @@ public class NRConsole {
 	
 	public NRConsole(boolean debug) {
 		self = this;
-		nrcFrame = new NRConsoleWindow();
+
 		nrcFrame.setJMenuBar(nrcMenubar);
 		nrcMenubar.setMenues(null);
-		
+		nrcFrame.displayLogo(manager);
 		nrcFrame.setLocationRelativeTo(null);
 		nrcFrame.setVisible(true);
 		nrcFrame.setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
-		
-		shower.start();
+
 		if(debug){
 			Log.enableDebugPrint();
 		}
@@ -122,56 +122,38 @@ public class NRConsole {
 		        System.exit(0); 
 		    }
 		});
-	}
-	
-	
-	/**
-	 * This private class is some kludgey bullshit
-	 * TODO: take this out
-	 * @author technocopia05
-	 *
-	 */
-	private class showManager extends Thread implements IPluginUpdateListener{
-		public void run(){
-			try{
-				nrcMenubar.connect();
-			}catch (Exception ex){
-				ex.printStackTrace();
-			}
-			while(true){	
+		
+		manager.addIPluginUpdateListener(new IPluginUpdateListener() {
+			
+			@Override
+			public void onPluginListUpdate(PluginManager m) {
+				if(manager != m)
+					return;
+				//System.out.println("NRConsole is refreshing");
+				//new RuntimeException().printStackTrace();
 				if(nrcMenubar.isReady()){
-					
-					onPluginListUpdate(manager);
-					manager.addIPluginUpdateListener(this);
-					 
-					while(nrcMenubar.isReady()){
-						ThreadUtil.wait(50);
-					}
-					
+					System.out.println("Connection ready");
+					SwingUtilities.invokeLater(() -> {
+						nrcMenubar.setMenues(manager.getMenueItems());
+						nrcFrame.setDeviceManager(manager);
+						nrcFrame.invalidate();
+						nrcFrame.setVisible(true);
+					});
+
 				}else{
-					manager.removeIPluginUpdateListener(this);
-					nrcMenubar.setMenues(null);
-					nrcFrame.displayLogo(manager);
-					nrcFrame.invalidate();
-					nrcFrame.setVisible(true);
-					
-					while(!nrcMenubar.isReady()){
-						ThreadUtil.wait(50);
-					}
-					
+					//System.out.println("No connection");
+					SwingUtilities.invokeLater(() -> {
+						nrcMenubar.setMenues(null);
+						nrcFrame.displayLogo(manager);
+						nrcFrame.invalidate();
+						nrcFrame.setVisible(true);
+					});
 				}
 			}
-		}
-
-		@Override
-		public void onPluginListUpdate(PluginManager manager) {
-			//System.out.println("NRConsole is refreshing");
-			if(nrcMenubar.isReady()){
-				nrcMenubar.setMenues(manager.getMenueItems());
-				nrcFrame.setDeviceManager(manager);
-				nrcFrame.invalidate();
-				nrcFrame.setVisible(true);
-			}
-		}
+		});
+		
+		nrcMenubar.connect();
+		
 	}
+
 }

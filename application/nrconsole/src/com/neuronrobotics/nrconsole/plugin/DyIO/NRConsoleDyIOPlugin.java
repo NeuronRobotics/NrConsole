@@ -13,6 +13,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -125,7 +126,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		manager.removeNRConsoleTabedPanelPlugin("NRConsolePIDPlugin");
 		setUp = true;
 		graph = new DyIOGraphPlugin(manager);
-		manager.firePluginUpdate();
+		//manager.firePluginUpdate();
 		for(ChannelManager  cm:channels){
 			addGraph(cm.getChannelRecorder());
 		}
@@ -273,10 +274,17 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	}
 	
 	public void addGraph(ChannelRecorder channelRecorder) {
-		graph.getGraphingWindow().addDataset(channelRecorder.getDataChannel());
+		if(graph!=null)
+            SwingUtilities.invokeLater(() -> {
+            	graph.getGraphingWindow().addDataset(channelRecorder.getDataChannel());
+    		});
+			
 	}
 	public void removeGraph(ChannelRecorder channelRecorder) {
-		graph.getGraphingWindow().removeDataset(channelRecorder.getDataChannel());
+		if(graph !=null)
+			SwingUtilities.invokeLater(() -> {
+            	graph.getGraphingWindow().removeDataset(channelRecorder.getDataChannel());
+    		});
 	}
 	
 	public void onRecordingEvent(ChannelManager source, boolean enabled) {

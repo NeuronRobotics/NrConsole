@@ -27,7 +27,6 @@ public class MachineSimDisplay extends SimpleApplication{
 	JPanel panel;
 	private ArrayList<Geometry> shapes = new ArrayList<Geometry>();
 	private boolean hasChanged = false;
-	
 	private ChaseCamera chaseCam;
 	Node obj;
 	Matrix3f rotateUp;
@@ -51,9 +50,14 @@ public class MachineSimDisplay extends SimpleApplication{
 	private boolean isUpdating = false;
 	private PrintObject printObj;
 	private List<PrintTestListener> listeners = new ArrayList<PrintTestListener>();
+	private ArrayList<Vector3f> movePoints = new ArrayList<Vector3f>();
 	private Material matHead;
 	private DisplayConfigs displayConfigs;
 	private boolean isSlicing = false;
+	private ArrayList<Geometry> moveLines = new ArrayList<Geometry>();
+	private boolean showPrintPlot = false;
+	
+
 	
 	public MachineSimDisplay(JPanel _panel, DisplayConfigs _displayConfigs){		
 		panel = _panel;
@@ -64,6 +68,13 @@ public class MachineSimDisplay extends SimpleApplication{
 		panel = _panel;
 		printObj = new PrintObject(this);
 		
+	}
+	
+	public ArrayList<Vector3f> getMovePoints(){
+		return movePoints;
+	}
+	public void setMovePoints(ArrayList<Vector3f> _movePoints){
+		movePoints = _movePoints;
 	}
 	public DisplayConfigs getDisplayConfigs() {
 		return displayConfigs;
@@ -451,6 +462,22 @@ public void waitForUpdate(){
 	}
 	
 	
+	public void displayPlot(){//This method sets up all of the lines to be plotted for print motion
+		Vector3f prevPoint = null;
+		for (Vector3f movePoint : movePoints) {
+		if(prevPoint == null){
+			prevPoint = movePoint;
+		}
+		else{
+			Line l = new Line(prevPoint, movePoint);
+			Geometry geom = new Geometry("MoveLine",l);
+			geom.setMaterial(getMatLine());
+			obj.attachChild(geom);
+		}
+	}	
+	}
+	
+	
 	@Override
 	public void simpleUpdate(float tpf){
 		if (loading == true  && hasChanged == false){
@@ -470,7 +497,7 @@ public void waitForUpdate(){
 			guiNode.detachChildNamed("Slicing Text");
 		}
 		
-		if (hasChanged == true){
+		if (hasChanged == true && isShowPrintPlot() == false){
 			
 			hasChanged = false;
 			System.out.println("Number of lines: " + shapes.size());
@@ -531,6 +558,19 @@ public void waitForUpdate(){
 			System.out.println("Last Index Shown: " +lastShownIndex);
 			System.out.println("How many children: " + obj.getChildren().size());
 			loading =  false;
+		}//End HasChanged if
+		else{
+			if (isShowPrintPlot() == true){
+				obj.detachAllChildren();
+				try {
+					displayPlot();
+				} catch (Exception e) {
+					//This is probably a concurrent modification exception because the renderer
+					//runs in a separate thread, so this makes sure to not break everything if this
+					//occurs
+				}
+				
+			}
 		}
 		
 	 }
@@ -618,5 +658,17 @@ public void waitForUpdate(){
 	public void setSlicing(boolean isSlicing) {
 		this.isSlicing = isSlicing;
 	}
-	
+	public boolean hasChanged() {
+		return hasChanged;
+	}
+	public void setHasChanged(boolean hasChanged) {
+		this.hasChanged = hasChanged;
+	}
+
+	public boolean isShowPrintPlot() {
+		return showPrintPlot;
+	}
+	public void setShowPrintPlot(boolean showPrintPlot) {
+		this.showPrintPlot = showPrintPlot;
+	}
 }

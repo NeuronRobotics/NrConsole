@@ -157,7 +157,7 @@ public class Slic3rPrinter extends SettingsPanel implements SettingsChangeListen
 						.addComponent(getLblBedTemperature())
 						.addComponent(getTfBTemp(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(getLblc_1()))
-					.addContainerGap(577, Short.MAX_VALUE))
+					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		this.addListener(this);

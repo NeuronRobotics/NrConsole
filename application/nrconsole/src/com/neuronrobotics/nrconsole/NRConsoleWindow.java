@@ -15,11 +15,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.neuronrobotics.nrconsole.plugin.IPluginUpdateListener;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.config.SDKBuildInfo;
 import com.neuronrobotics.sdk.ui.ConnectionImageIconFactory;
 
@@ -82,7 +84,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 					modePane.setMinimumSize(modePane.getSelectedComponent().getMinimumSize());
 					updateUI();
 				} catch (Exception e2) {
-					// TODO: handle exception
+					e2.printStackTrace();
 				}
 				
 				
@@ -92,6 +94,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		logoPanel.add(new JLabel(logo),"[0,2]");
 		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 		updateUI();
+		setSize(1050,1200);
 	}
 	
 	
@@ -111,18 +114,17 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		scroller.setVisible(true);
 	}
 	private void updateUI(){
-		//setSize(new Dimension(panelWidth+53,panelHight+105));
-		if (manager !=null){
-			//setSize((getCurrentPanelMinSize().width+53),805);
-			modePane.setSize(getCurrentPanelMinSize());	
-		}else {
-			setSize((1095+53),805);
-		}
+//		//setSize(new Dimension(panelWidth+53,panelHight+105));
+//		if (manager !=null){
+//			//setSize((getCurrentPanelMinSize().width+53),805);
+//			modePane.setSize(getCurrentPanelMinSize());	
+//		}else {
+			
+		//}
 		
 		updateScroller();
 
 		invalidate();
-		repaint();
 		
 	}
 	
@@ -131,13 +133,28 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		scroller.removeAll();
 		modePane.removeAll();
 		panels=new ArrayList<JPanel>();
-		for(JPanel p: manager.getPanels()){
-			modePane.addTab(p.getName(), p);
-			panels.add(p);
-		}
+
+
 		manager.addIPluginUpdateListener(this);
-		scroller.add(modePane);
-		//updateUI();
+		
+		Log.warning("Start Adding plugins ");
+		for(JPanel p: manager.getPanels()){
+			SwingUtilities.invokeLater(() -> {
+				Log.warning("Adding : " + p.getName());
+				modePane.addTab(p.getName(), p);
+				panels.add(p);
+				Log.warning("Done : " + p.getName());
+				updateUI();
+			});
+		}
+		SwingUtilities.invokeLater(() -> {
+			scroller.add(modePane);
+			Log.warning("Done adding plugins ");
+			SwingUtilities.invokeLater(() -> {
+				updateUI();
+			});
+		});
+
 	}
 
 	public void displayLogo(PluginManager deviceManager) {
@@ -157,12 +174,13 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	}
 	
 	public Dimension getCurrentPanelMinSize(){
-		if (getCurrentPanel().getMinimumSize() != null){
-			return getCurrentPanel().getMinimumSize();
+		if(getCurrentPanel()!=null){
+			if (getCurrentPanel().getMinimumSize() != null){
+				return getCurrentPanel().getMinimumSize();
+			}
 		}
-		else{
-			return new Dimension(manager.getMinimumWidth(), manager.getMinimumHeight());
-		}
+		return new Dimension(manager.getMinimumWidth(), manager.getMinimumHeight());
+		
 	}
 	public Component getCurrentPanel(){
 		return modePane.getSelectedComponent();

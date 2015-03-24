@@ -44,7 +44,7 @@ public class SchedulerGui extends JPanel{
 		setName("DyIO Sequencer");
 		setLayout(new MigLayout());
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		cs = new CoreScheduler(DyIORegestry.get(), loopTime,60000);
+		cs = new CoreScheduler(DyIORegestry.get(), loopTime,6000);
 		cb = new SchedulerControlBar(cs);
 		
 		JPanel addBar = new JPanel(new MigLayout());
@@ -145,7 +145,7 @@ public class SchedulerGui extends JPanel{
 	}
 	private void addServoChannel( ServoOutputScheduleChannel chan){
 		int selected = chan.getChannelNumber();
-		ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(chan);
+		ServoOutputScheduleChannelUI sosc= 	new ServoOutputScheduleChannelUI(chan,cs);
 		cs.addISchedulerListener(sosc);
 		outputs.add(sosc);
 		channelBar.add(sosc,"wrap");

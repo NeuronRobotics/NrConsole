@@ -107,6 +107,7 @@ public class HexapodConfigPanel extends JPanel {
 					invalidate();
 					//hexFrame.setExtendedState(Frame.MAXIMIZED_BOTH);
 				}catch(Exception ex){
+					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null, ex.getMessage(), "Hexapod ERROR", JOptionPane.ERROR_MESSAGE);
 					setConfigEnabled(false);
 					start.setEnabled(true);

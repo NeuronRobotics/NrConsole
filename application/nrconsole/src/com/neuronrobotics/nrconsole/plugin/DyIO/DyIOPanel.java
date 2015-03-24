@@ -50,7 +50,6 @@ public class DyIOPanel extends JPanel {
 		}
 	    initPanel();
 	    setName("DyIO");
-
 	}
 	
 	private void initPanel() {
@@ -157,7 +156,7 @@ public class DyIOPanel extends JPanel {
     	try {
     		g.drawImage(image.getImage(), 0,0,this.getWidth(),this.getHeight(),this);
     	} catch (Exception e) {
-    		
+    		e.printStackTrace();
     	}
     }
 	

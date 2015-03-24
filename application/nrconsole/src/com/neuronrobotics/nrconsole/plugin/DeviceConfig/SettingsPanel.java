@@ -99,7 +99,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 	
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
-				return (int) machineSetting.getValue();
+				return (Integer) machineSetting.getValue();
 			}
 		}
 		return -1;
@@ -108,7 +108,7 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 		
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
-				return (boolean) machineSetting.getValue();
+				return (Boolean) machineSetting.getValue();
 			}
 		}
 		return false;
@@ -117,23 +117,23 @@ private List<SettingsChangeListener> listeners = new ArrayList<SettingsChangeLis
 	
 		for (MachineSetting machineSetting : settings) {
 			if (machineSetting.getName() == _name){
-				return (double) machineSetting.getValue();
+				return (Double) machineSetting.getValue();
 			}
 		}
 		return -1;
 	}
 	public double getDoubleValue(int index){
 		
-		return (double) settings.get(index).getValue();
+		return (Double) settings.get(index).getValue();
 	}
 	
 	public int getIntegerValue(int index){
 			
-			return (int) settings.get(index).getValue();
+			return (Integer) settings.get(index).getValue();
 		}
 	
 	public boolean getBooleanValue(int index){
 		
-		return (boolean) settings.get(index).getValue();
+		return (Boolean) settings.get(index).getValue();
 	}
 }

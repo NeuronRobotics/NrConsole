@@ -283,7 +283,7 @@ public class Slic3rPrints extends SettingsPanel implements SettingsChangeListene
 						.addComponent(getLblFirstLayerSpeed())
 						.addComponent(getTfFirstLayerSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(getLabel_5()))
-					.addContainerGap(147, Short.MAX_VALUE))
+					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		this.addListener(this);

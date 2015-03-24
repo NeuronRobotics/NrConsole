@@ -62,7 +62,7 @@ public class IntelHexParser {
 		    		 tmp =  new ByteData(currentAddress);
 		    	 }
 	    		 if(type==NRBootCoreType.PIC32){
-	    			 if(!isSequential||(tmp.getData().length > 150)){
+	    			 if(!isSequential||(tmp.getData().length > 50)){
 			    		 packetList.add(tmp);
 			    		 tmp =  new ByteData(currentAddress);
 			    	 } 

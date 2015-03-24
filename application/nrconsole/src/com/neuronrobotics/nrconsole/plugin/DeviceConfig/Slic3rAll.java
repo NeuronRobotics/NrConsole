@@ -386,7 +386,7 @@ public class Slic3rAll extends SettingsPanel implements SettingsChangeListener{
 						.addComponent(getLblFirstLayerSpeed())
 						.addComponent(getTfFirstLayerSpeedPercent(), GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(getLabel_5()))
-					.addContainerGap(50, Short.MAX_VALUE))
+					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		this.addListener(this);
