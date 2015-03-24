@@ -144,13 +144,17 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 				Log.warning("Adding : " + p.getName());
 				modePane.addTab(p.getName(), p);
 				panels.add(p);
+				Log.warning("Done : " + p.getName());
 			});
 		}
 		SwingUtilities.invokeLater(() -> {
 			scroller.add(modePane);
-			manager.getFrame().invalidate();
 			Log.warning("Done adding plugins ");
+			SwingUtilities.invokeLater(() -> {
+				updateUI();
+			});
 		});
+
 	}
 
 	public void displayLogo(PluginManager deviceManager) {

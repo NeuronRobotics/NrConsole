@@ -167,7 +167,7 @@ public class ServoWidget extends ControlWidget implements ChangeListener, Action
 	}
 	
 	public void pollValue() {
-		recordValue(sliderUI.getValue());
+		//recordValue(sliderUI.getValue());
 	}
 
 	public DyIOAbstractPeripheral getPerpheral() {

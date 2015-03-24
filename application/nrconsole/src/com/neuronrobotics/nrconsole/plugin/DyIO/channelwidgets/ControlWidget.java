@@ -3,6 +3,7 @@ package com.neuronrobotics.nrconsole.plugin.DyIO.channelwidgets;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -32,11 +33,16 @@ public abstract class ControlWidget extends JPanel {
 	public void pollValue() { }
 	
 	public void recordValue(int value) {
-		manager.getChannelRecorder().recordValue(value);
+		SwingUtilities.invokeLater(() -> {
+			manager.getChannelRecorder().recordValue(value);
+		});
+		
 	}
 	
 	public void recordValue(double value) {
-		manager.getChannelRecorder().recordValue(value);
+		SwingUtilities.invokeLater(() -> {
+			manager.getChannelRecorder().recordValue(value);
+		});
 	}
 	
 	public void setRecordable(boolean enable) {

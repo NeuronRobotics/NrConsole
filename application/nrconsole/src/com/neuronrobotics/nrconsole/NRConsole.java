@@ -129,7 +129,8 @@ public class NRConsole {
 			public void onPluginListUpdate(PluginManager m) {
 				if(manager != m)
 					return;
-				System.out.println("NRConsole is refreshing");
+				//System.out.println("NRConsole is refreshing");
+				//new RuntimeException().printStackTrace();
 				if(nrcMenubar.isReady()){
 					System.out.println("Connection ready");
 					SwingUtilities.invokeLater(() -> {
@@ -140,7 +141,7 @@ public class NRConsole {
 					});
 
 				}else{
-					System.out.println("No connection");
+					//System.out.println("No connection");
 					SwingUtilities.invokeLater(() -> {
 						nrcMenubar.setMenues(null);
 						nrcFrame.displayLogo(manager);
