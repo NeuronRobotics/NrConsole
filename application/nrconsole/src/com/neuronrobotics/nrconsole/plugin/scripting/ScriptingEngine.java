@@ -95,7 +95,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			case Native:
 				return "Native";
 			case WebGist:
-				return "WebGist";
+				return "Web Gist";
 			default:
 				return "hrrmm";
 			}
@@ -217,13 +217,12 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
 				GHGistFile ghfile = entry.getValue();	
 				System.out.println("Key = " + entry.getKey());
-				SwingUtilities.invokeLater(() -> {
+				//SwingUtilities.invokeLater(() -> {
 					setCode(ghfile.getContent());
             		fileLabel.setText(entry.getKey().toString());
             		if(currentFile==null)
             			currentFile = new File(fileLabel.getText());
-        		});
-				Thread.sleep(200);
+        		//});
 				break;
 			}
 		}
@@ -303,7 +302,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 
 	private void handlePrintUpdate() {
 		// TODO Auto-generated method stub
-		ThreadUtil.wait(100);
+		ThreadUtil.wait(10);
 		SwingUtilities.invokeLater(() -> {
 			if(out.size()>0){
 				output.append(out.toString());
@@ -339,6 +338,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		collectionMenu.add(save);
 		
 		nativeIdisplay = new JMenuItem("Switch to "+interfaceType.Native);
+		webgist = new JMenuItem("Switch to "+interfaceType.WebGist);
 		
 		nativeIdisplay.addActionListener(e -> {
 			nativeIdisplay.setEnabled(false);
@@ -359,9 +359,6 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			invalidate();
 			pm.getFrame().invalidate();
 		});
-		collectionMenu.add(nativeIdisplay);
-		
-		webgist = new JMenuItem("Switch to "+interfaceType.WebGist);
 		webgist.addActionListener(e -> {
 			nativeIdisplay.setEnabled(true);
 			webgist.setEnabled(false);
@@ -382,6 +379,8 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			});
 
 		});
+		
+		collectionMenu.add(nativeIdisplay);
 		collectionMenu.add(webgist);
 		webgist.setEnabled(false);
 
