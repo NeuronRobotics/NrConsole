@@ -50,15 +50,18 @@ public class GithubGistBrowser extends JPanel {
     private final JTextField txtURL = new JTextField(100);
     private final JProgressBar progressBar = new JProgressBar();
     private WebView view;
-    
-    public GithubGistBrowser() {
-        super();
-        setLayout(new MigLayout());
-        initComponents();
-    }
+	private Dimension codeDimentions;
 
     
-    private void initComponents() {
+    public GithubGistBrowser(Dimension codeDimentions) {
+    	super();
+		this.codeDimentions = codeDimentions;
+        setLayout(new MigLayout());
+        initComponents();
+	}
+
+
+	private void initComponents() {
         createScene();
  
         ActionListener al = new ActionListener() {
@@ -190,8 +193,8 @@ public class GithubGistBrowser extends JPanel {
                 
                 
                 Platform.runLater(() -> {
-                	view.setPrefWidth(1168);
-                	view.setPrefHeight(768);
+                	view.setPrefWidth(codeDimentions.getWidth());
+                	view.setPrefHeight(codeDimentions.getHeight());
                 	jfxPanel.setScene(new Scene(view));
 //                	view.setOnMouseClicked(new EventHandler<MouseEvent>() {
 //

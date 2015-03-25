@@ -18,6 +18,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
@@ -49,6 +50,8 @@ import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GroovyFilter;
 import com.neuronrobotics.nrconsole.util.Mp3Filter;
+import com.neuronrobotics.sdk.common.BowlerMethod;
+import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.FileChangeWatcher;
@@ -79,6 +82,34 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	private DyIO dyio;
 	private PluginManager pm;
 	private GithubGistBrowser browser;
+	private enum interfaceType {
+		/** The STATUS. */
+		Native,
+		/** The GET. */
+		WebGist;
+		/* (non-Javadoc)
+		 * @see java.lang.Enum#toString()
+		 */
+		public String toString(){
+			switch (this){
+			case Native:
+				return "Native";
+			case WebGist:
+				return "WebGist";
+			default:
+				return "hrrmm";
+			}
+		}
+	};
+
+	
+	interfaceType toDisplay = interfaceType.WebGist;
+	private JMenuItem nativeIdisplay;
+	private JMenuItem webgist;
+	private JScrollPane codeScroll;
+	private Dimension codeDimentions = new Dimension(1168, 768);
+	private JPanel controls;
+	private JScrollPane outputPane;
 	
 	private void reset(){
 		System.setOut(orig);
@@ -98,10 +129,10 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		this.pm = pm;
 		setName("Bowler Scripting");
 		setLayout(new MigLayout());
-		code = new JTextArea(20, 40);
+		code = new JTextArea(200, 400);
 		output = new JTextArea(20, 100);
-		JScrollPane outputPane = new JScrollPane(output);
-        browser = new GithubGistBrowser();
+		outputPane = new JScrollPane(output);
+        browser = new GithubGistBrowser(codeDimentions);
         browser.setVisible(true);
         browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
         //browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
@@ -109,13 +140,12 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
         //browser.loadHTML( getHTMLFromGist(currentGist));
 		
 		run = new JButton("Run");
-		JPanel controls = new JPanel(new MigLayout());
+		controls = new JPanel(new MigLayout());
 		controls.add(run);
 		controls.add(fileLabel);
 		
-//		JScrollPane codeScroll = new JScrollPane(code);
-//		codeScroll.setPreferredSize(new Dimension(1024, 400));
-//		add(codeScroll,"wrap");
+		codeScroll = new JScrollPane(code);
+		codeScroll.setPreferredSize(codeDimentions);
 	
 		add(browser,"wrap");
 		add(controls,"wrap");
@@ -208,8 +238,8 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			public void run() {
 				setName("Bowler Script Runner");
 				try{
-					
-					loadCodeFromCurrentGist();
+					if(toDisplay == interfaceType.WebGist)
+						loadCodeFromCurrentGist();
 					output.setText("");
 					CompilerConfiguration cc = new CompilerConfiguration();
 	
@@ -307,6 +337,53 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 			save();
 		});
 		collectionMenu.add(save);
+		
+		nativeIdisplay = new JMenuItem("Switch to "+interfaceType.Native);
+		
+		nativeIdisplay.addActionListener(e -> {
+			nativeIdisplay.setEnabled(false);
+			webgist.setEnabled(true);
+			toDisplay=interfaceType.Native;
+			removeAll();
+			SwingUtilities.invokeLater(() -> {
+				try {
+					loadCodeFromCurrentGist();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			});
+			
+			add(codeScroll,"wrap");
+			add(controls,"wrap");
+			add(outputPane,"wrap");
+			invalidate();
+			pm.getFrame().invalidate();
+		});
+		collectionMenu.add(nativeIdisplay);
+		
+		webgist = new JMenuItem("Switch to "+interfaceType.WebGist);
+		webgist.addActionListener(e -> {
+			nativeIdisplay.setEnabled(true);
+			webgist.setEnabled(false);
+			toDisplay=interfaceType.WebGist;
+
+			SwingUtilities.invokeLater(() -> {
+				removeAll();
+				add(browser,"wrap");
+				add(controls,"wrap");
+				add(outputPane,"wrap");
+				updateFile();
+				save();
+				SwingUtilities.invokeLater(() -> {	
+					invalidate();
+					pm.getFrame().invalidate();
+				});
+				
+			});
+
+		});
+		collectionMenu.add(webgist);
+		webgist.setEnabled(false);
 
 		ArrayList<JMenu> m = new ArrayList<JMenu>();
 		m.add(collectionMenu);
