@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,7 +17,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
@@ -27,6 +25,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -43,24 +42,19 @@ import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
 import org.kohsuke.github.GHGist;
 import org.kohsuke.github.GHGistFile;
-import org.kohsuke.github.GHUser;
 import org.kohsuke.github.GitHub;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GroovyFilter;
-import com.neuronrobotics.nrconsole.util.Mp3Filter;
-import com.neuronrobotics.sdk.common.BowlerMethod;
-import com.neuronrobotics.sdk.common.ISendable;
 import com.neuronrobotics.sdk.dyio.DyIO;
-import com.neuronrobotics.sdk.dyio.DyIORegestry;
 import com.neuronrobotics.sdk.util.FileChangeWatcher;
 import com.neuronrobotics.sdk.util.IFileChangeListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import net.miginfocom.swing.MigLayout;
 
-public class ScriptingEngine extends JPanel implements IFileChangeListener{
+public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 
 	/**
 	 * 
@@ -110,6 +104,18 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 	private Dimension codeDimentions = new Dimension(1168, 768);
 	private JPanel controls;
 	private JScrollPane outputPane;
+	private String codeText="println(dyio)\n"
+			+ "while(true){\n"
+			+ "\tThreadUtil.wait(100)                     // Spcae out the loop\n\n"
+			+ "\tlong start = System.currentTimeMillis()  //capture the starting value \n\n"
+			+ "\tint value = dyio.getValue(15)            //grab the value of pin 15\n"
+			+ "\tint scaled = value/4                     //scale the analog voltage to match the range of the servos\n"
+			+ "\tdyio.setValue(0,scaled)                  // set the new value to the servo\n\n"
+			+ "\t//Print out this loops values\n"
+			+ "\tprint(\" Loop took = \"+(System.currentTimeMillis()-start))\n"
+			+ "\tprint(\"ms Value= \"+value)\n"
+			+ "\tprintln(\" Scaled= \"+scaled)\n"
+			+ "}";
 	
 	private void reset(){
 		System.setOut(orig);
@@ -153,18 +159,7 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 
 		
 		//getCode();
-		setCode("println(dyio)\n"
-				+ "while(true){\n"
-				+ "\tThreadUtil.wait(100)                     // Spcae out the loop\n\n"
-				+ "\tlong start = System.currentTimeMillis()  //capture the starting value \n\n"
-				+ "\tint value = dyio.getValue(15)            //grab the value of pin 15\n"
-				+ "\tint scaled = value/4                     //scale the analog voltage to match the range of the servos\n"
-				+ "\tdyio.setValue(0,scaled)                  // set the new value to the servo\n\n"
-				+ "\t//Print out this loops values\n"
-				+ "\tprint(\" Loop took = \"+(System.currentTimeMillis()-start))\n"
-				+ "\tprint(\"ms Value= \"+value)\n"
-				+ "\tprintln(\" Scaled= \"+scaled)\n"
-				+ "}");
+		setCode(codeText);
 //		setCode("<script src=\"https://gist.github.com/madhephaestus/9de9e45c75a5588c4a81.js\"></script>");
 
 		run.addActionListener(e -> {
@@ -305,8 +300,12 @@ public class ScriptingEngine extends JPanel implements IFileChangeListener{
 		ThreadUtil.wait(10);
 		SwingUtilities.invokeLater(() -> {
 			if(out.size()>0){
-				output.append(out.toString());
+				String current = output.getText();
+				current +=out.toString();
 				out.reset();
+				if(current.getBytes().length>2000)
+					current=new String(current.substring(current.getBytes().length-1500));
+				output.setText(current);
 				output.setCaretPosition(output.getDocument().getLength());
 			}
 		});

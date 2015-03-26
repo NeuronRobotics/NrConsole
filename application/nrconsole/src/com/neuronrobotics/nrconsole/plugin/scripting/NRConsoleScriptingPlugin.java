@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 
+import net.miginfocom.swing.MigLayout;
+
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
@@ -37,8 +39,13 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 
 	@Override
 	public JPanel getTabPane() {
-		// TODO Auto-generated method stub
-		return se;
+		if(se!=null){
+			JPanel ret =new JPanel(new MigLayout());
+			ret.setName(se.getName());
+			ret.add(new SwingFXBrowser());
+			return ret;
+		}
+		return null;
 	}
 
 	@Override
@@ -55,3 +62,5 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	}
 
 }
+
+
