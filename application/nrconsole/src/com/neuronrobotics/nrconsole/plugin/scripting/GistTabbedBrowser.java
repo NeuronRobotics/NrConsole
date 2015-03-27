@@ -40,7 +40,7 @@ import javax.swing.SwingUtilities;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
-public class SwingFXBrowser extends JFXPanel implements DefaultURL{
+public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 
 	/**
 	 * 
@@ -50,7 +50,7 @@ public class SwingFXBrowser extends JFXPanel implements DefaultURL{
 	private PluginManager pm;
 
 
-	public SwingFXBrowser(DyIO dyIO, PluginManager pm) {
+	public GistTabbedBrowser(DyIO dyIO, PluginManager pm) {
 		this.dyIO = dyIO;
 		this.pm = pm;
 		Platform.runLater(()-> {
@@ -113,7 +113,7 @@ public class SwingFXBrowser extends JFXPanel implements DefaultURL{
 		//Addition of New Tab to the tabpane.
 		tabPane.getTabs().addAll(newtab);
 
-		createAndSelectNewTab(tabPane, "About the Browser");
+		createAndSelectNewTab(tabPane, "About NrConsole");
 
 		//Function to add and display new tabs with default URL display.
 		tabPane.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Tab>() {
@@ -257,6 +257,8 @@ public class SwingFXBrowser extends JFXPanel implements DefaultURL{
 		});
 
 		borderPane.setCenter(tabPane);
+		
+		
 		root.getChildren().add(borderPane);
 
 

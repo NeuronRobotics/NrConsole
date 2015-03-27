@@ -113,7 +113,7 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 		if(DyIORegestry.get().isAvailable()){
 			JPanel ret =new JPanel(new MigLayout());
 			ret.setName("Groovy Scripting");
-			ret.add(new SwingFXBrowser(DyIORegestry.get(),pm));
+			ret.add(new GistTabbedBrowser(DyIORegestry.get(),pm));
 			return ret;
 		}
 		return null;
