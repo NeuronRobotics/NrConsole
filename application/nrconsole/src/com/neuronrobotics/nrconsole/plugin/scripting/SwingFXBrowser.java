@@ -37,14 +37,22 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.sdk.dyio.DyIO;
+
 public class SwingFXBrowser extends JFXPanel implements DefaultURL{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2686618188618431477L;
+	private DyIO dyIO;
+	private PluginManager pm;
 
-	public SwingFXBrowser(){
+
+	public SwingFXBrowser(DyIO dyIO, PluginManager pm) {
+		this.dyIO = dyIO;
+		this.pm = pm;
 		Platform.runLater(()-> {
 				initFX(this);
 		});
@@ -192,8 +200,8 @@ public class SwingFXBrowser extends JFXPanel implements DefaultURL{
 
 
 					webEngine.getLoadWorker().stateProperty().addListener(
-							new ChangeListener() {
-								public void changed(ObservableValue observable,
+							new ChangeListener<Object>() {
+								public void changed(ObservableValue<?> observable,
 										Object oldValue, Object newValue) {
 									State oldState = (State)oldValue;
 									State newState = (State)newValue;

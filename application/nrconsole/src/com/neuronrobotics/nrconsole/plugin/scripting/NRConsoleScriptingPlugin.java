@@ -110,10 +110,10 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 
 	@Override
 	public JPanel getTabPane() {
-		if(se!=null){
+		if(DyIORegestry.get().isAvailable()){
 			JPanel ret =new JPanel(new MigLayout());
-			ret.setName(se.getName());
-			ret.add(new SwingFXBrowser());
+			ret.setName("Groovy Scripting");
+			ret.add(new SwingFXBrowser(DyIORegestry.get(),pm));
 			return ret;
 		}
 		return null;
@@ -122,7 +122,7 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	@Override
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		// TODO Auto-generated method stub
-		se = new ScriptingEngine(DyIORegestry.get(),pm);
+		//se = new ScriptingEngine(DyIORegestry.get(),pm);
 		return true;
 	}
 

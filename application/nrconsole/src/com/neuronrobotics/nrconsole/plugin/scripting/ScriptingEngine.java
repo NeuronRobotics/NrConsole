@@ -26,6 +26,16 @@ import java.util.Map.Entry;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Color;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -47,6 +57,7 @@ import org.kohsuke.github.GitHub;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GroovyFilter;
+import com.neuronrobotics.nrconsole.util.PrefsLoader;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.util.FileChangeWatcher;
 import com.neuronrobotics.sdk.util.IFileChangeListener;
@@ -54,7 +65,7 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 
 import net.miginfocom.swing.MigLayout;
 
-public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
+public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	
 
 	static ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -75,13 +86,17 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 				for(int i=0;i<engines.size();i++){
 					// If the script is running update its display
 					if(engines.get(i).running){
-						String current = engines.get(i).output.getText();
-						current +=out.toString();
-						out.reset();
-						if(current.getBytes().length>2000)
-							current=new String(current.substring(current.getBytes().length-1500));
-						engines.get(i).output.setText(current);
-						engines.get(i).output.setCaretPosition(engines.get(i).output.getDocument().getLength());
+						final int myIndex = i;
+						SwingUtilities.invokeLater(() -> {
+							String current = engines.get(myIndex).output.getText();
+							current +=out.toString();
+							out.reset();
+							if(current.getBytes().length>2000)
+								current=new String(current.substring(current.getBytes().length-1500));
+							final String toSet=current;
+							engines.get(myIndex).output.setText(toSet);
+							//engines.get(myIndex).setCaretPosition(engines.get(myIndex).getDocument().getLength());
+						});
 					}
 				}
 
@@ -98,21 +113,17 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	//private JTextArea code;
-	private JButton run;
-
-	private JLabel fileLabel =new JLabel("No File Loaded");
 	private File currentFile = null;
 	
 	private boolean running = false;
-	private JTextArea output;
+	private TextArea output = new TextArea() ;
 	private Thread scriptRunner=null;
 	private FileChangeWatcher watcher;
 	//private String currentGist = "40fadfa5804eee848e62";
 	private DyIO dyio;
 	private PluginManager pm;
 	//private GithubGistBrowser browser;
-	
+	Label fileLabel = new Label();
 //	private enum interfaceType {
 //		/** The STATUS. */
 //		Native,
@@ -138,8 +149,7 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 //	private JMenuItem nativeIdisplay;
 //	private JMenuItem webgist;
 	private Dimension codeDimentions = new Dimension(1168, 768);
-	private JPanel controls;
-	private JScrollPane outputPane;
+
 	private String codeText="println(dyio)\n"
 			+ "while(true){\n"
 			+ "\tThreadUtil.wait(100)                     // Spcae out the loop\n\n"
@@ -154,50 +164,67 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 			+ "}";
 	
 	private ArrayList<IScriptEventListener> listeners = new ArrayList<IScriptEventListener>();
+
+	private Button runfx;
 	
-	public ScriptingEngine(DyIO dyio, PluginManager pm){
+	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile,String currentGist ) throws IOException, InterruptedException{
+		this(dyio,pm);
+		this.currentFile = currentFile;
+		loadCodeFromGist(currentGist);
+	}
+	
+	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile){
+		this(dyio,pm);
+		loadCodeFromFile(currentFile);
+	}
+		
+	private ScriptingEngine(DyIO dyio, PluginManager pm){
 		this.dyio = dyio;
 		this.pm = pm;
-		setName("Bowler Scripting");
-		setLayout(new MigLayout());
-		output = new JTextArea(20, 100);
-		outputPane = new JScrollPane(output);
-//        browser = new GithubGistBrowser(codeDimentions);
-//        browser.setVisible(true);
-//        browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
-        //browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
-        //browser.setPreferredSize(new Dimension(1400,600));
-        //browser.loadHTML( getHTMLFromGist(currentGist));
-		
-		run = new JButton("Run");
-		controls = new JPanel(new MigLayout());
-		controls.add(run);
-		controls.add(fileLabel);
-	
-//		add(browser,"wrap");
-		add(controls,"wrap");
-		add(outputPane,"wrap");
-
-		
-		//getCode();
-		setCode(codeText);
-//		setCode("<script src=\"https://gist.github.com/madhephaestus/9de9e45c75a5588c4a81.js\"></script>");
-
-		run.addActionListener(e -> {
+		runfx = new Button("Run");
+		runfx.setOnAction(e -> {
 			if(running)
 				stop();
 			else
-				start();			
+				start();
 		});
+
+
 
 	    //String ctrlSave = "CTRL Save";
 	    engines.add(this);
+	    fileLabel.setOnMouseEntered(e->{
+	    	SwingUtilities.invokeLater(() -> {
+				ThreadUtil.wait(10);
+				fileLabel.setText(currentFile.getAbsolutePath());
+			});
+	    });
+
+	    fileLabel.setOnMouseExited(e->{
+	    	SwingUtilities.invokeLater(() -> {
+				ThreadUtil.wait(10);
+				fileLabel.setText(currentFile.getName());
+			});
+	    });
+	    fileLabel.setTextFill(Color.GREEN);
+	    
+	    //Set up the run controls and the code area
+		// The BorderPane has the same areas laid out as the
+		// BorderLayout layout manager
+		setPadding(new Insets(20, 0, 20, 20));
+		final FlowPane controlPane = new FlowPane();
+		controlPane.setHgap(100);
+		controlPane.getChildren().add(runfx);
+		controlPane.getChildren().add(fileLabel);
+		// put the flowpane in the top area of the BorderPane
+		setTop(controlPane);
+		setBottom(output);
 	}
 	
 	private void reset(){
 		running = false;
 		SwingUtilities.invokeLater(() -> {
-			run.setText("Run");
+			runfx.setText("Run");
 		});
 
 	}
@@ -232,8 +259,11 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 		}
 
 	}
-	
-	public void loadCodeFromCurrentGist(String currentGist) throws IOException, InterruptedException{
+	public void loadCodeFromFile(File currentFile){
+		setUpFile(currentFile);
+		
+	}
+	public void loadCodeFromGist(String currentGist) throws IOException, InterruptedException{
 		GitHub github = GitHub.connectAnonymously();
 		System.out.println("Loading Gist: "+currentGist);
 		GHGist gist = github.getGist(currentGist);
@@ -245,8 +275,10 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 				//SwingUtilities.invokeLater(() -> {
 					setCode(ghfile.getContent());
             		fileLabel.setText(entry.getKey().toString());
-            		if(currentFile==null)
+            		if(currentFile==null){
+            			//PrefsLoader prefs = new PrefsLoader();
             			currentFile = new File(fileLabel.getText());
+            		}
             		else
             			currentFile = new File(currentFile.getPath()+File.pathSeparator+fileLabel.getText());
         		//});
@@ -259,7 +291,7 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 	private void start() {
 
 		running = true;
-		run.setText("Stop");
+		runfx.setText("Stop");
 		scriptRunner = new Thread(){
 			public void run() {
 				setName("Bowler Script Runner "+fileLabel.getText());
@@ -293,8 +325,8 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 			            	l.onGroovyScriptFinished(shell, script, obj);
 			            }
 			            SwingUtilities.invokeLater(() -> {
-		            		output.append("\nScript Completed\n");
-		            		output.setCaretPosition(output.getDocument().getLength());
+		            		append("\n"+currentFile+" Completed\n");
+		            		//output.setCaretPosition(output.getDocument().getLength());
 		        		});
 			            reset();
 			            
@@ -304,12 +336,12 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 				            	StringWriter sw = new StringWriter();
 				            	PrintWriter pw = new PrintWriter(sw);
 				            	ex.printStackTrace(pw);
-			        			output.append("\n"+sw+"\n");
+			        			append("\n"+currentFile+" \n"+sw+"\n");
 			        			
 		            		}else{
-		            			output.append("\nScript Interupted\n");
+		            			append("\n"+currentFile+" Interupted\n");
 		            		}
-		            		output.setCaretPosition(output.getDocument().getLength());
+		            		//output.setCaretPosition(output.getDocument().getLength());
 		            		reset();
 		        		});
 		            	for(IScriptEventListener l:listeners){
@@ -324,25 +356,35 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 
 		scriptRunner.start();
 	}
+	
+	private void append(String s){
+		SwingUtilities.invokeLater(() -> {
+			output.setText(output.getText()+s);
+		});
+	}
 
-
+	private void setUpFile(File f){
+		currentFile = f;
+		SwingUtilities.invokeLater(() -> {
+			fileLabel.setText(f.getName());
+		});
+		if (watcher != null) {
+			watcher.close();
+		}
+		try {
+			watcher = new FileChangeWatcher(currentFile);
+			watcher.addIFileChangeListener(this);
+			watcher.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	private void updateFile(){
-
 		 File last=FileSelectionFactory.GetFile(currentFile, new GroovyFilter());
 		 if(last != null){
-			 currentFile = last;
-	            if(watcher!=null){
-	            	watcher.close();
-	            }
-	            try {
-					watcher = new FileChangeWatcher(currentFile);
-		            watcher.addIFileChangeListener(this);
-		            watcher.start();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			 setUpFile(last);
 		 }
 		
 	}
@@ -381,6 +423,11 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 	            public void run() {
 	            	try {
 						setCode(new String(Files.readAllBytes(Paths.get(fileThatChanged.getAbsolutePath())), "UTF-8"));
+						fileLabel.setTextFill(Color.RED);
+						SwingUtilities.invokeLater(() -> {
+							ThreadUtil.wait(750);
+							fileLabel.setTextFill(Color.GREEN);
+						});
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -396,12 +443,16 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 		}
 	}
 	
-	protected String getCode(){
+	public String getCode(){
 		return codeText;
 	}
 
-	protected void setCode(String string) {
+	private void setCode(String string) {
+		String pervious = codeText;
 		codeText=string;
+        for(IScriptEventListener l:listeners){
+        	l.onGroovyScriptChanged(pervious, string);
+        } 
 	}
 
 }
