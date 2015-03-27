@@ -21,7 +21,7 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 
 	private static final String[] myNamespaces = new String[]{"neuronrobotics.dyio.*"};
 	
-	ScriptingEngine se =null;
+	GistTabbedBrowser se =null;
 
 	private PluginManager pm;
 
@@ -110,19 +110,20 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 
 	@Override
 	public JPanel getTabPane() {
-		if(DyIORegestry.get().isAvailable()){
-			JPanel ret =new JPanel(new MigLayout());
-			ret.setName("Groovy Scripting");
-			ret.add(new GistTabbedBrowser(DyIORegestry.get(),pm));
-			return ret;
+		if(se == null){
+			se=new GistTabbedBrowser(DyIORegestry.get(),pm);
 		}
-		return null;
+		JPanel ret =new JPanel(new MigLayout());
+		ret.setName("Groovy Scripting");
+		ret.add(se);
+		return ret;
 	}
 
 	@Override
 	public boolean setConnection(BowlerAbstractConnection connection) {
-		// TODO Auto-generated method stub
-		//se = new ScriptingEngine(DyIORegestry.get(),pm);
+		if(!DyIORegestry.get().isAvailable()){
+			return DyIORegestry.setConnection(connection);
+		}
 		return true;
 	}
 

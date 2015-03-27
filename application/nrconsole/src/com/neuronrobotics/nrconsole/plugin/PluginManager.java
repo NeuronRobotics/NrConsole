@@ -195,14 +195,14 @@ public class PluginManager {
 		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
 		// HACK this should load using OSGI
 		// Once instantiated they add themselves to the static list of plugins
-		new NRConsoleJobExecPlugin(this);
-		new NRConsoleDeviceConfigPlugin(this);
-		new CartesianController(this);
-		new NRConsoleDyIOPlugin(this);
-		new NRConsolePIDPlugin(this);
-		new NRConsoleBowlerCameraPlugin(this);
-		new NRConsoleBootloaderPlugin(this);
-		new NRConsoleBowlerRPCDisplayPlugin(this);
+//		new NRConsoleJobExecPlugin(this);
+//		new NRConsoleDeviceConfigPlugin(this);
+//		new CartesianController(this);
+//		new NRConsoleDyIOPlugin(this);
+//		new NRConsolePIDPlugin(this);
+//		new NRConsoleBowlerCameraPlugin(this);
+//		new NRConsoleBootloaderPlugin(this);
+//		new NRConsoleBowlerRPCDisplayPlugin(this);
 		new NRConsoleScriptingPlugin(this);
 		
 		//new NRConsoleBowlerConfigPlugin(this);
@@ -222,8 +222,8 @@ public class PluginManager {
 	}
 	public void firePluginUpdate(){
 		//System.out.println(this.getClass()+"is refreshing");
-		for(IPluginUpdateListener l:puListeners){
-			l.onPluginListUpdate(this);
+		for(int i=0;i<puListeners.size();i++){
+			puListeners.get(i).onPluginListUpdate(this);
 		}
 	}
 	public boolean isConnected() {

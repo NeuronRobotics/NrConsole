@@ -17,6 +17,8 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
@@ -36,6 +38,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -47,6 +50,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
@@ -58,6 +67,7 @@ import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GroovyFilter;
 import com.neuronrobotics.nrconsole.util.PrefsLoader;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.util.FileChangeWatcher;
 import com.neuronrobotics.sdk.util.IFileChangeListener;
@@ -73,7 +83,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	private static ArrayList<ScriptingEngine> engines = new ArrayList<ScriptingEngine>();
 	static{
         System.setOut(new PrintStream(out));
-		SwingUtilities.invokeLater(() -> {
+		Platform.runLater(() -> {
 			handlePrintUpdate();
 		});
 	}
@@ -81,13 +91,13 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	static void handlePrintUpdate() {
 
 		ThreadUtil.wait(20);
-		SwingUtilities.invokeLater(() -> {
+		Platform.runLater(() -> {
 			if(out.size()>0){
 				for(int i=0;i<engines.size();i++){
 					// If the script is running update its display
 					if(engines.get(i).running){
 						final int myIndex = i;
-						SwingUtilities.invokeLater(() -> {
+						Platform.runLater(() -> {
 							String current = engines.get(myIndex).output.getText();
 							current +=out.toString();
 							out.reset();
@@ -102,7 +112,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 
 			}
 		});
-		SwingUtilities.invokeLater(() -> {
+		Platform.runLater(() -> {
 			// TODO Auto-generated method stub
 			handlePrintUpdate();
 		});
@@ -167,16 +177,20 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 
 	private Button runfx;
 	
-	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile,String currentGist ) throws IOException, InterruptedException{
+	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile,String currentGist, WebEngine engine ) throws IOException, InterruptedException{
 		this(dyio,pm);
 		this.currentFile = currentFile;
-		loadCodeFromGist(currentGist);
+		loadCodeFromGist(currentGist,engine);
 	}
 	
-	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile){
-		this(dyio,pm);
-		loadCodeFromFile(currentFile);
-	}
+//	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile){
+//		this(dyio,pm);
+//		try{
+//			loadCodeFromFile(currentFile);
+//		}catch(NullPointerException ex){
+//			//init case
+//		}
+//	}
 		
 	private ScriptingEngine(DyIO dyio, PluginManager pm){
 		this.dyio = dyio;
@@ -194,14 +208,14 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	    //String ctrlSave = "CTRL Save";
 	    engines.add(this);
 	    fileLabel.setOnMouseEntered(e->{
-	    	SwingUtilities.invokeLater(() -> {
+	    	Platform.runLater(() -> {
 				ThreadUtil.wait(10);
 				fileLabel.setText(currentFile.getAbsolutePath());
 			});
 	    });
 
 	    fileLabel.setOnMouseExited(e->{
-	    	SwingUtilities.invokeLater(() -> {
+	    	Platform.runLater(() -> {
 				ThreadUtil.wait(10);
 				fileLabel.setText(currentFile.getName());
 			});
@@ -223,7 +237,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	
 	private void reset(){
 		running = false;
-		SwingUtilities.invokeLater(() -> {
+		Platform.runLater(() -> {
 			runfx.setText("Run");
 		});
 
@@ -247,7 +261,8 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		// TODO Auto-generated method stub
 		reset();
 		while(scriptRunner.isAlive()){
-			System.out.println("Interrupting");
+
+			Log.debug("Interrupting");
 			ThreadUtil.wait(10);
 			try {
 				scriptRunner.interrupt();
@@ -263,16 +278,17 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		setUpFile(currentFile);
 		
 	}
-	public void loadCodeFromGist(String currentGist) throws IOException, InterruptedException{
+	public void loadCodeFromGist(String addr,WebEngine engine) throws IOException, InterruptedException{
+		String currentGist = getCurrentGist(addr,engine);
 		GitHub github = GitHub.connectAnonymously();
-		System.out.println("Loading Gist: "+currentGist);
+		Log.debug("Loading Gist: "+currentGist);
 		GHGist gist = github.getGist(currentGist);
 		Map<String, GHGistFile> files = gist.getFiles();
 		for (Entry<String, GHGistFile> entry : files.entrySet()) { 
 			if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
 				GHGistFile ghfile = entry.getValue();	
-				System.out.println("Key = " + entry.getKey());
-				//SwingUtilities.invokeLater(() -> {
+				Log.debug("Key = " + entry.getKey());
+				//Platform.runLater(() -> {
 					setCode(ghfile.getContent());
             		fileLabel.setText(entry.getKey().toString());
             		if(currentFile==null){
@@ -287,6 +303,52 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		}
 		
 	}
+	
+	    public String urlToGist(String in) {
+			String domain = in.split("//")[1];
+			String [] tokens = domain.split("/");
+			if (tokens[0].toLowerCase().contains("gist.github.com") && tokens.length>=2){
+				String id = tokens[2].split("#")[0];
+
+				Log.debug("Gist URL Detected "+id);
+				return id;
+			}
+			
+			return null;
+		}
+	    private String returnFirstGist(String html){
+	    	//Log.debug(html);
+	    	String slug = html.split("//gist.github.com/")[1];
+	    	String js=		slug.split(".js")[0];
+	    	String id  = js.split("/")[1];
+	    	
+	    	return id;
+	    }
+
+		public String getCurrentGist(String addr,WebEngine engine) {
+			String gist = urlToGist(addr);
+			if (gist==null){
+				try {
+					Log.debug("Non Gist URL Detected");
+					String html;
+					TransformerFactory tf = TransformerFactory.newInstance();
+					Transformer t = tf.newTransformer();
+					StringWriter sw = new StringWriter();
+					t.transform(new DOMSource(engine.getDocument()), new StreamResult(sw));
+					html = sw.getBuffer().toString();
+					return returnFirstGist(html);
+				} catch (TransformerConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (TransformerException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+			return gist;
+		}
+
 
 	private void start() {
 
@@ -324,14 +386,14 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 			            for(IScriptEventListener l:listeners){
 			            	l.onGroovyScriptFinished(shell, script, obj);
 			            }
-			            SwingUtilities.invokeLater(() -> {
+			            Platform.runLater(() -> {
 		            		append("\n"+currentFile+" Completed\n");
 		            		//output.setCaretPosition(output.getDocument().getLength());
 		        		});
 			            reset();
 			            
 		            }catch(Exception ex){
-		            	SwingUtilities.invokeLater(() -> {
+		            	Platform.runLater(() -> {
 		            		if(!ex.getMessage().contains("sleep interrupted")){
 				            	StringWriter sw = new StringWriter();
 				            	PrintWriter pw = new PrintWriter(sw);
@@ -358,14 +420,14 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	}
 	
 	private void append(String s){
-		SwingUtilities.invokeLater(() -> {
+		Platform.runLater(() -> {
 			output.setText(output.getText()+s);
 		});
 	}
 
 	private void setUpFile(File f){
 		currentFile = f;
-		SwingUtilities.invokeLater(() -> {
+		Platform.runLater(() -> {
 			fileLabel.setText(f.getName());
 		});
 		if (watcher != null) {
@@ -424,7 +486,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	            	try {
 						setCode(new String(Files.readAllBytes(Paths.get(fileThatChanged.getAbsolutePath())), "UTF-8"));
 						fileLabel.setTextFill(Color.RED);
-						SwingUtilities.invokeLater(() -> {
+						Platform.runLater(() -> {
 							ThreadUtil.wait(750);
 							fileLabel.setTextFill(Color.GREEN);
 						});

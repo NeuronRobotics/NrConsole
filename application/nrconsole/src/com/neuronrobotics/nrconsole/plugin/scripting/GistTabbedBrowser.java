@@ -4,8 +4,11 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
@@ -36,6 +39,12 @@ import javafx.scene.web.WebView;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.dyio.DyIO;
@@ -64,9 +73,9 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 		Scene scene = createScene();
 		fxPanel.setScene(scene);
 	}
-
+	
 	//Custom function for creation of New Tabs.
-	private Tab createAndSelectNewTab(final TabPane tabPane, final String title) {
+	private Tab createFileTab(final TabPane tabPane, final String title) {
 
 		Tab tab = new Tab(title);
 		Label aboutLabel = new Label();
@@ -77,16 +86,39 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 		tab.setContent(aboutLabel);
 
 		final ObservableList<Tab> tabs = tabPane.getTabs();
-		tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
+		//tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
 		tabs.add(tabs.size() - 1, tab);
 		tabPane.getSelectionModel().select(tab);
+		
+		tab.setClosable(false);
 		return tab;
 	}
+
+	//Custom function for creation of New Tabs.
+	private Tab createAndSelectNewTab(final TabPane tabPane, final String title) {
+
+		ScriptingGistTab tab;
+		try {
+			tab = new ScriptingGistTab(title,dyIO,  pm , "http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
+			final ObservableList<Tab> tabs = tabPane.getTabs();
+			//tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
+			tabs.add(tabs.size() - 1, tab);
+			tabPane.getSelectionModel().select(tab);
+			tab.setOpenInNewTab(tabPane);
+			tab.setClosable(false);
+			return tab;
+		} catch (IOException | InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
-	public String getDomainName(String url) throws URISyntaxException {
-	    URI uri = new URI(url);
-	    String domain = uri.getHost();
-	    return domain.startsWith("www.") ? domain.substring(4) : domain;
+
+	private Tab createTab() throws IOException, InterruptedException{
+		final ScriptingGistTab tab = new ScriptingGistTab(null,dyIO,  pm , null);
+
+		return tab;
 	}
 
 
@@ -122,135 +154,20 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 					Tab oldSelectedTab, Tab newSelectedTab) {
 				if (newSelectedTab == newtab) {
 
-					final Tab tab = new Tab();
-					tab.setText("               ");
-					
+					try {
+						final Tab tab = createTab();
+						final ObservableList<Tab> tabs = tabPane.getTabs();
+						tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
+						tabs.add(tabs.size() - 1, tab);
+						tabPane.getSelectionModel().select(tab);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}	
 
-					//WebView - to display, browse web pages.
-					final WebView webView = new WebView();
-					final WebEngine webEngine = webView.getEngine();
-					webEngine.load(DEFAULT_URL);
-
-					final TextField urlField = new TextField(DEFAULT_URL);
-					webEngine.locationProperty().addListener(new ChangeListener<String>() {
-
-						@Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-							urlField.setText(newValue);
-							
-						}
-					});
-
-					//Action definition for the Button Go.
-					EventHandler<ActionEvent> goAction = new EventHandler<ActionEvent>() {
-
-						@Override public void handle(ActionEvent event) {
-							webEngine.load(urlField.getText().startsWith("http://") 
-									? urlField.getText() 
-											: "http://" + urlField.getText());
-							try {
-								tab.setText(getDomainName(urlField.getText()));
-							} catch (URISyntaxException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					};
-
-					urlField.setOnAction(goAction);
-
-					Button goButton = new Button("Go");
-					goButton.setDefaultButton(true);
-					goButton.setOnAction(goAction);
-
-
-					//Action definition for the Button Capture.
-					EventHandler<ActionEvent> CaptureAction = new EventHandler<ActionEvent>() {
-						int i = 1;
-						@Override public void handle(ActionEvent event) {
-							//frame.setSize((int)webView.getWidth(),(int)webView.getHeight());
-							BufferedImage bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-							Graphics graphics = bi.createGraphics();
-							paint(graphics);
-							try {
-								ImageIO.write(bi, "PNG", new File("c:\\demo"+i+".png"));
-								i++;
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-							graphics.dispose();
-							bi.flush();
-
-							/*WritableImage snapshot = webView.snapshot(new SnapshotParameters(), null);
-											BufferedImage image;
-											File file = new File("C:/test.jpg");
-											BufferedImage bufferedImage = new BufferedImage(550, 400, BufferedImage.TYPE_INT_ARGB);
-											image = javafx.embed.swing.SwingFXUtils.fromFXImage(snapshot, bufferedImage);
-											try {
-												Graphics2D gd = (Graphics2D) image.getGraphics();
-												gd.translate(1366,768);
-												ImageIO.write(image, "png", file);
-											} catch (IOException ex) {
-
-											};*/
-
-							/*	}
-									});*/
-						}
-					};
-
-
-					webEngine.getLoadWorker().stateProperty().addListener(
-							new ChangeListener<Object>() {
-								public void changed(ObservableValue<?> observable,
-										Object oldValue, Object newValue) {
-									State oldState = (State)oldValue;
-									State newState = (State)newValue;
-									if (State.SUCCEEDED == newValue) {
-										System.out
-										.println("Success");
-										captureView();
-									}
-								}
-
-								private void captureView() {
-
-									System.out.println("Inside Capture View");
-									BufferedImage bi = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-									Graphics graphics = bi.createGraphics();
-									paint(graphics);
-									try {
-										ImageIO.write(bi, "PNG", new File("c:\\demo.png"));
-
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-									graphics.dispose();
-									bi.flush();
-								
-								}
-							});
-
-					Button Capture = new Button("Capture");
-					Capture.setDefaultButton(false);
-
-					Capture.setOnAction(CaptureAction);
-
-
-					// Layout logic
-					HBox hBox = new HBox(5);
-					hBox.getChildren().setAll(urlField, goButton,Capture);
-					HBox.setHgrow(urlField, Priority.ALWAYS);
-
-					final VBox vBox = new VBox(5);
-					vBox.getChildren().setAll(hBox, webView);
-					VBox.setVgrow(webView, Priority.ALWAYS);
-
-
-					tab.setContent(vBox);
-					final ObservableList<Tab> tabs = tabPane.getTabs();
-					tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
-					tabs.add(tabs.size() - 1, tab);
-					tabPane.getSelectionModel().select(tab);
 
 				}
 			}
