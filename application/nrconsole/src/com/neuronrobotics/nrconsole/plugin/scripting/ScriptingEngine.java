@@ -84,7 +84,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 								current=new String(current.substring(current.getBytes().length-1500));
 							final String toSet=current;
 							engines.get(myIndex).output.setText(toSet);
-							engines.get(myIndex).output.setScrollTop(Double.MIN_VALUE);
+							engines.get(myIndex).output.setScrollTop(Double.MAX_VALUE);
 						});
 					//}
 				}
@@ -178,7 +178,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		// put the flowpane in the top area of the BorderPane
 		setTop(controlPane);
 		setBottom(output);
-		output.textProperty().addListener((ChangeListener<Object>) (ov, oldValue, newValue) -> output.setScrollTop(Double.MIN_VALUE));
+		output.textProperty().addListener((ChangeListener<Object>) (ov, oldValue, newValue) -> output.setScrollTop(Double.MAX_VALUE));
 	}
 	
 	private void reset(){
@@ -238,13 +238,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 					setCode(ghfile.getContent());
 					String fileName = entry.getKey().toString();
             		fileLabel.setText(fileName);
-            		
-            		if(currentFile==null){
-            			//PrefsLoader prefs = new PrefsLoader();
-            			currentFile = new File(fileName);
-            		}
-            		else
-            			currentFile = new File(currentFile.getPath()+File.pathSeparator+fileName);
+            		currentFile = new File(fileName);
         		//});
 				break;
 			}
@@ -336,7 +330,6 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 			            }
 			            Platform.runLater(() -> {
 		            		append("\n"+currentFile+" Completed\n");
-		            		output.setScrollTop(Double.MIN_VALUE);
 		        		});
 			            reset();
 			            
@@ -351,7 +344,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		            		}else{
 		            			append("\n"+currentFile+" Interupted\n");
 		            		}
-		            		output.setScrollTop(Double.MIN_VALUE);
+		            		
 		            		reset();
 		        		});
 		            	for(IScriptEventListener l:listeners){
@@ -370,6 +363,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	private void append(String s){
 		Platform.runLater(() -> {
 			output.setText(output.getText()+s);
+			output.setScrollTop(Double.MAX_VALUE);
 		});
 	}
 
