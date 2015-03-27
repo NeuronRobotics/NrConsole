@@ -5,9 +5,6 @@ import groovy.lang.GroovyShell;
 import groovy.lang.Script;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -17,8 +14,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
@@ -27,29 +22,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -66,14 +48,11 @@ import org.kohsuke.github.GitHub;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
 import com.neuronrobotics.nrconsole.util.GroovyFilter;
-import com.neuronrobotics.nrconsole.util.PrefsLoader;
 import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.dyio.DyIO;
 import com.neuronrobotics.sdk.util.FileChangeWatcher;
 import com.neuronrobotics.sdk.util.IFileChangeListener;
 import com.neuronrobotics.sdk.util.ThreadUtil;
-
-import net.miginfocom.swing.MigLayout;
 
 public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	
@@ -95,7 +74,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 			if(out.size()>0){
 				for(int i=0;i<engines.size();i++){
 					// If the script is running update its display
-					if(engines.get(i).running){
+					//if(engines.get(i).running){
 						final int myIndex = i;
 						Platform.runLater(() -> {
 							String current = engines.get(myIndex).output.getText();
@@ -105,9 +84,9 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 								current=new String(current.substring(current.getBytes().length-1500));
 							final String toSet=current;
 							engines.get(myIndex).output.setText(toSet);
-							//engines.get(myIndex).setCaretPosition(engines.get(myIndex).getDocument().getLength());
+							engines.get(myIndex).output.setScrollTop(Double.MIN_VALUE);
 						});
-					}
+					//}
 				}
 
 			}
@@ -129,36 +108,10 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	private TextArea output = new TextArea() ;
 	private Thread scriptRunner=null;
 	private FileChangeWatcher watcher;
-	//private String currentGist = "40fadfa5804eee848e62";
 	private DyIO dyio;
 	private PluginManager pm;
-	//private GithubGistBrowser browser;
-	Label fileLabel = new Label();
-//	private enum interfaceType {
-//		/** The STATUS. */
-//		Native,
-//		/** The GET. */
-//		WebGist;
-//		/* (non-Javadoc)
-//		 * @see java.lang.Enum#toString()
-//		 */
-//		public String toString(){
-//			switch (this){
-//			case Native:
-//				return "Native";
-//			case WebGist:
-//				return "Web Gist";
-//			default:
-//				return "hrrmm";
-//			}
-//		}
-//	};
-//
-//	
-//	interfaceType toDisplay = interfaceType.WebGist;
-//	private JMenuItem nativeIdisplay;
-//	private JMenuItem webgist;
 	private Dimension codeDimentions = new Dimension(1168, 768);
+	Label fileLabel = new Label();
 
 	private String codeText="println(dyio)\n"
 			+ "while(true){\n"
@@ -182,15 +135,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		this.currentFile = currentFile;
 		loadCodeFromGist(currentGist,engine);
 	}
-	
-//	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile){
-//		this(dyio,pm);
-//		try{
-//			loadCodeFromFile(currentFile);
-//		}catch(NullPointerException ex){
-//			//init case
-//		}
-//	}
+
 		
 	private ScriptingEngine(DyIO dyio, PluginManager pm){
 		this.dyio = dyio;
@@ -233,6 +178,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		// put the flowpane in the top area of the BorderPane
 		setTop(controlPane);
 		setBottom(output);
+		output.textProperty().addListener((ChangeListener<Object>) (ov, oldValue, newValue) -> output.setScrollTop(Double.MIN_VALUE));
 	}
 	
 	private void reset(){
@@ -290,13 +236,15 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 				Log.debug("Key = " + entry.getKey());
 				//Platform.runLater(() -> {
 					setCode(ghfile.getContent());
-            		fileLabel.setText(entry.getKey().toString());
+					String fileName = entry.getKey().toString();
+            		fileLabel.setText(fileName);
+            		
             		if(currentFile==null){
             			//PrefsLoader prefs = new PrefsLoader();
-            			currentFile = new File(fileLabel.getText());
+            			currentFile = new File(fileName);
             		}
             		else
-            			currentFile = new File(currentFile.getPath()+File.pathSeparator+fileLabel.getText());
+            			currentFile = new File(currentFile.getPath()+File.pathSeparator+fileName);
         		//});
 				break;
 			}
@@ -356,7 +304,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		runfx.setText("Stop");
 		scriptRunner = new Thread(){
 			public void run() {
-				setName("Bowler Script Runner "+fileLabel.getText());
+				setName("Bowler Script Runner "+currentFile.getName());
 				//try{
 					output.setText("");
 					CompilerConfiguration cc = new CompilerConfiguration();
@@ -388,7 +336,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 			            }
 			            Platform.runLater(() -> {
 		            		append("\n"+currentFile+" Completed\n");
-		            		//output.setCaretPosition(output.getDocument().getLength());
+		            		output.setScrollTop(Double.MIN_VALUE);
 		        		});
 			            reset();
 			            
@@ -403,7 +351,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		            		}else{
 		            			append("\n"+currentFile+" Interupted\n");
 		            		}
-		            		//output.setCaretPosition(output.getDocument().getLength());
+		            		output.setScrollTop(Double.MIN_VALUE);
 		            		reset();
 		        		});
 		            	for(IScriptEventListener l:listeners){
@@ -512,9 +460,11 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	private void setCode(String string) {
 		String pervious = codeText;
 		codeText=string;
+		//System.out.println(codeText);
         for(IScriptEventListener l:listeners){
         	l.onGroovyScriptChanged(pervious, string);
         } 
 	}
+
 
 }

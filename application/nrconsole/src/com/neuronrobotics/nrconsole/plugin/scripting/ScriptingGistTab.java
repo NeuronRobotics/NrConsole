@@ -31,11 +31,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
 public class ScriptingGistTab extends Tab {
 	
-	private String DEFAULT_URL = "http://gist.github.com/";
+	private String Current_URL = "http://gist.github.com/";
 	private PluginManager pm;
 	private DyIO dyio;
 	private ScriptingGistTab myTab;
@@ -45,8 +46,14 @@ public class ScriptingGistTab extends Tab {
 	private WebView webView;
 	private WebEngine webEngine;
 	private VBox vBox;
-	private Button goButton;
+	private Button goButton = new Button("Go");
+	private Button homeButton = new Button("Home");
+	private Button backButton = new Button("Back");
+	private Button forwardButton = new Button("Forward");
+	
 	private TextField urlField;
+	//private String currentAddress;
+	private ScriptingEngine scripting;
 	
 	
 	
@@ -63,8 +70,8 @@ public class ScriptingGistTab extends Tab {
 		webEngine = webView.getEngine();
 		
 		if(Url!=null)
-			DEFAULT_URL=Url;
-		webEngine.load(DEFAULT_URL);
+			Current_URL=Url;
+		webEngine.load(Current_URL);
 		
 		loaded=false;
 		webEngine.getLoadWorker().workDoneProperty().addListener((ChangeListener<Number>) (observableValue, oldValue, newValue) -> Platform.runLater(() -> {
@@ -82,16 +89,21 @@ public class ScriptingGistTab extends Tab {
 					}
 		    	}
 		    	loaded=true;
-		    	
+		    	try {
+					scripting.loadCodeFromGist(Current_URL, webEngine);
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    }else
 		    	loaded=false;
 		}));
-		urlField = new TextField(DEFAULT_URL);
+		urlField = new TextField(Current_URL);
 		webEngine.locationProperty().addListener((ChangeListener<String>) (observable1, oldValue, newValue) -> urlField.setText(newValue));
-		goButton = new Button("Go");
+		
 		goButton.setDefaultButton(true);
 	
-
 		webEngine.getLoadWorker().stateProperty().addListener(
 				new ChangeListener<Object>() {
 					public void changed(ObservableValue<?> observable,
@@ -99,16 +111,25 @@ public class ScriptingGistTab extends Tab {
 						State oldState = (State)oldValue;
 						State newState = (State)newValue;
 						if (State.SUCCEEDED == newValue) {
-							System.out
-							.println("Success");
+
 						}
 					}
 				});
-
+		backButton.setOnAction(arg0 -> {
+			goBack();
+		});
+		forwardButton.setOnAction(arg0 -> {
+			// TODO Auto-generated method stub
+			goForward();
+		});
+		homeButton.setOnAction(arg0 -> {
+			// TODO Auto-generated method stub
+			webEngine.load(GistTabbedBrowser.getHomeUrl());
+		});
 
 		// Layout logic
 		HBox hBox = new HBox(5);
-		hBox.getChildren().setAll(urlField, goButton);
+		hBox.getChildren().setAll(backButton,forwardButton,homeButton,goButton,urlField);
 		HBox.setHgrow(urlField, Priority.ALWAYS);
 
 		vBox = new VBox(5);
@@ -119,20 +140,19 @@ public class ScriptingGistTab extends Tab {
 	}
 	
 	private void finishLoadingComponents() throws IOException, InterruptedException{
-		// After loading the URL, create teh script engine
-		final ScriptingEngine scripting =new ScriptingEngine(dyio, pm, null ,DEFAULT_URL, webEngine);
+		scripting = new ScriptingEngine(dyio, pm, null ,Current_URL, webEngine);
 		
 		//Action definition for the Button Go.
 		EventHandler<ActionEvent> goAction = event -> {
-			String addr = urlField.getText().startsWith("http://") 
+			Current_URL = urlField.getText().startsWith("http://") 
 					? urlField.getText() 
 					: "http://" + urlField.getText();
-			if(tabPane==null || addr.contains("neuronrobotics.guithub.io")){
-				Log.debug("Loading "+addr);
-				webEngine.load(	addr);
+			if(tabPane==null || Current_URL.contains("neuronrobotics.guithub.io")){
+				Log.debug("Loading "+Current_URL);
+				webEngine.load(	Current_URL);
 					
 				try {
-					scripting.loadCodeFromGist(addr,webEngine);	
+					scripting.loadCodeFromGist(Current_URL,webEngine);	
 					myTab.setText(getDomainName(urlField.getText()));
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
@@ -147,7 +167,7 @@ public class ScriptingGistTab extends Tab {
 			}else{
 
 				try {
-					final ScriptingGistTab tab = new ScriptingGistTab(null,dyio,  pm , addr);
+					final ScriptingGistTab tab = new ScriptingGistTab(null,dyio,  pm , Current_URL);
 					final ObservableList<Tab> tabs = tabPane.getTabs();
 					tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
 					tabs.add(tabs.size() - 1, tab);
@@ -165,6 +185,30 @@ public class ScriptingGistTab extends Tab {
 
 		vBox.getChildren().add(scripting);
 	}
+	
+    public String goBack()
+    {    
+      final WebHistory history=webEngine.getHistory();
+      ObservableList<WebHistory.Entry> entryList=history.getEntries();
+      int currentIndex=history.getCurrentIndex();
+//      Out("currentIndex = "+currentIndex);
+//      Out(entryList.toString().replace("],","]\n"));
+
+      Platform.runLater(() -> history.go(-1));
+      return entryList.get(currentIndex>0?currentIndex-1:currentIndex).getUrl();
+    }
+
+    public String goForward()
+    {    
+      final WebHistory history=webEngine.getHistory();
+      ObservableList<WebHistory.Entry> entryList=history.getEntries();
+      int currentIndex=history.getCurrentIndex();
+//      Out("currentIndex = "+currentIndex);
+//      Out(entryList.toString().replace("],","]\n"));
+
+      Platform.runLater(() -> history.go(1));
+      return entryList.get(currentIndex<entryList.size()-1?currentIndex+1:currentIndex).getUrl();
+    }
 	
 
 	public static String getDomainName(String url) throws URISyntaxException {

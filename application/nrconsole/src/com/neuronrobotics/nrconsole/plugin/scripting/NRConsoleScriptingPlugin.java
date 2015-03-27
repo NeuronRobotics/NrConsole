@@ -122,7 +122,9 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	@Override
 	public boolean setConnection(BowlerAbstractConnection connection) {
 		if(!DyIORegestry.get().isAvailable()){
-			return DyIORegestry.setConnection(connection);
+			DyIORegestry.setConnection(connection);
+			DyIORegestry.get().connect();
+			return DyIORegestry.get().isAvailable();
 		}
 		return true;
 	}

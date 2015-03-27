@@ -51,6 +51,7 @@ import com.neuronrobotics.sdk.dyio.DyIO;
 
 public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 
+	private static final String HOME_URL = "http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/";
 	/**
 	 * 
 	 */
@@ -99,7 +100,7 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 
 		ScriptingGistTab tab;
 		try {
-			tab = new ScriptingGistTab(title,dyIO,  pm , "http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
+			tab = new ScriptingGistTab(title,dyIO,  pm , getHomeUrl());
 			final ObservableList<Tab> tabs = tabPane.getTabs();
 			//tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
 			tabs.add(tabs.size() - 1, tab);
@@ -130,7 +131,7 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 		final TabPane tabPane = new TabPane();
 
 		//Preferred Size of TabPane.
-		tabPane.setPrefSize(1365, 768);
+		tabPane.setPrefSize(1365, 1024);
 
 		//Placement of TabPane.
 		tabPane.setSide(Side.TOP);
@@ -180,6 +181,11 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 
 
 		return new Scene(root);
+	}
+
+
+	public static String getHomeUrl() {
+		return HOME_URL;
 	}
 
 }
