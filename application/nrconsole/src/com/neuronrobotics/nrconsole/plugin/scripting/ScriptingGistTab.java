@@ -100,7 +100,10 @@ public class ScriptingGistTab extends Tab {
 		    	loaded=false;
 		}));
 		urlField = new TextField(Current_URL);
-		webEngine.locationProperty().addListener((ChangeListener<String>) (observable1, oldValue, newValue) -> urlField.setText(newValue));
+		webEngine.locationProperty().addListener((ChangeListener<String>) (observable1, oldValue, newValue) ->{
+			urlField.setText(newValue);
+			
+		});
 		
 		goButton.setDefaultButton(true);
 	
@@ -111,7 +114,14 @@ public class ScriptingGistTab extends Tab {
 						State oldState = (State)oldValue;
 						State newState = (State)newValue;
 						if (State.SUCCEEDED == newValue) {
-
+							Current_URL = urlField.getText().startsWith("http://")|| urlField.getText().startsWith("https://")
+									? urlField.getText() 
+									: "http://" + urlField.getText();
+									
+							Log.debug("Navagating "+Current_URL);	
+							if( processNewTab(urlField.getText())){
+								goBack();
+							}
 						}
 					}
 				});
@@ -139,44 +149,41 @@ public class ScriptingGistTab extends Tab {
 		myTab.setContent(vBox);
 	}
 	
-	private void finishLoadingComponents() throws IOException, InterruptedException{
-		scripting = new ScriptingEngine(dyio, pm, null ,Current_URL, webEngine);
-		
-		//Action definition for the Button Go.
-		EventHandler<ActionEvent> goAction = event -> {
-			Current_URL = urlField.getText().startsWith("http://") 
-					? urlField.getText() 
-					: "http://" + urlField.getText();
-			if(tabPane==null || Current_URL.contains("neuronrobotics.guithub.io")){
-				Log.debug("Loading "+Current_URL);
-				webEngine.load(	Current_URL);
-					
+	private boolean processNewTab(String url){
+		Current_URL = urlField.getText().startsWith("http://") || urlField.getText().startsWith("https://")
+				? urlField.getText() 
+				: "http://" + urlField.getText();
+		if(tabPane!=null ){
+			if(!Current_URL.contains("neuronrobotics.github.io")){
 				try {
-					scripting.loadCodeFromGist(Current_URL,webEngine);	
-					myTab.setText(getDomainName(urlField.getText()));
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}else{
-
-				try {
+					Log.debug("Non demo page found, opening new tab "+Current_URL);
 					final ScriptingGistTab tab = new ScriptingGistTab(null,dyio,  pm , Current_URL);
 					final ObservableList<Tab> tabs = tabPane.getTabs();
 					tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
 					tabs.add(tabs.size() - 1, tab);
 					tabPane.getSelectionModel().select(tab);
+					return true;
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+			}
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	private void finishLoadingComponents() throws IOException, InterruptedException{
+		scripting = new ScriptingEngine(dyio, pm, null ,Current_URL, webEngine);
+		
+		//Action definition for the Button Go.
+		EventHandler<ActionEvent> goAction = event -> {
+			if( !processNewTab(urlField.getText())){
+				Log.debug("Loading "+Current_URL);
+				webEngine.load(	Current_URL);
 			}
 		};
 
@@ -194,7 +201,11 @@ public class ScriptingGistTab extends Tab {
 //      Out("currentIndex = "+currentIndex);
 //      Out(entryList.toString().replace("],","]\n"));
 
-      Platform.runLater(() -> history.go(-1));
+      Platform.runLater(() ->{
+    	  try{
+    		  history.go(-1);
+    	  }catch(Exception e){}
+      });
       return entryList.get(currentIndex>0?currentIndex-1:currentIndex).getUrl();
     }
 

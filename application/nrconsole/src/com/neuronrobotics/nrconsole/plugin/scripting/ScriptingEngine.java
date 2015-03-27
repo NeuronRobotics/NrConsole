@@ -10,6 +10,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -228,20 +229,24 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		String currentGist = getCurrentGist(addr,engine);
 		GitHub github = GitHub.connectAnonymously();
 		Log.debug("Loading Gist: "+currentGist);
-		GHGist gist = github.getGist(currentGist);
-		Map<String, GHGistFile> files = gist.getFiles();
-		for (Entry<String, GHGistFile> entry : files.entrySet()) { 
-			if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
-				GHGistFile ghfile = entry.getValue();	
-				Log.debug("Key = " + entry.getKey());
-				//Platform.runLater(() -> {
-					setCode(ghfile.getContent());
-					String fileName = entry.getKey().toString();
-            		fileLabel.setText(fileName);
-            		currentFile = new File(fileName);
-        		//});
-				break;
+		try{
+			GHGist gist = github.getGist(currentGist);
+			Map<String, GHGistFile> files = gist.getFiles();
+			for (Entry<String, GHGistFile> entry : files.entrySet()) { 
+				if(entry.getKey().endsWith(".java") || entry.getKey().endsWith(".groovy")){
+					GHGistFile ghfile = entry.getValue();	
+					Log.debug("Key = " + entry.getKey());
+					//Platform.runLater(() -> {
+						setCode(ghfile.getContent());
+						String fileName = entry.getKey().toString();
+	            		fileLabel.setText(fileName);
+	            		currentFile = new File(fileName);
+	        		//});
+					break;
+				}
 			}
+		}catch (InterruptedIOException e){
+			System.out.println("Gist Rate limited");
 		}
 		
 	}
