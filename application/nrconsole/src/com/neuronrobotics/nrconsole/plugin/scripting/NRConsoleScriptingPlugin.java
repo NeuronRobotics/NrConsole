@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
@@ -32,8 +33,78 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	}
 	
 	public ArrayList<JMenu> getMenueItems() {
-		if(se!=null)
-			return se.getMenueItems();
+		if(se!=null){
+			JMenu collectionMenu = new JMenu("Script");
+			JMenuItem open = new JMenuItem("Open");
+			open.addActionListener(e -> {
+				//open();
+			});
+			collectionMenu.add(open);
+			
+			JMenuItem saveas = new JMenuItem("Save As");
+			saveas.addActionListener(e -> {
+				//updateFile();
+				//save();
+			});
+			collectionMenu.add(saveas);
+			
+			JMenuItem save = new JMenuItem("Save");
+			save.addActionListener(e -> {
+				//save();
+			});
+			collectionMenu.add(save);
+			
+//			nativeIdisplay = new JMenuItem("Switch to "+interfaceType.Native);
+//			webgist = new JMenuItem("Switch to "+interfaceType.WebGist);
+//			
+//			nativeIdisplay.addActionListener(e -> {
+//				nativeIdisplay.setEnabled(false);
+//				webgist.setEnabled(true);
+//				toDisplay=interfaceType.Native;
+//				removeAll();
+//				SwingUtilities.invokeLater(() -> {
+//					try {
+//						loadCodeFromCurrentGist();
+//					} catch (Exception e1) {
+//						e1.printStackTrace();
+//					}
+//				});
+//				
+//				add(codeScroll,"wrap");
+//				add(controls,"wrap");
+//				add(outputPane,"wrap");
+//				invalidate();
+//				pm.getFrame().invalidate();
+//			});
+//			webgist.addActionListener(e -> {
+//				nativeIdisplay.setEnabled(true);
+//				webgist.setEnabled(false);
+//				toDisplay=interfaceType.WebGist;
+	//
+//				SwingUtilities.invokeLater(() -> {
+//					removeAll();
+//					add(browser,"wrap");
+//					add(controls,"wrap");
+//					add(outputPane,"wrap");
+//					updateFile();
+//					save();
+//					SwingUtilities.invokeLater(() -> {	
+//						invalidate();
+//						pm.getFrame().invalidate();
+//					});
+//					
+//				});
+	//
+//			});
+//			
+//			collectionMenu.add(nativeIdisplay);
+//			collectionMenu.add(webgist);
+//			webgist.setEnabled(false);
+
+			ArrayList<JMenu> m = new ArrayList<JMenu>();
+			m.add(collectionMenu);
+			return m;
+		}
 		return null;
 	}
 

@@ -55,52 +55,88 @@ import com.neuronrobotics.sdk.util.ThreadUtil;
 import net.miginfocom.swing.MigLayout;
 
 public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
+	
+
+	static ByteArrayOutputStream out = new ByteArrayOutputStream();
+	
+	private static ArrayList<ScriptingEngine> engines = new ArrayList<ScriptingEngine>();
+	static{
+        System.setOut(new PrintStream(out));
+		SwingUtilities.invokeLater(() -> {
+			handlePrintUpdate();
+		});
+	}
+	
+	static void handlePrintUpdate() {
+
+		ThreadUtil.wait(20);
+		SwingUtilities.invokeLater(() -> {
+			if(out.size()>0){
+				for(int i=0;i<engines.size();i++){
+					// If the script is running update its display
+					if(engines.get(i).running){
+						String current = engines.get(i).output.getText();
+						current +=out.toString();
+						out.reset();
+						if(current.getBytes().length>2000)
+							current=new String(current.substring(current.getBytes().length-1500));
+						engines.get(i).output.setText(current);
+						engines.get(i).output.setCaretPosition(engines.get(i).output.getDocument().getLength());
+					}
+				}
+
+			}
+		});
+		SwingUtilities.invokeLater(() -> {
+			// TODO Auto-generated method stub
+			handlePrintUpdate();
+		});
+	}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JTextArea output;
-	private JTextArea code;
+	
+	//private JTextArea code;
 	private JButton run;
 
 	private JLabel fileLabel =new JLabel("No File Loaded");
 	private File currentFile = null;
 	
 	private boolean running = false;
-	ByteArrayOutputStream out = new ByteArrayOutputStream();
-	private PrintStream orig= System.out;
+	private JTextArea output;
 	private Thread scriptRunner=null;
 	private FileChangeWatcher watcher;
-	private String currentGist = "40fadfa5804eee848e62";
+	//private String currentGist = "40fadfa5804eee848e62";
 	private DyIO dyio;
 	private PluginManager pm;
-	private GithubGistBrowser browser;
-	private enum interfaceType {
-		/** The STATUS. */
-		Native,
-		/** The GET. */
-		WebGist;
-		/* (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		public String toString(){
-			switch (this){
-			case Native:
-				return "Native";
-			case WebGist:
-				return "Web Gist";
-			default:
-				return "hrrmm";
-			}
-		}
-	};
-
+	//private GithubGistBrowser browser;
 	
-	interfaceType toDisplay = interfaceType.WebGist;
-	private JMenuItem nativeIdisplay;
-	private JMenuItem webgist;
-	private JScrollPane codeScroll;
+//	private enum interfaceType {
+//		/** The STATUS. */
+//		Native,
+//		/** The GET. */
+//		WebGist;
+//		/* (non-Javadoc)
+//		 * @see java.lang.Enum#toString()
+//		 */
+//		public String toString(){
+//			switch (this){
+//			case Native:
+//				return "Native";
+//			case WebGist:
+//				return "Web Gist";
+//			default:
+//				return "hrrmm";
+//			}
+//		}
+//	};
+//
+//	
+//	interfaceType toDisplay = interfaceType.WebGist;
+//	private JMenuItem nativeIdisplay;
+//	private JMenuItem webgist;
 	private Dimension codeDimentions = new Dimension(1168, 768);
 	private JPanel controls;
 	private JScrollPane outputPane;
@@ -117,30 +153,18 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 			+ "\tprintln(\" Scaled= \"+scaled)\n"
 			+ "}";
 	
-	private void reset(){
-		System.setOut(orig);
-		running = false;
-		SwingUtilities.invokeLater(() -> {
-			run.setText("Run");
-		});
-
-	}
-	
-	private String getHTMLFromGist(String gist){
-		return "<script src=\"https://gist.github.com/madhephaestus/"+gist+".js\"></script>";
-	}
+	private ArrayList<IScriptEventListener> listeners = new ArrayList<IScriptEventListener>();
 	
 	public ScriptingEngine(DyIO dyio, PluginManager pm){
 		this.dyio = dyio;
 		this.pm = pm;
 		setName("Bowler Scripting");
 		setLayout(new MigLayout());
-		code = new JTextArea(200, 400);
 		output = new JTextArea(20, 100);
 		outputPane = new JScrollPane(output);
-        browser = new GithubGistBrowser(codeDimentions);
-        browser.setVisible(true);
-        browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
+//        browser = new GithubGistBrowser(codeDimentions);
+//        browser.setVisible(true);
+//        browser.loadURL("http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/");
         //browser.loadURL("https://gist.github.com/madhephaestus/"+currentGist);
         //browser.setPreferredSize(new Dimension(1400,600));
         //browser.loadHTML( getHTMLFromGist(currentGist));
@@ -149,11 +173,8 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 		controls = new JPanel(new MigLayout());
 		controls.add(run);
 		controls.add(fileLabel);
-		
-		codeScroll = new JScrollPane(code);
-		codeScroll.setPreferredSize(codeDimentions);
 	
-		add(browser,"wrap");
+//		add(browser,"wrap");
 		add(controls,"wrap");
 		add(outputPane,"wrap");
 
@@ -169,20 +190,30 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 				start();			
 		});
 
-	    String ctrlSave = "CTRL Save";
-	    code.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK), ctrlSave);
-	    code.getActionMap().put(ctrlSave, new AbstractAction() {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 2405985221209391722L;
+	    //String ctrlSave = "CTRL Save";
+	    engines.add(this);
+	}
+	
+	private void reset(){
+		running = false;
+		SwingUtilities.invokeLater(() -> {
+			run.setText("Run");
+		});
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Saving Script");
-				save();
-			}
-	    });
+	}
+	
+//	private String getHTMLFromGist(String gist){
+//		return "<script src=\"https://gist.github.com/madhephaestus/"+gist+".js\"></script>";
+//	}
+	
+	public void addIScriptEventListener(IScriptEventListener l){
+		if(!listeners.contains(l))
+			listeners.add(l);
+	}
+	
+	public void removeIScriptEventListener(IScriptEventListener l){
+		if(listeners.contains(l))
+			listeners.remove(l);
 	}
 
 	private void stop() {
@@ -202,9 +233,8 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 
 	}
 	
-	private void loadCodeFromCurrentGist() throws IOException, InterruptedException{
+	public void loadCodeFromCurrentGist(String currentGist) throws IOException, InterruptedException{
 		GitHub github = GitHub.connectAnonymously();
-		currentGist = browser.getCurrentGist();
 		System.out.println("Loading Gist: "+currentGist);
 		GHGist gist = github.getGist(currentGist);
 		Map<String, GHGistFile> files = gist.getFiles();
@@ -217,6 +247,8 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
             		fileLabel.setText(entry.getKey().toString());
             		if(currentFile==null)
             			currentFile = new File(fileLabel.getText());
+            		else
+            			currentFile = new File(currentFile.getPath()+File.pathSeparator+fileLabel.getText());
         		//});
 				break;
 			}
@@ -230,10 +262,8 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 		run.setText("Stop");
 		scriptRunner = new Thread(){
 			public void run() {
-				setName("Bowler Script Runner");
-				try{
-					if(toDisplay == interfaceType.WebGist)
-						loadCodeFromCurrentGist();
+				setName("Bowler Script Runner "+fileLabel.getText());
+				//try{
 					output.setText("");
 					CompilerConfiguration cc = new CompilerConfiguration();
 	
@@ -249,144 +279,53 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 		                    );
 		        	
 		            Binding binding = new Binding();
-		            System.setOut(new PrintStream(out));
+
 	
 		            binding.setVariable("dyio", dyio);
 		            binding.setVariable("PluginManager", pm);
+		            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
+		            		binding, cc);
+		            System.out.println(getCode()+"\n\nStart\n\n");
+		            Script script = shell.parse(getCode());
 		            try{
-			            GroovyShell shell = new GroovyShell(getClass().getClassLoader(),
-			            		binding, cc);
-			            System.out.println(getCode()+"\n\nStart\n\n");
-			            Script script = shell.parse(getCode());
-			 
 			            Object obj = script.run();
-		            }catch(org.codehaus.groovy.control.MultipleCompilationErrorsException ex){
-		            	throw ex;
+			            for(IScriptEventListener l:listeners){
+			            	l.onGroovyScriptFinished(shell, script, obj);
+			            }
+			            SwingUtilities.invokeLater(() -> {
+		            		output.append("\nScript Completed\n");
+		            		output.setCaretPosition(output.getDocument().getLength());
+		        		});
+			            reset();
+			            
+		            }catch(Exception ex){
+		            	SwingUtilities.invokeLater(() -> {
+		            		if(!ex.getMessage().contains("sleep interrupted")){
+				            	StringWriter sw = new StringWriter();
+				            	PrintWriter pw = new PrintWriter(sw);
+				            	ex.printStackTrace(pw);
+			        			output.append("\n"+sw+"\n");
+			        			
+		            		}else{
+		            			output.append("\nScript Interupted\n");
+		            		}
+		            		output.setCaretPosition(output.getDocument().getLength());
+		            		reset();
+		        		});
+		            	for(IScriptEventListener l:listeners){
+			            	l.onGroovyScriptError(shell, script, ex);
+			            }
+		            	throw new RuntimeException(ex);
 		            }
-		            SwingUtilities.invokeLater(() -> {
-	            		output.append("\nScript Completed\n");
-	            		output.setCaretPosition(output.getDocument().getLength());
-	        		});
-		            reset();
-	            }catch(Exception e){
-	            	SwingUtilities.invokeLater(() -> {
-	            		if(!e.getMessage().contains("sleep interrupted")){
-			            	StringWriter sw = new StringWriter();
-			            	PrintWriter pw = new PrintWriter(sw);
-			            	e.printStackTrace(pw);
-		        			output.append("\n"+sw+"\n");
-		        			
-	            		}else{
-	            			output.append("\nScript Interupted\n");
-	            		}
-	            		output.setCaretPosition(output.getDocument().getLength());
-	        			running = false;
-	        			run.setText("Run");
-	        			System.setOut(orig);
-	        		});
-	            	throw new RuntimeException(e);
-	            }
+          
 				
 			}
 		};
-		SwingUtilities.invokeLater(() -> {
-			handlePrintUpdate();
-		});
+
 		scriptRunner.start();
 	}
 
-	private void handlePrintUpdate() {
-		// TODO Auto-generated method stub
-		ThreadUtil.wait(10);
-		SwingUtilities.invokeLater(() -> {
-			if(out.size()>0){
-				String current = output.getText();
-				current +=out.toString();
-				out.reset();
-				if(current.getBytes().length>2000)
-					current=new String(current.substring(current.getBytes().length-1500));
-				output.setText(current);
-				output.setCaretPosition(output.getDocument().getLength());
-			}
-		});
-		SwingUtilities.invokeLater(() -> {
-			// TODO Auto-generated method stub
-			handlePrintUpdate();
-		});
-	}
 
-	public ArrayList<JMenu> getMenueItems() {
-		JMenu collectionMenu = new JMenu("Script");
-		JMenuItem open = new JMenuItem("Open");
-		open.addActionListener(e -> {
-			open();
-		});
-		collectionMenu.add(open);
-		
-		JMenuItem saveas = new JMenuItem("Save As");
-		saveas.addActionListener(e -> {
-			updateFile();
-			save();
-		});
-		collectionMenu.add(saveas);
-		
-		JMenuItem save = new JMenuItem("Save");
-		save.addActionListener(e -> {
-			save();
-		});
-		collectionMenu.add(save);
-		
-		nativeIdisplay = new JMenuItem("Switch to "+interfaceType.Native);
-		webgist = new JMenuItem("Switch to "+interfaceType.WebGist);
-		
-		nativeIdisplay.addActionListener(e -> {
-			nativeIdisplay.setEnabled(false);
-			webgist.setEnabled(true);
-			toDisplay=interfaceType.Native;
-			removeAll();
-			SwingUtilities.invokeLater(() -> {
-				try {
-					loadCodeFromCurrentGist();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			});
-			
-			add(codeScroll,"wrap");
-			add(controls,"wrap");
-			add(outputPane,"wrap");
-			invalidate();
-			pm.getFrame().invalidate();
-		});
-		webgist.addActionListener(e -> {
-			nativeIdisplay.setEnabled(true);
-			webgist.setEnabled(false);
-			toDisplay=interfaceType.WebGist;
-
-			SwingUtilities.invokeLater(() -> {
-				removeAll();
-				add(browser,"wrap");
-				add(controls,"wrap");
-				add(outputPane,"wrap");
-				updateFile();
-				save();
-				SwingUtilities.invokeLater(() -> {	
-					invalidate();
-					pm.getFrame().invalidate();
-				});
-				
-			});
-
-		});
-		
-		collectionMenu.add(nativeIdisplay);
-		collectionMenu.add(webgist);
-		webgist.setEnabled(false);
-
-		ArrayList<JMenu> m = new ArrayList<JMenu>();
-		m.add(collectionMenu);
-		return m;
-	}
 	
 	private void updateFile(){
 
@@ -408,7 +347,7 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 		
 	}
 
-	private void open() {
+	public void open() {
 		
 		updateFile();
 		try {
@@ -419,7 +358,7 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 		}
 	}
 
-	private void save() {
+	public void save() {
 		// TODO Auto-generated method stub
 		try
 		{
@@ -458,14 +397,11 @@ public class ScriptingEngine extends JFXPanel implements IFileChangeListener{
 	}
 	
 	protected String getCode(){
-
-		return code.getText();
+		return codeText;
 	}
 
 	protected void setCode(String string) {
-		SwingUtilities.invokeLater(() -> {
-			code.setText(string);
-		});
+		codeText=string;
 	}
 
 }
