@@ -57,10 +57,10 @@ public class ScriptingGistTab extends Tab {
 	
 	
 	
-	public ScriptingGistTab(String title,DyIO dyio, PluginManager pm, String Url) throws IOException, InterruptedException{
+	public ScriptingGistTab(String title,DyIO dyio, PluginManager pm, String Url,TabPane tabPane) throws IOException, InterruptedException{
 		this.dyio = dyio;
 		this.pm = pm;
-		
+		this.tabPane = tabPane;
 		myTab = this;
 		if(pm== null)
 			return;
@@ -168,7 +168,7 @@ public class ScriptingGistTab extends Tab {
 			if(!Current_URL.contains("neuronrobotics.github.io")){
 				try {
 					Log.debug("Non demo page found, opening new tab "+Current_URL);
-					final ScriptingGistTab tab = new ScriptingGistTab(null,dyio,  pm , Current_URL);
+					final ScriptingGistTab tab = new ScriptingGistTab(null,dyio,  pm , Current_URL,null);
 					final ObservableList<Tab> tabs = tabPane.getTabs();
 					tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
 					tabs.add(tabs.size() - 1, tab);
@@ -204,7 +204,8 @@ public class ScriptingGistTab extends Tab {
 		goButton.setOnAction(goAction);
 
 		vBox.getChildren().add(scripting);
-		myTab.setText(scripting.getFileName());
+		if(tabPane==null )
+			myTab.setText(scripting.getFileName());
 	}
 	
     public String goBack()
@@ -242,9 +243,5 @@ public class ScriptingGistTab extends Tab {
 	    return domain.startsWith("www.") ? domain.substring(4) : domain;
 	}
 
-
-	public void setOpenInNewTab(TabPane tabPane) {
-		this.tabPane = tabPane;
-	}
 	
 }
