@@ -136,6 +136,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 
 
 		manager.addIPluginUpdateListener(this);
+		manager.updateNamespaces();
 		
 		Log.warning("Start Adding plugins ");
 		for(JPanel p: manager.getPanels()){

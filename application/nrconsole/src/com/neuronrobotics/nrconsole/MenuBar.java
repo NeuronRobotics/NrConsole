@@ -209,6 +209,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 		}//clear any partial connection
 		
 		connectionMenu.setEnabled(true);//Re-enable connection menu to allow access to menu items
+		
 		manager.firePluginUpdate();
 	}
 	

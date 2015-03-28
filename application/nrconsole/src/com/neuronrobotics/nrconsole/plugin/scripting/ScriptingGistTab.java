@@ -180,7 +180,22 @@ public class ScriptingGistTab extends Tab {
 				}
 			}
 		}else{
-			myTab.setText(scripting.getFileName());
+			if(scripting!=null){
+				try{
+					myTab.setText(scripting.getFileName());
+				}catch(java.lang.NullPointerException ex){
+					try {
+						scripting.loadCodeFromGist(Current_URL, webEngine);
+						myTab.setText(scripting.getFileName());
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}			
+			}
 		}
 		return false;
 	}
@@ -204,8 +219,13 @@ public class ScriptingGistTab extends Tab {
 		goButton.setOnAction(goAction);
 
 		vBox.getChildren().add(scripting);
-		if(tabPane==null )
-			myTab.setText(scripting.getFileName());
+		if(tabPane==null){
+			try{
+				myTab.setText(scripting.getFileName());
+			}catch(java.lang.NullPointerException ex){
+				ex.printStackTrace();
+			}
+		}
 	}
 	
     public String goBack()

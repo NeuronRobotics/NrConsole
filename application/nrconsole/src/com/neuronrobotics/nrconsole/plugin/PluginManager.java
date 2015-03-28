@@ -34,7 +34,21 @@ public class PluginManager {
 	private JFrame frame;
 	public PluginManager(JFrame frame){
 		this.setFrame(frame);
-		update();
+		
+		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
+		// HACK this should load using OSGI
+		// Once instantiated they add themselves to the static list of plugins
+		new NRConsoleJobExecPlugin(this);
+		new NRConsoleDeviceConfigPlugin(this);
+		new CartesianController(this);
+		
+		new NRConsoleDyIOPlugin(this);
+		new NRConsoleScriptingPlugin(this);
+		
+		new NRConsolePIDPlugin(this);
+		new NRConsoleBowlerCameraPlugin(this);
+		new NRConsoleBootloaderPlugin(this);
+		new NRConsoleBowlerRPCDisplayPlugin(this);
 	}
 	
 	public void removeNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
@@ -83,13 +97,13 @@ public class PluginManager {
 		for(INRConsoleTabedPanelPlugin pl:plugins){
 			pl.setActive(false);
 		}
-		update();
 		if(connection != null) {
 			connection.disconnect();
 		}
+
 		return true;
 	}
-	private void updateNamespaces(){
+	public void updateNamespaces(){
 		for (int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin p = plugins.get(i);
 			p.setActive(false);
@@ -105,6 +119,20 @@ public class PluginManager {
 				return false;
 			}
 			connection.addConnectionEventListener(listener);
+//			connection.addConnectionEventListener(new IConnectionEventListener() {
+//				@Override
+//				public void onDisconnect(BowlerAbstractConnection source) {
+//					for (INRConsoleTabedPanelPlugin p:plugins){
+//						 p.setActive(false);
+//					 }
+//				}
+//				@Override
+//				public void onConnect(BowlerAbstractConnection source) {
+//					for (INRConsoleTabedPanelPlugin p:plugins){
+//						 p.setActive(p.isMyNamespace(source.getNamespaces(null)));
+//					 }
+//				}
+//			});
 			gen = new GenericDevice(connection);
 			if(!gen.connect()) {
 				throw new InvalidConnectionException("Connection is invalid");
@@ -187,31 +215,7 @@ public class PluginManager {
 			return false;
 		}
 	}
-	/**
-	 * Update the plugin state data
-	 */
-	private void update() {
-		//System.out.println("Clearing tab list");
-		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
-		// HACK this should load using OSGI
-		// Once instantiated they add themselves to the static list of plugins
-		new NRConsoleJobExecPlugin(this);
-		new NRConsoleDeviceConfigPlugin(this);
-		new CartesianController(this);
-		
-		new NRConsoleDyIOPlugin(this);
-		new NRConsoleScriptingPlugin(this);
-		
-		new NRConsolePIDPlugin(this);
-		new NRConsoleBowlerCameraPlugin(this);
-		new NRConsoleBootloaderPlugin(this);
-		new NRConsoleBowlerRPCDisplayPlugin(this);
-		
-		//new NRConsoleBowlerConfigPlugin(this);
-		//System.out.println("Updating plugins:"+plugins);
-		
-		//END HACK
-	}
+
 	private ArrayList<IPluginUpdateListener> puListeners = new ArrayList<IPluginUpdateListener>();
 	public void addIPluginUpdateListener(IPluginUpdateListener l) {
 		if(puListeners.contains(l))
@@ -223,6 +227,7 @@ public class PluginManager {
 			puListeners.remove(l);
 	}
 	public void firePluginUpdate(){
+		updateNamespaces();
 		//System.out.println(this.getClass()+"is refreshing");
 		for(int i=0;i<puListeners.size();i++){
 			puListeners.get(i).onPluginListUpdate(this);

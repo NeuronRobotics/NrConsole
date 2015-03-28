@@ -251,6 +251,8 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 			}
 		}catch (InterruptedIOException e){
 			System.out.println("Gist Rate limited");
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
 		
 	}
