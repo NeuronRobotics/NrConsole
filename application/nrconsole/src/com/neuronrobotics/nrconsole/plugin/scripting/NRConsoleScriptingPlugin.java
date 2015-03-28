@@ -38,7 +38,7 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	}
 	
 	public ArrayList<JMenu> getMenueItems() {
-		if(se!=null){
+
 			JMenu collectionMenu = new JMenu("Script");
 			JMenuItem open = new JMenuItem("Open");
 			open.addActionListener(e -> {
@@ -105,12 +105,9 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 //			collectionMenu.add(nativeIdisplay);
 //			collectionMenu.add(webgist);
 //			webgist.setEnabled(false);
-
 			ArrayList<JMenu> m = new ArrayList<JMenu>();
 			m.add(collectionMenu);
 			return m;
-		}
-		return null;
 	}
 
 	@Override

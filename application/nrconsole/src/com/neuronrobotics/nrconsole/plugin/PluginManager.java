@@ -198,8 +198,10 @@ public class PluginManager {
 		new NRConsoleJobExecPlugin(this);
 		new NRConsoleDeviceConfigPlugin(this);
 		new CartesianController(this);
-		new NRConsoleScriptingPlugin(this);
+		
 		new NRConsoleDyIOPlugin(this);
+		new NRConsoleScriptingPlugin(this);
+		
 		new NRConsolePIDPlugin(this);
 		new NRConsoleBowlerCameraPlugin(this);
 		new NRConsoleBootloaderPlugin(this);
