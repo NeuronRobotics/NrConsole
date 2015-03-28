@@ -73,23 +73,21 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		ThreadUtil.wait(20);
 		Platform.runLater(() -> {
 			if(out.size()>0){
-				for(int i=0;i<engines.size();i++){
-					// If the script is running update its display
-					//if(engines.get(i).running){
-						final int myIndex = i;
-						Platform.runLater(() -> {
-							String current = engines.get(myIndex).output.getText();
-							current +=out.toString();
-							out.reset();
-							if(current.getBytes().length>2000)
-								current=new String(current.substring(current.getBytes().length-1500));
-							final String toSet=current;
-							engines.get(myIndex).output.setText(toSet);
-							engines.get(myIndex).output.setScrollTop(Double.MAX_VALUE);
-						});
-					//}
-				}
+				Platform.runLater(() -> {
+					for(int i=0;i<engines.size();i++){
 
+						final int myIndex = i;
+						
+						String current = engines.get(myIndex).output.getText();
+						current +=out.toString();
+						if(current.getBytes().length>2000)
+							current=new String(current.substring(current.getBytes().length-1500));
+						final String toSet=current;
+						engines.get(myIndex).output.setText(toSet);
+						engines.get(myIndex).output.setScrollTop(Double.MAX_VALUE);
+					}
+					out.reset();
+				});
 			}
 		});
 		Platform.runLater(() -> {
@@ -130,6 +128,10 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	private ArrayList<IScriptEventListener> listeners = new ArrayList<IScriptEventListener>();
 
 	private Button runfx;
+
+	private WebEngine engine;
+
+	private String addr;
 	
 	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile,String currentGist, WebEngine engine ) throws IOException, InterruptedException{
 		this(dyio,pm);
@@ -226,6 +228,8 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		
 	}
 	public void loadCodeFromGist(String addr,WebEngine engine) throws IOException, InterruptedException{
+		this.addr = addr;
+		this.engine = engine;
 		String currentGist = getCurrentGist(addr,engine);
 		GitHub github = GitHub.connectAnonymously();
 		Log.debug("Loading Gist: "+currentGist);
@@ -361,8 +365,16 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 				
 			}
 		};
+		Platform.runLater(() -> {
+			try {
+				loadCodeFromGist( addr, engine);
+				scriptRunner.start();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 
-		scriptRunner.start();
 	}
 	
 	private void append(String s){
@@ -463,6 +475,11 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
         for(IScriptEventListener l:listeners){
         	l.onGroovyScriptChanged(pervious, string);
         } 
+	}
+
+
+	public String getFileName() {
+		return currentFile.getName();
 	}
 
 

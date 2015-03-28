@@ -60,7 +60,18 @@ public class ScriptingGistTab extends Tab {
 	public ScriptingGistTab(String title,DyIO dyio, PluginManager pm, String Url) throws IOException, InterruptedException{
 		this.dyio = dyio;
 		this.pm = pm;
+		
 		myTab = this;
+		if(pm== null)
+			return;
+		pm.getFrame().addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent e) {
+        		//Preferred Size of TabPane.
+            	Platform.runLater(()-> {
+            		webView.setPrefSize(pm.getFrame().getWidth()-50, pm.getFrame().getHeight()-100);
+            	});
+            }
+        });
 		if(title==null)
 			myTab.setText("               ");
 		else
@@ -168,6 +179,8 @@ public class ScriptingGistTab extends Tab {
 					e.printStackTrace();
 				}
 			}
+		}else{
+			myTab.setText(scripting.getFileName());
 		}
 		return false;
 	}
@@ -191,6 +204,7 @@ public class ScriptingGistTab extends Tab {
 		goButton.setOnAction(goAction);
 
 		vBox.getChildren().add(scripting);
+		myTab.setText(scripting.getFileName());
 	}
 	
     public String goBack()

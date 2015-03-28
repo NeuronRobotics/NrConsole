@@ -1,51 +1,21 @@
 package com.neuronrobotics.nrconsole.plugin.scripting;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
@@ -58,13 +28,24 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 	private static final long serialVersionUID = -2686618188618431477L;
 	private DyIO dyIO;
 	private PluginManager pm;
+	private TabPane tabPane;
 
 
 	public GistTabbedBrowser(DyIO dyIO, PluginManager pm) {
 		this.dyIO = dyIO;
 		this.pm = pm;
+		if(pm==null)
+			return;
 		Platform.runLater(()-> {
 				initFX(this);
+				pm.getFrame().addComponentListener(new java.awt.event.ComponentAdapter() {
+		            public void componentResized(java.awt.event.ComponentEvent e) {
+		        		//Preferred Size of TabPane.
+		            	Platform.runLater(()-> {
+		            		tabPane.setPrefSize(pm.getFrame().getWidth()-50, pm.getFrame().getHeight()-100);
+		            	});
+		            }
+		        });
 		});
 	}
 
@@ -128,7 +109,7 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 		final Group root = new Group();
 
 		BorderPane borderPane = new BorderPane();
-		final TabPane tabPane = new TabPane();
+		tabPane = new TabPane();
 
 		//Preferred Size of TabPane.
 		tabPane.setPrefSize(1365, 1024);
@@ -140,7 +121,7 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 		 * tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);*/
 
 		final Tab newtab = new Tab();
-		newtab.setText("New Tab");
+		newtab.setText("New Gist");
 		newtab.setClosable(false);
 
 		//Addition of New Tab to the tabpane.

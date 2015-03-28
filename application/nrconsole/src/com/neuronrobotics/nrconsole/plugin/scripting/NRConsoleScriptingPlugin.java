@@ -4,9 +4,12 @@ import java.awt.Dimension;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
+
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import net.miginfocom.swing.MigLayout;
 
@@ -24,6 +27,8 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	GistTabbedBrowser se =null;
 
 	private PluginManager pm;
+
+	private JPanel ret;
 
 	
 	public NRConsoleScriptingPlugin( PluginManager pm) {
@@ -110,12 +115,21 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 
 	@Override
 	public JPanel getTabPane() {
-		if(se == null){
+		if(ret == null){
 			se=new GistTabbedBrowser(DyIORegestry.get(),pm);
+			ret = new JPanel(new MigLayout());
+			ret.setName("Groovy Scripting");
+			ret.add(se);
+			pm.getFrame().addComponentListener(new java.awt.event.ComponentAdapter() {
+	            public void componentResized(java.awt.event.ComponentEvent e) {
+	        		//Preferred Size of TabPane.
+	            	SwingUtilities.invokeLater(()-> {
+	            		ret.setSize(pm.getFrame().getWidth(), pm.getFrame().getHeight());
+	            		se.setSize(pm.getFrame().getWidth(), pm.getFrame().getHeight());
+	            	});
+	            }
+	        });	
 		}
-		JPanel ret =new JPanel(new MigLayout());
-		ret.setName("Groovy Scripting");
-		ret.add(se);
 		return ret;
 	}
 
