@@ -81,10 +81,12 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				try {
-					modePane.setMinimumSize(modePane.getSelectedComponent().getMinimumSize());
-					updateUI();
+					if(modePane != null){
+						modePane.setMinimumSize(modePane.getSelectedComponent().getMinimumSize());
+						updateUI();
+					}
 				} catch (Exception e2) {
-					e2.printStackTrace();
+					//e2.printStackTrace();
 				}
 				
 				
