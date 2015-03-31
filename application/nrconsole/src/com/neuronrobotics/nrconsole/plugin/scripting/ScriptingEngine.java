@@ -127,8 +127,8 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	
 	private ArrayList<IScriptEventListener> listeners = new ArrayList<IScriptEventListener>();
 
-	private Button runfx;
-
+	private Button runfx= new Button("Run");;
+	private Button runsave= new Button("Save");;
 	private WebEngine engine;
 
 	private String addr;
@@ -148,12 +148,14 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	private ScriptingEngine(DyIO dyio, PluginManager pm){
 		this.dyio = dyio;
 		this.pm = pm;
-		runfx = new Button("Run");
 		runfx.setOnAction(e -> {
 			if(running)
 				stop();
 			else
 				start();
+		});
+		runsave.setOnAction(e -> {
+			save();
 		});
 
 
@@ -182,6 +184,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		final FlowPane controlPane = new FlowPane();
 		controlPane.setHgap(100);
 		controlPane.getChildren().add(runfx);
+		controlPane.getChildren().add(runsave);
 		controlPane.getChildren().add(fileLabel);
 		// put the flowpane in the top area of the BorderPane
 		setTop(controlPane);
@@ -316,6 +319,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		scriptRunner = new Thread(){
 			public void run() {
 				setName("Bowler Script Runner "+currentFile.getName());
+				
 				//try{
 					output.setText("");
 					CompilerConfiguration cc = new CompilerConfiguration();
@@ -377,6 +381,8 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 			try {
 				if(loadGist)
 					loadCodeFromGist( addr, engine);
+				else
+					save();
 				scriptRunner.start();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
