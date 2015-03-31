@@ -1,6 +1,8 @@
 package com.neuronrobotics.nrconsole.plugin.scripting;
 
+import java.io.File;
 import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
@@ -16,23 +18,26 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
+import com.neuronrobotics.nrconsole.util.FileSelectionFactory;
+import com.neuronrobotics.nrconsole.util.GroovyFilter;
 import com.neuronrobotics.sdk.dyio.DyIO;
 
-public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
+public class GistTabbedBrowser extends JFXPanel{
 
 	private static final String HOME_URL = "http://neuronrobotics.github.io/Java-Code-Library/Digital-Input-Example-Simple/";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2686618188618431477L;
-	private DyIO dyIO;
+	private DyIO dyio;
 	private PluginManager pm;
 	private TabPane tabPane;
 
 
 	public GistTabbedBrowser(DyIO dyIO, PluginManager pm) {
-		this.dyIO = dyIO;
+		this.dyio = dyIO;
 		this.pm = pm;
 		if(pm==null)
 			return;
@@ -57,49 +62,44 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 	}
 	
 	//Custom function for creation of New Tabs.
-	private Tab createFileTab(final TabPane tabPane, final String title) {
+	private void createFileTab(File file) {
 
-		Tab tab = new Tab(title);
-		Label aboutLabel = new Label();
-		aboutLabel.setText("\n\n\t\t365: A Program for a day.\n\n\t\t\tWelcome to JavaFX Custom Browser. " +
-				"\n\t\t\tThis is a custom browser created for demo purpose only." +
-		"\n\t\t\tTo start browsing, click on New Tab.");
-		aboutLabel.setFont(Font.font("Calibri", FontWeight.BOLD, 20));
-		tab.setContent(aboutLabel);
+		try {
+			addTab(new LocalFileScriptTabTab( dyio, pm, file),true);
 
-		final ObservableList<Tab> tabs = tabPane.getTabs();
-		//tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
-		tabs.add(tabs.size() - 1, tab);
-		tabPane.getSelectionModel().select(tab);
-		
-		tab.setClosable(false);
-		return tab;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//Custom function for creation of New Tabs.
-	private Tab createAndSelectNewTab(final TabPane tabPane, final String title) {
+	private void createAndSelectNewTab(final TabPane tabPane, final String title) {
 
-		ScriptingGistTab tab;
+
 		try {
-			tab = new ScriptingGistTab(title,dyIO,  pm , getHomeUrl(),tabPane);
-			final ObservableList<Tab> tabs = tabPane.getTabs();
-			//tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
-			tabs.add(tabs.size() - 1, tab);
-			tabPane.getSelectionModel().select(tab);
-			tab.setClosable(false);
-			return tab;
+			addTab(new ScriptingGistTab(title,dyio,  pm , getHomeUrl(),tabPane), false);
 		} catch (IOException | InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+
 	}
 	
 
 	private Tab createTab() throws IOException, InterruptedException{
-		final ScriptingGistTab tab = new ScriptingGistTab(null,dyIO,  pm , null,null);
+		final ScriptingGistTab tab = new ScriptingGistTab(null,dyio,  pm , null,null);
 
 		return tab;
+	}
+	
+	public void addTab(Tab tab, boolean closable){
+		Platform.runLater(()->{
+			final ObservableList<Tab> tabs = tabPane.getTabs();
+			tab.setClosable(closable);
+			tabs.add(tabs.size() - 1, tab);
+			tabPane.getSelectionModel().select(tab);
+		});
 	}
 
 
@@ -136,11 +136,8 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 				if (newSelectedTab == newtab) {
 
 					try {
-						final Tab tab = createTab();
-						final ObservableList<Tab> tabs = tabPane.getTabs();
-						tab.closableProperty().bind(Bindings.size(tabs).greaterThan(2));
-						tabs.add(tabs.size() - 1, tab);
-						tabPane.getSelectionModel().select(tab);
+						addTab(createTab(),true);
+
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -166,6 +163,14 @@ public class GistTabbedBrowser extends JFXPanel implements DefaultURL{
 
 	public static String getHomeUrl() {
 		return HOME_URL;
+	}
+
+
+	public void open() {
+		 File last=FileSelectionFactory.GetFile(null, new GroovyFilter());
+		 if(last != null){
+			 createFileTab(last);
+		 }
 	}
 
 }

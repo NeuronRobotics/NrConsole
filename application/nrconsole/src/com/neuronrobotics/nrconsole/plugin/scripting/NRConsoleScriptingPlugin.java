@@ -42,23 +42,10 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 			JMenu collectionMenu = new JMenu("Script");
 			JMenuItem open = new JMenuItem("Open");
 			open.addActionListener(e -> {
-				//open();
+				se.open();
 			});
 			collectionMenu.add(open);
-			
-			JMenuItem saveas = new JMenuItem("Save As");
-			saveas.addActionListener(e -> {
-				//updateFile();
-				//save();
-			});
-			collectionMenu.add(saveas);
-			
-			JMenuItem save = new JMenuItem("Save");
-			save.addActionListener(e -> {
-				//save();
-			});
-			collectionMenu.add(save);
-			
+
 //			nativeIdisplay = new JMenuItem("Switch to "+interfaceType.Native);
 //			webgist = new JMenuItem("Switch to "+interfaceType.WebGist);
 //			

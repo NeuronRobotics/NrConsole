@@ -57,5 +57,12 @@
 	<classpathentry kind="lib" path="lib/okhttp-urlconnection-1.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-annotations-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-core-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/richtextfx-0.6.jar"/>
+	<classpathentry kind="lib" path="lib/reactfx-2.0-M2u1.jar"/>
+	<classpathentry kind="lib" path="lib/controlsfx-8.0.6.jar"/>
+	<classpathentry kind="lib" path="lib/easybind-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/flowless-0.4.jar"/>
+	<classpathentry kind="lib" path="lib/undofx-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/wellbehavedfx-0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

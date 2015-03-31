@@ -132,13 +132,18 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	private WebEngine engine;
 
 	private String addr;
+	boolean loadGist=false;
 	
 	public ScriptingEngine(DyIO dyio, PluginManager pm, File currentFile,String currentGist, WebEngine engine ) throws IOException, InterruptedException{
 		this(dyio,pm);
 		this.currentFile = currentFile;
 		loadCodeFromGist(currentGist,engine);
 	}
-
+	public ScriptingEngine(DyIO dyio, PluginManager pm,File currentFile) throws IOException{
+		this(dyio,pm);
+		this.currentFile = currentFile;
+		loadCodeFromFile(currentFile);
+	}
 		
 	private ScriptingEngine(DyIO dyio, PluginManager pm){
 		this.dyio = dyio;
@@ -223,13 +228,14 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		}
 
 	}
-	public void loadCodeFromFile(File currentFile){
+	public void loadCodeFromFile(File currentFile) throws IOException{
 		setUpFile(currentFile);
-		
+		setCode(new String(Files.readAllBytes(currentFile.toPath())));
 	}
 	public void loadCodeFromGist(String addr,WebEngine engine) throws IOException, InterruptedException{
 		this.addr = addr;
 		this.engine = engine;
+		loadGist=true;
 		String currentGist = getCurrentGist(addr,engine);
 		GitHub github = GitHub.connectAnonymously();
 		Log.debug("Loading Gist: "+currentGist);
@@ -369,7 +375,8 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		};
 		Platform.runLater(() -> {
 			try {
-				loadCodeFromGist( addr, engine);
+				if(loadGist)
+					loadCodeFromGist( addr, engine);
 				scriptRunner.start();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -470,7 +477,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 		return codeText;
 	}
 
-	private void setCode(String string) {
+	public void setCode(String string) {
 		String pervious = codeText;
 		codeText=string;
 		//System.out.println(codeText);
