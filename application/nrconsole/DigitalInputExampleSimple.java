@@ -4,5 +4,4 @@ DigitalInputChannel dig = new DigitalInputChannel(dyio.getChannel(0));
 while(true){
 	System.out.println(dig.isHigh());
 	Thread.sleep(1000);
-
 }
