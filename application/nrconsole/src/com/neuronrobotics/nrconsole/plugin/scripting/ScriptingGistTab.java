@@ -48,8 +48,8 @@ public class ScriptingGistTab extends Tab {
 	private VBox vBox;
 	private Button goButton = new Button("Go");
 	private Button homeButton = new Button("Home");
-	private Button backButton = new Button("Back");
-	private Button forwardButton = new Button("Forward");
+	private Button backButton = new Button("<");
+	private Button forwardButton = new Button(">");
 	
 	private TextField urlField;
 	//private String currentAddress;
