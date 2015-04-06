@@ -18,8 +18,10 @@ import com.neuronrobotics.nrconsole.plugin.bootloader.NRConsoleBootloaderPlugin;
 import com.neuronrobotics.nrconsole.plugin.cartesian.CartesianController;
 import com.neuronrobotics.nrconsole.plugin.scripting.NRConsoleScriptingPlugin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
 
@@ -119,20 +121,9 @@ public class PluginManager {
 				return false;
 			}
 			connection.addConnectionEventListener(listener);
-//			connection.addConnectionEventListener(new IConnectionEventListener() {
-//				@Override
-//				public void onDisconnect(BowlerAbstractConnection source) {
-//					for (INRConsoleTabedPanelPlugin p:plugins){
-//						 p.setActive(false);
-//					 }
-//				}
-//				@Override
-//				public void onConnect(BowlerAbstractConnection source) {
-//					for (INRConsoleTabedPanelPlugin p:plugins){
-//						 p.setActive(p.isMyNamespace(source.getNamespaces(null)));
-//					 }
-//				}
-//			});
+
+			Log.error("Switching to v4 parser");
+			BowlerDatagram.setUseBowlerV4(true);
 			gen = new GenericDevice(connection);
 			if(!gen.connect()) {
 				throw new InvalidConnectionException("Connection is invalid");
