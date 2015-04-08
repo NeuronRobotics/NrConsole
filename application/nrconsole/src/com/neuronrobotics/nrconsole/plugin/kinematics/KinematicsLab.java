@@ -49,7 +49,7 @@ public class KinematicsLab extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				if(viewer3d == null)
 					viewer3d = new DHKinematicsViewer(model);
-				viewer3d.getFrame().setVisible(true);
+				//viewer3d.getFrame().setVisible(true);
 			}
 		});
 		
