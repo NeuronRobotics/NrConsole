@@ -100,13 +100,13 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 	}
 	
 	
-	public void repaint(){
-		logoPanel.repaint();
-		for(JPanel p: panels){
-			p.repaint();
-		}
-		super.repaint();
-	}
+//	public void repaint(){
+//		logoPanel.repaint();
+//		for(JPanel p: panels){
+//			p.repaint();
+//		}
+//		super.repaint();
+//	}
 	private void updateScroller(){
 		if(manager!=null)
 			scroller.setPreferredSize(getCurrentPanelMinSize());
@@ -127,7 +127,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		updateScroller();
 
 		invalidate();
-		
+		repaint();
 	}
 	
 	public void setDeviceManager(PluginManager dm) {
