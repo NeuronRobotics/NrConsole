@@ -11,7 +11,7 @@ import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
 public class DyIOGraphPlugin extends AbstractNRConsoleTabedPanelPlugin {
 
 	public static final String[] myNames ={"neuronrobotics.dyio.*"};
-	private static final GraphingWindow gui =  new GraphingWindow();
+	private final GraphingWindow gui =  new GraphingWindow();
 	public DyIOGraphPlugin(PluginManager pm) {
 		this(myNames,pm);
 	}

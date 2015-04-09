@@ -36,21 +36,8 @@ public class PluginManager {
 	private JFrame frame;
 	public PluginManager(JFrame frame){
 		this.setFrame(frame);
-		
-		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
-		// HACK this should load using OSGI
-		// Once instantiated they add themselves to the static list of plugins
-		new NRConsoleJobExecPlugin(this);
-		new NRConsoleDeviceConfigPlugin(this);
-		new CartesianController(this);
-		
-		new NRConsoleDyIOPlugin(this);
-		new NRConsoleScriptingPlugin(this);
-		
-		new NRConsolePIDPlugin(this);
-		new NRConsoleBowlerCameraPlugin(this);
-		new NRConsoleBootloaderPlugin(this);
-		new NRConsoleBowlerRPCDisplayPlugin(this);
+		disconnect();
+
 	}
 	
 	public void removeNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
@@ -99,6 +86,20 @@ public class PluginManager {
 		for(INRConsoleTabedPanelPlugin pl:plugins){
 			pl.setActive(false);
 		}
+		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
+		// HACK this should load using OSGI
+		// Once instantiated they add themselves to the static list of plugins
+		new NRConsoleJobExecPlugin(this);
+		new NRConsoleDeviceConfigPlugin(this);
+		new CartesianController(this);
+		
+		new NRConsoleDyIOPlugin(this);
+		new NRConsoleScriptingPlugin(this);
+		
+		new NRConsolePIDPlugin(this);
+		new NRConsoleBowlerCameraPlugin(this);
+		new NRConsoleBootloaderPlugin(this);
+		new NRConsoleBowlerRPCDisplayPlugin(this);
 		if(connection != null) {
 			connection.disconnect();
 		}

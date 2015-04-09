@@ -125,9 +125,10 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		//}
 		
 		updateScroller();
-
-		invalidate();
-		repaint();
+		SwingUtilities.invokeLater(() -> {
+			getContentPane().validate();
+			getContentPane().repaint();
+		});
 	}
 	
 	public void setDeviceManager(PluginManager dm) {
