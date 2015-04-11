@@ -210,8 +210,8 @@ public class ScriptingGistTab extends Tab {
 		//Action definition for the Button Go.
 		EventHandler<ActionEvent> goAction = event -> {
 			if( !processNewTab(urlField.getText())){
-				Log.debug("Loading "+Current_URL);
-				webEngine.load(	Current_URL);
+				//Log.debug("Loading "+Current_URL);
+				//webEngine.load(	Current_URL);
 			}
 		};
 
