@@ -70,23 +70,24 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	
 	static void handlePrintUpdate() {
 
-		ThreadUtil.wait(20);
+		ThreadUtil.wait(100);
 		Platform.runLater(() -> {
 			if(out.size()>0){
 				Platform.runLater(() -> {
+					String newString = out.toString();
+					out.reset();
 					for(int i=0;i<engines.size();i++){
 
 						final int myIndex = i;
 						
-						String current = engines.get(myIndex).output.getText();
-						current +=out.toString();
+						String current = engines.get(myIndex).output.getText()+newString;
 						if(current.getBytes().length>2000)
-							current=new String(current.substring(current.getBytes().length-1500));
+							current=new String(current.substring(current.getBytes().length-1000));
 						final String toSet=current;
 						engines.get(myIndex).output.setText(toSet);
 						engines.get(myIndex).output.setScrollTop(Double.MAX_VALUE);
 					}
-					out.reset();
+					
 				});
 			}
 		});
@@ -393,10 +394,7 @@ public class ScriptingEngine extends BorderPane implements IFileChangeListener{
 	}
 	
 	private void append(String s){
-		Platform.runLater(() -> {
-			output.setText(output.getText()+s);
-			output.setScrollTop(Double.MAX_VALUE);
-		});
+		System.out.println(s);
 	}
 
 	private void setUpFile(File f){
