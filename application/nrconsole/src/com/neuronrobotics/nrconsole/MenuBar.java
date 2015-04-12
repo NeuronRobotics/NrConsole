@@ -227,7 +227,7 @@ public class MenuBar extends JMenuBar implements IConnectionEventListener {
 			ex.printStackTrace();
 		}
 		ThreadUtil.wait(75);
-		manager.firePluginUpdate();
+		//manager.firePluginUpdate();
 	}
 	
 	/**
