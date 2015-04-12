@@ -1,5 +1,7 @@
 package com.neuronrobotics.graphing;
 
+import javafx.application.Platform;
+
 import org.jfree.data.xy.XYSeries;
 
 public class DataChannel {
@@ -17,9 +19,18 @@ public class DataChannel {
 	}
 	
 	public void graphValue(double value) {
-		long time = System.currentTimeMillis() - startTime ;
-		if(series != null)
-			series.add((double) time/1000, value);
+		try{
+			Platform.runLater(()-> {
+				long time = System.currentTimeMillis() - startTime ;
+				if(series != null)
+					series.add((double) time/1000, value);
+				while(series.getItemCount()>3000){
+					series.remove(0);
+				}
+			});
+		}catch(IllegalStateException ex){
+			//application not yet loaded
+		}
 	}
 	
 	public XYSeries getSeries() {
