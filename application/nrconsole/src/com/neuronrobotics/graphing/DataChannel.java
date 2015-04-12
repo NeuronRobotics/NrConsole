@@ -25,7 +25,9 @@ public class DataChannel {
 				if(series != null)
 					series.add((double) time/1000, value);
 				while(series.getItemCount()>3000){
-					series.remove(0);
+					Platform.runLater(()-> {
+						series.remove(0);
+					});
 				}
 			});
 		}catch(IllegalStateException ex){
