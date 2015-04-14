@@ -29,7 +29,7 @@ public class StatusLabel extends JLabel {
 		}
 		
 		invalidate();
-		repaint();
+		//repaint();
 	}
 	
 	protected ImageIcon createImageIcon(String path) {

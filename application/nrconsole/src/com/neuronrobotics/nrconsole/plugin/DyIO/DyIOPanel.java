@@ -83,7 +83,7 @@ public class DyIOPanel extends JPanel {
 			}
 		});
 	    int pr = Log.getMinimumPrintLevel();
-	    Log.enableInfoPrint();
+	    //Log.enableInfoPrint();
 	    //brownOutDetect.setSelected(DyIORegestry.get().isServoPowerSafeMode());
 	    Log.setMinimumPrintLevel(pr);
 	    brownOutDetect.addActionListener(new ActionListener() {

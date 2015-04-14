@@ -161,7 +161,7 @@ public class GraphingWindow extends JPanel {
         axis.setAutoRange(true);
         axis.setFixedAutoRange(scale.getValue());  
         length.setText("" + scale.getValue());
-		invalidate();
+		//invalidate();
 		repaint();
 	}
 	private void setMovedWindow(double percent) {
@@ -177,8 +177,8 @@ public class GraphingWindow extends JPanel {
         double sUpper =loc+(scale.getValue()/2);
         axis.setRange(sLower, sUpper);
         length.setText("" + scale.getValue());
-		invalidate();
-		repaint();
+		//invalidate();
+		//repaint();
 	}
 	
 	public void addDataset(DataChannel data) {

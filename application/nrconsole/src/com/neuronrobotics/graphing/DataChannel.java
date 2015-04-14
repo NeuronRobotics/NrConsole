@@ -8,6 +8,7 @@ public class DataChannel {
 	private String title;
 	private XYSeries series;
 	private static long startTime = System.currentTimeMillis();
+	private  long lastTime = System.currentTimeMillis();
 	
 	public DataChannel(String title) {
 		this.title = title;
@@ -19,6 +20,9 @@ public class DataChannel {
 	}
 	
 	public void graphValue(double value) {
+		if((lastTime+100)>System.currentTimeMillis())
+			return;
+		lastTime=	System.currentTimeMillis();
 		try{
 			Platform.runLater(()-> {
 				long time = System.currentTimeMillis() - startTime ;
