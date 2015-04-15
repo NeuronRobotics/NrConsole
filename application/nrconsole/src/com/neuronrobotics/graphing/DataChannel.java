@@ -23,20 +23,20 @@ public class DataChannel {
 		if((lastTime+100)>System.currentTimeMillis())
 			return;
 		lastTime=	System.currentTimeMillis();
-		try{
-			Platform.runLater(()-> {
-				long time = System.currentTimeMillis() - startTime ;
-				if(series != null)
-					series.add((double) time/1000, value);
-				while(series.getItemCount()>3000){
-					Platform.runLater(()-> {
-						series.remove(0);
-					});
-				}
-			});
-		}catch(IllegalStateException ex){
-			//application not yet loaded
-		}
+//		try{
+//			Platform.runLater(()-> {
+//				long time = System.currentTimeMillis() - startTime ;
+//				if(series != null)
+//					series.add((double) time/1000, value);
+//				while(series.getItemCount()>3000){
+//					Platform.runLater(()-> {
+//						series.remove(0);
+//					});
+//				}
+//			});
+//		}catch(IllegalStateException ex){
+//			//application not yet loaded
+//		}
 	}
 	
 	public XYSeries getSeries() {

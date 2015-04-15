@@ -133,11 +133,11 @@ public class PluginManager {
 			if(!gen.connect()) {
 				throw new InvalidConnectionException("Connection is invalid");
 			}
-			if(!gen.ping()){
+			if(!gen.ping(true)){
 				throw new InvalidConnectionException("Communication failed");
 			}
 		} catch(Exception e) {
-			connection.disconnect();
+			//connection.disconnect();
 			ThreadUtil.wait(1000);
 			BowlerDatagram.setUseBowlerV4(false);
 			if(!gen.connect()) {
