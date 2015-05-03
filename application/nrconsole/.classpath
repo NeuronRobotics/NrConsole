@@ -61,8 +61,8 @@
 	<classpathentry kind="lib" path="lib/flowless-0.4.jar"/>
 	<classpathentry kind="lib" path="lib/undofx-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/wellbehavedfx-0.1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/java-bowler-git"/>
 	<classpathentry kind="lib" path="/java-bowler-git/libs/smack.jar"/>
 	<classpathentry kind="lib" path="/java-bowler-git/libs/smackx.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/java-bowler-git"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
