@@ -4,8 +4,14 @@ import java.awt.Dimension;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+import javafx.application.Platform;
+
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import net.miginfocom.swing.MigLayout;
 
 import com.neuronrobotics.nrconsole.plugin.AbstractNRConsoleTabedPanelPlugin;
 import com.neuronrobotics.nrconsole.plugin.PluginManager;
@@ -18,9 +24,11 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 
 	private static final String[] myNamespaces = new String[]{"neuronrobotics.dyio.*"};
 	
-	ScriptingEngine se =null;
+	GistTabbedBrowser se =null;
 
 	private PluginManager pm;
+
+	private JPanel ret;
 
 	
 	public NRConsoleScriptingPlugin( PluginManager pm) {
@@ -30,21 +38,92 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	}
 	
 	public ArrayList<JMenu> getMenueItems() {
-		if(se!=null)
-			return se.getMenueItems();
-		return null;
+
+			JMenu collectionMenu = new JMenu("Script");
+			JMenuItem open = new JMenuItem("Open");
+			open.addActionListener(e -> {
+				se.open();
+			});
+			collectionMenu.add(open);
+
+//			nativeIdisplay = new JMenuItem("Switch to "+interfaceType.Native);
+//			webgist = new JMenuItem("Switch to "+interfaceType.WebGist);
+//			
+//			nativeIdisplay.addActionListener(e -> {
+//				nativeIdisplay.setEnabled(false);
+//				webgist.setEnabled(true);
+//				toDisplay=interfaceType.Native;
+//				removeAll();
+//				SwingUtilities.invokeLater(() -> {
+//					try {
+//						loadCodeFromCurrentGist();
+//					} catch (Exception e1) {
+//						e1.printStackTrace();
+//					}
+//				});
+//				
+//				add(codeScroll,"wrap");
+//				add(controls,"wrap");
+//				add(outputPane,"wrap");
+//				invalidate();
+//				pm.getFrame().invalidate();
+//			});
+//			webgist.addActionListener(e -> {
+//				nativeIdisplay.setEnabled(true);
+//				webgist.setEnabled(false);
+//				toDisplay=interfaceType.WebGist;
+	//
+//				SwingUtilities.invokeLater(() -> {
+//					removeAll();
+//					add(browser,"wrap");
+//					add(controls,"wrap");
+//					add(outputPane,"wrap");
+//					updateFile();
+//					save();
+//					SwingUtilities.invokeLater(() -> {	
+//						invalidate();
+//						pm.getFrame().invalidate();
+//					});
+//					
+//				});
+	//
+//			});
+//			
+//			collectionMenu.add(nativeIdisplay);
+//			collectionMenu.add(webgist);
+//			webgist.setEnabled(false);
+			ArrayList<JMenu> m = new ArrayList<JMenu>();
+			m.add(collectionMenu);
+			return m;
 	}
 
 	@Override
 	public JPanel getTabPane() {
-		// TODO Auto-generated method stub
-		return se;
+		if(ret == null){
+			se=new GistTabbedBrowser(DyIORegestry.get(),pm);
+			ret = new JPanel(new MigLayout());
+			ret.setName("Groovy Scripting");
+			ret.add(se);
+			pm.getFrame().addComponentListener(new java.awt.event.ComponentAdapter() {
+	            public void componentResized(java.awt.event.ComponentEvent e) {
+	        		//Preferred Size of TabPane.
+	            	SwingUtilities.invokeLater(()-> {
+	            		ret.setSize(pm.getFrame().getWidth(), pm.getFrame().getHeight());
+	            		se.setSize(pm.getFrame().getWidth(), pm.getFrame().getHeight());
+	            	});
+	            }
+	        });	
+		}
+		return ret;
 	}
 
 	@Override
 	public boolean setConnection(BowlerAbstractConnection connection) {
-		// TODO Auto-generated method stub
-		se = new ScriptingEngine(DyIORegestry.get(),pm);
+		if(!DyIORegestry.get().isAvailable()){
+			DyIORegestry.setConnection(connection);
+			DyIORegestry.get().connect();
+			return DyIORegestry.get().isAvailable();
+		}
 		return true;
 	}
 
@@ -55,3 +134,5 @@ public class NRConsoleScriptingPlugin extends AbstractNRConsoleTabedPanelPlugin 
 	}
 
 }
+
+

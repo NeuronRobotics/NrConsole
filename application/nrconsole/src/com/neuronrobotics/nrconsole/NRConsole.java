@@ -132,7 +132,7 @@ public class NRConsole {
 				//System.out.println("NRConsole is refreshing");
 				//new RuntimeException().printStackTrace();
 				if(nrcMenubar.isReady()){
-					System.out.println("Connection ready");
+					Log.debug("Connection ready");
 					SwingUtilities.invokeLater(() -> {
 						nrcMenubar.setMenues(manager.getMenueItems());
 						nrcFrame.setDeviceManager(manager);

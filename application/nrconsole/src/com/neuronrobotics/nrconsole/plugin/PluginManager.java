@@ -18,10 +18,13 @@ import com.neuronrobotics.nrconsole.plugin.bootloader.NRConsoleBootloaderPlugin;
 import com.neuronrobotics.nrconsole.plugin.cartesian.CartesianController;
 import com.neuronrobotics.nrconsole.plugin.scripting.NRConsoleScriptingPlugin;
 import com.neuronrobotics.sdk.common.BowlerAbstractConnection;
+import com.neuronrobotics.sdk.common.BowlerDatagram;
 import com.neuronrobotics.sdk.common.IConnectionEventListener;
 import com.neuronrobotics.sdk.common.InvalidConnectionException;
+import com.neuronrobotics.sdk.common.Log;
 import com.neuronrobotics.sdk.genericdevice.GenericDevice;
 import com.neuronrobotics.sdk.ui.ConnectionDialog;
+import com.neuronrobotics.sdk.util.ThreadUtil;
 
 public class PluginManager {
 	private ArrayList<INRConsoleTabedPanelPlugin> plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
@@ -34,7 +37,8 @@ public class PluginManager {
 	private JFrame frame;
 	public PluginManager(JFrame frame){
 		this.setFrame(frame);
-		update();
+		disconnect();
+
 	}
 	
 	public void removeNRConsoleTabedPanelPlugin(INRConsoleTabedPanelPlugin p){
@@ -83,13 +87,14 @@ public class PluginManager {
 		for(INRConsoleTabedPanelPlugin pl:plugins){
 			pl.setActive(false);
 		}
-		update();
+
 		if(connection != null) {
 			connection.disconnect();
 		}
+
 		return true;
 	}
-	private void updateNamespaces(){
+	public void updateNamespaces(){
 		for (int i=0;i<plugins.size();i++){
 			INRConsoleTabedPanelPlugin p = plugins.get(i);
 			p.setActive(false);
@@ -99,13 +104,42 @@ public class PluginManager {
 	}
 	public boolean connect(IConnectionEventListener listener) throws Exception{
 		disconnect();
-		try {
-			connection = ConnectionDialog.promptConnection();
-			if(connection == null) {
-				return false;
+		
+		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
+		// HACK this should load using OSGI
+		// Once instantiated they add themselves to the static list of plugins
+		new NRConsoleJobExecPlugin(this);
+		new NRConsoleDeviceConfigPlugin(this);
+		new CartesianController(this);
+		
+		new NRConsoleDyIOPlugin(this);
+		new NRConsoleScriptingPlugin(this);
+		
+		new NRConsolePIDPlugin(this);
+		new NRConsoleBowlerCameraPlugin(this);
+		new NRConsoleBootloaderPlugin(this);
+		new NRConsoleBowlerRPCDisplayPlugin(this);
+		connection = ConnectionDialog.promptConnection();
+		if(connection == null) {
+			return false;
+		}
+
+
+		Log.error("Switching to v4 parser");
+		BowlerDatagram.setUseBowlerV4(true);
+		
+		gen = new GenericDevice(connection);
+		try{
+			if(!gen.connect()) {
+				throw new InvalidConnectionException("Connection is invalid");
 			}
-			connection.addConnectionEventListener(listener);
-			gen = new GenericDevice(connection);
+			if(!gen.ping(true)){
+				throw new InvalidConnectionException("Communication failed");
+			}
+		} catch(Exception e) {
+			//connection.disconnect();
+			ThreadUtil.wait(1000);
+			BowlerDatagram.setUseBowlerV4(false);
 			if(!gen.connect()) {
 				throw new InvalidConnectionException("Connection is invalid");
 			}
@@ -113,9 +147,10 @@ public class PluginManager {
 				connection = null;
 				throw new InvalidConnectionException("Communication failed");
 			}
-		} catch(Exception e) {
 			throw e;
 		}
+		connection.addConnectionEventListener(listener);
+		
 		setNameSpaces(gen.getNamespaces());
 		updateNamespaces();
 		for (int i=0;i<plugins.size();i++){
@@ -187,29 +222,7 @@ public class PluginManager {
 			return false;
 		}
 	}
-	/**
-	 * Update the plugin state data
-	 */
-	private void update() {
-		//System.out.println("Clearing tab list");
-		plugins = new ArrayList<INRConsoleTabedPanelPlugin>();
-		// HACK this should load using OSGI
-		// Once instantiated they add themselves to the static list of plugins
-		new NRConsoleJobExecPlugin(this);
-		new NRConsoleDeviceConfigPlugin(this);
-		new CartesianController(this);
-		new NRConsoleDyIOPlugin(this);
-		new NRConsolePIDPlugin(this);
-		new NRConsoleBowlerCameraPlugin(this);
-		new NRConsoleBootloaderPlugin(this);
-		new NRConsoleBowlerRPCDisplayPlugin(this);
-		new NRConsoleScriptingPlugin(this);
-		
-		//new NRConsoleBowlerConfigPlugin(this);
-		//System.out.println("Updating plugins:"+plugins);
-		
-		//END HACK
-	}
+
 	private ArrayList<IPluginUpdateListener> puListeners = new ArrayList<IPluginUpdateListener>();
 	public void addIPluginUpdateListener(IPluginUpdateListener l) {
 		if(puListeners.contains(l))
@@ -221,9 +234,10 @@ public class PluginManager {
 			puListeners.remove(l);
 	}
 	public void firePluginUpdate(){
+		updateNamespaces();
 		//System.out.println(this.getClass()+"is refreshing");
-		for(IPluginUpdateListener l:puListeners){
-			l.onPluginListUpdate(this);
+		for(int i=0;i<puListeners.size();i++){
+			puListeners.get(i).onPluginListUpdate(this);
 		}
 	}
 	public boolean isConnected() {

@@ -81,10 +81,12 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				try {
-					modePane.setMinimumSize(modePane.getSelectedComponent().getMinimumSize());
-					updateUI();
+					if(modePane != null){
+						modePane.setMinimumSize(modePane.getSelectedComponent().getMinimumSize());
+						updateUI();
+					}
 				} catch (Exception e2) {
-					e2.printStackTrace();
+					//e2.printStackTrace();
 				}
 				
 				
@@ -94,17 +96,17 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 		logoPanel.add(new JLabel(logo),"[0,2]");
 		setIconImage( ConnectionImageIconFactory.getIcon("images/hat.png").getImage()); 
 		updateUI();
-		setSize(1050,1200);
+		setSize(1400, 1124);
 	}
 	
 	
-	public void repaint(){
-		logoPanel.repaint();
-		for(JPanel p: panels){
-			p.repaint();
-		}
-		super.repaint();
-	}
+//	public void repaint(){
+//		logoPanel.repaint();
+//		for(JPanel p: panels){
+//			p.repaint();
+//		}
+//		super.repaint();
+//	}
 	private void updateScroller(){
 		if(manager!=null)
 			scroller.setPreferredSize(getCurrentPanelMinSize());
@@ -121,11 +123,12 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 //		}else {
 			
 		//}
-		
-		updateScroller();
 
-		invalidate();
-		
+//		SwingUtilities.invokeLater(() -> {
+//			updateScroller();
+//			getContentPane().validate();
+//			getContentPane().repaint();
+//		});
 	}
 	
 	public void setDeviceManager(PluginManager dm) {
@@ -136,6 +139,7 @@ public class NRConsoleWindow extends JFrame implements IPluginUpdateListener {
 
 
 		manager.addIPluginUpdateListener(this);
+		manager.updateNamespaces();
 		
 		Log.warning("Start Adding plugins ");
 		for(JPanel p: manager.getPanels()){

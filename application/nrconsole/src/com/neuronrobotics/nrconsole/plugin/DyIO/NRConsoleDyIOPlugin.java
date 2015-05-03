@@ -45,7 +45,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	private JMenuItem showSequencerConf = new JMenuItem("Show Sequencer Configuration");
 	private JMenuItem showPidConf = new JMenuItem("Show P.I.D. Configuration");
 	private JMenuItem showCloud = new JMenuItem("Show Cloud Computing Configuration");
-	private JMenuItem showGettingStarted = new JMenuItem("Getting Started");
+	//private JMenuItem showGettingStarted = new JMenuItem("Getting Started");
 	private JMenuItem graphOptionsMenuItem = new JMenuItem("Graphing Options");
 	private JMenuItem exportData = new JMenuItem("Export Data to File");
 	private boolean active=false;
@@ -105,7 +105,6 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 		
 		DyIORegestry.setConnection(connection);
 		DyIORegestry.get().connect();
-		
 		try {
 			DyIO.enableFWCheck();
 			DyIORegestry.get().checkFirmwareRev();
@@ -166,7 +165,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 	
 	public ArrayList<JMenu> getMenueItems() {
 		JMenu collectionMenu = new JMenu("DyIO");
-		collectionMenu.add(showGettingStarted);
+		//collectionMenu.add(showGettingStarted);
 		//collectionMenu.add(showGraphMenuItem);
 		collectionMenu.add(exportData);
 		collectionMenu.add(showPidConf);
@@ -228,17 +227,17 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 				}.start();
 			}
 		});
-		showGettingStarted.addActionListener(new ActionListener() {	
-			
-			public void actionPerformed(ActionEvent e) {		
-				
-				INRConsoleTabedPanelPlugin p =new NRConsoleGettingStartedPlugin(manager);
-				p.setConnection(DyIORegestry.get().getConnection());
-				manager.firePluginUpdate();
-				showGettingStarted.setEnabled(false);
-				
-			}
-		});
+//		showGettingStarted.addActionListener(new ActionListener() {	
+//			
+//			public void actionPerformed(ActionEvent e) {		
+//				
+//				INRConsoleTabedPanelPlugin p =new NRConsoleGettingStartedPlugin(manager);
+//				p.setConnection(DyIORegestry.get().getConnection());
+//				manager.firePluginUpdate();
+//				showGettingStarted.setEnabled(false);
+//				
+//			}
+//		});
 		showHexapodConf.addActionListener(new ActionListener() {	
 			
 			public void actionPerformed(ActionEvent e) {		
@@ -401,6 +400,7 @@ public class NRConsoleDyIOPlugin implements INRConsoleTabedPanelPlugin,IChannelP
 
 	@Override
 	public void setActive(boolean b) {
+		
 		if(active && DyIORegestry.get().isAvailable() && !b){
 			//DyIORegestry.get().killAllPidGroups();
 			for(int i =0;i<24;i++){
